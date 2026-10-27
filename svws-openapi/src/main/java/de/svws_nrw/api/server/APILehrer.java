@@ -53,7 +53,6 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerMehrleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
-import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
@@ -61,6 +60,7 @@ import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
+import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungPatchRequest;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungCreateRequest;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungPatchRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionBatchPatchRequest;
@@ -1970,9 +1970,10 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Keine Einwilligungen für den Lehrer mit der angegebenen ID gefunden")
 	public Response getLehrerEinwilligungen(@PathParam("schema") final String schema, @PathParam("idLehrer") final long idLehrer,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer).getListAsResponse(),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
+		return LehrerControllerFactory
+				.withReadAccessDev(request)
+				.getLehrerEinwilligungController()
+				.getListByIdLehrer(idLehrer);
 	}
 
 	/**
@@ -1981,7 +1982,7 @@ public class APILehrer {
 	 * @param schema               das Datenbankschema, auf welchem der Patch ausgeführt werden soll
 	 * @param idLehrer             die Lehrer-ID
 	 * @param idEinwilligungsart   die ID der Einwilligungsart, zu welcher die zu patchende Lehrereinwilligung gehört
-	 * @param is                   der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch                das partielle Update als {@link LehrerEinwilligungPatchRequest}
 	 * @param request              die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -2002,12 +2003,12 @@ public class APILehrer {
 			@PathParam("idEinwilligungsart") final long idEinwilligungsart,
 			@RequestBody(description = "Der Patch für die Lehrereinwilligung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = LehrerEinwilligung.class))) final InputStream is,
+							schema = @Schema(implementation = LehrerEinwilligung.class))) final LehrerEinwilligungPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerEinwilligungen(conn, idLehrer)
-						.patchAsResponse(new Long[] { idLehrer, idEinwilligungsart }, is),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.LEHRERDATEN_AENDERN);
+		return LehrerControllerFactory
+				.withWriteAccessDev(request)
+				.getLehrerEinwilligungController()
+				.patch(idLehrer, idEinwilligungsart, patch);
 	}
 
 	/**

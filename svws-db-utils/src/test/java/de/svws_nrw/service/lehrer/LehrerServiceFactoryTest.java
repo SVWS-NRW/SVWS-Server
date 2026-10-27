@@ -161,4 +161,15 @@ class LehrerServiceFactoryTest {
 		verify(katalogRepositoryFactory).getLernplattformCredentialRepository();
 	}
 
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerEinwilligungService den Service korrekt erstellt")
+	void getLehrerEinwilligungService() {
+		final var service = serviceFactory.getLehrerEinwilligungService();
+		assertNotNull(service);
+
+		verify(repoLehrerFactory).getLehrerEinwilligungRepository();
+		verify(repoLehrerFactory).getLehrerRepository();
+		verify(katalogRepositoryFactory).getEinwilligungsartRepository();
+	}
+
 }

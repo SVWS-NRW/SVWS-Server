@@ -12,6 +12,8 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtFac
 import de.svws_nrw.repo.RepositoryFactory;
 import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepository;
 import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepositoryImpl;
+import de.svws_nrw.repo.lehrer.einwilligung.LehrerEinwilligungRepository;
+import de.svws_nrw.repo.lehrer.einwilligung.LehrerEinwilligungRepositoryImpl;
 import de.svws_nrw.repo.lehrer.foto.LehrerFotoRepository;
 import de.svws_nrw.repo.lehrer.foto.LehrerFotoRepositoryImpl;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
@@ -156,6 +158,13 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 */
 	public LehrerLernplattformRepository getLehrerLernplattformRepository() {
 		return this.getOrCreate(LehrerLernplattformRepository.class, () -> new LehrerLernplattformRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * @return {@link LehrerEinwilligungRepository}
+	 */
+	public LehrerEinwilligungRepository getLehrerEinwilligungRepository() {
+		return this.getOrCreate(LehrerEinwilligungRepository.class, () -> new LehrerEinwilligungRepositoryImpl(this.conn));
 	}
 
 }

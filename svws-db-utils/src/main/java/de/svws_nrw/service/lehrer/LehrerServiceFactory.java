@@ -2,6 +2,7 @@ package de.svws_nrw.service.lehrer;
 
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
+import de.svws_nrw.mapper.lehrer.einwilligung.LehrerEinwilligungMapper;
 import de.svws_nrw.mapper.lehrer.fachrichtung.LehrerFachrichtungMapper;
 import de.svws_nrw.mapper.lehrer.foto.LehrerFotoMapper;
 import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
@@ -18,6 +19,7 @@ import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeServiceKontext;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerPersonalabschnittsdatenAnrechnungsstundeService;
+import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungService;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
 import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
@@ -267,6 +269,20 @@ public final class LehrerServiceFactory {
 				katalogRepositoryFactory.getLernplattformRepository(),
 				katalogRepositoryFactory.getLernplattformCredentialRepository(),
 				LehrerLernplattformMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt einen neuen {@link LehrerEinwilligungService}.
+	 *
+	 * @return ein neuer {@code LehrerEinwilligungService}
+	 */
+	public LehrerEinwilligungService getLehrerEinwilligungService() {
+		return new LehrerEinwilligungService(
+				lehrerRepositoryFactory.getLehrerEinwilligungRepository(),
+				lehrerRepositoryFactory.getLehrerRepository(),
+				katalogRepositoryFactory.getEinwilligungsartRepository(),
+				LehrerEinwilligungMapper.INSTANCE
 		);
 	}
 
