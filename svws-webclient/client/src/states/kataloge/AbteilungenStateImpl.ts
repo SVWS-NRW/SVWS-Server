@@ -53,7 +53,8 @@ export class AbteilungenStateImpl extends StateManager<AbteilungenReactiveState>
 	}
 
 	override reset() {
-		this._abschnittWatcher = null;
+		super.reset();
+		this._abschnittWatcher?.();
 	}
 
 	/** Initialisiert den State und lädt Daten der Kataloge */
