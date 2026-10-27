@@ -12,7 +12,6 @@ import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -23,6 +22,7 @@ import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.foto.LehrerFoto;
 import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
@@ -188,7 +188,7 @@ public class ReportingRepositoryLehrer {
 		return ReportingRepositoryUtils.waehleAus(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> new DataLehrerStammdaten(
 						this.reportingContext.conn(),
-						new DataLernplattformen(this.reportingContext.conn()),
+						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 						new DataEinwilligungsarten(this.reportingContext.conn()),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).getListByIDsOhneFotos(fehlendeIds),
@@ -232,7 +232,7 @@ public class ReportingRepositoryLehrer {
 			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade alle Lehrerstammdaten.");
 			final List<LehrerStammdaten> alle = new DataLehrerStammdaten(
 					this.reportingContext.conn(),
-					new DataLernplattformen(this.reportingContext.conn()),
+					KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 					new DataEinwilligungsarten(this.reportingContext.conn()),
 					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 			).getAllOhneFotos();

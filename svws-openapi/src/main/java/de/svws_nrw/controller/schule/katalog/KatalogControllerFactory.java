@@ -8,6 +8,8 @@ import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseControllerImpl;
 import de.svws_nrw.controller.schule.katalog.jahrgang.JahrgangController;
 import de.svws_nrw.controller.schule.katalog.jahrgang.JahrgangControllerImpl;
+import de.svws_nrw.controller.schule.katalog.lernplattform.LernplattformController;
+import de.svws_nrw.controller.schule.katalog.lernplattform.LernplattformControllerImpl;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalController;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalControllerImpl;
 import de.svws_nrw.controller.schule.katalog.ort.OrtController;
@@ -170,6 +172,15 @@ public final class KatalogControllerFactory {
 	 */
 	public JahrgangController getJahrgangController() {
 		return new JahrgangControllerImpl(serviceFactory.getJahrgangService());
+	}
+
+	/**
+	 * Erstellt einen neuen LernplattformController.
+	 *
+	 * @return {@link LernplattformController} - neu erzeugter Controller
+	 */
+	public LernplattformController getLernplattformController() {
+		return new LernplattformControllerImpl(serviceFactory.getLernplattformService());
 	}
 
 	/**

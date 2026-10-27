@@ -86,7 +86,6 @@ import de.svws_nrw.data.schule.DataKatalogSchulformen;
 import de.svws_nrw.data.schule.DataKatalogSchulgliederungen;
 import de.svws_nrw.data.schule.DataKatalogSchultraeger;
 import de.svws_nrw.data.schule.DataKatalogVerkehrssprachen;
-import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -95,6 +94,8 @@ import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.data.schule.DataTeilstandorte;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataVermerkarten;
+import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformCreateRequest;
+import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformPatchRequest;
 import de.svws_nrw.service.schule.katalog.religion.ReligionCreateRequest;
 import de.svws_nrw.service.schule.katalog.religion.ReligionPatchRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoCreateRequest;
@@ -2508,16 +2509,18 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).getAllAsResponse(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getLernplattformController()
+				.getAll();
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Lernplattform.
 	 *
-	 * @param schema       das Datenbankschema, in welchem die Einwilligungsart erstellt wird
+	 * @param schema       das Datenbankschema, in welchem die Lernplattform erstellt wird
+	 * @param dto          die Daten der neuen Lernplattform
 	 * @param request      die Informationen zur HTTP-Anfrage
-	 * @param is           das JSON-Objekt
 	 *
 	 * @return die HTTP-Antwort mit der neuen Lernplattform
 	 */
@@ -2533,11 +2536,12 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLernplattform(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der initiale Patch für die neue Lernplattform", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Lernplattform.class))) final LernplattformCreateRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).addAsResponse(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getLernplattformController()
+				.create(dto);
 	}
 
 	/**
@@ -2545,7 +2549,7 @@ public class APISchule {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der Lernplattform
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch für die Lernplattform
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -2565,11 +2569,12 @@ public class APISchule {
 	public Response patchLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Lernplattform", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
+							schema = @Schema(implementation = Lernplattform.class))) final LernplattformPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getLernplattformController()
+				.patch(id, patch);
 	}
 
 
@@ -2577,7 +2582,7 @@ public class APISchule {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Lernplattformen der Schule.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           die IDs der Lernplattformen
+	 * @param ids          die IDs der Lernplattformen
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -2596,11 +2601,12 @@ public class APISchule {
 	public Response deleteLernplattformen(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Lernplattformen", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
+				.getLernplattformController()
+				.deleteMultiple(ids);
 	}
 
 	/**

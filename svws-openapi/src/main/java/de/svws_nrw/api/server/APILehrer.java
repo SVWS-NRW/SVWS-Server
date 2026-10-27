@@ -56,7 +56,7 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
@@ -233,7 +233,7 @@ public class APILehrer {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataLehrerStammdaten(
 						conn,
-						new DataLernplattformen(conn),
+						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 						new DataEinwilligungsarten(conn),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).getByIdAsResponse(id),
@@ -270,7 +270,7 @@ public class APILehrer {
 		return DBBenutzerUtils.runWithTransaction(
 			conn -> new DataLehrerStammdaten(
 					conn,
-					new DataLernplattformen(conn),
+					KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 					new DataEinwilligungsarten(conn),
 					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 			).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
@@ -303,7 +303,7 @@ public class APILehrer {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataLehrerStammdaten(
 						conn,
-						new DataLernplattformen(conn),
+						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 						new DataEinwilligungsarten(conn),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).addAsResponse(is), request,
@@ -339,7 +339,7 @@ public class APILehrer {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataLehrerStammdaten(
 						conn,
-						new DataLernplattformen(conn),
+						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 						new DataEinwilligungsarten(conn),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).patchAsResponse(id, is),

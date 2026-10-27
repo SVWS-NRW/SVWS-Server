@@ -43,7 +43,6 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.util.TestUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -53,6 +52,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
 import jakarta.ws.rs.core.Response;
 
 @DisplayName("Diese Klasse testet die Klasse DataLehrerStammdaten")
@@ -66,7 +66,7 @@ class DataLehrerStammdatenTest {
 	private DataEinwilligungsarten dataEinwilligungsarten;
 
 	@Mock
-	private DataLernplattformen dataLernplattformen;
+	private LernplattformRepository lernplattformRepository;
 
 	@Mock
 	private LehrerFotoService lehrerFotoService;
@@ -80,7 +80,7 @@ class DataLehrerStammdatenTest {
 
 	@BeforeEach
 	void setUp() {
-		dataLehrerStammdaten = new DataLehrerStammdaten(conn, dataLernplattformen, dataEinwilligungsarten, lehrerFotoService);
+		dataLehrerStammdaten = new DataLehrerStammdaten(conn, lernplattformRepository, dataEinwilligungsarten, lehrerFotoService);
 	}
 
 	@Test
@@ -106,7 +106,7 @@ class DataLehrerStammdatenTest {
 
 		this.dataLehrerStammdaten.addAsResponse(is);
 
-		verify(this.dataLernplattformen).getAll();
+		verify(this.lernplattformRepository).getAllIds();
 		verify(this.dataEinwilligungsarten).getAllIdsByPersonTyp(PersonTyp.LEHRER);
 		verify(this.dataEinwilligungsarten, never()).getAll();
 

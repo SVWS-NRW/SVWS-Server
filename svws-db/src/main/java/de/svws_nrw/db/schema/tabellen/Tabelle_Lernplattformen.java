@@ -13,27 +13,33 @@ public class Tabelle_Lernplattformen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
+			.setJavaName("id")
 			.setJavaComment("ID des Datensatzes für die verwendete Lernplattform");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
 			.setNotNull()
+			.setJavaName("bezeichnung")
 			.setJavaComment("Bezeichnung der Lernplattform");
 
 	/** Die Definition der Tabellenspalte BenutzernameSuffixLehrer */
 	public final SchemaTabelleSpalte col_BenutzernameSuffixLehrer = add("BenutzernameSuffixLehrer", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("benutzernameSuffixLehrer")
 			.setJavaComment("Suffix für den Benutzernamen bei den Lehrern");
 
 	/** Die Definition der Tabellenspalte BenutzernameSuffixErzieher */
 	public final SchemaTabelleSpalte col_BenutzernameSuffixErzieher = add("BenutzernameSuffixErzieher", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("benutzernameSuffixErzieher")
 			.setJavaComment("Suffix für den Benutzernamen bei den Erziehern");
 
 	/** Die Definition der Tabellenspalte BenutzernameSuffixSchueler */
 	public final SchemaTabelleSpalte col_BenutzernameSuffixSchueler = add("BenutzernameSuffixSchueler", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("benutzernameSuffixSchueler")
 			.setJavaComment("Suffix für den Benutzernamen bei den Schülern");
 
 	/** Die Definition der Tabellenspalte Konfiguration */
 	public final SchemaTabelleSpalte col_Konfiguration = add("Konfiguration", SchemaDatentypen.TEXT, false)
+			.setJavaName("konfiguration")
 			.setJavaComment("Json-Objekt mit den Konfigurationseinstellungen der Accounterstellung für die Lernplattform");
 
 

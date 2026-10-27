@@ -10,14 +10,12 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -27,6 +25,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
 import de.svws_nrw.service.lehrer.foto.LehrerFoto;
 import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import jakarta.ws.rs.core.MediaType;
@@ -40,7 +39,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehrer, LehrerStammdaten> {
 
-	private final DataLernplattformen dataLernplattformen;
+	private final LernplattformRepository lernplattformRepository;
 	private final DataEinwilligungsarten dataEinwilligungsarten;
 	private final LehrerFotoService lehrerFotoService;
 
@@ -48,18 +47,18 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link LehrerStammdaten}.
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param dataLernplattformen {@link DataLernplattformen} Lernplattform Service
+	 * @param lernplattformRepository {@link LernplattformRepository} Repository für den Lernplattformen-Katalog
 	 * @param dataEinwilligungsarten {@link DataEinwilligungsarten} Einwilligungsarten Service
 	 * @param lehrerFotoService {@link LehrerFotoService} LehrerFotoService
 	 */
 	public DataLehrerStammdaten(
 			final DBEntityManager conn,
-			final DataLernplattformen dataLernplattformen,
+			final LernplattformRepository lernplattformRepository,
 			final DataEinwilligungsarten dataEinwilligungsarten,
 			final LehrerFotoService lehrerFotoService
 	) {
 		super(conn);
-		this.dataLernplattformen = dataLernplattformen;
+		this.lernplattformRepository = lernplattformRepository;
 		this.dataEinwilligungsarten = dataEinwilligungsarten;
 		this.lehrerFotoService = lehrerFotoService;
 		setAttributesNotPatchable("id");
@@ -99,10 +98,10 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	}
 
 	private void createLehrerLernPlattformen(final LehrerStammdaten newLehrer) {
-		final List<Lernplattform> availableLernPlattformen = dataLernplattformen.getAll();
+		final List<Long> idsLernplattformen = lernplattformRepository.getAllIds();
 
-		final List<DTOLehrerLernplattform> initialLehrerLernPlattformen = availableLernPlattformen.stream()
-				.map(l -> new DTOLehrerLernplattform(newLehrer.id, l.id, false, false, false, false))
+		final List<DTOLehrerLernplattform> initialLehrerLernPlattformen = idsLernplattformen.stream()
+				.map(idLernplattform -> new DTOLehrerLernplattform(newLehrer.id, idLernplattform, false, false, false, false))
 				.toList();
 
 		conn.transactionPersistAll(initialLehrerLernPlattformen);

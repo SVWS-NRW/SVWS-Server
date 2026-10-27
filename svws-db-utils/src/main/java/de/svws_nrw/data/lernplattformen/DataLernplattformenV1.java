@@ -29,7 +29,6 @@ import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Lerngruppe;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Schueler;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -45,6 +44,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformService;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -57,7 +57,7 @@ public class DataLernplattformenV1 {
 
 	/** Die Datenbank-Verbindung zum Aggregieren der Informationen aus der DB und zum Schreiben der Informationen bzw. Teilinformationen */
 	private final @NotNull DBEntityManager conn;
-	private final DataLernplattformen dataLernplattformen;
+	private final LernplattformService lernplattformService;
 
 	/** Die ID des Schuljahresabschnitts zu dem die Lernplattform Daten ermittelt werden. */
 	private final long idSchuljahresabschnitt;
@@ -68,16 +68,16 @@ public class DataLernplattformenV1 {
 	 *
 	 * @param conn                     die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * @param dataLernplattformen       DataLernplattformen
+	 * @param lernplattformService       der Service für den Lernplattformen-Katalog
 	 * @param clock                       die Clock, welche für die Zeitmessung verwendet werden soll
 	 */
 	public DataLernplattformenV1(final @NotNull DBEntityManager conn,
 			final long idSchuljahresabschnitt,
-			final DataLernplattformen dataLernplattformen,
+			final LernplattformService lernplattformService,
 			final Clock clock) {
 		this.conn = conn;
 		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this.dataLernplattformen = dataLernplattformen;
+		this.lernplattformService = lernplattformService;
 		this.clock = clock;
 	}
 
@@ -111,7 +111,7 @@ public class DataLernplattformenV1 {
 	 * @return    eine Liste der Lernplattformen als Response
 	 */
 	public Response getAllAsResponse() {
-		final List<LernplattformV1> lernplattformen = Optional.of(this.dataLernplattformen.getAll())
+		final List<LernplattformV1> lernplattformen = Optional.of(this.lernplattformService.getAll())
 				.orElse(Collections.emptyList())
 				.stream()
 				.map(this::map)
@@ -244,8 +244,8 @@ public class DataLernplattformenV1 {
 		lernplattformExport.idSchuljahresabschnitt = schuljahresabschnitt.id;
 		lernplattformExport.mailadresse = schuleStammdaten.email;
 		lernplattformExport.schulbezeichnung = schuleStammdaten.bezeichnung1 + schuleStammdaten.bezeichnung2 + schuleStammdaten.bezeichnung3;
-		lernplattformExport.idLernplattform = lernplattformDto.ID;
-		lernplattformExport.lernplattformBezeichnung = lernplattformDto.Bezeichnung;
+		lernplattformExport.idLernplattform = lernplattformDto.id;
+		lernplattformExport.lernplattformBezeichnung = lernplattformDto.bezeichnung;
 	}
 
 	private void addFaecherAndLerngruppenToExport(final Map<String, LernplattformV1Lerngruppe> lerngruppenToExport,

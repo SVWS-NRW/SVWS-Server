@@ -2,6 +2,7 @@ package de.svws_nrw.controller.schule.katalog;
 
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
 import de.svws_nrw.controller.schule.katalog.jahrgang.JahrgangController;
+import de.svws_nrw.controller.schule.katalog.lernplattform.LernplattformController;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalController;
 import de.svws_nrw.controller.schule.katalog.ort.OrtController;
 import de.svws_nrw.controller.schule.katalog.ortsteil.OrtsteilController;
@@ -136,6 +137,16 @@ class KatalogControllerFactoryTest {
 		final MerkmalController controller = KatalogControllerFactory
 				.withReadAccessStable(request)
 				.getMerkmalController();
+
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("getLernplattformController | gibt einen Controller zurück")
+	void getLernplattformController() {
+		final LernplattformController controller = KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getLernplattformController();
 
 		assertNotNull(controller);
 	}

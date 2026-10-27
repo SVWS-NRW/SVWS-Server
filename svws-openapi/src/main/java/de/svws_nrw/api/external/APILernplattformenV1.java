@@ -9,7 +9,11 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.lernplattformen.DataLernplattformenV1;
-import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
+import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -45,6 +49,11 @@ public class APILernplattformenV1 {
 		this.clock = Clock.system(ZoneId.of("Europe/Berlin"));
 	}
 
+	private static LernplattformService getLernplattformService() {
+		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance());
+		return KatalogServiceFactory.getNewInstance(KatalogRepositoryFactory.getNewInstance(), eigeneSchuleServiceFactory).getLernplattformService();
+	}
+
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage eines Datenexports aller relevanten Informationen im angefragten Schuljahresabschnitt für die angefragte
@@ -72,7 +81,7 @@ public class APILernplattformenV1 {
 						new DataLernplattformenV1(
 								conn,
 								idSchuljahresabschnitt,
-								new DataLernplattformen(conn),
+								getLernplattformService(),
 								this.clock
 						).getByIdAsResponse(idLernplattform),
 				request,
@@ -109,7 +118,7 @@ public class APILernplattformenV1 {
 						new DataLernplattformenV1(
 								conn,
 								idSchuljahresabschnitt,
-								new DataLernplattformen(conn),
+								getLernplattformService(),
 								this.clock
 						).getByIdAsGzipResponse(idLernplattform),
 				request,
@@ -139,7 +148,7 @@ public class APILernplattformenV1 {
 						new DataLernplattformenV1(
 								conn,
 								-1L,
-								new DataLernplattformen(conn),
+								getLernplattformService(),
 								this.clock
 						).getAllAsResponse(),
 				request,

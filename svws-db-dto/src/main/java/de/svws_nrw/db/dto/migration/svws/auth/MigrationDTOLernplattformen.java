@@ -18,87 +18,87 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Lernplattformen")
-@JsonPropertyOrder({"ID", "Bezeichnung", "BenutzernameSuffixLehrer", "BenutzernameSuffixErzieher", "BenutzernameSuffixSchueler", "Konfiguration"})
+@JsonPropertyOrder({"id", "bezeichnung", "benutzernameSuffixLehrer", "benutzernameSuffixErzieher", "benutzernameSuffixSchueler", "konfiguration"})
 public final class MigrationDTOLernplattformen {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOLernplattformen e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.Bezeichnung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.bezeichnung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.Bezeichnung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.bezeichnung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes BenutzernameSuffixLehrer */
-	public static final String QUERY_BY_BENUTZERNAMESUFFIXLEHRER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixLehrer = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes benutzernameSuffixLehrer */
+	public static final String QUERY_BY_BENUTZERNAMESUFFIXLEHRER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.benutzernameSuffixLehrer = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BenutzernameSuffixLehrer */
-	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXLEHRER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixLehrer IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes benutzernameSuffixLehrer */
+	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXLEHRER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.benutzernameSuffixLehrer IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes BenutzernameSuffixErzieher */
-	public static final String QUERY_BY_BENUTZERNAMESUFFIXERZIEHER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixErzieher = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes benutzernameSuffixErzieher */
+	public static final String QUERY_BY_BENUTZERNAMESUFFIXERZIEHER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.benutzernameSuffixErzieher = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BenutzernameSuffixErzieher */
-	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXERZIEHER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixErzieher IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes benutzernameSuffixErzieher */
+	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXERZIEHER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.benutzernameSuffixErzieher IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes BenutzernameSuffixSchueler */
-	public static final String QUERY_BY_BENUTZERNAMESUFFIXSCHUELER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixSchueler = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes benutzernameSuffixSchueler */
+	public static final String QUERY_BY_BENUTZERNAMESUFFIXSCHUELER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.benutzernameSuffixSchueler = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BenutzernameSuffixSchueler */
-	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXSCHUELER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixSchueler IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes benutzernameSuffixSchueler */
+	public static final String QUERY_LIST_BY_BENUTZERNAMESUFFIXSCHUELER = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.benutzernameSuffixSchueler IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Konfiguration */
-	public static final String QUERY_BY_KONFIGURATION = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.Konfiguration = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes konfiguration */
+	public static final String QUERY_BY_KONFIGURATION = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.konfiguration = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Konfiguration */
-	public static final String QUERY_LIST_BY_KONFIGURATION = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.Konfiguration IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes konfiguration */
+	public static final String QUERY_LIST_BY_KONFIGURATION = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.konfiguration IN ?1";
 
 	/** ID des Datensatzes für die verwendete Lernplattform */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public Long id;
 
 	/** Bezeichnung der Lernplattform */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
-	public String Bezeichnung;
+	public String bezeichnung;
 
 	/** Suffix für den Benutzernamen bei den Lehrern */
 	@Column(name = "BenutzernameSuffixLehrer")
 	@JsonProperty
-	public String BenutzernameSuffixLehrer;
+	public String benutzernameSuffixLehrer;
 
 	/** Suffix für den Benutzernamen bei den Erziehern */
 	@Column(name = "BenutzernameSuffixErzieher")
 	@JsonProperty
-	public String BenutzernameSuffixErzieher;
+	public String benutzernameSuffixErzieher;
 
 	/** Suffix für den Benutzernamen bei den Schülern */
 	@Column(name = "BenutzernameSuffixSchueler")
 	@JsonProperty
-	public String BenutzernameSuffixSchueler;
+	public String benutzernameSuffixSchueler;
 
 	/** Json-Objekt mit den Konfigurationseinstellungen der Accounterstellung für die Lernplattform */
 	@Column(name = "Konfiguration")
 	@JsonProperty
-	public String Konfiguration;
+	public String konfiguration;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLernplattformen ohne eine Initialisierung der Attribute.
@@ -109,18 +109,18 @@ public final class MigrationDTOLernplattformen {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLernplattformen ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
+	 * @param id   der Wert für das Attribut id
+	 * @param bezeichnung   der Wert für das Attribut bezeichnung
 	 */
-	public MigrationDTOLernplattformen(final Long ID, final String Bezeichnung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
+	public MigrationDTOLernplattformen(final Long id, final String bezeichnung) {
+		if (id == null) {
+			throw new NullPointerException("id must not be null");
 		}
-		this.ID = ID;
-		if (Bezeichnung == null) {
-			throw new NullPointerException("Bezeichnung must not be null");
+		this.id = id;
+		if (bezeichnung == null) {
+			throw new NullPointerException("bezeichnung must not be null");
 		}
-		this.Bezeichnung = Bezeichnung;
+		this.bezeichnung = bezeichnung;
 	}
 
 
@@ -136,11 +136,11 @@ public final class MigrationDTOLernplattformen {
 			return false;
 		}
 		MigrationDTOLernplattformen other = (MigrationDTOLernplattformen) obj;
-		if (ID == null) {
-			if (other.ID != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!ID.equals(other.ID)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
@@ -150,7 +150,7 @@ public final class MigrationDTOLernplattformen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -162,7 +162,7 @@ public final class MigrationDTOLernplattformen {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLernplattformen(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", BenutzernameSuffixLehrer=" + this.BenutzernameSuffixLehrer + ", BenutzernameSuffixErzieher=" + this.BenutzernameSuffixErzieher + ", BenutzernameSuffixSchueler=" + this.BenutzernameSuffixSchueler + ", Konfiguration=" + this.Konfiguration + ")";
+		return "MigrationDTOLernplattformen(id=" + this.id + ", bezeichnung=" + this.bezeichnung + ", benutzernameSuffixLehrer=" + this.benutzernameSuffixLehrer + ", benutzernameSuffixErzieher=" + this.benutzernameSuffixErzieher + ", benutzernameSuffixSchueler=" + this.benutzernameSuffixSchueler + ", konfiguration=" + this.konfiguration + ")";
 	}
 
 }
