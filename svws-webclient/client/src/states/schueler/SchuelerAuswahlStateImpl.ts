@@ -230,7 +230,7 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 
 	public async add(data: Partial<SchuelerNeu>): Promise<SchuelerStammdaten> {
 		const result = await api.server.addSchueler(data, api.schema);
-		await this.setSchuljahresabschnitt(data.idSchuljahresabschnitt ?? -1, true);
+		await this.setSchuljahresabschnitt(data.idSchuljahresabschnitt ?? this.idSchuljahresabschnitt, true);
 		this.manager.setDaten(result);
 		this.commit();
 		return result;
