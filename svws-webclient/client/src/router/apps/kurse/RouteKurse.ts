@@ -1,4 +1,4 @@
-import type { RouteLocationNormalizedGeneric, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalizedGeneric, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -109,6 +109,25 @@ export class RouteKurse extends RouteTabNode<RouteDataKurse, RouteApp> {
 		this.data.reset();
 		const { id } = RouteNode.getStringParams(from_params, ['id']);
 		await configStateImpl.nonPersistentConfig.setValue(`${this.name}.auswahl.id`, id ?? "");
+	}
+
+	/**
+	 * Fügt die ID zu der Route hinzu. Diese Methode kann überschrieben werden, wenn neben
+	 * der ID noch weitere Parameter benötigt werden.
+	 *
+	 * @returns die Routing-Parameter mit der ID.
+	 */
+	public addRouteParamsFromState(): RouteParamsRawGeneric {
+		const params = <RouteParamsRawGeneric>{};
+		const kurseAuswahlState = useKurseAuswahlState();
+		if (!kurseAuswahlState.isAvailable) {
+			return params;
+		}
+		const id = kurseAuswahlState.manager.auswahlID();
+		if (id !== null) {
+			params.id = id;
+		}
+		return params;
 	}
 
 	protected doUpdateIfTarget = async (from: RouteNode<any, any> | undefined) => {
