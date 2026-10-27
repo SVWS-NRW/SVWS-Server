@@ -40,6 +40,7 @@ public final class ValidatorLsLehrerStammdaten extends Validator {
 		_validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(geburtsdatum, kontext));
 		_validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(geschlecht, kontext));
 		_validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(kuerzel, kontext));
+		// ValidatorLsrLehrerStammdatenRelevantFuerStatistik nur für INIT-Truppe interessant
 		_validatoren.add(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, idSchuljahresabschnitt, kontext));
 	}
 

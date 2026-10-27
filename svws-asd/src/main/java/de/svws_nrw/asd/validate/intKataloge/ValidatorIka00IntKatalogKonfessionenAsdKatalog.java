@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -13,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorIka00IntKatalogKonfessionenAsdKatalog extends Validator {
 
 	/** Die Katalog-ID. */
-	private final @NotNull Supplier<Long> _idKatalog;
+	private final @NotNull Supplier<@AllowNull Long> _idKatalog;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
@@ -21,11 +22,11 @@ public final class ValidatorIka00IntKatalogKonfessionenAsdKatalog extends Valida
 	 * @param idKatalog   die Katalog-ID
 	 * @param kontext     der Kontext des Validators
 	 */
-	public ValidatorIka00IntKatalogKonfessionenAsdKatalog(final @NotNull Supplier<Long> idKatalog, final @NotNull ValidatorKontext kontext) {
+	public ValidatorIka00IntKatalogKonfessionenAsdKatalog(final @NotNull Supplier<@AllowNull Long> idKatalog, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this._idKatalog = idKatalog;
 
-		_validatoren.add(new ValidatorIka01IntKatalogKonfessionenAsdKatalog(idKatalog, kontext));
+		_validatoren.add(new ValidatorIka01IntKatalogKonfessionenAsdKatalog(getNotNullSupplierLong(idKatalog), kontext));
 
 	}
 

@@ -9,7 +9,7 @@ export class ValidatorIka00IntKatalogKonfessionenAsdKatalog extends Validator {
 	/**
 	 * Die Katalog-ID.
 	 */
-	private readonly _idKatalog: Supplier<number>;
+	private readonly _idKatalog: Supplier<number | null>;
 
 
 	/**
@@ -18,10 +18,10 @@ export class ValidatorIka00IntKatalogKonfessionenAsdKatalog extends Validator {
 	 * @param idKatalog   die Katalog-ID
 	 * @param kontext     der Kontext des Validators
 	 */
-	public constructor(idKatalog: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(idKatalog: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idKatalog = idKatalog;
-		this._validatoren.add(new ValidatorIka01IntKatalogKonfessionenAsdKatalog(idKatalog, kontext));
+		this._validatoren.add(new ValidatorIka01IntKatalogKonfessionenAsdKatalog(this.getNotNullSupplierLong(idKatalog), kontext));
 	}
 
 	protected pruefe(): boolean {

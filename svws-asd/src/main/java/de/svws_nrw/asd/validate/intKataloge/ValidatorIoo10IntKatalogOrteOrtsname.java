@@ -39,25 +39,28 @@ public final class ValidatorIoo10IntKatalogOrteOrtsname extends Validator {
 	@Override
 	protected boolean pruefe() {
 
-		final Laender laender =
-				Laender.data().getWertByIDOrNull(idLand.get());
+		if ((new ValidatorIop00IntKatalogOrtePlz(plz, ortsname, idLand, kontext())).pruefe()) {
 
-		if (Laender.NW.equals(laender)) {
+			final Laender laender =
+					Laender.data().getWertByIDOrNull(idLand.get());
 
-			String ortsnameString = ortsname.get();
-			String plzString = plz.get();
+			if (Laender.NW.equals(laender)) {
 
-			for (Orte ort : Orte.data().getWerte()) {
-				for (OrteKatalogEintrag orteKatalogEintrag : ort.historie()) {
-					if (orteKatalogEintrag.ort.equals(ortsnameString) && orteKatalogEintrag.plz.equals(plzString)) {
-						return true;
+				String ortsnameString = ortsname.get();
+				String plzString = plz.get();
+
+				for (Orte ort : Orte.data().getWerte()) {
+					for (OrteKatalogEintrag orteKatalogEintrag : ort.historie()) {
+						if (orteKatalogEintrag.ort.equals(ortsnameString) && orteKatalogEintrag.plz.equals(plzString)) {
+							return true;
+						}
 					}
 				}
+
+				addFehler(0, "Da der eigetragene Ort in Nordrhein-Westfalen liegt, muss die dazugehörige Postleitzahl auch in Nordrhein-Westfalen liegen. Bitte prüfen!");
+				return false;
+
 			}
-
-			addFehler(0, "Da der eigetragene Ort in Nordrhein-Westfalen liegt, muss die dazugehörige Postleitzahl auch in Nordrhein-Westfalen liegen. Bitte prüfen!");
-			return false;
-
 		}
 
 		return true;

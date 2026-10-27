@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ValidatorIop00IntKatalogOrtePlz } from '../../../asd/validate/intKataloge/ValidatorIop00IntKatalogOrtePlz';
 import { Laender } from '../../../asd/types/schule/Laender';
 import { Orte } from '../../../asd/types/schule/Orte';
 import type { Supplier } from '../../../java/util/function/Supplier';
@@ -29,19 +30,21 @@ export class ValidatorIoo10IntKatalogOrteOrtsname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		const laender: Laender | null = Laender.data().getWertByIDOrNull(this.idLand.get());
-		if (JavaObject.equalsTranspiler(Laender.NW, (laender))) {
-			let ortsnameString: string | null = this.ortsname.get();
-			let plzString: string | null = this.plz.get();
-			for (let ort of Orte.data().getWerte()) {
-				for (let orteKatalogEintrag of ort.historie()) {
-					if (JavaObject.equalsTranspiler(orteKatalogEintrag.ort, (ortsnameString)) && JavaObject.equalsTranspiler(orteKatalogEintrag.plz, (plzString))) {
-						return true;
+		if ((new ValidatorIop00IntKatalogOrtePlz(this.plz, this.ortsname, this.idLand, this.kontext())).pruefe()) {
+			const laender: Laender | null = Laender.data().getWertByIDOrNull(this.idLand.get());
+			if (JavaObject.equalsTranspiler(Laender.NW, (laender))) {
+				let ortsnameString: string | null = this.ortsname.get();
+				let plzString: string | null = this.plz.get();
+				for (let ort of Orte.data().getWerte()) {
+					for (let orteKatalogEintrag of ort.historie()) {
+						if (JavaObject.equalsTranspiler(orteKatalogEintrag.ort, (ortsnameString)) && JavaObject.equalsTranspiler(orteKatalogEintrag.plz, (plzString))) {
+							return true;
+						}
 					}
 				}
+				this.addFehler(0, "Da der eigetragene Ort in Nordrhein-Westfalen liegt, muss die dazugehörige Postleitzahl auch in Nordrhein-Westfalen liegen. Bitte prüfen!");
+				return false;
 			}
-			this.addFehler(0, "Da der eigetragene Ort in Nordrhein-Westfalen liegt, muss die dazugehörige Postleitzahl auch in Nordrhein-Westfalen liegen. Bitte prüfen!");
-			return false;
 		}
 		return true;
 	}

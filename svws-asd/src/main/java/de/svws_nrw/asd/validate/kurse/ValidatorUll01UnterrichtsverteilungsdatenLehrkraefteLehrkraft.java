@@ -42,8 +42,8 @@ public final class ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft
 				return true;
 			}
 		}
-			addFehler(0, "Lehrkraft: Das Feld 'Lehrkraft' muss zulässig sein.");
-			return false;
+		addFehler(0, "Lehrkraft: Das Feld 'Lehrkraft' muss zulässig sein.");
+		return false;
 	}
 
 }

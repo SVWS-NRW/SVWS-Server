@@ -1,4 +1,3 @@
-import { ValidatorIoo10IntKatalogOrteOrtsname } from '../../../asd/validate/intKataloge/ValidatorIoo10IntKatalogOrteOrtsname';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -23,10 +22,9 @@ export class ValidatorIop00IntKatalogOrtePlz extends Validator {
 		this.plz = plz;
 		this._validatoren.add(new ValidatorIop01IntKatalogOrtePlz(this.getNotNullSupplier(plz), idLand, kontext));
 		this._validatoren.add(new ValidatorIop10IntKatalogOrtePlz(this.getNotNullSupplier(plz), idLand, kontext));
-		this._validatoren.add(new ValidatorIoo10IntKatalogOrteOrtsname(plz, ortsname, idLand, kontext));
 	}
 
-	protected pruefe(): boolean {
+	public pruefe(): boolean {
 		if (null === this.plz.get() || JavaString.isEmpty(this.plz.get())) {
 			this.addFehler(0, "Das Feld 'PLZ' muss besetzt sein.");
 			return false;

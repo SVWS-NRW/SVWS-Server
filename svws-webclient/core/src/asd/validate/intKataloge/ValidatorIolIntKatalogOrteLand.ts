@@ -8,12 +8,12 @@ export class ValidatorIolIntKatalogOrteLand extends Validator {
 
 
 	/**
-	 * @param idKatalog   ID
-	 * @param kontext	  Kontext
+	 * @param idLand   ID
+	 * @param kontext  Kontext
 	 */
-	public constructor(idKatalog: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idLand: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorIol00IntKatalogOrteLand(idKatalog, kontext));
+		this._validatoren.add(new ValidatorIol00IntKatalogOrteLand(idLand, kontext));
 	}
 
 	protected pruefe(): boolean {

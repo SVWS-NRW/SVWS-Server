@@ -30,11 +30,10 @@ public final class ValidatorIop00IntKatalogOrtePlz extends Validator {
 
 		_validatoren.add(new ValidatorIop01IntKatalogOrtePlz(getNotNullSupplier(plz), idLand, kontext));
 		_validatoren.add(new ValidatorIop10IntKatalogOrtePlz(getNotNullSupplier(plz), idLand, kontext));
-		_validatoren.add(new ValidatorIoo10IntKatalogOrteOrtsname(plz, ortsname, idLand, kontext));
 	}
 
 	@Override
-	protected boolean pruefe() {
+	public boolean pruefe() {
 
 		if (null == plz.get() || plz.get().isEmpty()) {
 			addFehler(0, "Das Feld 'PLZ' muss besetzt sein.");

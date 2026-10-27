@@ -15,14 +15,14 @@ public final class ValidatorIol02IntKatalogOrteLand extends Validator {
 	private final @NotNull Supplier<@NotNull Long> _idKatalog;
 
 	/**
-	 * @param idKatalog   ID
-	 * @param kontext	  Kontext
+	 * @param idLand   ID
+	 * @param kontext  Kontext
 	 */
 	public ValidatorIol02IntKatalogOrteLand(
-			final @NotNull Supplier<@NotNull Long> idKatalog,
+			final @NotNull Supplier<@NotNull Long> idLand,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._idKatalog = idKatalog;
+		this._idKatalog = idLand;
 	}
 
 	@Override

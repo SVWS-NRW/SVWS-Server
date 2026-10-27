@@ -10,6 +10,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
 import de.svws_nrw.asd.data.statistik.FoerderschwerpunktStatistikGesamt;
+import de.svws_nrw.asd.data.statistik.JahrgaengeStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.KlassenStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.KursStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
@@ -22,10 +23,12 @@ import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten;
 import de.svws_nrw.asd.validate.gesamt.ValidatorGsGesamtSchuelerdaten;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIfaIntKatalogFoerderschwerpunkteAsdKatalog;
+import de.svws_nrw.asd.validate.intKataloge.ValidatorIjjaIntKatalogJahrgaengeJahrgangAsdKatalog;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIkaIntKatalogKonfessionenAsdKatalog;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIolIntKatalogOrteLand;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIooIntKatalogOrteOrtsname;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIopIntKatalogOrtePlz;
+import de.svws_nrw.asd.validate.klassen.ValidatorKaKlassenAbkuerzung;
 import de.svws_nrw.asd.validate.klassen.ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet;
 import de.svws_nrw.asd.validate.klassen.ValidatorKlKlassenKlassenleitung;
 import de.svws_nrw.asd.validate.kurse.ValidatorUfUnterrichtsverteilungsdatenFach;
@@ -188,6 +191,10 @@ public final class ValidatorGesamt extends Validator {
 					this.kontext()));
 			for (final SchuelerLernabschnittStatistikGesamt lernabschnitt : schueler.lernabschnitte) {
 				list.add(new ValidatorSlSchuelerLernabschnittsdaten(
+						() -> lernabschnitt.idOrganisationsform,
+						() -> lernabschnitt.idSchulgliederung,
+						() -> lernabschnitt.idFachklasse,
+						() -> lernabschnitt.hatSchwerbehinderungsNachweis,
 						() -> this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt1),
 						() -> this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt2),
 						() -> lernabschnitt.idSchuljahresabschnitt,
@@ -214,9 +221,14 @@ public final class ValidatorGesamt extends Validator {
 
 		// Id-Liste der Lehrer
 		final @NotNull List<Long> idListLehrer = new ArrayList<Long>();
-
 		for (final LehrerStatistikGesamt lehrer: gesamt.lehrer) {
 			idListLehrer.add(lehrer.id);
+		}
+
+		// Klassenkürzelliste
+		final @NotNull List<String> klassenKuerzelListe = new ArrayList<>();
+		for (final KlassenStatistikGesamt klasse: gesamt.klassen) {
+			klassenKuerzelListe.add(klasse.kuerzel);
 		}
 
 		// Ergänze die allgemeinen Validatoren unter der ID -1
@@ -232,24 +244,17 @@ public final class ValidatorGesamt extends Validator {
 			// Erzeuge die Liste der Subvalidatoren für die Klasse
 			final @NotNull List<Validator> list = new ArrayList<>();
 
-// Validatoren KK* laufen nur an der Oberfläche
-//			list.add(new ValidatorKkKlassenKlassenart(
-//					() -> null, //hier muss die idKlassenart hin -> gibt es in den daten noch nicht
-//					this.kontext()));
+			list.add(new ValidatorKaKlassenAbkuerzung(
+					() -> klasse.kuerzel,
+					() -> klassenKuerzelListe,
+					this.kontext()));
+			// Validatoren KK* laufen nur an der Oberfläche
 			list.add(new ValidatorKlKlassenKlassenleitung(
 					() -> klasse.klassenLeitungen,
 					() -> idListLehrer,
 					this.kontext()));
 			// Validatoren KO* laufen nur an der Oberfläche
-//			list.add(new ValidatorKoKlassenOrganisationsform(
-//					() -> null, //hier muss die idallgemeinbildungsorganisationsform hin -> gibt es in den daten noch nicht
-//					() -> null, //hier muss die idweiterbildungsorganisationsform hin    -> gibt es in den daten noch nicht
-//					() -> null, //hier muss die idberufsbildungsorganisationsform hin    -> gibt es in den daten noch nicht
-//					this.kontext()));
 			// Validatoren KS* laufen nur an der Oberfläche
-//			list.add(new ValidatorKsKlassenSchulgliederung(
-//					() -> null, //hier muss die idSchulgliederung hin -> gibt es in den daten noch nicht,
-//					this.kontext()));
 
 			// Füge diese in die allgemeine Liste für die Ausführung ein und in die Map für die Klasse
 			_validatoren.addAll(list);
@@ -353,6 +358,20 @@ public final class ValidatorGesamt extends Validator {
 		for (final ReligionStatistikGesamt religion : gesamt.religionen) {
 			_validatoren.add(new ValidatorIkaIntKatalogKonfessionenAsdKatalog(
 					() -> religion.idKatalog,
+					this.kontext()));
+		}
+	}
+
+
+	/**
+	 * Fügt die Subvalidatoren für den Katalog der Jahrgänge hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit dem Katalog der Jahrgänge
+	 */
+	private void addSubvalidatorenKatalogJahrgaenge(final @NotNull StatistikGesamt gesamt) {
+		for (final JahrgaengeStatistikGesamt jahrgang : gesamt.jahrgaenge) {
+			_validatoren.add(new ValidatorIjjaIntKatalogJahrgaengeJahrgangAsdKatalog(
+					() -> jahrgang.idKatalog,
 					this.kontext()));
 		}
 	}
@@ -528,6 +547,7 @@ public final class ValidatorGesamt extends Validator {
 		// Erzeuge dynamisch Subvalidatoren anhand der übergebenen Daten zur späteren Ausführung in diesem Validator
 		this.addSubvalidatorenLehrer(gesamt);
 		this.addSubvalidatorenSchueler(gesamt);
+		this.addSubvalidatorenKatalogJahrgaenge(gesamt);
 		this.addSubvalidatorenKlassen(gesamt);
 		this.addSubvalidatorenKatalogReligion(gesamt);
 		this.addSubvalidatorenKatalogOrte(gesamt);

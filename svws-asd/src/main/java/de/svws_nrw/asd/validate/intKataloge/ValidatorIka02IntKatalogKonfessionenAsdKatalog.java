@@ -22,7 +22,7 @@ public final class ValidatorIka02IntKatalogKonfessionenAsdKatalog extends Valida
 	 * @param idKatalog   die Katalog-ID der Fachrichtung
 	 * @param kontext     der Kontext des Validators
 	 */
-	public ValidatorIka02IntKatalogKonfessionenAsdKatalog(final @NotNull Supplier<Long> idKatalog, final @NotNull ValidatorKontext kontext) {
+	public ValidatorIka02IntKatalogKonfessionenAsdKatalog(final @NotNull Supplier<@NotNull Long> idKatalog, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this._idKatalog = idKatalog;
 	}

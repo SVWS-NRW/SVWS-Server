@@ -1,3 +1,4 @@
+import { ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung } from '../../../asd/validate/schueler/ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung';
 import { ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei } from '../../../asd/validate/schueler/ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -11,13 +12,15 @@ export class ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt extends V
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idFoerderschwerpunkt1   die ID des ersten Förderschwerpunktes
-	 * @param idFoerderschwerpunkt2   die ID des zweiten Förderschwerpunktes
-	 * @param kontext                 der Kontext des Validators
+	 * @param hatSchwerbehinderungsNachweis   der Schwerbehinderungsnachweis
+	 * @param idFoerderschwerpunkt1           die ID des ersten Förderschwerpunktes
+	 * @param idFoerderschwerpunkt2           die ID des zweiten Förderschwerpunktes
+	 * @param kontext                         der Kontext des Validators
 	 */
-	public constructor(idFoerderschwerpunkt1: Supplier<number | null>, idFoerderschwerpunkt2: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(hatSchwerbehinderungsNachweis: Supplier<boolean | null>, idFoerderschwerpunkt1: Supplier<number | null>, idFoerderschwerpunkt2: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorSlfeSchuelerLernabschnittsdatenFoerderschwerpunktEins(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		this._validatoren.add(new ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(idFoerderschwerpunkt1, hatSchwerbehinderungsNachweis, kontext));
 		this._validatoren.add(new ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
 	}
 

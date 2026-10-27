@@ -15,11 +15,13 @@ public final class ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt ext
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idFoerderschwerpunkt1   die ID des ersten Förderschwerpunktes
-	 * @param idFoerderschwerpunkt2   die ID des zweiten Förderschwerpunktes
-	 * @param kontext                 der Kontext des Validators
+	 * @param hatSchwerbehinderungsNachweis   der Schwerbehinderungsnachweis
+	 * @param idFoerderschwerpunkt1           die ID des ersten Förderschwerpunktes
+	 * @param idFoerderschwerpunkt2           die ID des zweiten Förderschwerpunktes
+	 * @param kontext                         der Kontext des Validators
 	 */
 	public ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt(
+			final @NotNull Supplier<@AllowNull Boolean> hatSchwerbehinderungsNachweis,
 			final @NotNull Supplier<@AllowNull Long> idFoerderschwerpunkt1,
 			final @NotNull Supplier<@AllowNull Long> idFoerderschwerpunkt2,
 			final @NotNull ValidatorKontext kontext) {
@@ -27,6 +29,8 @@ public final class ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt ext
 
 		_validatoren.add(
 				new ValidatorSlfeSchuelerLernabschnittsdatenFoerderschwerpunktEins(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		_validatoren.add(
+				new ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(idFoerderschwerpunkt1, hatSchwerbehinderungsNachweis, kontext));
 		_validatoren.add(
 				new ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
 	}

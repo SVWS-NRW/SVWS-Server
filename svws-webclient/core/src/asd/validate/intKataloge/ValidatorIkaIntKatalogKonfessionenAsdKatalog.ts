@@ -13,7 +13,7 @@ export class ValidatorIkaIntKatalogKonfessionenAsdKatalog extends Validator {
 	 * @param idKatalog   die Katalog-ID
 	 * @param kontext     der Kontext des Validators
 	 */
-	public constructor(idKatalog: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(idKatalog: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorIka00IntKatalogKonfessionenAsdKatalog(idKatalog, kontext));
 	}
