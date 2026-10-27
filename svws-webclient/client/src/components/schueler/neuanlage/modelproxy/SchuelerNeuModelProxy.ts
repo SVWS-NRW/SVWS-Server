@@ -6,6 +6,11 @@ import type { SchuelerNeu } from "@core/asd/data/schueler/SchuelerNeu";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import { Geschlecht } from "@core/asd/types/Geschlecht";
 import { Einschulungsart } from "@core/asd/types/schueler/Einschulungsart";
+import { ValidatorSsdSchuelerStammdatenGeburtsdatum } from "@core/asd/validate/schueler/ValidatorSsdSchuelerStammdatenGeburtsdatum";
+import { ValidatorSsgSchuelerStammdatenGeschlecht } from "@core/asd/validate/schueler/ValidatorSsgSchuelerStammdatenGeschlecht";
+import { ValidatorSsnSchuelerStammdatenNachname } from "@core/asd/validate/schueler/ValidatorSsnSchuelerStammdatenNachname";
+import { ValidatorSsvSchuelerStammdatenVorname } from "@core/asd/validate/schueler/ValidatorSsvSchuelerStammdatenVorname";
+import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { ModelProxy } from "@ui/model/ModelProxy";
@@ -13,9 +18,11 @@ import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
 import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 import type { SchuelerNeuManager } from "@ui/ui/manager/schueler/SchuelerNeuManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
-import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
-import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { ValidatorSchuelerGeburtsdatum } from "@ui/validation/ValidatorSchuelerGeburtsdatum";
+
+import { ValidatorSchuelerAlleVornamen } from "../../individualdaten/modelproxy/validation/ValidatorSchuelerAlleVornamen";
+import { ValidatorSchuelerNachname } from "../../individualdaten/modelproxy/validation/ValidatorSchuelerNachname";
+import { ValidatorSchuelerVorname } from "../../individualdaten/modelproxy/validation/ValidatorSchuelerVorname";
 
 export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 
@@ -26,40 +33,54 @@ export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 	/**
 	 * ModelProxy für die Schüler-Neuanlage.
 	 *
-	 * @param data      Lambda für den Zugriff auf die Original-Daten
-	 * @param manager   Lambda für den Zugriff auf den SchuelerNeuManager
+	 * @param data      		 Lambda für den Zugriff auf die Original-Daten
+	 * @param validatorKontext   Kontext für die ASD-Validatoren
+	 * @param manager   		 Lambda für den Zugriff auf den SchuelerNeuManager
 	 */
 	constructor(
 		data: () => SchuelerNeu,
+		validatorKontext: () => ValidatorKontext,
 		manager: () => SchuelerNeuManager
 	) {
 		super({ data });
 		this._manager = manager;
-		this.addValidatoren();
+		this.addAsdValidatoren(validatorKontext());
+		this.addUiValidatoren();
 		this.validate();
 	}
 
-	private addValidatoren() {
+	private addAsdValidatoren(vk: ValidatorKontext) {
+		this.addValidator(new ValidatorSsnSchuelerStammdatenNachname({ get: () => this.proxy.nachname }, vk), "nachname");
+		this.addValidator(new ValidatorSsvSchuelerStammdatenVorname({ get: () => this.proxy.vorname }, vk), "vorname");
+		this.addValidator(new ValidatorSsgSchuelerStammdatenGeschlecht({ get: () => this.proxy.geschlecht }, vk), "geschlecht");
+		this.addValidator(new ValidatorSsdSchuelerStammdatenGeburtsdatum({ get: () => this.proxy.geburtsdatum }, vk), "geburtsdatum");
+	}
+
+	private addUiValidatoren() {
+		// Schuljahresabschnitt
 		this.addValidator(new ValidatorInputRequired(() => this.schuljahresabschnitt.value), "idSchuljahresabschnitt");
 
+		// Jahrgang
 		this.addValidator(new ValidatorInputRequired(() => this.proxy.idJahrgang), "idJahrgang");
 
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.nachname), "nachname");
-		this.addValidator(new ValidatorStringLength(() => this.proxy.nachname, null, 120), "nachname");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.nachname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "nachname");
+		// Nachname
+		this.addBlockingValidator(new ValidatorSchuelerNachname(() => this.proxy), "nachname");
 
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.vorname), "vorname");
-		this.addValidator(new ValidatorStringLength(() => this.proxy.vorname, null, 80), "vorname");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.vorname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "vorname");
+		// Rufname (vorname)
+		this.addBlockingValidator(new ValidatorSchuelerVorname(() => this.proxy), "vorname");
 
-		this.addValidator(new ValidatorInputRequired(() => this.geschlecht.value), "geschlecht");
+		// Alle Vornamen
+		this.addBlockingValidator(new ValidatorSchuelerAlleVornamen(() => this.proxy), "alleVornamen");
 
-		this.addValidator(new ValidatorStringLength(() => this.proxy.alleVornamen, null, 255), "alleVornamen");
+		// Geschlecht
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.geschlecht.value), "geschlecht");
 
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.geburtsdatum), "geburtsdatum");
-		this.addValidator(new ValidatorNumberRange(() => this.getAgeInYears(), 4, 50), "geburtsdatum");
+		// Geburtsdatum
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.geburtsdatum), "geburtsdatum");
+		this.addBlockingValidator(new ValidatorSchuelerGeburtsdatum(() => this.proxy.geburtsdatum, () => null, false), "geburtsdatum");
 
-		this.addValidator(new ValidatorInputRequired(() => this.religion.value), "idReligion");
+		// Konfession
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idReligion), "idReligion");
 
 	}
 
@@ -127,33 +148,4 @@ export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 		return result;
 	});
 
-	private getAgeInYears(): number | null {
-		const geb = this.proxy.geburtsdatum;
-		if (geb === null || geb === "") {
-			return null;
-		}
-
-		const today = new Date();
-		const birth = new Date(geb);
-		// Berechnen der Altersdifferenz anhand der Jahreszahlen
-		const yearDifference = today.getFullYear() - birth.getFullYear();
-
-		// Beispiel: Heute 18.05.2026, Geburtstag 20.08.2010
-		// Geburtstag war noch nicht -> yearDifference (16) - 1 = 15 (korrektes Alter)
-		if (this.isBirthdayUpcomingThisYear(today, birth)) {
-			return yearDifference - 1;
-		}
-
-		// Beispiel: Heute 18.05.2026, Geburtstag 01.03.2010
-		// Geburtstag war bereits -> yearDifference (16) ist korrekt
-		return yearDifference;
-	}
-
-	private isBirthdayUpcomingThisYear(today: Date, birthDate: Date): boolean {
-		// Geburtstag im aktullen Jahr nachgestellt für die Prüfung
-		const birthdayThisYear = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-
-		// Hier wird geprüft, ob der Geburtstag in diese, Jahr noch nicht stattgefunden hat
-		return today < birthdayThisYear;
-	}
 }

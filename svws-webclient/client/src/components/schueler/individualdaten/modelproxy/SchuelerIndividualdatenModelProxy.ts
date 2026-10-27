@@ -15,6 +15,7 @@ import { ValidatorSsvSchuelerStammdatenVorname } from "@core/asd/validate/schuel
 import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
 import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
@@ -22,6 +23,7 @@ import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
+import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 import { useOrteState } from "@ui/states/kataloge/OrteState";
 import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
@@ -31,12 +33,17 @@ import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLeng
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { ValidatorSchuelerGeburtsdatum } from "@ui/validation/ValidatorSchuelerGeburtsdatum";
 
-export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten> {
+import { ValidatorSchuelerAlleVornamen } from "./validation/ValidatorSchuelerAlleVornamen";
+import { ValidatorSchuelerNachname } from "./validation/ValidatorSchuelerNachname";
+import { ValidatorSchuelerVorname } from "./validation/ValidatorSchuelerVorname";
+
+export class SchuelerIndividualdatenModelProxy extends ModelProxy<SchuelerStammdaten> {
 
 	private readonly _orteState = useOrteState();
 	private readonly _fahrschuelerartenState = useFahrschuelerartenState();
 	private readonly _religionenState = useReligionenState();
 	private readonly _haltestellenState = useHaltestellenState();
+	private readonly _herkunftsstellenState = useHerkunftschulenState();
 
 	private readonly schuljahr: () => number;
 
@@ -69,17 +76,19 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 
 	private addUiValidatoren() {
 		// Nachname
-		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.nachname, null, 120), "nachname");
-		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.nachname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "nachname");
+		this.addBlockingValidator(new ValidatorSchuelerNachname(() => this.proxy), "nachname");
 
-		// Rufname (vorname) – Required durch ASD abgedeckt
-		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.vorname, null, 80), "vorname");
-		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.vorname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "vorname");
+		// Rufname (vorname)
+		this.addBlockingValidator(new ValidatorSchuelerVorname(() => this.proxy), "vorname");
 
 		// Alle Vornamen
-		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.alleVornamen, null, 255), "alleVornamen");
+		this.addBlockingValidator(new ValidatorSchuelerAlleVornamen(() => this.proxy), "alleVornamen");
 
-		// Geburtsdatum – Required + Datumsformat durch ASD abgedeckt
+		// Geschlecht
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.geschlecht.value), "geschlecht");
+
+		// Geburtsdatum
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.geburtsdatum), "geburtsdatum");
 		this.addBlockingValidator(new ValidatorSchuelerGeburtsdatum(() => this.proxy.geburtsdatum, () => null, false), "geburtsdatum");
 
 		// Geburtsort
@@ -88,8 +97,8 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		// Geburtsname
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.geburtsname, null, 120), "geburtsname");
 
-		// Straße (parallel zu #3222)
-		this.addBlockingValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30), "strassenname", "hausnummer", "hausnummerZusatz");
+		// Straße
+		this.addBlockingValidator(new ValidatorStrasse(() => this.strasse.value, 55, 10, 30), "strassenname", "hausnummer", "hausnummerZusatz");
 
 		// Telefon
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.telefon, null, 20), "telefon");
@@ -107,7 +116,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.emailSchule, null, 100), "emailSchule");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailSchule, StringPattern.IS_EMAIL), "emailSchule");
 
-		// Status – Required
+		// Status
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.status), "status");
 
 		// Schülerausweis-Nummer
@@ -116,10 +125,10 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		// Beruf
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.beruf, null, 100), "beruf");
 
-		// 1. Staatsangehörigkeit – Required
+		// 1. Staatsangehörigkeit
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
 
-		// Konfession – Required
+		// Konfession
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.religionID), "religionID");
 
 		// Zuzugsjahr
@@ -149,27 +158,27 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		},
 	});
 
-	religionID = computed<ReligionEintrag | null>({
+	religion = computed<ReligionEintrag | null>({
 		get: () => this.proxy.religionID === null ? null : this._religionenState.religionen.byId.get(this.proxy.religionID) ?? null,
 		set: (v: ReligionEintrag | null) => this.proxy.religionID = v?.id ?? null,
 	});
 
-	fahrschuelerArtID = computed<Fahrschuelerart | null>({
+	fahrschuelerArt = computed<Fahrschuelerart | null>({
 		get: () => this.proxy.fahrschuelerArtID === null ? null : this._fahrschuelerartenState.fahrschuelerarten.byId.get(this.proxy.fahrschuelerArtID) ?? null,
 		set: (v: Fahrschuelerart | null) => this.proxy.fahrschuelerArtID = v?.id ?? null,
 	});
 
-	haltestelleID = computed<Haltestelle | null>({
+	haltestelle = computed<Haltestelle | null>({
 		get: () => this.proxy.haltestelleID === null ? null : this._haltestellenState.haltestellen.byId.get(this.proxy.haltestelleID) ?? null,
 		set: (v: Haltestelle | null) => this.proxy.haltestelleID = v?.id ?? null,
 	});
 
-	staatsangehoerigkeitID = computed<NationalitaetenKatalogEintrag | null>({
+	staatsangehoerigkeit1 = computed<NationalitaetenKatalogEintrag | null>({
 		get: () => Nationalitaeten.data().getWertByIDOrNull(this.proxy.idStaatsangehoerigkeit)?.daten(this.schuljahr()) ?? null,
 		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.idStaatsangehoerigkeit = v?.id ?? null,
 	});
 
-	staatsangehoerigkeit2ID = computed<NationalitaetenKatalogEintrag | null>({
+	staatsangehoerigkeit2 = computed<NationalitaetenKatalogEintrag | null>({
 		get: () => Nationalitaeten.data().getWertByIDOrNull(this.proxy.idStaatsangehoerigkeit2)?.daten(this.schuljahr()) ?? null,
 		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.idStaatsangehoerigkeit2 = v?.id ?? null,
 	});
@@ -194,12 +203,12 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		set: (v: VerkehrsspracheKatalogEintrag | null) => this.proxy.idVerkehrspracheFamilie = v?.id ?? null,
 	});
 
-	selectedOrt = computed<OrtKatalogEintrag | null>({
+	wohnort = computed<OrtKatalogEintrag | null>({
 		get: () => this._orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
 		set: (value: OrtKatalogEintrag | null) => this.setAndPatchOrtAndOrtsteil(value?.id ?? null, null),
 	});
 
-	selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
+	ortsteil = computed<OrtsteilKatalogEintrag | null>({
 		get: () => this._orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (value: OrtsteilKatalogEintrag | null) => {
 			const v = value;
@@ -209,9 +218,9 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		},
 	});
 
-	externeSchulNr = computed<string | null>({
-		get: () => this.proxy.externeSchulNr ?? null,
-		set: (v) => this.proxy.externeSchulNr = v ?? null,
+	externeSchulNr = computed<SchulEintrag | null>({
+		get: () => this._herkunftsstellenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.get(this.proxy.externeSchulNr ?? "") ?? null,
+		set: (v: SchulEintrag | null) => this.proxy.externeSchulNr = v?.schulnummerStatistik ?? null,
 	});
 
 	private setAndPatchOrtAndOrtsteil(wohnortID: number | null, ortsteilID: number | null): void {
@@ -219,7 +228,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		void this.patch();
 	}
 
-	adresse = computed<string | null>({
+	strasse = computed<string | null>({
 		get: () => AdressenUtils.combineStrasse(this.proxy.strassenname, this.proxy.hausnummer ?? '', this.proxy.hausnummerZusatz ?? ''),
 		set: (adresse) => {
 			const [strassenname, hausnummer, hausnummerZusatz] = AdressenUtils.splitStrasse(adresse);

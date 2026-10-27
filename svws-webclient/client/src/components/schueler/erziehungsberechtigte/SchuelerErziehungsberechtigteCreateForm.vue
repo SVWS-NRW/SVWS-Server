@@ -1,21 +1,24 @@
 <template>
-	<svws-ui-modal :show="createModalIsOpen" @update:show="closeModal">
+	<svws-ui-modal :show="createModalIsOpen" @update:show="closeModal" size="medium">
 		<template #modalTitle>Erziehungsberechtigten hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2" class="text-left" v-if="!istErsterErzGespeichert">
 				<ui-select label="Erzieherart"
 					v-model="model.erzieherart.value"
 					:manager="erzieherartenManager"
-					:removable="false" class="col-span-full" />
+					:validation="() => model.getFehler('idErzieherArt')"
+					:removable="false" required />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Anrede" v-model="model.proxy.anrede" type="text" />
-				<svws-ui-text-input placeholder="Titel" v-model="model.proxy.titel" type="text" />
+				<svws-ui-text-input placeholder="Anrede" v-model="model.proxy.anrede"
+					:validation="() => model.getFehler('anrede')" type="text" :max-len="20" />
+				<svws-ui-text-input placeholder="Titel" v-model="model.proxy.titel"
+					:validation="() => model.getFehler('titel')" type="text" :max-len="10" />
 				<svws-ui-text-input placeholder="Rufname" v-model="model.proxy.vorname"
-					:validation="() => model.getFehler('vorname')" type="text" required />
+					:validation="() => model.getFehler('vorname')" type="text" :max-len="80" required />
 				<svws-ui-text-input placeholder="Nachname" v-model="model.proxy.nachname"
-					:validation="() => model.getFehler('nachname')" type="text" required />
+					:validation="() => model.getFehler('nachname')" type="text" :max-len="120" required />
 				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="model.proxy.eMail"
-					:validation="() => model.getFehler('eMail')" type="email" verify-email />
+					:validation="() => model.getFehler('eMail')" type="email" verify-email :max-len="100" />
 				<ui-select label="Staatsangehörigkeit"
 					v-model="model.staatsangehoerigkeit.value"
 					:manager="staatsangehoerigkeitenManager" searchable />
@@ -27,13 +30,14 @@
 				<ui-select label="Ortsteil" v-model="model.ortsteil.value" :manager="ortsteilManager"
 					:readonly="!model.proxy.wohnortID" searchable />
 				<svws-ui-spacing />
-				<svws-ui-tooltip class="col-span-full">
-					<svws-ui-text-input v-model="model.proxy.bemerkungen" type="text" placeholder="Bemerkungen" />
+				<svws-ui-tooltip>
+					<svws-ui-text-input v-model="model.proxy.bemerkungen" type="text" placeholder="Bemerkungen"
+						:validation="() => model.getFehler('bemerkungen')" />
 					<template #content>{{ model.proxy.bemerkungen ?? 'Bemerkungen' }}</template>
 				</svws-ui-tooltip>
 				<svws-ui-checkbox :model-value="model.proxy.erhaeltAnschreiben ?? false"
 					@update:model-value="val => model.proxy.erhaeltAnschreiben = val"
-					type="checkbox" title="Erhält Anschreiben" class="col-span-full">
+					type="checkbox" title="Erhält Anschreiben" class="col-span-full mt-2">
 					Erhält Anschreiben
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
@@ -82,7 +86,7 @@
 
 	const props = defineProps<{
 		addErzieher: (data: Partial<ErzieherStammdaten>, pos: number) => Promise<ErzieherStammdaten>;
-		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<void>;
+		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<boolean>;
 		schuljahr: number;
 		createModalIsOpen: boolean;
 	}>();
@@ -133,8 +137,7 @@
 		defaultErz.idErzieherArt = ersteErzieherArt?.id ?? null;
 		defaultErz.erhaeltAnschreiben = false;
 		return new ErzieherStammdatenModelProxy(
-			() => defaultErz,
-			() => props.schuljahr
+			() => defaultErz
 		);
 	}
 
@@ -143,8 +146,7 @@
 	function createZweiterModel() {
 		const defaultZweiterErz = new ErzieherStammdaten();
 		return new ErzieherStammdatenModelProxy(
-			() => defaultZweiterErz,
-			() => props.schuljahr
+			() => defaultZweiterErz
 		);
 	}
 

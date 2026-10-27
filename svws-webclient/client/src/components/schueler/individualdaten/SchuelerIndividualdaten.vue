@@ -26,13 +26,13 @@
 				<svws-ui-text-input placeholder="Nachname" class="contentFocusField"
 					v-model="model.proxy.nachname"
 					:validation="() => model.getFehler('nachname')"
-					:min-len="1" :max-len="120"
+					:max-len="120"
 					required :readonly v-autofocus
 					@change="model.patch" />
 				<svws-ui-text-input placeholder="Rufname"
 					v-model="model.proxy.vorname"
 					:validation="() => model.getFehler('vorname')"
-					:min-len="1" :max-len="80"
+					:max-len="80"
 					required :readonly
 					@change="model.patch" />
 				<svws-ui-text-input placeholder="Alle Vornamen"
@@ -44,7 +44,7 @@
 				<ui-select label="Geschlecht"
 					v-model="model.geschlecht.value"
 					:manager="geschlechtManager"
-					:readonly required statistics />
+					:readonly required statistics :removable="false" />
 				<svws-ui-text-input placeholder="Geburtsdatum" :readonly
 					v-model="model.proxy.geburtsdatum"
 					:validation="() => model.getFehler('geburtsdatum')"
@@ -77,7 +77,6 @@
 					label="Stammschule"
 					v-model="model.externeSchulNr.value"
 					:manager="stammschuleManager"
-					:removable="model.proxy.externeSchulNr !== null"
 					:readonly searchable />
 				<div v-else />
 				<template v-if="serverState.hasDev">
@@ -96,13 +95,13 @@
 					@change="model.patch"
 					:readonly :max-len="100" />
 				<ui-select label="Fahrschüler"
-					v-model="model.fahrschuelerArtID.value"
+					v-model="model.fahrschuelerArt.value"
 					:manager="fahrschuelerartManager"
-					:removable="model.fahrschuelerArtID.value !== null" :readonly />
+					:readonly />
 				<ui-select label="Haltestelle"
-					v-model="model.haltestelleID.value"
+					v-model="model.haltestelle.value"
 					:manager="haltestellenManager"
-					:removable="model.haltestelleID.value !== null" :readonly />
+					:readonly />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly
 					v-model="model.proxy.anmeldedatum"
 					@change="model.patch"
@@ -144,20 +143,19 @@
 		<svws-ui-content-card title="Wohnort und Kontaktdaten" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly
-					v-model="model.adresse.value"
+					v-model="model.strasse.value"
 					:validation="() => model.getFehler('strassenname')"
 					@change="model.patch"
+					:max-len="55"
 					span="full" />
 				<ui-select label="Wohnort"
-					v-model="model.selectedOrt.value"
+					v-model="model.wohnort.value"
 					:manager="orteManager"
-					:removable="model.selectedOrt.value !== null"
 					searchable :readonly statistics />
 				<ui-select label="Ortsteil"
-					v-model="model.selectedOrtsteil.value"
+					v-model="model.ortsteil.value"
 					:manager="ortsteilManager"
 					:disabled="istOrtsteilDisabled"
-					:removable="model.selectedOrtsteil.value !== null"
 					searchable :readonly statistics />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon" :readonly
@@ -187,17 +185,17 @@
 		<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="1. Staatsangehörigkeit"
-					v-model="model.staatsangehoerigkeitID.value"
+					v-model="model.staatsangehoerigkeit1.value"
 					:manager="staatsangehoerigkeitManager"
-					:readonly required searchable statistics focus-class-content />
+					:readonly required searchable statistics focus-class-content :removable="false" />
 				<ui-select label="2. Staatsangehörigkeit"
-					v-model="model.staatsangehoerigkeit2ID.value"
+					v-model="model.staatsangehoerigkeit2.value"
 					:manager="staatsangehoerigkeitManager"
-					:removable="model.staatsangehoerigkeit2ID.value !== null" :readonly searchable />
+					:readonly searchable />
 				<ui-select label="Konfession"
-					v-model="model.religionID.value"
+					v-model="model.religion.value"
 					:manager="religionManager"
-					:readonly required statistics />
+					:readonly required statistics :removable="false" />
 				<div class="flex items-center pl-2">
 					<svws-ui-checkbox
 						v-model="model.proxy.druckeKonfessionAufZeugnisse" :readonly>
@@ -234,22 +232,22 @@
 				<ui-select label="Geburtsland"
 					v-model="model.geburtsland.value"
 					:manager="geburtslandManager"
-					:removable="model.geburtsland.value !== null" :disabled="!model.proxy.hatMigrationshintergrund"
+					:disabled="!model.proxy.hatMigrationshintergrund"
 					:readonly="model.proxy.hatMigrationshintergrund && readonly" searchable statistics />
 				<ui-select label="Verkehrssprache"
 					v-model="model.verkehrspracheFamilie.value"
 					:manager="verkehrsspracheManager"
-					:removable="model.verkehrspracheFamilie.value !== null" :disabled="!model.proxy.hatMigrationshintergrund"
+					:disabled="!model.proxy.hatMigrationshintergrund"
 					:readonly="model.proxy.hatMigrationshintergrund && readonly" class="col-span-full" searchable statistics />
 				<ui-select label="Geburtsland Mutter"
 					v-model="model.geburtslandMutter.value"
 					:manager="geburtslandManager"
-					:removable="model.geburtslandMutter.value !== null" :disabled="!model.proxy.hatMigrationshintergrund"
+					:disabled="!model.proxy.hatMigrationshintergrund"
 					:readonly="model.proxy.hatMigrationshintergrund && readonly" searchable statistics />
 				<ui-select label="Geburtsland Vater"
 					v-model="model.geburtslandVater.value"
 					:manager="geburtslandManager"
-					:removable="model.geburtslandVater.value !== null" :disabled="!model.proxy.hatMigrationshintergrund"
+					:disabled="!model.proxy.hatMigrationshintergrund"
 					:readonly="model.proxy.hatMigrationshintergrund && readonly" searchable statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -268,6 +266,7 @@
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
+	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 	import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 	import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 	import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
@@ -287,7 +286,7 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
-	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
+	import { SchuelerIndividualdatenModelProxy } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
 	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
@@ -308,7 +307,7 @@
 
 	const schuljahr = computed<number>(() => schuelerAuswahlState.manager.schuelerGetSchuljahrOrException());
 
-	const model = new SchuelerIndividualdatenModel(
+	const model = new SchuelerIndividualdatenModelProxy(
 		() => schuelerAuswahlState.manager.daten(),
 		() => schuleState.validatorKontext,
 		() => schuljahr.value,
@@ -356,26 +355,25 @@
 	});
 
 	const eigeneSchulnummer = computed<string>(() => `${schuleState.validatorKontext.getSchulnummer()}`);
-	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
+	const moeglicheStammschulnummern = computed<JavaSet<SchulEintrag>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
-		const result = new HashSet<string>();
+		const result = new HashSet<SchulEintrag>();
 		for (const schule of herkunftschulenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.values()) {
 			if ((schule.schulnummerStatistik !== null) && (schule.schulnummerStatistik !== eigeneSchulnummer.value)) {
-				result.add(schule.schulnummerStatistik);
+				result.add(schule);
 			}
 		}
 		return result;
 	});
 
-	const stammschuleManager = new SelectManager({
+	const stammschuleManager = new SelectManager<SchulEintrag>({
 		options: moeglicheStammschulnummern,
 		selectionDisplayText: getSchulnummerText,
 		optionDisplayText: getSchulnummerText,
 	});
 
-	function getSchulnummerText(schulnummer: string): string {
-		const eintrag = herkunftschulenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.get(schulnummer);
-		const text = `${eintrag?.schulnummerStatistik ?? ''} ${eintrag?.kuerzel ?? eintrag?.kurzbezeichnung ?? ''}`;
+	function getSchulnummerText(schule: SchulEintrag): string {
+		const text = `${schule.schulnummerStatistik ?? ''} ${schule.kuerzel ?? schule.kurzbezeichnung ?? ''}`;
 		return text.length > 0 ? text : 'Fehlende Angaben';
 	}
 
@@ -429,7 +427,7 @@
 
 	const orteState = useOrteState();
 
-	const istOrtsteilDisabled = computed(() => (model.selectedOrt.value === null) && (model.selectedOrtsteil.value === null));
+	const istOrtsteilDisabled = computed(() => (model.wohnort.value === null) && (model.ortsteil.value === null));
 
 	const orteManager = new SelectManager({
 		options: computed(() => orteState.orte.list),

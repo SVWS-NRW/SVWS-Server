@@ -22,18 +22,14 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 	private readonly _orteState: OrteState = useOrteState();
 	private readonly _erzieherartenState: ErzieherartenState = useErzieherartenState();
 
-	private readonly _schuljahr: () => number;
-
 	constructor(
 		data: () => ErzieherStammdaten,
-		schuljahr: () => number,
 		patch?: (data: Partial<ErzieherStammdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof ErzieherStammdaten> = [
 			'idErzieherArt', 'idStaatsangehoerigkeit', 'wohnortID', 'ortsteilID', 'erhaeltAnschreiben'];
 		super({ data, patch, listOfAutopatchProps });
 
-		this._schuljahr = schuljahr;
 		this.addValidatoren();
 		this.validate();
 	}

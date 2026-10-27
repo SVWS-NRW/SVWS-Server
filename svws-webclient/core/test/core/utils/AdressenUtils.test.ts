@@ -47,6 +47,17 @@ describe('AdressenUtils', () => {
 			expect(aufgeteilt[2]).toBe(daten.zusatzTrimmed);
 		});
 	});
+
+	it('combineStrasse', () => {
+		expect(AdressenUtils.combineStrasse(null, null, null)).toBeNull();
+		expect(AdressenUtils.combineStrasse("Hauptstr", "", "")).toBe("Hauptstr");
+		expect(AdressenUtils.combineStrasse("Hauptstr", null, null)).toBe("Hauptstr");
+		expect(AdressenUtils.combineStrasse("Hauptstr", "12", "")).toBe("Hauptstr 12");
+		expect(AdressenUtils.combineStrasse("Hauptstr", "12", "a")).toBe("Hauptstr 12a");
+		expect(AdressenUtils.combineStrasse(null, "12", "a")).toBe("12a");
+		expect(AdressenUtils.combineStrasse("", "12", "")).toBe("12");
+		expect(AdressenUtils.combineStrasse(" Hauptstr ", " 12 ", "")).toBe("Hauptstr 12");
+	});
 });
 
 /**

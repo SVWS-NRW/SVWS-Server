@@ -129,7 +129,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		return result;
 	};
 
-	patchErzieher = async (data: Partial<ErzieherStammdaten>, idEintrag: number) => {
+	patchErzieher = async (data: Partial<ErzieherStammdaten>, idEintrag: number): Promise<boolean> => {
 		await api.server.patchErzieherStammdaten(data, api.schema, idEintrag);
 		const erzieher = this.getErzieher;
 		for (const e of erzieher) {
@@ -139,12 +139,14 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			}
 		}
 		this.setPatchedState({ erzieher });
+		return true;
 	};
 
-	patchErzieherAnPosition = async (data: Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number) => {
+	patchErzieherAnPosition = async (data: Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number): Promise<boolean> => {
 		await api.server.patchErzieherStammdatenZweitePosition(data, api.schema, idEintrag, pos);
 		const erzieher = await api.server.getSchuelerErzieher(api.schema, idSchueler);
 		this.setPatchedState({ erzieher });
+		return true;
 	};
 
 	deleteErzieher = async (ids: List<number>): Promise<void> => {

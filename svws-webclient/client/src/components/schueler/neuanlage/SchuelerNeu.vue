@@ -121,7 +121,7 @@
 	const jahrgaenge = computed(() => Array.from(jahrgaengeState.jahrgaenge.list));
 
 	const initialData = ref<SchuelerNeu>(Object.assign(new SchuelerNeu(), { status: statusNeuaufnahme?.id ?? -1 }));
-	const model = new SchuelerNeuModelProxy(() => initialData.value, () => manager());
+	const model = new SchuelerNeuModelProxy(() => initialData.value, () => schuleState.validatorKontext, () => manager());
 
 	const formIsValid = computed<boolean>(() => model.getAlleFehler().isEmpty());
 

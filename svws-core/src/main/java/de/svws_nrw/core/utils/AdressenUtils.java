@@ -82,10 +82,14 @@ public final class AdressenUtils {
 		if ((name == null) && (hausNummer == null) && (zusatz == null)) {
 			return null;
 		}
-		@NotNull final String st = (name != null) ? (name.trim() + " ") : "";
+		@NotNull final String st = (name != null) ? name.trim() : "";
 		@NotNull final String hn = (hausNummer != null) ? hausNummer.trim() : "";
 		@NotNull final String zs = (zusatz != null) ? zusatz.trim() : "";
-		return st + hn + zs;
+		@NotNull final String nummer = hn + zs;
+		if ((st.length() == 0) || (nummer.length() == 0)) {
+			return st + nummer;
+		}
+		return st + " " + nummer;
 	}
 
 }

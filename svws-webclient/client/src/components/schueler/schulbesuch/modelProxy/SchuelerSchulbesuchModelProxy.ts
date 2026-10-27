@@ -49,11 +49,11 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	private readonly _herkunftschulenState = useHerkunftschulenState();
 	private readonly _kindergaertenState = useKindergaertenState();
 
-	private readonly manager: () => SchuelerSchulbesuchManager;
+	private readonly schuljahr: () => number;
 
 	constructor(
 		data: () => SchuelerSchulbesuchsdaten,
-		manager: () => SchuelerSchulbesuchManager,
+		schuljahr: () => number,
 		patch?: (data: Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerSchulbesuchsdaten> =
 			["idVorherigeSchule", "entlassdatumVorherigeSchule", "kuerzelEntlassjahrgangVorherigeSchule", "idEntlassgrundVorherigeSchule",
@@ -65,7 +65,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 				"idSchulgliederungVorherigeSchule", "schluesselCoreTypeFachklasseVorherigeSchule", "idHerkunftSchulformVorherigeSchule",
 				"schluesselAbschlussartAllgemeinbildendVorherigeSchule", "idHerkunftSonstigeVorherigeSchule", "idHochschulabschluss"];
 		super({ data, patch, listOfAutopatchProps });
-		this.manager = manager;
+		this.schuljahr = schuljahr;
 		this.addValidatoren();
 		this.validate();
 	}
@@ -133,7 +133,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	fachklasseVorherigeSchule = computed<FachklasseKatalogEintrag | null>({
-		get: () => Fachklasse.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselCoreTypeFachklasseVorherigeSchule ?? '') ?? null,
+		get: () => Fachklasse.data().getEintragBySchuljahrUndSchluessel(this.schuljahr(), this.proxy.schluesselCoreTypeFachklasseVorherigeSchule ?? '') ?? null,
 		set: (v: FachklasseKatalogEintrag | null) => this.proxy.schluesselCoreTypeFachklasseVorherigeSchule = v?.schluessel ?? null,
 	});
 
@@ -143,7 +143,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	schulnummerStatistik = computed<string | null>(() => this.vorherigeSchule.value?.schulnummerStatistik ?? null);
 
 	kuerzelEntlassjahrgangVorherigeSchule = computed<JahrgaengeKatalogEintrag | null>({
-		get: () => Jahrgaenge.data().getWertByKuerzel(this.proxy.kuerzelEntlassjahrgangVorherigeSchule ?? '')?.daten(this.manager().schuljahr) ?? null,
+		get: () => Jahrgaenge.data().getWertByKuerzel(this.proxy.kuerzelEntlassjahrgangVorherigeSchule ?? '')?.daten(this.schuljahr()) ?? null,
 		set: (v: JahrgaengeKatalogEintrag | null) => this.proxy.kuerzelEntlassjahrgangVorherigeSchule = v?.kuerzel ?? null,
 	});
 
@@ -184,12 +184,12 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	abschlussartAllgemeinbildendDieseSchule = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
-		get: () => SchulabschlussAllgemeinbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselAbschlussartAllgemeinbildendDieseSchule ?? ''),
+		get: () => SchulabschlussAllgemeinbildend.data().getEintragBySchuljahrUndSchluessel(this.schuljahr(), this.proxy.schluesselAbschlussartAllgemeinbildendDieseSchule ?? ''),
 		set: (v: SchulabschlussAllgemeinbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartAllgemeinbildendDieseSchule = v?.schluessel ?? null,
 	});
 
 	abschlussartBerufsbildendDieseSchule = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
-		get: () => SchulabschlussBerufsbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselAbschlussartBerufsbildendDieseSchule ?? ''),
+		get: () => SchulabschlussBerufsbildend.data().getEintragBySchuljahrUndSchluessel(this.schuljahr(), this.proxy.schluesselAbschlussartBerufsbildendDieseSchule ?? ''),
 		set: (v: SchulabschlussBerufsbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartBerufsbildendDieseSchule = v?.schluessel ?? null,
 	});
 
@@ -224,7 +224,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	kuerzelErsteSchulformSek1 = computed<SchulformKatalogEintrag | null>({
-		get: () => Schulform.data().getWertByKuerzel(this.proxy.kuerzelErsteSchulformSek1 ?? '')?.daten(this.manager().schuljahr) ?? null,
+		get: () => Schulform.data().getWertByKuerzel(this.proxy.kuerzelErsteSchulformSek1 ?? '')?.daten(this.schuljahr()) ?? null,
 		set: (v: SchulformKatalogEintrag | null) => this.proxy.kuerzelErsteSchulformSek1 = v?.kuerzel ?? null,
 	});
 

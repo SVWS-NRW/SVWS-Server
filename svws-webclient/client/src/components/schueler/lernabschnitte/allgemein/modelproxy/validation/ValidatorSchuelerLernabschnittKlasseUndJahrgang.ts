@@ -4,25 +4,24 @@ import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 
-import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
-
 export class ValidatorSchuelerLernabschnittKlasseUndJahrgang extends BasicValidator {
 
-	private readonly getManager: () => SchuelerLernabschnittManager;
 	private readonly getKlasse: () => KlassenDaten | null;
 	private readonly getJahrgang: () => JahrgangsDaten | null;
+	private readonly klassenListe: () => KlassenDaten[];
+	private readonly jahrgangsListe: () => JahrgangsDaten[];
 
-	constructor(idKlasse: () => number | null, idJahrgang: () => number | null, manager: () => SchuelerLernabschnittManager) {
+	constructor(idKlasse: () => number | null, idJahrgang: () => number | null, klassenListe: () => KlassenDaten[], jahrgangsListe: () => JahrgangsDaten[]) {
 		super(ValidatorFehlerart.MUSS);
-		this.getManager = manager;
-		this.getKlasse = () => this.getManager().klasseGetByIdOrNull(idKlasse() ?? -1);
-		this.getJahrgang = () => this.getManager().jahrgangGetByIdOrNull(idJahrgang() ?? -1);
+		this.getKlasse = () => this.klassenListe().find(k => k.id === idKlasse()) ?? null;
+		this.getJahrgang = () => this.jahrgangsListe().find(j => j.id === idJahrgang()) ?? null;
+		this.klassenListe = klassenListe;
+		this.jahrgangsListe = jahrgangsListe;
 
 		this._validatoren.add(new ValidatorInputRequired(() => idKlasse()));
 	}
 
 	protected pruefe(): boolean	{
-		const manager = this.getManager();
 		const klasse = this.getKlasse();
 		const jahrgang = this.getJahrgang();
 
@@ -35,7 +34,7 @@ export class ValidatorSchuelerLernabschnittKlasseUndJahrgang extends BasicValida
 			return true;
 		}
 
-		const klasseJahrgang = manager.jahrgangGetByIdOrNull(klasse.idJahrgang ?? -1);
+		const klasseJahrgang = this.jahrgangsListe().find(j => j.id === klasse.idJahrgang);
 		if (klasseJahrgang?.idJahrgang !== jahrgang.idJahrgang) {
 			this.addFehler(1, "Die Kombination aus Klasse und Jahrgang ist nicht gültig.");
 		}

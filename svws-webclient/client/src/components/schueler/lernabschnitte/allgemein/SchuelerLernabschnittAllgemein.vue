@@ -151,9 +151,10 @@
 
 	const model = new SchuelerLernabschnittAllgemeinModelProxy(
 		() => props.manager().lernabschnittGet(),
-		props.manager,
-		() => schulform.value,
-		() => schuljahr.value,
+		() => [...props.manager().lehrerGetMenge()],
+		() => [...props.manager().klasseGetMenge()],
+		() => [...props.manager().jahrgangGetMenge()],
+		() => [...props.manager().foerderschwerpunktGetMenge()],
 		async (data: Partial<SchuelerLernabschnittsdaten>) => {
 			await props.patch(data);
 			return true;

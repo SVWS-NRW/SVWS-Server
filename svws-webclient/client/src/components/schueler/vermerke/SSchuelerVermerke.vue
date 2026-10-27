@@ -77,7 +77,7 @@
 
 	const lastAddedVermerk = ref<SchuelerVermerke>();
 
-	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_VERMERKE_AENDERN));
 	const readonly = computed<boolean>(() => !hatKompetenzAendern.value);
 
 	const filteredVermerke = computed<List<SchuelerVermerke>>(() => {

@@ -15,7 +15,7 @@ test.describe('Schüler — Smoke', () => {
 		await expect(page).not.toHaveURL(/\/error/);
 		await expect(page).not.toHaveURL(/\/login/);
 
-		const zeilen = page.locator('main .svws-ui-tr[role="row"], main table tbody tr');
+		const zeilen = page.locator('.secondary-menu--content [role="row"].group');
 		await expect(zeilen.first()).toBeVisible({ timeout: 10000 });
 
 		expect(errors, `JS-Fehler: ${errors.join(' | ')}`).toHaveLength(0);

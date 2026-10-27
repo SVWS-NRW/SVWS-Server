@@ -81,24 +81,7 @@
 		</svws-ui-content-card>
 
 		<!-- Kindergartenbesuch !-->
-		<svws-ui-content-card title="Kindergartenbesuch" v-if="schuleHatPrimarstufe">
-			<svws-ui-input-wrapper :grid="2">
-				<ui-select label="Name des Kindergartens"
-					:manager="kindergartenManager"
-					v-model="model.idKindergarten.value"
-					:readonly />
-				<ui-select label="Dauer des Kindergartenbesuchs"
-					:manager="dauerKindergartenbesuchManager"
-					v-model="model.idDauerKindergartenbesuch.value"
-					:readonly />
-				<svws-ui-checkbox v-model="model.proxy.verpflichtungSprachfoerderkurs" :readonly>
-					Verpflichtung für Sprachförderkurs
-				</svws-ui-checkbox>
-				<svws-ui-checkbox v-model="model.proxy.teilnahmeSprachfoerderkurs" :readonly>
-					Teilnahme an Sprachförderkurs
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
+		<schueler-schulbesuch-kindergarten v-if="schuleHatPrimarstufe" :model :readonly />
 		<div v-else />
 
 		<!-- Grundschulbesuch !-->
@@ -169,20 +152,17 @@
 	import { PrimarstufeSchuleingangsphaseBesuchsjahre } from '@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre';
 	import { Einschulungsart } from '@core/asd/types/schueler/Einschulungsart';
 	import { Uebergangsempfehlung } from '@core/asd/types/schueler/Uebergangsempfehlung';
-	import { Kindergartenbesuch } from '@core/asd/types/schule/Kindergartenbesuch';
 	import { SchulabschlussAllgemeinbildend } from '@core/asd/types/schule/SchulabschlussAllgemeinbildend';
 	import { SchulabschlussBerufsbildend } from "@core/asd/types/schule/SchulabschlussBerufsbildend";
 	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import type { JahrgangsDaten } from '@core/core/data/jahrgang/JahrgangsDaten';
 	import type { KatalogEntlassgrund } from '@core/core/data/kataloge/KatalogEntlassgrund';
 	import type { SchulEintrag } from '@core/core/data/kataloge/SchulEintrag';
-	import type { Kindergarten } from '@core/core/data/schule/Kindergarten';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
 	import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 	import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
-	import { useKindergaertenState } from "@ui/states/kataloge/KindergaertenState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { useServerState } from '@ui/states/ServerState';
 	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
@@ -199,14 +179,13 @@
 	const serverState = useServerState();
 	const entlassgruendeState = useEntlassgruendeState();
 	const herkunftschulenState = useHerkunftschulenState();
-	const kindergaertenState = useKindergaertenState();
 	const jahrgaengeState = useJahrgaengeState();
 
 	const updateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !updateKompetenz.value);
 	const model = new SchuelerSchulbesuchModelProxy(
 		() => props.manager().daten,
-		() => props.manager(),
+		() => props.manager().schuljahr,
 		(data) => props.patch(props.manager().daten.id, data)
 	);
 	const schuljahr = computed(() => props.manager().schuljahr);
@@ -252,19 +231,6 @@
 		options: computed(() => entlassgruendeState.entlassgruende.list),
 		optionDisplayText: s => s.bezeichnung,
 		selectionDisplayText: s => s.bezeichnung,
-	});
-
-	const kindergartenManager = new SelectManager<Kindergarten>({
-		options: computed(() => kindergaertenState.kindergaerten.list),
-		optionDisplayText: s => s.bezeichnung,
-		selectionDisplayText: s => s.bezeichnung,
-	});
-
-	const dauerKindergartenbesuchManager = new CoreTypeSelectManager({
-		clazz: Kindergartenbesuch.class,
-		schuljahr: schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
 	});
 
 	const aufnehmendeSchuleManager = new SelectManager<SchulEintrag>({

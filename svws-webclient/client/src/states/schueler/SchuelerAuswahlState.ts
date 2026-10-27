@@ -72,7 +72,7 @@ export interface SchuelerAuswahlState extends GenericAuswahlState<SchuelerListeM
 
 	addTelefoneintrag(data: Partial<SchuelerTelefon>, idSchueler: number): Promise<void>;
 
-	patchTelefoneintrag(data: Partial<SchuelerTelefon>, idEintrag: number): Promise<void>;
+	patchTelefoneintrag(data: Partial<SchuelerTelefon>, idEintrag: number): Promise<boolean>;
 
 	deleteTelefoneintrage(idsEintraege: List<number>): Promise<void>;
 }

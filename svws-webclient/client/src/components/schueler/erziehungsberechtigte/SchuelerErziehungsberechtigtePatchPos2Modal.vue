@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show @update:show="emit('close-modal')">
+	<svws-ui-modal :show @update:show="emit('close-modal')" size="medium">
 		<template #modalTitle>Einen zweiten Erziehungsberechtigten hinzufügen</template>
 		<template #modalContent>
 			<schueler-erziehungsberechtigte-zweiter-erz-felder :model :schuljahr :readonly />
@@ -29,7 +29,7 @@
 		pos2SourceId: number;
 		schuljahr: number;
 		hatKompetenzUpdate: boolean;
-		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<void>;
+		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<boolean>;
 	}>();
 
 	const emit = defineEmits<{ 'close-modal': [] }>();
@@ -37,8 +37,7 @@
 	const readonly = computed(() => !props.hatKompetenzUpdate);
 
 	const model = new ErzieherStammdatenModelProxy(
-		() => props.zweiterErz,
-		() => props.schuljahr
+		() => props.zweiterErz
 	);
 
 	async function save() {

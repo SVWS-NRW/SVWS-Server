@@ -89,7 +89,7 @@
 		erzieher: ErzieherStammdaten;
 		schuljahr: number;
 		hatKompetenzUpdate: boolean;
-		patch: (data: Partial<ErzieherStammdaten>, id: number) => Promise<void>;
+		patch: (data: Partial<ErzieherStammdaten>, id: number) => Promise<boolean>;
 	}>();
 
 	const orteState = useOrteState();
@@ -98,7 +98,6 @@
 	const readonly = computed(() => !props.hatKompetenzUpdate);
 	const model = new ErzieherStammdatenModelProxy(
 		() => props.erzieher,
-		() => props.schuljahr,
 		async (data) => {
 			await props.patch(data, props.erzieher.id); return true;
 		}

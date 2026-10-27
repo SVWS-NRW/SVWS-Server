@@ -81,10 +81,14 @@ export class AdressenUtils extends JavaObject {
 		if ((name === null) && (hausNummer === null) && (zusatz === null)) {
 			return null;
 		}
-		const st: string = (name !== null) ? (name.trim() + " ") : "";
+		const st: string = (name !== null) ? name.trim() : "";
 		const hn: string = (hausNummer !== null) ? hausNummer.trim() : "";
 		const zs: string = (zusatz !== null) ? zusatz.trim() : "";
-		return st + hn + zs;
+		const nummer: string = hn + zs;
+		if ((st.length === 0) || (nummer.length === 0)) {
+			return st + nummer;
+		}
+		return st + " " + nummer;
 	}
 
 	transpilerCanonicalName(): string {

@@ -1,6 +1,6 @@
 <template>
 	<div class="ui-table-actions flex h-full items-center justify-end">
-		<div :class="{ 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200' : !alwaysVisible }">
+		<div :class="{ 'opacity-0 group-hover:opacity-100 group-has-focus-visible:opacity-100 transition-opacity duration-200' : !alwaysVisible }">
 			<div class="flex items-center justify-end">
 				<template v-for="action of actions" :key="action.label">
 					<svws-ui-button :type="action.trash ? 'trash' : 'icon'"

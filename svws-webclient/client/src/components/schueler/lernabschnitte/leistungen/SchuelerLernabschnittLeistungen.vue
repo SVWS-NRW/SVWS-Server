@@ -252,10 +252,12 @@
 
 	const headerCount = computed<number>(() => istGymOb.value ? 2 : 1);
 
-	const allgemeinModel = new SchuelerLernabschnittAllgemeinModelProxy(() => lernabschnittsdaten.value,
-		props.manager,
-		() => schulform.value,
-		() => schuljahr.value,
+	const allgemeinModel = new SchuelerLernabschnittAllgemeinModelProxy(
+		() => props.manager().lernabschnittGet(),
+		() => [...props.manager().lehrerGetMenge()],
+		() => [...props.manager().klasseGetMenge()],
+		() => [...props.manager().jahrgangGetMenge()],
+		() => [...props.manager().foerderschwerpunktGetMenge()],
 		async (data: Partial<SchuelerLernabschnittsdaten>) => {
 			await props.patch(data);
 			return true;

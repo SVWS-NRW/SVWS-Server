@@ -74,8 +74,8 @@
 		manager: () => SchuelerSchnelleingabeManager;
 		getErzieher: () => List<ErzieherStammdaten>;
 		addErzieher: (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number) => Promise<ErzieherStammdaten>;
-		patchErzieher: (data: Partial<ErzieherStammdaten>, idEintrag: number) => Promise<void>;
-		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number) => Promise<void>;
+		patchErzieher: (data: Partial<ErzieherStammdaten>, idEintrag: number) => Promise<boolean>;
+		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number) => Promise<boolean>;
 		deleteErzieher: (idsEintraege: List<number>) => Promise<void>;
 		schuljahr: number;
 		updateKompetenz: boolean;

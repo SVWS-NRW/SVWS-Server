@@ -12,9 +12,10 @@ export class SchuelerVermerkeModelProxy extends ModelProxy<SchuelerVermerke> {
 
 	constructor(
 		data: () => SchuelerVermerke,
-		patch?: (data: Partial<SchuelerVermerke>) => Promise<boolean>
+		patch?: (data: Partial<SchuelerVermerke>) => Promise<boolean>,
+		autopatchVermerkart: boolean = true
 	) {
-		const listOfAutopatchProps: Iterable<keyof SchuelerVermerke> = ["idVermerkart"];
+		const listOfAutopatchProps: Iterable<keyof SchuelerVermerke> = autopatchVermerkart ? ["idVermerkart"] : [];
 		super({ data, patch, listOfAutopatchProps });
 		this.addValidatoren();
 		this.validate();

@@ -1,6 +1,7 @@
 package de.svws_nrw.core.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import de.svws_nrw.base.CsvReader;
@@ -96,6 +98,22 @@ class AdressenUtilsTest {
 					}));
 		});
 		return tests.stream();
+	}
+
+	/**
+	 * Testet die Methode {@link AdressenUtils#combineStrasse(String, String, String)}
+	 */
+	@Test
+	@DisplayName("Teste das Zusammensetzen von Strassen aus Name, Hausnummer und Zusatz ...")
+	void pruefeCombineStrasse() {
+		assertNull(AdressenUtils.combineStrasse(null, null, null), "Fehler: Ohne Angaben muss null zurückgegeben werden!");
+		assertEquals("Hauptstr", AdressenUtils.combineStrasse("Hauptstr", "", ""), "Fehler: Ohne Hausnummer darf kein Leerzeichen angehängt werden!");
+		assertEquals("Hauptstr", AdressenUtils.combineStrasse("Hauptstr", null, null), "Fehler: Ohne Hausnummer darf kein Leerzeichen angehängt werden!");
+		assertEquals("Hauptstr 12", AdressenUtils.combineStrasse("Hauptstr", "12", ""), "Fehler: Name und Hausnummer müssen durch ein Leerzeichen getrennt werden!");
+		assertEquals("Hauptstr 12a", AdressenUtils.combineStrasse("Hauptstr", "12", "a"), "Fehler: Der Zusatz muss direkt an die Hausnummer angehängt werden!");
+		assertEquals("12a", AdressenUtils.combineStrasse(null, "12", "a"), "Fehler: Ohne Name darf kein Leerzeichen vorangestellt werden!");
+		assertEquals("12", AdressenUtils.combineStrasse("", "12", ""), "Fehler: Ohne Name darf kein Leerzeichen vorangestellt werden!");
+		assertEquals("Hauptstr 12", AdressenUtils.combineStrasse(" Hauptstr ", " 12 ", ""), "Fehler: Die Bestandteile müssen getrimmt werden!");
 	}
 
 }

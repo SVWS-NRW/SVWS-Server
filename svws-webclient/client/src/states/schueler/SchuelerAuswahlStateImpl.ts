@@ -250,7 +250,7 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 		this.setPatchedState({ listSchuelerTelefoneintraege });
 	};
 
-	public async patchTelefoneintrag(data: Partial<SchuelerTelefon>, idEintrag: number): Promise<void> {
+	public async patchTelefoneintrag(data: Partial<SchuelerTelefon>, idEintrag: number): Promise<boolean> {
 		await api.server.patchSchuelerTelefon(data, api.schema, idEintrag);
 		const listSchuelerTelefoneintraege = this.listTelefoneintraege;
 		for (const l of listSchuelerTelefoneintraege) {
@@ -260,6 +260,7 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 			}
 		}
 		this.setPatchedState({ listSchuelerTelefoneintraege });
+		return true;
 	};
 
 	public async deleteTelefoneintrage(idsEintraege: List<number>): Promise<void> {
