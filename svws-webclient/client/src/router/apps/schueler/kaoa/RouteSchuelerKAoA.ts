@@ -32,10 +32,12 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		try {
 			const { id } = RouteNode.getIntParams(params, ["id"]);
 			const schuelerAuswahlState = useSchuelerAuswahlState();
+			if (!schuelerAuswahlState.manager.hasDaten()) {
+				return routeSchueler.getRouteDefaultChild({ id });
+			}
 			const auswahl = schuelerAuswahlState.manager.auswahl();
 			const schuljahr = schuleStateImpl.schuljahr;
-			if (!schuelerAuswahlState.manager.hasDaten()
-					|| (auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
+			if ((auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
 					|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id)
 					|| !this.isJahrgangEligible(auswahl.jahrgang)) {
 				return routeSchueler.getRouteDefaultChild({ id });
