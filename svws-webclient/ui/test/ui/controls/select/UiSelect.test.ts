@@ -651,7 +651,6 @@ describe.concurrent("Validierung", () => {
 				},
 			});
 			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
-
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 	});
@@ -879,7 +878,7 @@ describe.concurrent("Teste Funktionen", () => {
 		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, modelValue: selection } });
 
 		const selectOption = wrapper.findComponent({ name: "UiSelect" }).vm.selectOption;
-		expect(() => selectOption(selection)).toThrow("Die Option BMW ist bereits selektiert.");
+		expect(() => selectOption(selection)).toThrow("Die Option Audi ist bereits selektiert.");
 	});
 
 	describe.concurrent("function->clearSelection()", () => {

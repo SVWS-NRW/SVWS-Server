@@ -99,8 +99,8 @@
 			"historie": [
 				{
 					"id": 10003,
-					"kuerzel": "OKK",
-					"text": "OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
+					"kuerzel": "AA",
+					"text": "BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
 					"schluessel": "AK",
 					"zulaessig": [
 						{ "schulform": "G", "gliederung": null },
@@ -314,9 +314,9 @@
 			"historie": [
 				{
 					"id": 9000,
-					"kuerzel": "JK",
-					"text": "OJ - Ein längerer Eintrag mit 40 Zeichen",
-					"schluessel": "DF",
+					"kuerzel": "BB",
+					"text": "AA - Ein längerer Eintrag mit 45 Zeichen",
+					"schluessel": "BB",
 					"zulaessig": [
 						{ "schulform": "G", "gliederung": null },
 						{ "schulform": "GE", "gliederung": null },

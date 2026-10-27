@@ -1,5 +1,6 @@
-import { nextTick, ref, type Ref } from "vue";
-import { describe, test, expect, beforeAll, vi } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
+import { nextTick, type Ref, ref } from "vue";
+
 import type { CoreTypeData } from "@core/asd/data/CoreTypeData";
 import type { KlassenartKatalogEintrag } from "@core/asd/data/klassen/KlassenartKatalogEintrag";
 import { Klassenart } from "@core/asd/types/klassen/Klassenart";
@@ -11,6 +12,7 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { Comparator } from "@core/java/util/Comparator";
 import type { List } from "@core/java/util/List";
 import type { SelectFilter } from "@ui/ui/controls/select/filter/SelectFilter";
+import type { SelectSort } from "@ui/ui/controls/select/manager/BaseSelectManager";
 import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 
 const reader = new JsonCoreTypeReaderStatic();
@@ -33,235 +35,416 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 			expect(manager.getOptionText(klassenart)).toBe("OK - O - Kurzer Eintrag");
 			expect(manager.unfilteredOptions.size()).toBe(0);
 			expect(manager.filteredOptions.size()).toBe(0);
-			expect(manager.sort).toBeNull();
 		});
 
 		test('Neuer Manager mit clazz setzt filteredOptions und unfilteredOptions mit aktuellsten Historieneinträgen', () => {
-			const { clazz, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const { clazz, sortedAlphabetical, unsorted } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz });
 
 			expect(manager.unfilteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+			expect(manager.filteredOptions.size()).toBe(15);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('Neuer Manager mit clazz und schuljahr setzt filteredOptions und unfilteredOptions mit dem angegebenen Jahr.', () => {
-			const { clazz, schuljahr, initalOrder2010 } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schuljahr: schuljahr });
+			const { clazz, schuljahr } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, schuljahr: schuljahr });
 
 			expect(manager.unfilteredOptions.size()).toBe(13);
-			initalOrder2010.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			[
+				"** - Kein Eintrag",
+				"BK - B - Kurzer Eintrag",
+				"SK - KS - Kurzer Eintrag",
+				"KK - K - Ein sehr langer Eintrag mit insgesamt 52 Zeichen",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"OK - O - Kurzer Eintrag",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"PK - P - Ein etwas längerer Eintrag",
+				"ZK - Z - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
-			initalOrder2010.forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+			expect(manager.filteredOptions.size()).toBe(13);
+			[
+				"** - Kein Eintrag",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"BK - B - Kurzer Eintrag",
+				"HK - H - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"KK - K - Ein sehr langer Eintrag mit insgesamt 52 Zeichen",
+				"OK - O - Kurzer Eintrag",
+				"PK - P - Ein etwas längerer Eintrag",
+				"SK - KS - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"ZK - Z - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('Neuer Manager mit clazz, schuljahr und schulformen(einzelne) setzt filteredOptions und unfilteredOptions mit zulässiger Schulform und Schuljahr.', () => {
 			const { clazz, schuljahr } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schuljahr: schuljahr, schulformen: Schulform.GY });
-
-			const entries = [
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"H - Kurzer Eintrag",
-				"V - Kurzer Eintrag",
-				"T - Kurzer Eintrag",
-				"I - Kurzer Eintrag",
-			];
+			const manager = new CoreTypeSelectManager({ clazz, schuljahr: schuljahr, schulformen: Schulform.GY });
 
 			expect(manager.unfilteredOptions.size()).toBe(6);
-			entries.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			expect(manager.filteredOptions.size()).toBe(6);
-			entries.forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('Neuer Manager mit clazz und schulformen(einzelne) setzt filteredOptions und unfilteredOptions mit zulässiger Schulform und aktuellsten Einträgen.', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schulformen: Schulform.GY });
-
-			const entries = [
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"H - Kurzer Eintrag",
-				"V - Kurzer Eintrag",
-				"T - Kurzer Eintrag",
-				"I - Kurzer Eintrag",
-				'C - Kurzer Eintrag',
-			];
+			const manager = new CoreTypeSelectManager({ clazz, schulformen: Schulform.GY });
 
 			expect(manager.unfilteredOptions.size()).toBe(7);
-			entries.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"CK - C - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			expect(manager.filteredOptions.size()).toBe(7);
-			entries.forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"CK - C - Kurzer Eintrag",
+				"HK - H - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('Neuer Manager mit clazz, schuljahr und schulformen(mehrere) setzt filteredOptions und unfilteredOptions mit zulässigen Schulformen und Schuljahr.', () => {
 			const { clazz, schuljahr } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schuljahr: schuljahr, schulformen: [Schulform.GY, Schulform.H] });
-			const entries = [
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"H - Kurzer Eintrag",
-				"V - Kurzer Eintrag",
-				"T - Kurzer Eintrag",
-				"I - Kurzer Eintrag",
-				"B - Kurzer Eintrag",
-				"KS - Kurzer Eintrag",
-				"K - Ein sehr langer Eintrag mit insgesamt 52 Zeichen",
-				"P - Ein etwas längerer Eintrag",
-			];
+			const manager = new CoreTypeSelectManager({ clazz, schuljahr: schuljahr, schulformen: [Schulform.GY, Schulform.H] });
 
 			expect(manager.unfilteredOptions.size()).toBe(10);
-			entries.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"BK - B - Kurzer Eintrag",
+				"SK - KS - Kurzer Eintrag",
+				"KK - K - Ein sehr langer Eintrag mit insgesamt 52 Zeichen",
+				"PK - P - Ein etwas längerer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			expect(manager.filteredOptions.size()).toBe(10);
-			entries.forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"BK - B - Kurzer Eintrag",
+				"HK - H - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"KK - K - Ein sehr langer Eintrag mit insgesamt 52 Zeichen",
+				"PK - P - Ein etwas längerer Eintrag",
+				"SK - KS - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('Neuer Manager mit clazz und schulformen(mehrere) setzt filteredOptions und unfilteredOptions mit zulässigen Schulformen und aktuellsten Einträgen.', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schulformen: [Schulform.GY, Schulform.H] });
-			const entries = [
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"H - Kurzer Eintrag",
-				"V - Kurzer Eintrag",
-				"T - Kurzer Eintrag",
-				"I - Kurzer Eintrag",
-				'C - Kurzer Eintrag',
-				"B - Kurzer Eintrag",
-				"KS - Kurzer Eintrag",
-				"K - Aktuellster Eintrag",
-				'A - Kurzer Eintrag',
-				"P - Ein etwas längerer Eintrag",
-			];
+			const manager = new CoreTypeSelectManager({ clazz, schulformen: [Schulform.GY, Schulform.H] });
 
 			expect(manager.unfilteredOptions.size()).toBe(12);
-			entries.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"CK - C - Kurzer Eintrag",
+				"BK - B - Kurzer Eintrag",
+				"SK - KS - Kurzer Eintrag",
+				"KK - K - Aktuellster Eintrag",
+				"AK - A - Kurzer Eintrag",
+				"PK - P - Ein etwas längerer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			expect(manager.filteredOptions.size()).toBe(12);
-			entries.forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"AK - A - Kurzer Eintrag",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"BK - B - Kurzer Eintrag",
+				"CK - C - Kurzer Eintrag",
+				"HK - H - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"KK - K - Aktuellster Eintrag",
+				"PK - P - Ein etwas längerer Eintrag",
+				"SK - KS - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
-		test('Neuer Manager mit clazz und sort setzt eine sortierte gefilterte und unsortierte ungefilterter Liste.', () => {
-			const { clazz, sort, initalOrderCurrent, sorted } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, sort: sort });
+		test('Neuer Manager mit clazz und sort = undefined -> sortiert alphabetisch, da der CoreType keine Prop "sortierung" besitzt, welches die Defaultsortierung wäre', () => {
+			const { clazz, unsorted, sortedAlphabetical } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz });
 
 			expect(manager.unfilteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
-			sorted.forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+			expect(manager.filteredOptions.size()).toBe(15);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+		});
+
+		test('Neuer Manager mit clazz und sort = "sortierungProp" -> sortiert alphabetisch, da der CoreType keine Prop "sortierung" besitzt', () => {
+			const { clazz, unsorted, sortedAlphabetical } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, sort: "sortierungProp" });
+
+			expect(manager.unfilteredOptions.size()).toBe(15);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			expect(manager.filteredOptions.size()).toBe(15);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+		});
+
+		test('Neuer Manager mit clazz und sort = "idProp" -> sortiert die Optionen nach ID', () => {
+			const { clazz, unsorted } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, sort: "idProp" });
+
+			expect(manager.unfilteredOptions.size()).toBe(15);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			expect(manager.filteredOptions.size()).toBe(15);
+			[
+				"0 - Kein Eintrag",
+				"1003 - B - Kurzer Eintrag",
+				"2004 - KS - Kurzer Eintrag",
+				"3001 - K - Aktuellster Eintrag",
+				"4000 - O - Kurzer Eintrag",
+				"5000 - Z - Kurzer Eintrag",
+				"6001 - V - Kurzer Eintrag",
+				"7002 - T - Kurzer Eintrag",
+				"8001 - I - Kurzer Eintrag",
+				"9000 - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"10003 - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"11002 - A - Kurzer Eintrag",
+				"12005 - H - Kurzer Eintrag",
+				"13002 - P - Ein etwas längerer Eintrag",
+				"14003 - C - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const option = manager.filteredOptions.get(index);
+				const displayText = `${option.id} - ${option.text}`;
+				expect(displayText).toBe(element);
+			});
+		});
+
+		test('Neuer Manager mit clazz und sort = "alphabetical" -> sortiert die Optionen alphabetisch', () => {
+			const { clazz, unsorted, sortedAlphabetical } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, sort: "alphabetical" });
+
+			expect(manager.unfilteredOptions.size()).toBe(15);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			expect(manager.filteredOptions.size()).toBe(15);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+		});
+
+		test('Neuer Manager mit clazz und sort = "unsorted" -> behält die ursprüngliche Reihenfolge bei', () => {
+			const { clazz, unsorted } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, sort: "unsorted" });
+
+			expect(manager.unfilteredOptions.size()).toBe(15);
+			expect(manager.filteredOptions.size()).toBe(15);
+
+			unsorted.forEach((element, index) => {
+				const unfilteredDisplayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(unfilteredDisplayText).toBe(element);
+
+				const filteredDisplayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(filteredDisplayText).toBe(element);
+			});
+		});
+
+		test("Neuer Manager mit clazz und sort als Funktion -> sortiert nach dem eigenen Comparator", () => {
+			const { clazz, sort, unsorted, sortedByText } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, sort });
+
+			expect(manager.unfilteredOptions.size()).toBe(15);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			expect(manager.filteredOptions.size()).toBe(15);
+			sortedByText.forEach((element, index) => {
+				const displayText = manager.filteredOptions.get(index).text;
+				expect(displayText).toBe(element);
+			});
+		});
+
+		test("Neuer Manager mit clazz und sort als Comparator-Objekt -> sortiert nach dem eigenen Comparator", () => {
+			const { clazz, sort, unsorted, sortedByText } = createTestData();
+			const comparator = { compare: sort };
+			const manager = new CoreTypeSelectManager({ clazz, sort: comparator });
+
+			expect(manager.unfilteredOptions.size()).toBe(15);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			expect(manager.filteredOptions.size()).toBe(15);
+			sortedByText.forEach((element, index) => {
+				const displayText = manager.filteredOptions.get(index).text;
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('Neuer Manager mit clazz und filter erzeugt eine gefilterte Optionenliste.', () => {
-			const { clazz, startsWithFilter, longNameFilter, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter, longNameFilter] });
+			const { clazz, startsWithFilter, longNameFilter, unsorted } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter, longNameFilter] });
 
 			expect(manager.unfilteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
-			expect(manager.filteredOptions.size()).toBe(2);
-			expect(manager.filteredOptions.get(0).text).toBe("OK - Ein sehr laaanger Eintrag mit 45 Zeichen");
-			expect(manager.filteredOptions.get(1).text).toBe("OJ - Ein längerer Eintrag mit 40 Zeichen");
+			expect(manager.filteredOptions.size()).toBe(1);
+			const displayText = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText).toBe("AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen");
 		});
 
 		test('Neuer Manager mit clazz, filter und sort erzeugt eine gefilterte und sortierte Optionenliste.', () => {
-			const { clazz, sort, longNameFilter, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, sort: sort, filters: [longNameFilter] });
+			const { clazz, sort, longNameFilter, unsorted } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, sort: sort, filters: [longNameFilter] });
 
 			expect(manager.unfilteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			expect(manager.filteredOptions.size()).toBe(2);
 			[
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
+				"AA - Ein längerer Eintrag mit 45 Zeichen",
+				"BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
 			].forEach((element, index) => {
 				expect(manager.filteredOptions.get(index).text).toBe(element);
 			});
 		});
 
-
 		test("Neuer Manager mit clazz und selectionDisplayText(Funktion) hat Custom Text für die Selektion", () => {
 			const { clazz, klassenart, selectionDisplayText } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, selectionDisplayText: selectionDisplayText });
+			const manager = new CoreTypeSelectManager({ clazz, selectionDisplayText: selectionDisplayText });
 			expect(manager.getSelectionText(klassenart)).toBe("sel:O - Kurzer Eintrag");
 		});
 
-		test("Neuer Manager mit clazz und selectionDisplayText('kuerzel') hat Kürzel als Text für die Selektion", () => {
+		test.each([
+			{ selectionDisplayText: 'kuerzel', expected: "OK" },
+			{ selectionDisplayText: 'text', expected: "O - Kurzer Eintrag" },
+			{ selectionDisplayText: 'kuerzelText', expected: "OK - O - Kurzer Eintrag" },
+		] as const)("Neuer Manager mit clazz und selectionDisplayText($selectionDisplayText) hat '$expected' als Text für die Selektion", ({ selectionDisplayText, expected }) => {
 			const { clazz, klassenart } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, selectionDisplayText: 'kuerzel' });
-			expect(manager.getSelectionText(klassenart)).toBe("OK");
-		});
-
-		test("Neuer Manager mit clazz und selectionDisplayText('text') hat Text als Text für die Selektion", () => {
-			const { clazz, klassenart } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, selectionDisplayText: 'text' });
-			expect(manager.getSelectionText(klassenart)).toBe("O - Kurzer Eintrag");
-		});
-
-		test("Neuer Manager mit clazz und selectionDisplayText('kuerzelText') hat 'Kürzel - Text' als Text für die Selektion", () => {
-			const { clazz, klassenart } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, selectionDisplayText: 'kuerzelText' });
-			expect(manager.getSelectionText(klassenart)).toBe("OK - O - Kurzer Eintrag");
+			const manager = new CoreTypeSelectManager({ clazz, selectionDisplayText });
+			expect(manager.getSelectionText(klassenart)).toBe(expected);
 		});
 
 		test("Neuer Manager mit clazz und optionDisplayText(Funktion) hat Custom Text für die Optionen", () => {
 			const { clazz, klassenart, optionDisplayText } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, optionDisplayText: optionDisplayText });
+			const manager = new CoreTypeSelectManager({ clazz, optionDisplayText: optionDisplayText });
 			expect(manager.getOptionText(klassenart)).toBe("opt:O - Kurzer Eintrag");
 		});
 
-		test("Neuer Manager mit clazz und optionDisplayText('kuerzel') hat Kürzel als Text für die Optionen", () => {
+		test.each([
+			{ optionDisplayText: 'kuerzel', expected: "OK" },
+			{ optionDisplayText: 'text', expected: "O - Kurzer Eintrag" },
+			{ optionDisplayText: 'kuerzelText', expected: "OK - O - Kurzer Eintrag" },
+		] as const)("Neuer Manager mit clazz und optionDisplayText($optionDisplayText) hat '$expected' als Text für die Optionen", ({ optionDisplayText, expected }) => {
 			const { clazz, klassenart } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, optionDisplayText: 'kuerzel' });
-			expect(manager.getOptionText(klassenart)).toBe("OK");
-		});
-
-		test("Neuer Manager mit clazz und optionDisplayText('text') hat Text als Text für die Optionen", () => {
-			const { clazz, klassenart } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, optionDisplayText: 'text' });
-			expect(manager.getOptionText(klassenart)).toBe("O - Kurzer Eintrag");
-		});
-
-		test("Neuer Manager mit clazz und optionDisplayText('kuerzelText') hat 'Kürzel - Text' als Text für die Optionen", () => {
-			const { clazz, klassenart } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, optionDisplayText: 'kuerzelText' });
-			expect(manager.getOptionText(klassenart)).toBe("OK - O - Kurzer Eintrag");
+			const manager = new CoreTypeSelectManager({ clazz, optionDisplayText });
+			expect(manager.getOptionText(klassenart)).toBe(expected);
 		});
 
 		test("setConfig() -> es ändert sich nichts an den Konfigurationen", () => {
@@ -328,13 +511,12 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 			expect(manager.getSelectionText(klassenart)).toBe("newSel:O - Kurzer Eintrag");
 			expect(manager.getOptionText(klassenart)).toBe("OK - O - Kurzer Eintrag");
 		});
-
 	});
 
 	describe.concurrent("Reaktivität", () => {
 
 		test("Neue clazz bei Änderung des Refs", async () => {
-			const { clazz, initalOrderCurrent } = createTestData();
+			const { clazz, unsorted } = createTestData();
 			const clazzRef: Ref<Class<Klassenart> | null> = ref(null);
 			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazzRef });
 
@@ -346,8 +528,9 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 			await nextTick();
 
 			expect(manager.unfilteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
@@ -404,37 +587,38 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 		test("Neue filters bei Änderung des Refs", async () => {
 			const { clazz, startsWithFilter } = createTestData();
 			const filterRef = ref<SelectFilter<KlassenartKatalogEintrag>[]>([]);
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: filterRef });
+			const manager = new CoreTypeSelectManager({ clazz, filters: filterRef });
 
 			expect(manager.filteredOptions.size()).toBe(manager.unfilteredOptions.size());
 
 			filterRef.value = [startsWithFilter];
 			await nextTick();
 
-			expect(manager.filteredOptions.size()).toBe(3);
+			expect(manager.filteredOptions.size()).toBe(2);
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"O - Kurzer Eintrag",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"AK - A - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test("Neues sort bei Änderung des Refs", async () => {
-			const { clazz, sort, initalOrderCurrent, sorted } = createTestData();
-			const sortRef = ref<((a: KlassenartKatalogEintrag, b: KlassenartKatalogEintrag) => number) | Comparator<KlassenartKatalogEintrag> | null>(null);
-			const manager = new CoreTypeSelectManager({ clazz: clazz, sort: sortRef });
+			const { clazz, sort, unsorted, sortedByText } = createTestData();
+			const sortRef = ref<SelectSort<KlassenartKatalogEintrag>>("sortierungProp");
+			const manager = new CoreTypeSelectManager({ clazz, sort: sortRef });
 
 			expect(manager.unfilteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			sortRef.value = { compare: sort };
 			await nextTick();
 
-			sorted.forEach((element, index) => {
+			sortedByText.forEach((element, index) => {
 				expect(manager.filteredOptions.get(index).text).toBe(element);
 			});
 		});
@@ -444,128 +628,109 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 	describe.concurrent("Funktionen", () => {
 
 		test('get unfilteredOptions() mit Optionen und Filtern -> Gibt die ungefilterten Optionen zurück', () => {
-			const { clazz, startsWithFilter, longNameFilter, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter, longNameFilter] });
+			const { clazz, startsWithFilter, longNameFilter, unsorted } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter, longNameFilter] });
 
 			expect(manager.unfilteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('get filteredOptions() mit Optionen und Filtern -> Gibt die gefilterten Optionen zurück', () => {
 			const { clazz, startsWithFilter, longNameFilter } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter, longNameFilter] });
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter, longNameFilter] });
 
-			expect(manager.filteredOptions.size()).toBe(2);
+			expect(manager.filteredOptions.size()).toBe(1);
+			const displayText = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText).toBe("AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen");
 
-			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
-			});
 		});
 
 
 		test('updateFilteredOptions() -> aktualisiert alle Optionen', () => {
-			const { clazz, letter, letters, startsWithFilter, longNameFilter } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter, longNameFilter] });
+			const { clazz, letter, lettersCount, startsWithFilter, longNameFilter } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter, longNameFilter] });
 
+			expect(manager.filteredOptions.size()).toBe(1);
+			const displayText = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText).toBe("AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen");
+
+			letter.value = "B";
+			lettersCount.value = 5;
+			manager.updateFilteredOptions();
 			expect(manager.filteredOptions.size()).toBe(2);
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"BK - B - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
-			});
-
-			letter.value = "K";
-			letters.value = 5;
-			manager.updateFilteredOptions();
-
-			expect(manager.filteredOptions.size()).toBe(3);
-			[
-				"Kein Eintrag",
-				"KS - Kurzer Eintrag",
-				"K - Aktuellster Eintrag",
-			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 
 		test('updateFilteredOptions(longNameFilter) -> aktualisiert nur die Optionen des Filters', () => {
-			const { clazz, startsWithFilter, longNameFilter, letter, letters } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter, longNameFilter] });
+			const { clazz, startsWithFilter, longNameFilter, letter, lettersCount } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter, longNameFilter] });
 
-			expect(manager.filteredOptions.size()).toBe(2);
-			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
-			});
+			expect(manager.filteredOptions.size()).toBe(1);
+			const displayText = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText).toBe("AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen");
 
-			letters.value = 41;
-			letter.value = "K";
+			letter.value = "B";
+			lettersCount.value = 41;
 			manager.updateFilteredOptions(longNameFilter);
 
 			expect(manager.filteredOptions.size()).toBe(1);
-			expect(manager.filteredOptions.get(0).text).toBe("OK - Ein sehr laaanger Eintrag mit 45 Zeichen");
+			const displayText2 = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText2).toBe("AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen");
 		});
 
 
 		test('updateFilteredOptions(longNameFilter, false) -> aktualisiert nur die Optionen des Filters', () => {
-			const { clazz, startsWithFilter, longNameFilter, letter, letters } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter, longNameFilter] });
-
-			expect(manager.filteredOptions.size()).toBe(2);
-			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
-			});
-
-			letters.value = 41;
-			letter.value = "K";
-			manager.updateFilteredOptions(longNameFilter, false);
+			const { clazz, startsWithFilter, longNameFilter, letter, lettersCount } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter, longNameFilter] });
 
 			expect(manager.filteredOptions.size()).toBe(1);
-			expect(manager.filteredOptions.get(0).text).toBe("OK - Ein sehr laaanger Eintrag mit 45 Zeichen");
+			const displayText = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText).toBe("AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen");
+
+			letter.value = "B";
+			lettersCount.value = 41;
+			manager.updateFilteredOptions(longNameFilter, false);
+			expect(manager.filteredOptions.size()).toBe(1);
+			const displayText2 = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText2).toBe("AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen");
 		});
 
 
 		test('updateFilteredOptions(longNameFilter, true) -> löscht den Filter und aktualisiert keine anderen Filter', () => {
-			const { clazz, startsWithFilter, longNameFilter, letter, letters } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter, longNameFilter] });
+			const { clazz, startsWithFilter, longNameFilter, letter, lettersCount } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter, longNameFilter] });
 
+			expect(manager.filteredOptions.size()).toBe(1);
+			const displayText = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText).toBe("AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen");
+
+			letter.value = "B";
+			lettersCount.value = 41;
+			manager.updateFilteredOptions(longNameFilter, true);
 			expect(manager.filteredOptions.size()).toBe(2);
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"AK - A - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
-			});
-
-			letters.value = 41;
-			letter.value = "K";
-			manager.updateFilteredOptions(longNameFilter, true);
-			expect(manager.filteredOptions.size()).toBe(3);
-			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"O - Kurzer Eintrag",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 
 		test('toList(List) -> gibt List unverändert zurück', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const manager = new CoreTypeSelectManager({ clazz });
 			const arrayList = new ArrayList<CoreTypeData>();
 			for (const f of manager.unfilteredOptions) {
 				arrayList.add(f);
@@ -584,7 +749,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('toList(Array) -> konvertiert das Array zu ArrayList', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const manager = new CoreTypeSelectManager({ clazz });
 			const arr = manager.unfilteredOptions.toArray();
 
 			const result = manager.toList(arr);
@@ -612,136 +777,138 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 
 		test('addFilter(Filter) ohne bereits existierenden Filter mit diesem Schlüssel -> fügt neuen Filter hinzu und aktualisiert die gefilterten Optionen', () => {
-			const { clazz, startsWithFilter, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const { clazz, startsWithFilter, unsorted } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz });
 
 			expect(manager.unfilteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			manager.addFilter(startsWithFilter);
 
-			expect(manager.filteredOptions.size()).toBe(3);
+			expect(manager.filteredOptions.size()).toBe(2);
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"O - Kurzer Eintrag",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"AK - A - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 
 		test('addFilter(Filter) mit bereits existierenden Filter mit diesem Schlüssel -> überschreibt den Filter und aktualisiert die gefilterten Optionen', () => {
 			const { clazz, startsWithFilter, letter } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter] });
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter] });
 
-			expect(manager.filteredOptions.size()).toBe(3);
+			expect(manager.filteredOptions.size()).toBe(2);
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"O - Kurzer Eintrag",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"AK - A - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			letter.value = "K";
 			manager.addFilter(startsWithFilter);
 
-			expect(manager.filteredOptions.size()).toBe(3);
-			[
-				"Kein Eintrag",
-				"KS - Kurzer Eintrag",
-				"K - Aktuellster Eintrag",
-			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
-			});
+			expect(manager.filteredOptions.size()).toBe(1);
+			const displayText = manager.getOptionText(manager.filteredOptions.getFirst());
+			expect(displayText).toBe("KK - K - Aktuellster Eintrag");
 		});
 
 
 		test('removeFilter(Filter) mit existierendem Filter -> entfernt existierenden Filter und aktualisiert die gefilterten Optionen', () => {
-			const { clazz, startsWithFilter, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter] });
+			const { clazz, startsWithFilter, sortedAlphabetical } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter] });
 
-			expect(manager.filteredOptions.size()).toBe(3);
+			expect(manager.filteredOptions.size()).toBe(2);
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"O - Kurzer Eintrag",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"AK - A - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			manager.removeFilter(startsWithFilter);
 
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 
 		test('removeFilter(key) mit existierendem Filter -> entfernt existierenden Filter per Schlüssel und aktualisiert die gefilterten Optionen', () => {
-			const { clazz, startsWithFilter, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter] });
+			const { clazz, startsWithFilter, sortedAlphabetical } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter] });
 
-			expect(manager.filteredOptions.size()).toBe(3);
+			expect(manager.filteredOptions.size()).toBe(2);
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"O - Kurzer Eintrag",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"AK - A - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			manager.removeFilter("startsWithLetter");
 
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 
 		test('removeFilter(Filter) ohne existierenden Filter -> entfernt nichts', () => {
-			const { clazz, startsWithFilter, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const { clazz, startsWithFilter, sortedAlphabetical } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz });
 
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			manager.removeFilter(startsWithFilter);
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 
 		test('removeFilter(key) ohne existierenden Filter -> entfernt nichts', () => {
-			const { clazz, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const { clazz, sortedAlphabetical } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz });
 
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			manager.removeFilter("startsWithFilter");
 
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 
 		test('getFilterByKey(filterKey) und Filter existiert -> gibt Filter zurück', () => {
 			const { clazz, startsWithFilter, longNameFilter } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, filters: [startsWithFilter, longNameFilter] });
+			const manager = new CoreTypeSelectManager({ clazz, filters: [startsWithFilter, longNameFilter] });
 
 			const result = manager.getFilterByKey("startsWithLetter");
 
@@ -751,7 +918,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('getFilterByKey(filterKey) und Filter existiert nicht -> gibt null zurück', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const manager = new CoreTypeSelectManager({ clazz });
 
 			const result = manager.getFilterByKey("nonExistingFilter");
 
@@ -766,7 +933,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test("set selectionDisplayText() -> setzt den Wert von selectionDisplayText", () => {
 			const { clazz, selectionDisplayText } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz });
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz });
 			manager.selectionDisplayText = selectionDisplayText;
 
 			expect(manager.selectionDisplayText).toBe(selectionDisplayText);
@@ -780,37 +947,27 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('getSelectionText(selection) ohne selectionDisplayText -> gibt das Kürzel mit Text der Selection zurück', () => {
 			const { klassenart, clazz } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz });
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz });
 
 			expect(manager.getSelectionText(klassenart)).toBe("OK - O - Kurzer Eintrag");
 		});
 
 		test('getSelectionText(selection) mit Funktion als selectionDisplayText-> gibt den Text der Selection entsprechend der Funktion zurück', () => {
 			const { klassenart, clazz, selectionDisplayText } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz, selectionDisplayText: selectionDisplayText });
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz, selectionDisplayText: selectionDisplayText });
 
 			expect(manager.getSelectionText(klassenart)).toBe("sel:O - Kurzer Eintrag");
 		});
 
-		test('getSelectionText(selection) mit selectionDisplayText = text -> gibt den Text der Selection zurück', () => {
+		test.each([
+			{ selectionDisplayText: 'text', expected: "O - Kurzer Eintrag" },
+			{ selectionDisplayText: 'kuerzel', expected: "OK" },
+			{ selectionDisplayText: 'kuerzelText', expected: "OK - O - Kurzer Eintrag" },
+		] as const)('getSelectionText(selection) mit selectionDisplayText = $selectionDisplayText -> gibt $expected zurück', ({ selectionDisplayText, expected }) => {
 			const { klassenart, clazz } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz, selectionDisplayText: 'text' });
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz, selectionDisplayText });
 
-			expect(manager.getSelectionText(klassenart)).toBe("O - Kurzer Eintrag");
-		});
-
-		test('getSelectionText(selection) mit selectionDisplayText = kuerzel -> gibt das Kürzel der Selection zurück', () => {
-			const { klassenart, clazz } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz, selectionDisplayText: 'kuerzel' });
-
-			expect(manager.getSelectionText(klassenart)).toBe("OK");
-		});
-
-		test('getSelectionText(selection) mit selectionDisplayText = kuerzelText -> gibt das Kürzel mit Text der Selection zurück', () => {
-			const { klassenart, clazz } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz, selectionDisplayText: 'kuerzelText' });
-
-			expect(manager.getSelectionText(klassenart)).toBe("OK - O - Kurzer Eintrag");
+			expect(manager.getSelectionText(klassenart)).toBe(expected);
 		});
 
 		test("get optionDisplayText() -> gibt den Wert von optionDisplayText zurück", () => {
@@ -821,7 +978,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test("set optionDisplayText() -> setzt den Wert von optionDisplayText", () => {
 			const { clazz, optionDisplayText } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz });
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz });
 			manager.optionDisplayText = optionDisplayText;
 
 			expect(manager.optionDisplayText).toBe(optionDisplayText);
@@ -835,156 +992,116 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('getOptionText(option) ohne optionDisplayText -> gibt das Kürzel mit Text der Option zurück', () => {
 			const { klassenart, clazz } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz });
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz });
 
 			expect(manager.getOptionText(klassenart)).toBe("OK - O - Kurzer Eintrag");
 		});
 
 		test('getOptionText(option) mit Funktion als optionDisplayText-> gibt den Text der Option entsprechend der Funktion zurück', () => {
 			const { klassenart, clazz, optionDisplayText } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz, optionDisplayText: optionDisplayText });
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz, optionDisplayText: optionDisplayText });
 
 			expect(manager.getOptionText(klassenart)).toBe("opt:O - Kurzer Eintrag");
 		});
 
-		test('getOptionText(option) mit optionDisplayText = text -> gibt den Text der Option zurück', () => {
+		test.each([
+			{ optionDisplayText: 'text', expected: "O - Kurzer Eintrag" },
+			{ optionDisplayText: 'kuerzel', expected: "OK" },
+			{ optionDisplayText: 'kuerzelText', expected: "OK - O - Kurzer Eintrag" },
+		] as const)('getOptionText(option) mit optionDisplayText = $optionDisplayText -> gibt $expected zurück', ({ optionDisplayText, expected }) => {
 			const { klassenart, clazz } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz, optionDisplayText: 'text' });
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz, optionDisplayText });
 
-			expect(manager.getOptionText(klassenart)).toBe("O - Kurzer Eintrag");
+			expect(manager.getOptionText(klassenart)).toBe(expected);
 		});
 
-		test('getOptionText(option) mit optionDisplayText = kuerzel -> gibt das Kürzel der Option zurück', () => {
-			const { klassenart, clazz } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz, optionDisplayText: 'kuerzel' });
+		test('getComparator() mit sort = "unsorted" -> gibt null zurück', () => {
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ sort: "unsorted" });
 
-			expect(manager.getOptionText(klassenart)).toBe("OK");
-		});
-
-		test('getOptionText(option) mit optionDisplayText = kuerzelText -> gibt das Kürzel mit Text der Option zurück', () => {
-			const { klassenart, clazz } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz, optionDisplayText: 'kuerzelText' });
-
-			expect(manager.getOptionText(klassenart)).toBe("OK - O - Kurzer Eintrag");
-		});
-
-		test("get sort() -> gibt die aktuelle Sortierfunktion zurück", () => {
-			const { clazz, sort } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, sort: sort });
-
-			expect(manager.sort).not.toBeNull();
-
-			const list = new ArrayList<KlassenartKatalogEintrag>();
-			list.add(manager.unfilteredOptions.get(0));
-			list.add(manager.unfilteredOptions.get(1));
-			list.add(manager.unfilteredOptions.get(2));
-
-			list.sort(manager.sort!);
-			[
-				"B - Kurzer Eintrag",
-				"Kein Eintrag",
-				"KS - Kurzer Eintrag",
-			].forEach((element, index) => {
-				expect(list.get(index).text).toBe(element);
-			});
-		});
-
-
-
-		test("set sort() -> setzt die neue Sortierfunktion", () => {
-			const { clazz, sort, initalOrderCurrent, sorted } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz });
-
-			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
-			});
-
-			manager.sort = sort;
-
-			expect(manager.filteredOptions.size()).toBe(15);
-			sorted.forEach((element, index) => {
-				expect(manager.filteredOptions.get(index).text).toBe(element);
-			});
-		});
-
-		test('toComparator(null) -> gibt null zurück', () => {
-			const manager = new CoreTypeSelectManager();
-			const result = manager.toComparator(null);
+			const result = manager.getComparator();
 
 			expect(result).toBeNull();
 		});
 
-
-		test('toComparator(undefined) -> gibt null zurück', () => {
-			const manager = new CoreTypeSelectManager();
-			const result = manager.toComparator(undefined);
-
-			expect(result).toBeNull();
-		});
-
-
-		test('toComparator(sort Funktion) -> gibt Comparator Objekt mit compare zurück', () => {
+		test('getComparator() mit sort Funktion -> gibt Comparator Objekt mit compare zurück', () => {
 			const { sort } = createTestData();
-			const manager = new CoreTypeSelectManager();
-			const result = manager.toComparator(sort);
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ sort });
+			const result = manager.getComparator();
 
 			expect(result).not.toBeNull();
 			expect(typeof result!.compare).toBe("function");
 		});
 
-
-		test('toComparator(Comparator Objekt) -> gibt das gleiche Comparator Objekt zurück', () => {
+		test('getComparator() mit sort = Comparator Objekt -> gibt das gleiche Comparator Objekt zurück', () => {
 			const { sort } = createTestData();
 			const comp: Comparator<KlassenartKatalogEintrag> = { compare: sort };
-			const manager = new CoreTypeSelectManager();
-			const result = manager.toComparator(comp);
+			const manager = new CoreTypeSelectManager({ sort: comp });
+			const result = manager.getComparator();
 
 			expect(result).toBe(comp);
 		});
 
+		test.each(["sortierungProp", "idProp", "alphabetical", null, undefined] as const)(
+			'getComparator() mit sort = "%s" -> gibt einen Comparator zurück',
+			(sort) => {
+				const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ sort });
 
-		test('updateSort() sort ist null -> sortiert die gefilterten Optionen nicht', () => {
-			const { clazz, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+				const result = manager.getComparator();
+
+				expect(result).not.toBeNull();
+				expect(typeof result?.compare).toBe("function");
+			}
+		);
+
+		test('updateSort() comparator ist null -> bringt die Optionen in ihre ursprüngliche Reihenfolge', async () => {
+			const { clazz, sortedAlphabetical, unsorted } = createTestData();
+			const sortRef = ref<SelectSort<KlassenartKatalogEintrag>>(null);
+			const manager = new CoreTypeSelectManager({ clazz, sort: sortRef });
 
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
-			manager.updateSort();
+			sortRef.value = "unsorted"; // erzeugt comparator = null
+			await nextTick();
 
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 
-		test('updateSort() sort ist vorhanden -> sortiert die gefilterten Optionen', () => {
-			const { clazz, sort, initalOrderCurrent, sorted } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: clazz });
+		test('updateSort() comparator ist vorhanden -> sortiert die gefilterten Optionen', async () => {
+			const { clazz, sort, sortedAlphabetical, sortedByText } = createTestData();
+			const sortRef = ref<SelectSort<KlassenartKatalogEintrag>>(null);
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz, sort: sortRef });
 
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
-			manager.sort = sort;
-			manager.updateSort();
+			sortRef.value = sort;
+			await nextTick();
 
-			sorted.forEach((element, index) => {
+			sortedByText.forEach((element, index) => {
 				expect(manager.filteredOptions.get(index).text).toBe(element);
 			});
 		});
 
 		test('updateSort() filteredOptions leer -> es wird nichts sortiert', () => {
 			const { sort } = createTestData();
-			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>();
+			const sortRef = ref<SelectSort<KlassenartKatalogEintrag>>(null);
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ sort: sortRef });
+
 			expect(manager.filteredOptions.size()).toBe(0);
 
-			manager.sort = sort;
+			sortRef.value = sort;
 			manager.updateSort();
 
 			expect(manager.filteredOptions.size()).toBe(0);
@@ -992,14 +1109,14 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('get clazz() -> gibt die aktuell gesetzte Klasse zurück', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const manager = new CoreTypeSelectManager({ clazz });
 
 			expect(manager.clazz).toBe(clazz);
 		});
 
 		test('set clazz(neuer Wert) -> setzt neue Klasse, aktualisiert Manager und ruft updateOptions auf', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const manager = new CoreTypeSelectManager({ clazz });
 			expect(manager.clazz).toBe(clazz);
 			expect(manager.unfilteredOptions.size()).toBe(15);
 			expect(manager.filteredOptions.size()).toBe(15);
@@ -1012,7 +1129,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('set clazz(selber Wert) -> setzt weder eine neue Klasse, noch neue Optionen', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const manager = new CoreTypeSelectManager({ clazz });
 			expect(manager.clazz).toBe(clazz);
 			expect(manager.unfilteredOptions.size()).toBe(15);
 			expect(manager.filteredOptions.size()).toBe(15);
@@ -1025,7 +1142,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('set clazz(null) -> setzt die Klasse auf null und löscht alle Optionen', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const manager = new CoreTypeSelectManager({ clazz });
 			expect(manager.clazz).toBe(clazz);
 			expect(manager.unfilteredOptions.size()).toBe(15);
 			expect(manager.filteredOptions.size()).toBe(15);
@@ -1038,7 +1155,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('set clazz(undefined) -> setzt die Klasse auf undefined und löscht alle Optionen', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
+			const manager = new CoreTypeSelectManager({ clazz });
 			expect(manager.clazz).toBe(clazz);
 			expect(manager.unfilteredOptions.size()).toBe(15);
 			expect(manager.filteredOptions.size()).toBe(15);
@@ -1051,15 +1168,15 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('get schuljahr() -> gibt das aktuell gesetzte Schuljahr zurück', () => {
 			const { clazz, schuljahr } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schuljahr: schuljahr });
+			const manager = new CoreTypeSelectManager({ clazz, schuljahr: schuljahr });
 
 			expect(manager.schuljahr).toBe(schuljahr);
 		});
 
 		test('set schuljahr(neuer Wert) -> setzt neues Schuljahr und aktualisiert die Optionen', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
-			expect(manager.schuljahr).toBe(null);
+			const manager = new CoreTypeSelectManager({ clazz });
+			expect(manager.schuljahr).toBeNull();
 			expect(manager.unfilteredOptions.size()).toBe(15);
 			expect(manager.filteredOptions.size()).toBe(15);
 
@@ -1071,7 +1188,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('set schuljahr(null) -> setzt das Schuljahr auf null und aktualisiert die Optionen', () => {
 			const { clazz, schuljahr } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schuljahr: schuljahr });
+			const manager = new CoreTypeSelectManager({ clazz, schuljahr: schuljahr });
 			expect(manager.schuljahr).toBe(schuljahr);
 			expect(manager.unfilteredOptions.size()).toBe(13);
 			expect(manager.filteredOptions.size()).toBe(13);
@@ -1084,7 +1201,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('set schuljahr(selber Wert) -> ändert weder das Schuljahr, noch die Optionen', () => {
 			const { clazz, schuljahr } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schuljahr: schuljahr });
+			const manager = new CoreTypeSelectManager({ clazz, schuljahr: schuljahr });
 			expect(manager.schuljahr).toBe(schuljahr);
 			expect(manager.unfilteredOptions.size()).toBe(13);
 			expect(manager.filteredOptions.size()).toBe(13);
@@ -1097,19 +1214,20 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 		test('get schulformen() -> gibt die aktuell gesetzten Schulformen zurück', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schulformen: [Schulform.BK, Schulform.GY] });
+			const manager = new CoreTypeSelectManager({ clazz, schulformen: [Schulform.BK, Schulform.GY] });
 
 			expect(manager.schulformen).not.toBeNull();
 			// Checkt, ob Schulformen eine Liste ist
 			expect(Symbol.iterator in new Object(manager.schulformen!)).toBe(true);
-			expect((manager.schulformen as Schulform[]).length).toBe(2);
+			expect(manager.schulformen as Schulform[]).toHaveLength(2);
 			expect((manager.schulformen as Schulform[])).toEqual([Schulform.BK, Schulform.GY]);
 		});
 
 		test('set schulformen(neuer Wert) -> setzt neue Schulformen und aktualisiert die Optionen', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz });
-			expect(manager.schulformen).toBe(null);
+			const manager = new CoreTypeSelectManager({ clazz });
+
+			expect(manager.schulformen).toBeNull();
 			expect(manager.unfilteredOptions.size()).toBe(15);
 			expect(manager.filteredOptions.size()).toBe(15);
 
@@ -1117,109 +1235,161 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 			expect(manager.schulformen).toBe(Schulform.GY);
 			expect(manager.unfilteredOptions.size()).toBe(7);
 			expect(manager.filteredOptions.size()).toBe(7);
+
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"H - Kurzer Eintrag",
-				"V - Kurzer Eintrag",
-				"T - Kurzer Eintrag",
-				"I - Kurzer Eintrag",
-				"C - Kurzer Eintrag",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"CK - C - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"CK - C - Kurzer Eintrag",
+				"HK - H - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('set schulformen(null) -> setzt Schulformen auf null und aktualisiert die Optionen', () => {
-			const { clazz, initalOrderCurrent } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schulformen: Schulform.GY });
+			const { clazz, unsorted, sortedAlphabetical } = createTestData();
+			const manager = new CoreTypeSelectManager({ clazz, schulformen: Schulform.GY });
+
 			expect(manager.schulformen).toBe(Schulform.GY);
 			expect(manager.unfilteredOptions.size()).toBe(7);
 			expect(manager.filteredOptions.size()).toBe(7);
+
 			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"H - Kurzer Eintrag",
-				"V - Kurzer Eintrag",
-				"T - Kurzer Eintrag",
-				"I - Kurzer Eintrag",
-				"C - Kurzer Eintrag",
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"CK - C - Kurzer Eintrag",
 			].forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			[
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"CK - C - Kurzer Eintrag",
+				"HK - H - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+			].forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
 			manager.schulformen = null;
 			expect(manager.schulformen).toBeNull();
+			expect(manager.unfilteredOptions.size()).toBe(15);
 			expect(manager.filteredOptions.size()).toBe(15);
-			initalOrderCurrent.forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+
+			unsorted.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			sortedAlphabetical.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 		test('set schulformen(selber Wert) -> setzt weder neue Schulformen, noch neue Optionen', () => {
 			const { clazz } = createTestData();
-			const manager = new CoreTypeSelectManager({ clazz: clazz, schulformen: Schulform.GY });
+			const manager = new CoreTypeSelectManager({ clazz, schulformen: Schulform.GY });
+
+			const unsortedEntries = [
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"HK - H - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"CK - C - Kurzer Eintrag",
+			];
+
+			const sortedEntries = [
+				"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+				"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+				"CK - C - Kurzer Eintrag",
+				"HK - H - Kurzer Eintrag",
+				"IK - I - Kurzer Eintrag",
+				"TK - T - Kurzer Eintrag",
+				"VK - V - Kurzer Eintrag",
+			];
 
 			expect(manager.schulformen).toBe(Schulform.GY);
 			expect(manager.unfilteredOptions.size()).toBe(7);
 			expect(manager.filteredOptions.size()).toBe(7);
-			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"H - Kurzer Eintrag",
-				"V - Kurzer Eintrag",
-				"T - Kurzer Eintrag",
-				"I - Kurzer Eintrag",
-				"C - Kurzer Eintrag",
-			].forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+
+			unsortedEntries.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 
-			// denselben Wert nochmal setzen → sollte return treffen, keine Änderung
+			sortedEntries.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
 			manager.schulformen = Schulform.GY;
 			expect(manager.schulformen).toBe(Schulform.GY);
 			expect(manager.unfilteredOptions.size()).toBe(7);
 			expect(manager.filteredOptions.size()).toBe(7);
-			[
-				"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-				"OJ - Ein längerer Eintrag mit 40 Zeichen",
-				"H - Kurzer Eintrag",
-				"V - Kurzer Eintrag",
-				"T - Kurzer Eintrag",
-				"I - Kurzer Eintrag",
-				"C - Kurzer Eintrag",
-			].forEach((element, index) => {
-				expect(manager.unfilteredOptions.get(index).text).toBe(element);
-				expect(manager.filteredOptions.get(index).text).toBe(element);
+
+			unsortedEntries.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.unfilteredOptions.get(index));
+				expect(displayText).toBe(element);
+			});
+
+			sortedEntries.forEach((element, index) => {
+				const displayText = manager.getOptionText(manager.filteredOptions.get(index));
+				expect(displayText).toBe(element);
 			});
 		});
 
 	});
-
 });
 
 /**
  * Erstellt Testdaten für die Tests des CoreTypeSelectManagers.
  *
- * @returns die testdaten: fruits, letters, letter, startsWithFilter, longNameFilter, selectionDisplayText, optionDisplayText, sort
+ * @returns die testdaten: clazz, schuljahr, klassenart, lettersCount, letter, startsWithFilter, longNameFilter, selectionDisplayText, optionDisplayText, sort,
+ * 			unsorted, sortedAlphabetical, sortedByText,
  */
 function createTestData() {
 	const clazz = Klassenart.class;
 	const schuljahr = 2010;
 	const klassenart = Klassenart.AM.daten(schuljahr);
-	const letters = { value: 39 };
-	const letter = { value: "O" };
+	const lettersCount = { value: 39 };
+	const letter = { value: "A" };
 
 	const startsWithFilter = {
 		key: "startsWithLetter",
 		apply: (options: List<KlassenartKatalogEintrag>) => {
 			const filtered = new ArrayList<KlassenartKatalogEintrag>();
 			for (const option of options) {
-				if (option.text.startsWith(letter.value)) {
+				const text = option.kuerzel + " - " + option.text;
+				if (text.startsWith(letter.value)) {
 					filtered.add(option);
 				}
 			}
@@ -1232,7 +1402,8 @@ function createTestData() {
 		apply: (options: List<KlassenartKatalogEintrag>) => {
 			const filtered = new ArrayList<KlassenartKatalogEintrag>();
 			for (const option of options) {
-				if (option.text.length > letters.value) {
+				const text = option.kuerzel + " - " + option.text;
+				if (text.length > lettersCount.value) {
 					filtered.add(option);
 				}
 			}
@@ -1243,43 +1414,37 @@ function createTestData() {
 	const selectionDisplayText = (s: KlassenartKatalogEintrag) => `sel:${s.text}`;
 	const optionDisplayText = (s: KlassenartKatalogEintrag) => `opt:${s.text}`;
 	const sort = (a: KlassenartKatalogEintrag, b: KlassenartKatalogEintrag) => a.text.localeCompare(b.text);
-	const initalOrder2010 = [
-		"Kein Eintrag",
-		"B - Kurzer Eintrag",
-		"KS - Kurzer Eintrag",
-		"K - Ein sehr langer Eintrag mit insgesamt 52 Zeichen",
-		"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-		"O - Kurzer Eintrag",
-		"OJ - Ein längerer Eintrag mit 40 Zeichen",
-		"H - Kurzer Eintrag",
-		"P - Ein etwas längerer Eintrag",
-		"Z - Kurzer Eintrag",
-		"V - Kurzer Eintrag",
-		"T - Kurzer Eintrag",
-		"I - Kurzer Eintrag",
+
+	/**
+	 * Unsortierte aktuelle Historieneinträge mit dem Anzeigetext "Kürzel - Text".
+	 */
+	const unsorted = [
+		"** - Kein Eintrag",
+		"BK - B - Kurzer Eintrag",
+		"SK - KS - Kurzer Eintrag",
+		"KK - K - Aktuellster Eintrag",
+		"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+		"OK - O - Kurzer Eintrag",
+		"AK - A - Kurzer Eintrag",
+		"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+		"HK - H - Kurzer Eintrag",
+		"PK - P - Ein etwas längerer Eintrag",
+		"ZK - Z - Kurzer Eintrag",
+		"VK - V - Kurzer Eintrag",
+		"TK - T - Kurzer Eintrag",
+		"IK - I - Kurzer Eintrag",
+		"CK - C - Kurzer Eintrag",
 	];
 
-	const initalOrderCurrent = [
-		"Kein Eintrag",
-		"B - Kurzer Eintrag",
-		"KS - Kurzer Eintrag",
-		"K - Aktuellster Eintrag",
-		"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
-		"O - Kurzer Eintrag",
+	/**
+	 * Aktuelle Historieneinträge sortiert nach der Prop text.
+	 * Hier stehen bewusst nur die Textwerte, da der Comparator option.text vergleicht.
+	 */
+	const sortedByText = [
 		"A - Kurzer Eintrag",
-		"OJ - Ein längerer Eintrag mit 40 Zeichen",
-		"H - Kurzer Eintrag",
-		"P - Ein etwas längerer Eintrag",
-		"Z - Kurzer Eintrag",
-		"V - Kurzer Eintrag",
-		"T - Kurzer Eintrag",
-		"I - Kurzer Eintrag",
-		"C - Kurzer Eintrag",
-	];
-
-	const sorted = [
-		"A - Kurzer Eintrag",
+		"AA - Ein längerer Eintrag mit 45 Zeichen",
 		"B - Kurzer Eintrag",
+		"BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
 		"C - Kurzer Eintrag",
 		"H - Kurzer Eintrag",
 		"I - Kurzer Eintrag",
@@ -1287,14 +1452,47 @@ function createTestData() {
 		"Kein Eintrag",
 		"KS - Kurzer Eintrag",
 		"O - Kurzer Eintrag",
-		"OJ - Ein längerer Eintrag mit 40 Zeichen",
-		"OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
 		"P - Ein etwas längerer Eintrag",
 		"T - Kurzer Eintrag",
 		"V - Kurzer Eintrag",
 		"Z - Kurzer Eintrag",
 	];
 
+	/**
+	 * Aktuelle Historieneinträge nach dem Default-Comparator sortiert.
+	 * Die Werte entsprechen dem optionDisplayText "Kürzel - Text".
+	 */
+	const sortedAlphabetical = [
+		"** - Kein Eintrag",
+		"AA - BB - Ein sehr laaanger Eintrag mit 50 Zeichen",
+		"AK - A - Kurzer Eintrag",
+		"BB - AA - Ein längerer Eintrag mit 45 Zeichen",
+		"BK - B - Kurzer Eintrag",
+		"CK - C - Kurzer Eintrag",
+		"HK - H - Kurzer Eintrag",
+		"IK - I - Kurzer Eintrag",
+		"KK - K - Aktuellster Eintrag",
+		"OK - O - Kurzer Eintrag",
+		"PK - P - Ein etwas längerer Eintrag",
+		"SK - KS - Kurzer Eintrag",
+		"TK - T - Kurzer Eintrag",
+		"VK - V - Kurzer Eintrag",
+		"ZK - Z - Kurzer Eintrag",
+	];
 
-	return { clazz, schuljahr, klassenart, letters, letter, startsWithFilter, longNameFilter, selectionDisplayText, optionDisplayText, sort, initalOrderCurrent, initalOrder2010, sorted };
+	return {
+		clazz,
+		schuljahr,
+		klassenart,
+		lettersCount,
+		letter,
+		startsWithFilter,
+		longNameFilter,
+		selectionDisplayText,
+		optionDisplayText,
+		sort,
+		unsorted,
+		sortedAlphabetical,
+		sortedByText,
+	};
 }

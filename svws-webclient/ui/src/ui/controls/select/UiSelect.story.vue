@@ -8,17 +8,14 @@
 		<Variant title="SelectManager" id="selectManager">
 			<svws-ui-input-wrapper>
 				<ui-select label="SelectManager mit String"
-					:class="[selectManagerState.bgColor.value, selectManagerState.textColor.value, selectManagerState.iconColor.value, selectManagerState.borderColor.value]"
 					:manager="stringSelectManager"
 					v-bind="selectManagerState.props" />
 
 				<ui-select label="SelectManager mit Custom-Objekten"
-					:class="[selectManagerState.bgColor.value, selectManagerState.textColor.value, selectManagerState.iconColor.value, selectManagerState.borderColor.value]"
 					:manager="objectSelectManager"
 					v-bind="selectManagerState.props" />
 
 				<ui-select label="CoreTypeSelectManager mit LehrerRechtsverhaeltnis"
-					:class="[selectManagerState.bgColor.value, selectManagerState.textColor.value, selectManagerState.iconColor.value, selectManagerState.borderColor.value]"
 					:manager="coreTypeSelectManager"
 					v-bind="selectManagerState.props" />
 			</svws-ui-input-wrapper>
@@ -52,7 +49,6 @@
 				</svws-ui-checkbox>
 
 				<ui-select label="CoreTypeSelectManager Fach abhängig von Fachgruppe"
-					:class="[filterSelectState.bgColor.value, filterSelectState.textColor.value, filterSelectState.iconColor.value, filterSelectState.borderColor.value]"
 					:manager="fachSelectManager"
 					v-bind="filterSelectState.props" />
 			</svws-ui-input-wrapper>
@@ -60,124 +56,31 @@
 
 		<Variant title="Deep Search" id="search">
 			<svws-ui-input-wrapper>
-				Das folgende Select verwendet Deep Search und lässt auch die Suche nach Attributen zu, die nicht im Optiontext dargestellt werden. So ergibt
-				die Suche nach "2006" oder "2008" ebenfalls jeweils ein Auto, da die Optionen folgende sind:
-
-				<pre class="bg-ui-neutral border border-ui-neutral rounded w-fit whitespace-normal p-2">
-					<code>
-						[<br>
-							{ marke: "BMW", color: "blue", baujahr: 2006 },<br>
-							{ marke: "Audi", color: "red", baujahr: 2008 }<br>
-							{ marke: "Opel", color: "schwarz", baujahr: 2006 }<br>
-						]
-					</code>
-				</pre>
+				Das folgende Select verwendet Deep Search und lässt auch die Suche nach Attributen zu, die nicht im Optiontext dargestellt werden, zum Beispiel das Baujahr.
 
 				<ui-select label="Deep Search SelectManager"
-					:class="[deepSearchState.bgColor.value, deepSearchState.textColor.value, deepSearchState.iconColor.value, deepSearchState.borderColor.value]"
 					:manager="deepSearchSelectManager"
 					:deep-search-attributes="['marke', 'color', 'baujahr']"
 					v-bind="deepSearchState.props" />
 			</svws-ui-input-wrapper>
 		</Variant>
 
-		<Variant title="Sortierung" id="sortierung">
-			<svws-ui-input-wrapper>
-				<ui-select label="Sortiertes Select"
-					:class="[sortState.bgColor.value, sortState.textColor.value, sortState.iconColor.value, sortState.borderColor.value]"
-					:manager="sortableCoreTypeSelectManager"
-					v-bind="sortState.props" />
-			</svws-ui-input-wrapper>
-
-			<template #controls>
-				<HstCheckbox title="Searchable"
-					v-model="sortState.searchable.value" />
-
-				<HstCheckbox title="Required"
-					v-model="sortState.required.value" />
-
-				<HstCheckbox title="Disabled"
-					v-model="sortState.disabled.value" />
-
-				<HstCheckbox title="Statistik"
-					v-model="sortState.statistics.value" />
-
-				<HstCheckbox title="Removable"
-					v-model="sortState.removable.value" />
-
-				<HstCheckbox title="Readonly"
-					v-model="sortState.readonly.value" />
-
-				<HstCheckbox title="Headless"
-					v-model="sortState.headless.value" />
-
-				<HstRadio title="Sortierung"
-					v-model="sortState.sort.value"
-					:options="[
-						{ label: 'ID', value: 'id' },
-						{ label: 'Kürzel', value: 'kuerzel' },
-						{ label: 'Text', value: 'text' },
-					]" />
-
-				<span class="text-headline-md">Farben</span>
-
-				<HstRadio title="Hintergrund"
-					v-model="sortState.bgColor.value"
-					:options="[
-						{ label: 'keine', value: '' },
-						{ label: 'bg-ui-brand', value: 'bg-ui-brand' },
-						{ label: 'bg-ui-success', value: 'bg-ui-success' },
-						{ label: 'bg-ui-danger', value: 'bg-ui-danger' },
-					]" />
-
-				<HstRadio title="Text"
-					v-model="sortState.textColor.value"
-					:options="[
-						{ label: 'keine', value: '' },
-						{ label: 'text-ui-onbrand', value: 'text-ui-onbrand' },
-						{ label: 'text-ui-onsuccess', value: 'text-ui-onsuccess' },
-						{ label: 'text-ui-ondanger', value: 'text-ui-ondanger' },
-					]" />
-
-				<HstRadio title="Icon"
-					v-model="sortState.iconColor.value"
-					:options="[
-						{ label: 'keine', value: '' },
-						{ label: 'icon-ui-onbrand', value: 'icon-ui-onbrand' },
-						{ label: 'icon-ui-onsuccess', value: 'icon-ui-onsuccess' },
-						{ label: 'icon-ui-ondanger', value: 'icon-ui-ondanger' },
-					]" />
-
-				<HstRadio title="Border"
-					v-model="sortState.borderColor.value"
-					:options="[
-						{ label: 'keine', value: '' },
-						{ label: 'border-ui-brand', value: 'border-ui-brand' },
-						{ label: 'border-ui-success', value: 'border-ui-success' },
-						{ label: 'border-ui-danger', value: 'border-ui-danger' },
-					]" />
-			</template>
-		</Variant>
-
 		<Variant title="Validatoren" id="validatoren">
 			<svws-ui-content-card class="p-5">
 				<svws-ui-input-wrapper>
 					<ui-select label="SelectManager mit Muss-Validator"
-						:class="[validatorState.bgColor.value, validatorState.textColor.value, validatorState.iconColor.value, validatorState.borderColor.value]"
 						v-model="mussValidatorSelection"
 						:manager="sMussValidatorSelectManager"
 						:validation="validateMuss"
 						v-bind="validatorState.props" />
 
 					<ui-select label="SelectManager mit Kann-Validator"
-						:class="[validatorState.bgColor.value, validatorState.textColor.value, validatorState.iconColor.value, validatorState.borderColor.value]"
 						v-model="kannValidatorSelection"
 						:manager="sKannValidatorSelectManager"
 						:validation="validateKann"
 						v-bind="validatorState.props" />
 
 					<ui-select label="SelectManager mit Hinweis-Validator"
-						:class="[validatorState.bgColor.value, validatorState.textColor.value, validatorState.iconColor.value, validatorState.borderColor.value]"
 						v-model="hinweisValidatorSelection"
 						:manager="sHinweisValidatorSelectManager"
 						:validation="validateHinweis"
@@ -208,42 +111,15 @@
 			<HstCheckbox title="Headless"
 				v-model="activeState.headless.value" />
 
-			<span class="text-headline-md">Farben</span>
-
-			<HstRadio title="Hintergrund"
-				v-model="activeState.bgColor.value"
+			<HstRadio title="Sortierung"
+				v-model="activeState.sort.value"
 				:options="[
-					{ label: 'keine', value: '' },
-					{ label: 'bg-ui-brand', value: 'bg-ui-brand' },
-					{ label: 'bg-ui-success', value: 'bg-ui-success' },
-					{ label: 'bg-ui-danger', value: 'bg-ui-danger' },
-				]" />
-
-			<HstRadio title="Text"
-				v-model="activeState.textColor.value"
-				:options="[
-					{ label: 'keine', value: '' },
-					{ label: 'text-ui-onbrand', value: 'text-ui-onbrand' },
-					{ label: 'text-ui-onsuccess', value: 'text-ui-onsuccess' },
-					{ label: 'text-ui-ondanger', value: 'text-ui-ondanger' },
-				]" />
-
-			<HstRadio title="Icon"
-				v-model="activeState.iconColor.value"
-				:options="[
-					{ label: 'keine', value: '' },
-					{ label: 'icon-ui-onbrand', value: 'icon-ui-onbrand' },
-					{ label: 'icon-ui-onsuccess', value: 'icon-ui-onsuccess' },
-					{ label: 'icon-ui-ondanger', value: 'icon-ui-ondanger' },
-				]" />
-
-			<HstRadio title="Border"
-				v-model="activeState.borderColor.value"
-				:options="[
-					{ label: 'keine', value: '' },
-					{ label: 'border-ui-brand', value: 'border-ui-brand' },
-					{ label: 'border-ui-success', value: 'border-ui-success' },
-					{ label: 'border-ui-danger', value: 'border-ui-danger' },
+					{ label: 'Prop ID', value: 'idProp' },
+					{ label: 'Prop Sortierung', value: 'sortierungProp' },
+					{ label: 'Alphabetisch', value: 'alphabetical' },
+					{ label: 'Unsortiert', value: 'unsorted' },
+					{ label: 'Baujahr (Autos)', value: 'baujahr' },
+					{ label: 'Undefined/Null', value: 'undefined' },
 				]" />
 		</template>
 	</Story>
@@ -253,7 +129,6 @@
 
 	import { computed, reactive, type Ref, ref } from "vue";
 
-	import type { LehrerRechtsverhaeltnisKatalogEintrag } from "@core/asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
 	import { LehrerRechtsverhaeltnis } from "@core/asd/types/lehrer/LehrerRechtsverhaeltnis";
@@ -269,7 +144,7 @@
 	import { SelectManager } from "./manager/SelectManager";
 	import Docs from "./UiSelect.story.md";
 
-	type Sortierung = "id" | "kuerzel" | "text";
+	type Sortierung = "idProp" | "sortierungProp" | "unsorted" | "undefined" | "baujahr" | "alphabetical";
 
 	type State = {
 		searchable?: boolean;
@@ -279,12 +154,9 @@
 		readonly?: boolean;
 		required?: boolean;
 		headless?: boolean;
-		bgColor?: string;
-		textColor?: string;
-		iconColor?: string;
-		borderColor?: string;
-		sort?: "id" | "kuerzel" | "text";
+		sort?: Sortierung;
 	};
+
 
 	class VariantState {
 
@@ -295,13 +167,7 @@
 		public readonly: Ref<boolean> = ref(false);
 		public required: Ref<boolean> = ref(false);
 		public headless: Ref<boolean> = ref(false);
-
-		public bgColor: Ref<string> = ref("");
-		public textColor: Ref<string> = ref("");
-		public iconColor: Ref<string> = ref("");
-		public borderColor: Ref<string> = ref("");
-
-		public sort: Ref<Sortierung> = ref("id");
+		public sort: Ref<Sortierung> = ref("unsorted");
 
 		public props = reactive({
 			searchable: this.searchable,
@@ -321,12 +187,6 @@
 			this.readonly.value = state.readonly ?? this.readonly.value;
 			this.required.value = state.required ?? this.required.value;
 			this.headless.value = state.headless ?? this.headless.value;
-
-			this.bgColor.value = state.bgColor ?? this.bgColor.value;
-			this.textColor.value = state.textColor ?? this.textColor.value;
-			this.iconColor.value = state.iconColor ?? this.iconColor.value;
-			this.borderColor.value = state.borderColor ?? this.borderColor.value;
-
 			this.sort.value = state.sort ?? this.sort.value;
 		}
 	}
@@ -334,14 +194,12 @@
 	const selectManagerState = new VariantState();
 	const filterSelectState = new VariantState();
 	const deepSearchState = new VariantState();
-	const sortState = new VariantState();
 	const validatorState = new VariantState();
 
 	const variantControlsMap = new Map<string, VariantState>([
 		["selectManager", selectManagerState],
 		["filter", filterSelectState],
 		["search", deepSearchState],
-		["sortierung", sortState],
 		["validatoren", validatorState],
 	]);
 
@@ -357,58 +215,6 @@
 	const filterState2 = reactive({
 		deutsch: false,
 		musikUndKunst2: false,
-	});
-
-	const fruitItems: string[] = [
-		"Ananas",
-		"Aprikose",
-		"Banane",
-		"Birne",
-		"Apfelsine",
-		"Brombeere",
-		"Clementine",
-		"Granatapfel",
-		"Himbeere",
-		"Ich will gleich den ganzen Obstkorb haben und am liebsten alles doppelt und dreifach, nur damit dieses Item einen langen Text zur Vorschau hat.",
-		"Kirsche",
-		"Kiwi",
-		"Lemon",
-		"Litschi",
-		"Melone",
-		"Orange",
-		"Papaya",
-		"Pfirsich",
-		"Pflaume",
-		"Rote Johannisbeere",
-		"Zitronenmelisse",
-	];
-
-	const carItems: { marke: string, color: string, baujahr: number }[] = [
-		{ marke: "BMW", color: "blue", baujahr: 2006 },
-		{ marke: "Audi", color: "red", baujahr: 2008 },
-		{ marke: "Opel", color: "schwarz", baujahr: 2006 },
-	];
-
-	const stringSelectManager = new SelectManager({
-		options: fruitItems,
-	});
-
-	const coreTypeSelectManager = new CoreTypeSelectManager({
-		clazz: LehrerRechtsverhaeltnis.class,
-		selectionDisplayText: "text",
-		optionDisplayText: "kuerzelText",
-	});
-
-	const objectSelectManager = new SelectManager({
-		options: carItems,
-		selectionDisplayText: (option: { marke: string, color: string }): string => option.marke,
-		optionDisplayText: (option: { marke: string, color: string }): string => `${option.marke} - ${option.color}`,
-	});
-
-	const deepSearchSelectManager = new SelectManager({
-		options: carItems,
-		selectionDisplayText: (option: { marke: string, color: string, baujahr: number }): string => option.marke,
-		optionDisplayText: (option: { marke: string, color: string, baujahr: number }): string => `${option.marke} - ${option.color}`,
 	});
 
 	const filter1 = computed<Fachgruppe[]>(() => {
@@ -444,77 +250,114 @@
 		new FachSelectFilter("fachgruppe2", filter2),
 	]);
 
+	const sortByBaujahr = (a: Car, b: Car): number => {
+		if (a.baujahr < b.baujahr) {
+			return -1;
+		}
+
+		if (a.baujahr > b.baujahr) {
+			return 1;
+		}
+
+		return 0;
+	};
+
+	const fruitItems: string[] = [
+		"Ananas",
+		"Aprikose",
+		"Banane",
+		"Birne",
+		"Apfelsine",
+		"Brombeere",
+		"Clementine",
+		"Granatapfel",
+		"Himbeere",
+		"Ich will gleich den ganzen Obstkorb haben und am liebsten alles doppelt und dreifach, nur damit dieses Item einen langen Text zur Vorschau hat.",
+		"Kirsche",
+		"Kiwi",
+		"Lemon",
+		"Litschi",
+		"Melone",
+		"Orange",
+		"Papaya",
+		"Pfirsich",
+		"Pflaume",
+		"Rote Johannisbeere",
+		"Zitronenmelisse",
+	];
+
+	type Car = { id: number; marke: string; color: string; sortierung: number; baujahr: number;	};
+
+	const carItems: Car[] = [
+		{ id: 104, marke: "BMW", color: "blue", baujahr: 2006, sortierung: 70 },
+		{ id: 211, marke: "Audi", color: "red", baujahr: 2008, sortierung: 20 },
+		{ id: 307, marke: "Opel", color: "schwarz", baujahr: 2009, sortierung: 90 },
+		{ id: 18, marke: "Mercedes", color: "silber", baujahr: 2015, sortierung: 40 },
+		{ id: 502, marke: "Volkswagen", color: "weiss", baujahr: 2010, sortierung: 10 },
+		{ id: 73, marke: "Ford", color: "grau", baujahr: 2004, sortierung: 60 },
+		{ id: 160, marke: "Porsche", color: "schwarz", baujahr: 2020, sortierung: 30 },
+		{ id: 41, marke: "Skoda", color: "grün", baujahr: 2012, sortierung: 100 },
+		{ id: 390, marke: "Toyota", color: "weiss", baujahr: 2007, sortierung: 50 },
+		{ id: 8, marke: "Honda", color: "rot", baujahr: 2018, sortierung: 80 },
+		{ id: 129, marke: "Renault", color: "blau", baujahr: 2003, sortierung: 15 },
+		{ id: 276, marke: "Peugeot", color: "silber", baujahr: 2014, sortierung: 110 },
+		{ id: 95, marke: "Seat", color: "schwarz", baujahr: 2005, sortierung: 5 },
+		{ id: 341, marke: "Volvo", color: "grau", baujahr: 2011, sortierung: 35 },
+		{ id: 227, marke: "Fiat", color: "gelb", baujahr: 2017, sortierung: 25 },
+	];
+
+	const carSort = computed(() => {
+		if (activeState.value.sort.value === "undefined") {
+			return undefined;
+		}
+		if (activeState.value.sort.value === "baujahr") {
+			return sortByBaujahr;
+		}
+
+		return activeState.value.sort.value;
+	});
+
+	const simpleSort = computed(() => {
+		if ((activeState.value.sort.value === "undefined") || (activeState.value.sort.value === "baujahr")) {
+			return undefined;
+		}
+
+		return activeState.value.sort.value;
+	});
+
+	const stringSelectManager = new SelectManager({
+		options: fruitItems,
+		sort: simpleSort,
+	});
+
+	const coreTypeSelectManager = new CoreTypeSelectManager({
+		clazz: LehrerRechtsverhaeltnis.class,
+		selectionDisplayText: "text",
+		optionDisplayText: "kuerzelText",
+		sort: simpleSort,
+	});
+
+	const objectSelectManager = new SelectManager({
+		options: carItems,
+		selectionDisplayText: (option: Car): string => option.marke,
+		optionDisplayText: (option: Car): string => `ID: ${option.id} - Sortierung: ${option.sortierung} - ${option.marke} - ${option.color} - ${option.baujahr}`,
+		sort: carSort,
+	});
+
+	const deepSearchSelectManager = new SelectManager({
+		options: carItems,
+		selectionDisplayText: (option: Car): string => option.marke,
+		optionDisplayText: (option: Car): string => `${option.marke} - ${option.color}`,
+		sort: carSort,
+	});
+
 	const fachSelectManager = new CoreTypeSelectManager({
 		clazz: Fach.class,
 		schulformen: Schulform.GY,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "text",
 		filters: filters,
-	});
-
-	const sortById = (
-		a: LehrerRechtsverhaeltnisKatalogEintrag,
-		b: LehrerRechtsverhaeltnisKatalogEintrag
-	): number => {
-		if (a.id < b.id) {
-			return -1;
-		}
-
-		if (a.id > b.id) {
-			return 1;
-		}
-
-		return 0;
-	};
-
-	const sortByKuerzel = (
-		a: LehrerRechtsverhaeltnisKatalogEintrag,
-		b: LehrerRechtsverhaeltnisKatalogEintrag
-	): number => {
-		if (a.kuerzel < b.kuerzel) {
-			return -1;
-		}
-
-		if (a.kuerzel > b.kuerzel) {
-			return 1;
-		}
-
-		return 0;
-	};
-
-	const sortByText = (
-		a: LehrerRechtsverhaeltnisKatalogEintrag,
-		b: LehrerRechtsverhaeltnisKatalogEintrag
-	): number => {
-		if (a.text < b.text) {
-			return -1;
-		}
-
-		if (a.text > b.text) {
-			return 1;
-		}
-
-		return 0;
-	};
-
-	const computedSort = computed(() => {
-		switch (sortState.sort.value) {
-			case "kuerzel":
-				return sortByKuerzel;
-			case "text":
-				return sortByText;
-			default:
-				return sortById;
-		}
-	});
-
-	const sortableCoreTypeSelectManager = new CoreTypeSelectManager({
-		clazz: LehrerRechtsverhaeltnis.class,
-		schuljahr: 2018,
-		schulformen: Schulform.GY,
-		optionDisplayText: (a): string => `${a.id} - ${a.kuerzel} - ${a.text}`,
-		selectionDisplayText: "text",
-		sort: computedSort,
+		sort: simpleSort,
 	});
 
 	/**
@@ -601,7 +444,21 @@
 
 	function getSourceString(): string {
 		const currentState = activeState.value;
+		let sortText;
+		switch (currentState.sort.value) {
+			case "undefined":
+			case "sortierungProp":
+				sortText = "";
+				break;
 
+			case "baujahr":
+				sortText = ':sort="(a, b) => a.baujahr - b.baujahr..."';
+				break;
+
+			default:
+				sortText = `sort="${currentState.sort.value}"`;
+				break;
+		}
 		return `<ui-select
 		label="..."
 		:manager="..."
@@ -611,7 +468,7 @@
 		${currentState.statistics.value ? "statistics" : ""}
 		${currentState.required.value ? "required" : ""}
 		${currentState.headless.value ? "headless" : ""}
-		${currentState === sortState ? ':sort="(a, b) => ..."' : ""}
+		${sortText}
 		${currentState === validatorState ? ':validation="() => modelProxy.getFehler(\'feldname\')"' : ""}
 	`.split("\n").filter(line => line.trim() !== "").join("\n");
 	}

@@ -15,6 +15,7 @@ type MockBounding = {
 	left: Ref<number>;
 	right: Ref<number>;
 	bottom: Ref<number>;
+	update: () => void;
 };
 
 let mockBounding: MockBounding;
@@ -28,6 +29,7 @@ const createMockBounding = () => ({
 	left: ref(0),
 	right: ref(0),
 	bottom: ref(0),
+	update: vi.fn(),
 });
 
 vi.mock('@vueuse/core', async () => {
@@ -1574,42 +1576,42 @@ describe("UiSelect Utils", () => {
 			test("Printable Character (searchable = false, nichts hervorgehoben): Erste passende Option wird hervorgehoben", async () => {
 				const wrapper = mount(UiSelect<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
-				const seatOption = dropdown.findAll("li").find(li => li.text() === "Seat");
+				const skodaOption = dropdown.findAll("li").find(li => li.text() === "Skoda");
 
 				await combobox.trigger('click');
 				await combobox.trigger('keydown', { key: 's' });
 
-				expect(seatOption).toBeDefined();
-				expect(seatOption!.classes()).toContain("inset-ring-2");
-				expect(seatOption!.classes()).toContain("inset-ring-ui-neutral");
+				expect(skodaOption).toBeDefined();
+				expect(skodaOption!.classes()).toContain("inset-ring-2");
+				expect(skodaOption!.classes()).toContain("inset-ring-ui-neutral");
 			});
 
 			test("Printable Character (searchable = false, Option hervorgehoben): Erste passende Option nach der hervorgehobenen wird hervorgehoben",
 				async () => {
 					const wrapper = mount(UiSelect<cars>, { props: { manager: manager, searchable: false } });
 					const { combobox, dropdown } = getElements(wrapper);
-					const seatOption = dropdown.findAll("li").find(li => li.text() === "Seat");
 					const skodaOption = dropdown.findAll("li").find(li => li.text() === "Skoda");
+					const subaruOption = dropdown.findAll("li").find(li => li.text() === "Subaru");
 
 					await combobox.trigger('click');
-
-					await combobox.trigger('keydown', { key: 's' });
-
-					expect(seatOption).toBeDefined();
-					expect(seatOption!.classes()).toContain("inset-ring-2");
-					expect(seatOption!.classes()).toContain("inset-ring-ui-neutral");
 
 					await combobox.trigger('keydown', { key: 's' });
 
 					expect(skodaOption).toBeDefined();
 					expect(skodaOption!.classes()).toContain("inset-ring-2");
 					expect(skodaOption!.classes()).toContain("inset-ring-ui-neutral");
+
+					await combobox.trigger('keydown', { key: 's' });
+
+					expect(subaruOption).toBeDefined();
+					expect(subaruOption!.classes()).toContain("inset-ring-2");
+					expect(subaruOption!.classes()).toContain("inset-ring-ui-neutral");
 				});
 
 			test("Printable Character (searchable = false 2x gleicher Buchstabe): Zweite passende Option wird hervorgehoben", async () => {
 				const wrapper = mount(UiSelect<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
-				const skodaOption = dropdown.findAll("li").find(li => li.text() === "Skoda");
+				const subaruOption = dropdown.findAll("li").find(li => li.text() === "Subaru");
 
 				await combobox.trigger('click');
 
@@ -1627,9 +1629,9 @@ describe("UiSelect Utils", () => {
 				// Timer auflösen, damit die Komponente reagiert
 				await vi.runAllTimersAsync();
 
-				expect(skodaOption).toBeDefined();
-				expect(skodaOption!.classes()).toContain("inset-ring-2");
-				expect(skodaOption!.classes()).toContain("inset-ring-ui-neutral");
+				expect(subaruOption).toBeDefined();
+				expect(subaruOption!.classes()).toContain("inset-ring-2");
+				expect(subaruOption!.classes()).toContain("inset-ring-ui-neutral");
 			});
 
 			test("Printable Character (searchable = false, 2 unterschiedliche Buchstaben im Timer): Erste passende Option mit String wird hervorgehoben",
@@ -1756,7 +1758,7 @@ describe("UiSelect Utils", () => {
 				await input.setValue("ar");
 				const options = dropdown.findAll("li");
 
-				expect(options.length).toBe(2);
+				expect(options).toHaveLength(2);
 				expect(options[0].text()).toBe("Subaru");
 				expect(options[1].text()).toBe("Jaguar");
 			});
@@ -1783,9 +1785,9 @@ describe("UiSelect Utils", () => {
 
 				expect(options.length).toBe(6);
 				expect(options[0].text()).toBe("Opel");
-				expect(options[1].text()).toBe("Nissan");
-				expect(options[2].text()).toBe("Skoda");
-				expect(options[3].text()).toBe("Subaru");
+				expect(options[1].text()).toBe("Skoda");
+				expect(options[2].text()).toBe("Subaru");
+				expect(options[3].text()).toBe("Nissan");
 				expect(options[4].text()).toBe("Jaguar");
 				expect(options[5].text()).toBe("Porsche");
 			});
@@ -1844,43 +1846,42 @@ function getElements(wrapper: VueWrapper) {
 	return { select, combobox, dropdown, input, vm, label };
 }
 
+type cars = { id: number, marke: string, color: string, baujahr: number, sortierung: number };
 
 function createTestData() {
 	const options: cars[] = [
-		{ marke: "BMW", color: "blue", baujahr: 2006 },
-		{ marke: "Audi", color: "red", baujahr: 2008 },
-		{ marke: "Opel", color: "schwarz", baujahr: 2006 },
-		{ marke: "Mercedes", color: "weiß", baujahr: 2010 },
-		{ marke: "VW", color: "grau", baujahr: 2012 },
-		{ marke: "Ford", color: "grün", baujahr: 2009 },
-		{ marke: "Toyota", color: "gelb", baujahr: 2015 },
-		{ marke: "Honda", color: "blau", baujahr: 2011 },
-		{ marke: "Mazda", color: "rot", baujahr: 2013 },
-		{ marke: "Nissan", color: "schwarz", baujahr: 2007 },
-		{ marke: "Kia", color: "weiß", baujahr: 2014 },
-		{ marke: "Hyundai", color: "grau", baujahr: 2012 },
-		{ marke: "Peugeot", color: "grün", baujahr: 2008 },
-		{ marke: "Citroën", color: "gelb", baujahr: 2010 },
-		{ marke: "Fiat", color: "blau", baujahr: 2009 },
-		{ marke: "Seat", color: "rot", baujahr: 2011 },
-		{ marke: "Skoda", color: "schwarz", baujahr: 2013 },
-		{ marke: "Renault", color: "weiß", baujahr: 2007 },
-		{ marke: "Mitsubishi", color: "grau", baujahr: 2015 },
-		{ marke: "Subaru", color: "grün", baujahr: 2014 },
-		{ marke: "Volvo", color: "gelb", baujahr: 2012 },
-		{ marke: "Jaguar", color: "blau", baujahr: 2006 },
-		{ marke: "Land Rover", color: "rot", baujahr: 2008 },
-		{ marke: "Porsche", color: "schwarz", baujahr: 2010 },
-		{ marke: "Tesla", color: "weiß", baujahr: 2020 },
+		{ id: 14, marke: "BMW", color: "blue", baujahr: 2006, sortierung: 8 },
+		{ id: 3, marke: "Audi", color: "red", baujahr: 2008, sortierung: 19 },
+		{ id: 21, marke: "Opel", color: "schwarz", baujahr: 2006, sortierung: 2 },
+		{ id: 9, marke: "Mercedes", color: "weiß", baujahr: 2010, sortierung: 15 },
+		{ id: 25, marke: "VW", color: "grau", baujahr: 2012, sortierung: 4 },
+		{ id: 17, marke: "Ford", color: "grün", baujahr: 2009, sortierung: 23 },
+		{ id: 6, marke: "Toyota", color: "gelb", baujahr: 2015, sortierung: 11 },
+		{ id: 12, marke: "Honda", color: "blau", baujahr: 2011, sortierung: 6 },
+		{ id: 19, marke: "Mazda", color: "rot", baujahr: 2013, sortierung: 25 },
+		{ id: 2, marke: "Nissan", color: "schwarz", baujahr: 2007, sortierung: 17 },
+		{ id: 23, marke: "Kia", color: "weiß", baujahr: 2014, sortierung: 9 },
+		{ id: 8, marke: "Hyundai", color: "grau", baujahr: 2012, sortierung: 1 },
+		{ id: 15, marke: "Peugeot", color: "grün", baujahr: 2008, sortierung: 13 },
+		{ id: 1, marke: "Citroën", color: "gelb", baujahr: 2010, sortierung: 22 },
+		{ id: 20, marke: "Fiat", color: "blau", baujahr: 2009, sortierung: 5 },
+		{ id: 11, marke: "Seat", color: "rot", baujahr: 2011, sortierung: 18 },
+		{ id: 24, marke: "Skoda", color: "schwarz", baujahr: 2013, sortierung: 10 },
+		{ id: 5, marke: "Renault", color: "weiß", baujahr: 2007, sortierung: 24 },
+		{ id: 18, marke: "Mitsubishi", color: "grau", baujahr: 2015, sortierung: 3 },
+		{ id: 10, marke: "Subaru", color: "grün", baujahr: 2014, sortierung: 16 },
+		{ id: 4, marke: "Volvo", color: "gelb", baujahr: 2012, sortierung: 7 },
+		{ id: 22, marke: "Jaguar", color: "blau", baujahr: 2006, sortierung: 20 },
+		{ id: 13, marke: "Land Rover", color: "rot", baujahr: 2008, sortierung: 12 },
+		{ id: 7, marke: "Porsche", color: "schwarz", baujahr: 2010, sortierung: 21 },
+		{ id: 16, marke: "Tesla", color: "weiß", baujahr: 2020, sortierung: 14 },
 	];
 
 	const optionDisplayText = (option: cars) => option.marke;
 	const selectionDisplayText = (option: cars) => option.marke;
-	const manager = new SelectManager<{ marke: string, color: string, baujahr: number }>({
+	const manager = new SelectManager<cars>({
 		options: options, optionDisplayText: optionDisplayText, selectionDisplayText: selectionDisplayText,
 	});
 	const firstOption = manager.filteredOptions.getFirst();
 	return { manager, firstOption };
 }
-
-type cars = { marke: string, color: string, baujahr: number };

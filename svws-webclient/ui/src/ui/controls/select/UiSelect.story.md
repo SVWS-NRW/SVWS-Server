@@ -4,21 +4,21 @@ UiSelect ist eine Combobox, die zur Selektion einer Option aus mehreren vorgegeb
 <details>
 <summary>Inhalt</summary>
 
-- [Props](#props)
-- [Fokusklassen](#fokusklassen)
-- [Tastaturbedienung](#tastaturbedienung)
-  - [Geschlossenes Dropdown](#geschlossenes-dropdown)
-  - [Geöffnetes Dropdown](#geöffnetes-dropdown)
-- [Manager](#manager)
-  - [BaseSelectManager](#baseselectmanager-t)
-  - [BaseSelectManagerConfig](#baseselectmanagerconfig)
-  - [SelectManager](#selectmanager)
-  - [SelectManagerConfig](#selectmanagerconfig)
-  - [CoreTypeSelectManager](#coretypeselectmanager)
-  - [CoreTypeSelectManagerConfig](#coretypeselectmanagerconfig)
-- [Filter](#filter)
-  - [FachSelectFilter](#fachselectfilter)
-    - [Konstruktor](#konstruktor)
+* [UiSelect](#uiselect)
+	* [Props](#props)
+	* [Fokusklassen](#fokusklassen)
+	* [Tastaturbedienung](#tastaturbedienung)
+	* [Manager](#manager)
+		* [BaseManager\<T>](#basemanagert)
+			* [BaseSelectManagerConfig\<T>](#baseselectmanagerconfigt)
+		* [SelectManager\<T>](#selectmanagert)
+			* [SelectManagerConfig\<T>](#selectmanagerconfigt)
+		* [CoreTypeSelectManager\<T>](#coretypeselectmanagert)
+		* [CoreTypeSelectManagerConfig\<T>](#coretypeselectmanagerconfigt)
+	* [Filter](#filter)
+		* [FachSelectFilter](#fachselectfilter)
+			* [Konstruktor](#konstruktor)
+	* [Sortierung](#sortierung)
 
 </details>
 
@@ -101,11 +101,11 @@ Manager übernehmen die Logik des Selects. Sie kümmern sich um folgende Punkte:
 #### BaseSelectManagerConfig\<T>
 Alle Parameter der Config sind optional und können entweder direkt angegeben werden oder in einem Ref. Werden sie in einem Ref angegeben, dann reagierte der Manager auf Änderungen dieses Refs und aktualisiert sich automatisch.
 
-| Parameter | Typ                                                       | Definition                                                                                                                             |
-|-----------|-----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| options   | `MaybeRef<Iterable<T>>`                                   | Alle Optionen, die das Dropdown beinhaltet. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.     |
-| sort      | `MaybeRef<Comparator<T>\|((a: T, b: T) => number)\|null>` | Gibt eine Sortierfunktion an. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.                   |
-| filters   | `MaybeRef<Iterable<SelectFilter<T>>>`                     | Setzt die aktiven Filter für die Optionenliste. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. |
+| Parameter | Typ                                   | Definition                                                                                                                             |
+|-----------|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| options   | `MaybeRef<Iterable<T>>`               | Alle Optionen, die das Dropdown beinhaltet. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.     |
+| sort      | `MaybeRef<SelectSort<T>>`             | Konfiguration für die Sortierfunktion. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben.          |
+| filters   | `MaybeRef<Iterable<SelectFilter<T>>>` | Setzt die aktiven Filter für die Optionenliste. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. |
 
 ### SelectManager\<T>
 Der `SelectManager<T>` ist ein einfacher, allgemeiner Manager für Selects, der für die verschiedensten Datentypen wie `string`, `number` oder auch Custom-Objekte verwendet werden kann. Er beinhaltet die Logik der Komponente basierend auf dem Datentyp der Optionen in Dropdown.
@@ -147,3 +147,14 @@ Ein spezieller Filter, der Optionen vom Typ `Fach` nach `Fachgruppen` filtert. E
 |-------------|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | key         | `string`                     | Ein eindeutiger Key zur Identifikation des Filters. Der Key muss nur innerhalb des Managers eindeutig sein.                                   |
 | fachgruppen | `MaybeRef<List<Fachgruppe>>` | Eine Liste der Fachgruppen, nach denen gefiltert wird. <br/>Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. |
+
+## Sortierung
+Für die Sortierung können vordefinierte Konfigurationen oder eigene Funktionen bzw. Comparatoren übergeben werden. Folgende Werte können für das Feld `sort` in der Config übergeben werden:
+
+| Konfiguration             | Sortierung                                                                                                                                                                                      |
+|---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 'alphabetical'            | Sortiert die Optionen alphabetisch von A bis Z basierend auf dem angezeigten Text (optionDisplayText)                                                                                           |
+| 'idProp'                  | Sortiert die Optionen aufsteigend nach der Prop `id`, welches eine `number` oder ein `string` sein kann. Existiert diese Prop nicht, wird stattdessen die alphabetische Sortierung vorgenommen. |
+| 'sortierungProp'          | Sortiert die Optionen aufsteigend nach der Prop `sortierung`. Existiert diese Prop nicht, wird auf die alphabetische Sortierung zurückgegriffen.                                                |
+| `(a: T, b: T) => number)` | Sortiert die Optionen nach der übergebenen Sortierfunktion.                                                                                                                                     |
+| `Comparator<T>`           | Sortiert die Optionen nach dem übergebenen Comparator                                                                                                                                           |

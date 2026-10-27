@@ -174,6 +174,7 @@ export function useUiSelectUtils<T>(
 			return;
 		}
 		focusSelect();
+		comboboxDimensions.update();
 		elements.uiSelectDropdown.value.showPopover();
 		dropdownIsOpen.value = true;
 		if (!hasHighlightedOption()) {

@@ -73,7 +73,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 		};
 
 		super(baseConfig);
-		this.initCoreTypeSelectManager(config);
+		this.initCoreTypeSelectManager(config, true);
 	}
 
 	public setConfig(config?: CoreTypeSelectManagerConfig<T, U>, setDefaults?: boolean) {

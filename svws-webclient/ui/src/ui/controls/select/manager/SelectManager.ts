@@ -28,7 +28,7 @@ export class SelectManager<T> extends BaseSelectManager<T> {
 
 	public constructor(config?: SelectManagerConfig<T>) {
 		super(config);
-		this.initSelectManager(config);
+		this.initSelectManager(config, true);
 	}
 
 	public setConfig(config?: SelectManagerConfig<T>, setDefaults?: boolean): void {
@@ -48,6 +48,8 @@ export class SelectManager<T> extends BaseSelectManager<T> {
 		this._selectionDisplayText = this.initShallowRef(newSelectionDisplayText, v => v);
 		const newOptionDisplayText = config?.optionDisplayText ?? (setDefaults ? String : this.optionDisplayText);
 		this._optionDisplayText = this.initShallowRef(newOptionDisplayText, v => v);
+
+		this.updateFilteredOptions();
 
 		/*
 		 * Die Watcher beobachten Änderungen der reaktiven Werte der Konfiguration, um diese intern weiterzuleiten.

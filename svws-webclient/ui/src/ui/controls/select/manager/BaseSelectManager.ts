@@ -1,10 +1,13 @@
-import { isRef, type MaybeRef, type ShallowRef, shallowRef, toRaw, toValue, triggerRef, watch } from "vue";
+import { isRef, type MaybeRef, type ShallowRef, shallowRef, toRaw, toValue, triggerRef, unref, watch } from "vue";
 
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { Comparator } from "@core/java/util/Comparator";
 import type { List } from "@core/java/util/List";
 
 import type { SelectFilter } from "../filter/SelectFilter";
+
+/** Konfigurationen für die Sortierung */
+export type SelectSort<T> = Comparator<T> | ((a: T, b: T) => number) | 'sortierungProp' | 'idProp' | 'alphabetical' | 'unsorted' | undefined | null;
 
 /**
  * Config des Managers.
@@ -14,7 +17,7 @@ export interface BaseSelectManagerConfig<T> {
 	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	options?: MaybeRef<Iterable<T>>;
 	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
-	sort?: MaybeRef<Comparator<T> | ((a: T, b: T) => number) | null>;
+	sort?: MaybeRef<SelectSort<T>>;
 	/** Um die Reaktivität zu gewährleisten, Refs nur ohne den Zusatz `.value` übergeben. */
 	filters?: MaybeRef<Iterable<SelectFilter<T>>>;
 }
@@ -38,9 +41,14 @@ export abstract class BaseSelectManager<T> {
 	protected _filteredOptions = shallowRef<List<T>>(new ArrayList<T>());
 
 	/**
-	 * Die Sortierfunktion als Comparator oder null, falls keine Sortierung gewünscht ist.
+	 * Die Konfiguration der Sortierung.
 	 */
-	protected _sort = shallowRef<Comparator<T> | null>(null);
+	protected _sort: SelectSort<T> = "sortierungProp";
+
+	/**
+	 * Der Comparator, der zur Sortierung verwendet wird.
+	 */
+	protected _comparator: Comparator<T> | null = null;
 
 	/**
 	 * Alle Filter des Selects als List
@@ -78,7 +86,7 @@ export abstract class BaseSelectManager<T> {
 	 * @param config      die Konfiguration des Selects. Wenn nicht angegeben, dann wird das Select ohne Optionen generiert.
 	 */
 	protected constructor(config?: BaseSelectManagerConfig<T>) {
-		this.initManager(config);
+		this.initManager(config, true);
 	}
 
 	/**
@@ -97,7 +105,6 @@ export abstract class BaseSelectManager<T> {
 		this._watcher = [];
 
 		this.initManager(config, setDefaults);
-		this.updateFilteredOptions();
 	}
 
 	/**
@@ -111,13 +118,11 @@ export abstract class BaseSelectManager<T> {
 		const newOptions = config?.options ?? (setDefaults ? new ArrayList<T>() : this.unfilteredOptions);
 		this._unfilteredOptions = this.initShallowRef(newOptions, v => this.toList(v));
 
-		const newSort = config?.sort ?? (setDefaults ? null : this.sort);
-		this._sort = this.initShallowRef(newSort, v => this.toComparator(v));
+		const newSort = toRaw(unref(config?.sort)) ?? (setDefaults ? "sortierungProp" : this._sort);
+		this.applySort(newSort);
 
 		const newFilters = config?.filters ?? (setDefaults ? new ArrayList<SelectFilter<T>>() : this.filters);
 		this._filters = this.initShallowRef(newFilters, v => this.toList(v));
-
-		this.updateFilteredOptions();
 
 		/*
 		 * Die Watcher beobachten Änderungen der reaktiven Werte der Konfiguration, um diese intern weiterzuleiten.
@@ -135,7 +140,8 @@ export abstract class BaseSelectManager<T> {
 		if (isRef(config?.sort)) {
 			this._watcher.push(
 				watch(config.sort, sort => {
-					this.sort = sort;
+					this.applySort(toRaw(sort));
+					this.updateFilteredOptions();
 				}, { deep: true })
 			);
 		}
@@ -207,12 +213,9 @@ export abstract class BaseSelectManager<T> {
 	 * @param value   neue sortierte Liste der gefilterten Optionen
 	 */
 	private set filteredOptions(value: Iterable<T>) {
-		const filteredList = this.toList(value);
-		if (this.sort !== null) {
-			filteredList.sort(this.sort);
-		}
-		this._filteredOptions.value = filteredList;
+		this._filteredOptions.value = this.toList(value);
 		triggerRef(this._filteredOptions);
+		this.updateSort();
 	}
 
 	/**
@@ -432,55 +435,146 @@ export abstract class BaseSelectManager<T> {
 	}
 
 	/**
-	 * Getter für den Sortier-Comparator der Optionen.
-	 *
-	 * @return Comparator für die Sortierung
+	 * Comparator, der die Optionen nach optionDisplayText alphabetisch von A bis Z sortiert.
 	 */
-	public get sort(): Comparator<T> | null {
-		return this._sort.value;
+	private readonly alphabeticalComparator: Comparator<T> = {
+		compare: (o1: T, o2: T): number => {
+			const o1Text = this.getOptionText(o1);
+			const o2Text = this.getOptionText(o2);
+			return o1Text.localeCompare(o2Text, "de-DE");
+		},
+	};
+
+	/**
+	 * Gibt den Comparator für die Sortierung nach der Prop "id" oder "sortierung" zurück.
+	 * Der Typ der Prop (number oder string) wird einmal über den ersten vorhandenen Wert (nicht null oder undefined) der ungefilterten Optionen bestimmt.
+	 * Es wird angenommen, dass alle Optionen denselben Typ verwenden (abgesehen von null und undefined). Numbers werden numerisch, strings
+	 * alphabetisch verglichen.
+	 * Optionen ohne Wert (Prop fehlt, null oder undefined) stehen vorn und werden untereinander alphabetisch nach dem optionDisplayText sortiert.
+	 * Hat keine Option einen Wert oder ist der erste vorhandene Wert weder number noch string, wird für alle Optionen alphabetisch sortiert.
+	 *
+	 * @param prop   der Name der Prop, nach der sortiert wird
+	 *
+	 * @returns der Comparator, passend zu den aktuellen Optionen
+	 */
+	private getPropComparator(prop: "id" | "sortierung"): Comparator<T> {
+		switch (this.getPropType(prop)) {
+			case "number":
+				return this.createPropComparator(prop, (v1, v2) => Number(v1) - Number(v2));
+			case "string":
+				return this.createPropComparator(prop, (v1, v2) => String(v1).localeCompare(String(v2), "de-DE"));
+			default:
+				return this.alphabeticalComparator;
+		}
 	}
 
 	/**
-	 * Setter für den Sortier-Comparator der Optionen.
+	 * Liest den Wert einer Prop aus einer Option.
 	 *
-	 * @param value neuer Comparator für die Optionensortierung
+	 * @param option   die Option
+	 * @param prop     der Name der Prop
+	 *
+	 * @returns der Wert der Prop oder undefined, wenn die Option kein Objekt ist, die Prop nicht hat oder der Wert null ist
 	 */
-	public set sort(value: Comparator<T> | ((a: T, b: T) => number) | null) {
-		this._sort.value = this.toComparator(value);
-		triggerRef(this._sort);
-		this.updateSort();
+	private getPropValue(option: T, prop: "id" | "sortierung"): unknown {
+		if ((option === null) || (typeof option !== "object")) {
+			return undefined;
+		}
+		const value = (option as Record<string, unknown>)[prop];
+		return (value === null) ? undefined : value;
 	}
 
 	/**
-	 * Wandelt eine Sortierfunktion bzw. einen Comparator in ein Comparator-Objekt um.
+	 * Bestimmt den Datentyp einer Prop anhand des ersten vorhandenen Werts (nicht null oder undefined) in den ungefilterten Optionen.
 	 *
-	 * @param sort   die Sortierfunktion als Funktion, als Comparator oder null, falls keine Sortierung vorgenommen werden soll.
+	 * @param prop   der Name der Prop ("id" oder "sortierung")
+	 *
+	 * @returns der Datentyp des ersten vorhandenen Werts, wie ihn typeof liefert (z. B. "number" oder "string"), oder "undefined",
+	 * 			wenn keine Option einen Wert hat
+	 */
+	private getPropType(prop: "id" | "sortierung"): string {
+		for (const option of this.unfilteredOptions) {
+			const value = this.getPropValue(option, prop);
+			if (value !== undefined) {
+				return typeof value;
+			}
+		}
+		return "undefined";
+	}
+
+	/**
+	 * Erzeugt einen Comparator, der nach dem Wert einer Prop sortiert. Optionen ohne Wert für diese Prop stehen vorn und werden untereinander alphabetisch
+	 * sortiert.
+	 *
+	 * @param prop            der Name der Prop, nach der sortiert wird ("id" oder "sortierung")
+	 * @param compareValues   der Vergleich zweier vorhandener Werte der Prop
+	 *
+	 * @returns der Comparator
+	 */
+	private createPropComparator(prop: "id" | "sortierung", compareValues: (v1: unknown, v2: unknown) => number): Comparator<T> {
+		return {
+			compare: (o1: T, o2: T): number => {
+				const v1 = this.getPropValue(o1, prop);
+				const v2 = this.getPropValue(o2, prop);
+				if (v1 === undefined) {
+					return (v2 === undefined) ? this.alphabeticalComparator.compare(o1, o2) : -1;
+				}
+				return (v2 === undefined) ? 1 : compareValues(v1, v2);
+			},
+		};
+	}
+
+	/**
+	 * Gibt den Comparator zur konfigurierten Sortierung zurück.
+	 * Per default wird nach der Prop "sortierung" sortiert. Mit "idProp" wird nach der Prop "id" sortiert. Haben die Optionen die jeweilige Prop nicht,
+	 * wird alphabetisch nach dem optionDisplayText sortiert, ebenso bei der Konfiguration "alphabetical".
+	 *
 	 * @returns die Sortierung als Comparator oder null, falls keine Sortierung verwendet wird.
 	 */
-	public toComparator<T>(sort: Comparator<T> | ((a: T, b: T) => number) | null | undefined): Comparator<T> | null {
-		if (!sort) {
-			return null;
-		}
+	public getComparator(): Comparator<T> | null {
+		const sort = this._sort;
 		if (typeof sort === "function") {
 			return {
 				compare: sort,
 			};
 		}
 
-		return sort;
+		switch (sort) {
+			case "alphabetical":
+				return this.alphabeticalComparator;
+			case "idProp":
+				return this.getPropComparator("id");
+			case "unsorted":
+				return null;
+			case "sortierungProp":
+			case null:
+			case undefined:
+				return this.getPropComparator("sortierung");
+			default:
+				return sort;
+		}
 	}
-
 
 	/**
 	 * Aktualisiert die Sortierung der Optionen, der gefilterten Liste und der Selektion, falls eine Sortierfunktion definiert ist.
 	 */
 	public updateSort(): void {
-		if (this.filteredOptions.isEmpty() || (this.sort === null)) {
+		if (this.filteredOptions.isEmpty()) {
 			return;
 		}
-		this.filteredOptions.sort(this.sort);
+		const comparator = this.getComparator();
+		this._comparator = comparator;
+		if (comparator === null) {
+			return;
+		}
+		this.filteredOptions.sort(comparator);
 
 		triggerRef(this._filteredOptions);
 	}
 
+	private applySort(value: SelectSort<T>): void {
+		this._sort = value;
+		this._comparator = this.getComparator();
+
+	}
 }

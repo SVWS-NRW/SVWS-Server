@@ -170,6 +170,7 @@
 
 	import { type ComponentPublicInstance, computed, ref, watch } from "vue";
 
+	import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 	import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
 	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
@@ -353,21 +354,48 @@
 		selectionDisplayText: fach => fach.bezeichnung,
 	});
 
-	const getKursartSelectManagerByIdLeistung = (idLeistung: number) => {
+	const kursartSelectManagerCache = new Map<number, SelectManager<ZulaessigeKursart>>();
+	const kursSelectManagerCache = new Map<number, SelectManager<KursDaten>>();
+
+
+	function getKursartSelectManagerByIdLeistung(idLeistung: number) {
+		let selectManager = kursartSelectManagerCache.get(idLeistung);
+		if (selectManager === undefined) {
+			selectManager = createKursartSelectManager(idLeistung);
+			kursartSelectManagerCache.set(idLeistung, selectManager);
+		}
+		return selectManager;
+	}
+
+
+	function getKursSelectManagerByIdLeistung(idLeistung: number) {
+		let selectManager = kursSelectManagerCache.get(idLeistung);
+		if (selectManager === undefined) {
+			selectManager = createKursSelectManager(idLeistung);
+			kursSelectManagerCache.set(idLeistung, selectManager);
+		}
+		return selectManager;
+	}
+
+	function createKursartSelectManager(idLeistung: number) {
 		return new SelectManager({
-			options: ZulaessigeKursart.getByAllgemeinerKursart(schuljahr.value, props.manager().kursGetByLeistungIdOrNull(idLeistung)!.kursartAllg),
+			options: ZulaessigeKursart.getByAllgemeinerKursart(
+				schuljahr.value,
+				props.manager().kursGetByLeistungIdOrNull(idLeistung)!.kursartAllg
+			),
 			optionDisplayText: kursart => kursart.daten(schuljahr.value)?.kuerzel ?? '—',
 			selectionDisplayText: kursart => kursart.daten(schuljahr.value)?.kuerzel ?? '—',
 		});
-	};
+	}
 
-	const getKursSelectManagerByIdLeistung = (idLeistung: number) => {
+
+	function createKursSelectManager(idLeistung: number) {
 		return new SelectManager({
 			options: props.manager().kursGetMengeFilteredByLeistung(idLeistung),
 			optionDisplayText: kurs => kurs.kuerzel,
 			selectionDisplayText: kurs => kurs.kuerzel,
 		});
-	};
+	}
 
 	/**
 	 * Prüft, ob der angemeldete Benutzer eine Kompetenz zum Ändern von Leistungsdaten in Bezug

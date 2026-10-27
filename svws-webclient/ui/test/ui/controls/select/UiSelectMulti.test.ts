@@ -1122,7 +1122,7 @@ describe.concurrent("Teste Funktionen", () => {
 		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: twoSelections } });
 
 		const selectOption = wrapper.findComponent({ name: "UiSelectMulti" }).vm.selectOption;
-		expect(() => selectOption(manager.filteredOptions.get(0))).toThrow("Die Option BMW ist bereits selektiert.");
+		expect(() => selectOption(manager.filteredOptions.get(0))).toThrow("Die Option Audi ist bereits selektiert.");
 	});
 
 	describe.concurrent("function->deselectOption(option)", () => {
