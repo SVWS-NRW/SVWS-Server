@@ -595,16 +595,22 @@ public class AggregationKlassenStatistikExport {
 
 						final String[] einschulungsartBezeincher1 = { "E51", "E52", "E53", "E54" };
 						final String[] einschulungsartBezeincher2 = { "E18", "E19" };
-
-						if (Arrays.asList(einschulungsartBezeincher1)
-								.contains(Einschulungsart.data().getWertByID(schueler.idGrundschuleEinschulungsart).name())) {
-							herkunftsart = Einschulungsart.data().getSchluesselByIDOrNull(schueler.idGrundschuleEinschulungsart);
-						} else if (Arrays.asList(einschulungsartBezeincher2)
-								.contains(Einschulungsart.data().getWertByID(schueler.idGrundschuleEinschulungsart).name())) {
-							herkunftsart = "51";
+						if (schueler.idGrundschuleEinschulungsart != null) {
+							if (Arrays.asList(einschulungsartBezeincher1)
+									.contains(Einschulungsart.data().getWertByID(schueler.idGrundschuleEinschulungsart).name())) {
+								herkunftsart = Einschulungsart.data().getSchluesselByIDOrNull(schueler.idGrundschuleEinschulungsart);
+							} else if (Arrays.asList(einschulungsartBezeincher2)
+									.contains(Einschulungsart.data().getWertByID(schueler.idGrundschuleEinschulungsart).name())) {
+								herkunftsart = "51";
+							} else {
+								herkunftsart = "";
+							}
 						} else {
 							herkunftsart = "";
+							fehlermeldungen.add(this.getClass().getSimpleName()
+									+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine idGrundschuleEinschulungsart von Null: " + schueler.id);
 						}
+
 
 						// bleibt leer
 						kuerzelGrundschuleUebergangsempfehlung = "";
@@ -729,7 +735,7 @@ public class AggregationKlassenStatistikExport {
 							}
 
 						} else if ((schueler.idHerkunftSchulformVorherigeSchule == null) && (schueler.idVorherigeSchule != null)) {
-							final Long idSchulform = statistikGesamt.schulkatalog.stream()
+							final Long idSchulform = schueler.idVorherigeSchule == null ? null : statistikGesamt.schulkatalog.stream()
 									.filter(schule -> schule.id == schueler.idVorherigeSchule)
 									.findFirst()
 									.map(schule -> schule.idSchulform)
@@ -793,29 +799,56 @@ public class AggregationKlassenStatistikExport {
 						final String[] schulformen = { "H", "V", "R", "PS", "SK", "GE", "FW", "GY" };
 
 						if (Arrays.asList(schulformen).contains(schulform.name())) {
+							final String[] herkunftSchulformen = { "G", "V", "PS" };
 							final String jahrgangBezeichner = Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).name();
 							final boolean jahrgang05 = Jahrgaenge.JAHRGANG_05.name().equals(jahrgangBezeichner);
 							final boolean jahrgang06 = Jahrgaenge.JAHRGANG_06.name().equals(jahrgangBezeichner);
-							final boolean relevanteHerkunft =
-									"G".equals(herkunftSonstigeVorherigeSchule) || "V".equals(herkunftSonstigeVorherigeSchule)
-											|| "PS".equals(herkunftSonstigeVorherigeSchule);
+							final boolean relevanteHerkunft = Arrays.asList(herkunftSchulformen).contains(herkunftSonstigeVorherigeSchule);
 							final String vorigeArtLetzteVersetzung = schueler.vorigeArtLetzteVersetzung;
 							final boolean versetzt = "VERSETZT".equals(vorigeArtLetzteVersetzung);
 							final boolean vorversetzt = "VORVERSETZT".equals(vorigeArtLetzteVersetzung);
+							String schulform_Bezeichner = "";
+							final Long idSchulform = schueler.idVorherigeSchule == null ? null : statistikGesamt.schulkatalog.stream()
+									.filter(schule -> schule.id == schueler.idVorherigeSchule)
+									.findFirst()
+									.map(schule -> schule.idSchulform)
+									.orElse(null);
+							if (idSchulform != null) {
+								schulform_Bezeichner =
+										HerkunftSchulform.data().getWertByIDOrNull(idSchulform) == null ? null
+												: HerkunftSchulform.data().getWertByIDOrNull(idSchulform).name();
+							}
 
-							if (relevanteHerkunft && jahrgang05 && (versetzt || vorversetzt)) {
+							if ((relevanteHerkunft || Arrays.asList(herkunftSchulformen).contains(schulform_Bezeichner)) && jahrgang05
+									&& (versetzt || vorversetzt)) {
+								if (schueler.idKuerzelGrundschuleUebergangsempfehlung != null) {
+									kuerzelGrundschuleUebergangsempfehlung =
+											Uebergangsempfehlung.data().getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung)
+													.equals("****") ? ""
+															: Uebergangsempfehlung.data()
+																	.getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung);
+								} else {
+									kuerzelGrundschuleUebergangsempfehlung = "";
+									fehlermeldungen.add(this.getClass().getSimpleName()
+											+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine idKuerzelGrundschuleUebergangsempfehlung von Null: "
+											+ schueler.id);
+								}
 
-								kuerzelGrundschuleUebergangsempfehlung =
-										Uebergangsempfehlung.data()
-												.getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung);
 
-							} else if (relevanteHerkunft && jahrgang06 && vorversetzt) {
+							} else if ((relevanteHerkunft || Arrays.asList(herkunftSchulformen).contains(schulform_Bezeichner)) && jahrgang06 && vorversetzt) {
 
-								kuerzelGrundschuleUebergangsempfehlung =
-										Uebergangsempfehlung.data()
-												.getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung).equals("****") ? ""
-														: Uebergangsempfehlung.data()
-																.getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung);
+								if (schueler.idKuerzelGrundschuleUebergangsempfehlung != null) {
+									kuerzelGrundschuleUebergangsempfehlung =
+											Uebergangsempfehlung.data().getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung)
+													.equals("****") ? ""
+															: Uebergangsempfehlung.data()
+																	.getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung);
+								} else {
+									kuerzelGrundschuleUebergangsempfehlung = "";
+									fehlermeldungen.add(this.getClass().getSimpleName()
+											+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine idKuerzelGrundschuleUebergangsempfehlung von Null: "
+											+ schueler.id);
+								}
 
 							}
 
@@ -881,8 +914,16 @@ public class AggregationKlassenStatistikExport {
 					 * Übergangsempfehlung
 					 * ============================================================
 					 */
-					kuerzelGrundschuleUebergangsempfehlung =
-							Uebergangsempfehlung.data().getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung);
+					if (schueler.idKuerzelGrundschuleUebergangsempfehlung != null) {
+						kuerzelGrundschuleUebergangsempfehlung =
+								Uebergangsempfehlung.data().getSchluesselByIDOrNull(schueler.idKuerzelGrundschuleUebergangsempfehlung);
+					} else {
+						kuerzelGrundschuleUebergangsempfehlung = "";
+						fehlermeldungen.add(this.getClass().getSimpleName()
+								+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine idKuerzelGrundschuleUebergangsempfehlung von Null: "
+								+ schueler.id);
+					}
+
 				}
 
 			}
