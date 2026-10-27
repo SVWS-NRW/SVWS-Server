@@ -44,6 +44,7 @@ class KurseRepositoryFactoryTest {
 		assertNotNull(factory);
 
 		assertNotNull(factory.getKurseRepository());
+		assertNotNull(factory.getKursSchuelerRepository());
 	}
 
 }
