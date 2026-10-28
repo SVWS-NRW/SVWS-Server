@@ -1,19 +1,26 @@
+import { beforeAll, describe, expect, test, vi } from "vitest";
+
+import { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
 import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
-import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+import { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+import { Schueler } from "@core/asd/data/schueler/Schueler";
 import { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
-import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
-import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { ArrayList } from "@core/java/util/ArrayList";
-import { describe, expect, test, beforeAll } from "vitest";
+import type { List } from "@core/java/util/List";
+
 import { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 
-/**
- * TODO: Test was moved from /ui. Fix paths to ui/core/.. for tests in Vite Config and enable unit tests
- */
+// KlassenListeManager liest intern schuleStateImpl.schuljahr; Daher wird nur `schuljahr` gestubbt.
+vi.mock("~/states/SchuleStateImpl", () => ({
+	schuleStateImpl: { schuljahr: 2020 },
+}));
+
 describe("Tests für KlassenListeManager", () => {
 	// Testet, ob das HTML korrekt gerendert wird
 	const schulform: Schulform = Schulform.GY;
@@ -66,9 +73,6 @@ describe("Tests für KlassenListeManager", () => {
 		);
 	});
 
-	/**
-	 * 	TODO: Enable tests when import path to AuswahlManager is correctly resolved for test
-	 *
 	test("Initialization | Klasse not in Jahrgänge throws Exception", () => {
 		const _klassen: ArrayList<KlassenListeEintrag> = new ArrayList<KlassenListeEintrag>();
 		const k = new KlassenListeEintrag();
@@ -280,7 +284,7 @@ describe("Tests für KlassenListeManager", () => {
 		klasse2.kuerzel = "B";
 		klasse2.schueler = ArrayList.of(new Schueler());
 
-		manager.orderSet(ArrayList.of(new Pair("klassen", true)));
+		manager.orderSet([{ field: "klassen", ascending: true }]);
 
 		// access private method
 		const result = (manager as any).compareAuswahl(klasse1, klasse2);
@@ -301,7 +305,7 @@ describe("Tests für KlassenListeManager", () => {
 		klasse2.kuerzel = "B";
 		klasse2.anzahlZugeordneteSchueler = 1;
 
-		manager.orderSet(ArrayList.of(new Pair("schueleranzahl", true))); // ascending
+		manager.orderSet([{ field: "schueleranzahl", ascending: true }]); // ascending
 
 		// access private method
 		const result = (manager as any).compareAuswahl(klasse1, klasse2);
@@ -312,20 +316,17 @@ describe("Tests für KlassenListeManager", () => {
 	test("Compare | KlassenDaten should be compared correctly based on 'schueleranzahl' criteria descending", () => {
 		const manager = createKlassenListeManager();
 
-		const klasse1 = new KlassenDaten();
+		const klasse1 = new KlassenListeEintrag();
 		klasse1.id = 1;
 		klasse1.kuerzel = "A";
-		klasse1.schueler = ArrayList.of(
-			new Schueler(),
-			new Schueler()
-		);
+		klasse1.anzahlZugeordneteSchueler = 5;
 
-		const klasse2 = new KlassenDaten();
+		const klasse2 = new KlassenListeEintrag();
 		klasse2.id = 2;
 		klasse2.kuerzel = "B";
-		klasse2.schueler = ArrayList.of(new Schueler());
+		klasse2.anzahlZugeordneteSchueler = 1;
 
-		manager.orderSet(ArrayList.of(new Pair("schueleranzahl", false))); // descending
+		manager.orderSet([{ field: "schueleranzahl", ascending: false }]); // descending
 
 		// access private method
 		const result = (manager as any).compareAuswahl(klasse1, klasse2);
@@ -349,7 +350,7 @@ describe("Tests für KlassenListeManager", () => {
 		klasse2.kuerzel = "B";
 		klasse2.schueler = ArrayList.of(new Schueler());
 
-		manager.orderSet(ArrayList.of(new Pair("unknown", true)));
+		manager.orderSet([{ field: "unknown", ascending: true }]);
 
 		expect(() => {
 			// access private method
@@ -358,5 +359,4 @@ describe("Tests für KlassenListeManager", () => {
 			"Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt."
 		);
 	});
-	*/
 });

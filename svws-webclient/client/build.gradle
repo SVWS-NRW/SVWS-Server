@@ -36,3 +36,21 @@ task cleanClient(type: Delete) {
 }
 
 clean.dependsOn cleanClient
+
+task testClient(type: NpmRun) {
+	dependsOn rootProject.npmPrepare
+	dependsOn ':svws-openapi:assembleTranspiled'
+	group = "testing"
+	inputs.files fileTree(dir: "$projectDir/src").matching { exclude "**/*.md" },
+		fileTree(dir: "$projectDir/test"),
+		file("$projectDir/package.json"),
+		file("$projectDir/vite.config.ts")
+	outputs.dir file("$projectDir/build/testresults")
+	args = [ 'test:coverage' ]
+	def dirResults = file("$projectDir/build/testresults")
+	doFirst {
+		dirResults.mkdirs()
+	}
+}
+
+test.dependsOn testClient

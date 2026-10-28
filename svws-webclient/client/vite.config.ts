@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import tailwindcss from '@tailwindcss/vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import Vue from "@vitejs/plugin-vue";
@@ -37,6 +38,13 @@ export default defineConfig(({ mode }) => {
 					},
 				},
 			} : {}),
+		},
+		test: {
+			environment: "happy-dom",
+			reporters: ["default", "junit", "verbose"],
+			outputFile: { junit: "build/testresults/junit.xml" },
+			include: ["test/**/*.test.ts"],
+			passWithNoTests: true,
 		},
 		plugins: [
 			Vue({

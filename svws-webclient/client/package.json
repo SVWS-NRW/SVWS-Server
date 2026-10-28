@@ -16,6 +16,8 @@
 		"serve": "vite preview",
 		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
 		"test:ts": "vue-tsc --noEmit",
-		"ci": "npm run lint && npm run test:ts"
+		"test": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"ci": "npm run lint && npm run test:ts && npm run test:coverage"
 	}
 }

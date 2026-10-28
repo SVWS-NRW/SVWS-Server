@@ -15,7 +15,7 @@
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
 		"story:build": "vite build --config vite.config.story.ts",
 		"story:preview": "vite preview --config vite.config.story.ts",
-		"ci": "npm run lint && npm run test:ts && npm run test"
+		"ci": "npm run lint && npm run test:ts && npm run test:coverage"
 	},
 	"files": [
 		"dist"
