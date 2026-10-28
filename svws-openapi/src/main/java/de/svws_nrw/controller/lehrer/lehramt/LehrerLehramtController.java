@@ -10,14 +10,6 @@ import jakarta.ws.rs.core.Response;
 public interface LehrerLehramtController {
 
 	/**
-	 * Gibt alle Lehrämter eines Lehrers zurück.
-	 *
-	 * @param idLehrer   die ID des Lehrers
-	 * @return die Response mit den Lehrämtern des Lehrers
-	 */
-	Response getByIdLehrer(long idLehrer);
-
-	/**
 	 * Erstellt ein neues Lehramt und gibt den erstellten Eintrag zurück.
 	 *
 	 * @param request   das Request-Objekt mit den Daten für den neuen Eintrag

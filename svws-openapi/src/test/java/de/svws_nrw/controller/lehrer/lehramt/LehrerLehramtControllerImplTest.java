@@ -42,21 +42,6 @@ class LehrerLehramtControllerImplTest {
 	}
 
 	// -------------------------------------------------------------------------
-	// getByIdLehrer
-	// -------------------------------------------------------------------------
-
-	@Test
-	@DisplayName("getByIdLehrer")
-	void getByIdLehrer() {
-		when(service.getByIdLehrer(1L)).thenReturn(List.of(apiModel));
-
-		try (var response = controller.getByIdLehrer(1L)) {
-			assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-			assertThat(response.getEntity()).isEqualTo(List.of(apiModel));
-		}
-	}
-
-	// -------------------------------------------------------------------------
 	// create
 	// -------------------------------------------------------------------------
 
