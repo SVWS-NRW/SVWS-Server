@@ -439,6 +439,33 @@ public class APILehrer {
 	}
 
 	/**
+	 * Die OpenAPI-Methode für die Abfrage der Lehrämter eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Lehrers
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Lehrämter des Lehrers
+	 */
+	@GET
+	@Path("/{id : \\d+}/personaldaten/lehraemter")
+	@Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Daten zu den Lehrämtern.",
+			description = "Liest zugehörigen Daten zu den Lehrämtern des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die zugehörigen Daten zu den Lehrämtern des Lehrers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerLehramtEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	public Response getLehrerLehraemter(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return LehrerControllerFactory
+				.withReadAccess(request)
+				.getLehrerLehramtController()
+				.getByIdLehrer(id);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode für das Patchen von Lehramtsdaten in den Personaldaten eines Lehrers.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll

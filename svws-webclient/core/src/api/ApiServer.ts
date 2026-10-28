@@ -9678,6 +9678,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getLehrerLehraemter für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehraemter
+	 *
+	 * Liest zugehörigen Daten zu den Lehrämtern des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die zugehörigen Daten zu den Lehrämtern des Lehrers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerLehramtEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
+	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die zugehörigen Daten zu den Lehrämtern des Lehrers
+	 */
+	public async getLehrerLehraemter(schema: string, id: number): Promise<List<LehrerLehramtEintrag>> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehraemter"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerLehramtEintrag>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLehramtEintrag.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerUnterrichtsfaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/unterrichtsfach
 	 *
 	 * Liest die Unterrichtsfächer des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
