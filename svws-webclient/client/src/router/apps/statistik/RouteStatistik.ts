@@ -16,7 +16,7 @@ import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
 import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateImpl";
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
-import { foerderschwerpunkteStateImpl } from "~/states/kataloge/FoerderschwerpunkteImpl";
+import { foerderschwerpunkteStateImpl } from "~/states/kataloge/FoerderschwerpunkteStateImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { herkunftschulenStateImpl } from "~/states/kataloge/HerkunftschulenStateImpl";
 import { jahrgaengeStateImpl } from "~/states/kataloge/JahrgaengeStateImpl";
@@ -66,6 +66,7 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 				entlassgruendeStateImpl.init(),
 				erzieherartenStateImpl.init(),
 				fahrschuelerartenStateImpl.init(),
+				foerderschwerpunkteStateImpl.init(),
 				haltestellenStateImpl.init(),
 				jahrgaengeStateImpl.init(),
 				kindergaertenStateImpl.init(),

@@ -33,6 +33,7 @@ import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateIm
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { faecherStateImpl } from "~/states/kataloge/FaecherStateImpl";
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
+import { foerderschwerpunkteStateImpl } from "~/states/kataloge/FoerderschwerpunkteStateImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { herkunftschulenStateImpl } from "~/states/kataloge/HerkunftschulenStateImpl";
 import { jahrgaengeStateImpl } from "~/states/kataloge/JahrgaengeStateImpl";
@@ -154,6 +155,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 			erzieherartenStateImpl.init(),
 			faecherStateImpl.init(),
 			fahrschuelerartenStateImpl.init(),
+			foerderschwerpunkteStateImpl.init(),
 			haltestellenStateImpl.init(),
 			herkunftschulenStateImpl.init(),
 			jahrgaengeStateImpl.init(),

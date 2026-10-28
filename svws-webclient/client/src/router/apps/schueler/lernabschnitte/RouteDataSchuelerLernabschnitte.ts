@@ -6,7 +6,6 @@ import type { GostSchuelerklausur } from "@core/core/data/gost/klausuren/GostSch
 import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchuelerLernabschnittListeEintrag } from "@core/core/data/schueler/SchuelerLernabschnittListeEintrag";
-import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import { GostKlausurplanManager } from "@core/core/utils/gost/klausuren/GostKlausurplanManager";
@@ -33,7 +32,6 @@ interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag>;
 	hatGymOb: boolean;
 	listFaecher: List<FachDaten>;
-	listFoerderschwerpunkte: List<FoerderschwerpunktEintrag>;
 	listJahrgaenge: List<JahrgangsDaten>;
 	// Daten, die in Abhängigkeit des ausgewählten Lernabschnitts geladen werden
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;
@@ -47,7 +45,6 @@ const defaultState = <RouteStateDataSchuelerLernabschnitte> {
 	listAbschnitte: new ArrayList<SchuelerLernabschnittListeEintrag>(),
 	hatGymOb: false,
 	listFaecher: new ArrayList(),
-	listFoerderschwerpunkte: new ArrayList(),
 	listJahrgaenge: new ArrayList(),
 	auswahl: undefined,
 	daten: undefined,
@@ -155,7 +152,6 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			schueler,
 			daten,
 			schuljahresabschnitt,
-			curState.listFoerderschwerpunkte,
 			curState.listJahrgaenge,
 			listKlassen,
 			listKurse,
@@ -197,18 +193,8 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 				break;
 			}
 		}
-		let listFoerderschwerpunkte;
-		let listJahrgaenge;
-		if (this.hatAuswahl) {
-			listFoerderschwerpunkte = this.manager.foerderschwerpunktGetMenge();
-			listJahrgaenge = this.manager.jahrgangGetMenge();
-		} else {
-			[listFoerderschwerpunkte, listJahrgaenge] = await Promise.all([
-				api.server.getKatalogFoerderschwerpunkte(api.schema),
-				api.server.getJahrgaenge(api.schema),
-			]);
-		}
-		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listFoerderschwerpunkte, listJahrgaenge, view: this._state.value.view };
+		const listJahrgaenge = this.hatAuswahl ? this.manager.jahrgangGetMenge() : await api.server.getJahrgaenge(api.schema);
+		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listJahrgaenge, view: this._state.value.view };
 		const alteAuswahl = this._state.value.auswahl;
 		newState = await this.updateSchuljahresabschnitt(newState,
 			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,

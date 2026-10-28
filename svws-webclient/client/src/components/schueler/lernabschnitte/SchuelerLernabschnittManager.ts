@@ -26,6 +26,7 @@ import type { JavaMap } from "@core/java/util/JavaMap";
 import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
 import { useFaecherState } from "@ui/states/kataloge/FaecherState";
+import { useFoerderschwerpunkteState } from "@ui/states/kataloge/FoerderschwerpunkteState";
 import { FoerderschwerpunkteListeManager } from "@ui/ui/manager/kataloge/FoerderschwerpunkteListeManager";
 
 /**
@@ -47,12 +48,6 @@ export class SchuelerLernabschnittManager {
 
 	// Eine Map für den schnellen Zugriff auf die Leistungsdaten des Schülers anhand der ID der Leistungsdaten
 	private readonly _mapLeistungById: JavaMap<number, SchuelerLeistungsdaten> = new HashMap<number, SchuelerLeistungsdaten>();
-
-	// Der Katalog der Förderschwerpunkte
-	private readonly _foerderschwerpunkte: List<FoerderschwerpunktEintrag> = new ArrayList<FoerderschwerpunktEintrag>();
-
-	// Eine Map für den schnellen Zugriff auf die Förderschwerpunkte anhand ihrer ID
-	private readonly _mapFoerderschwerpunktByID: JavaMap<number, FoerderschwerpunktEintrag> = new HashMap<number, FoerderschwerpunktEintrag>();
 
 	// Der Katalog der Jahrgänge
 	private readonly _jahrgaenge: List<JahrgangsDaten> = new ArrayList<JahrgangsDaten>();
@@ -85,6 +80,8 @@ export class SchuelerLernabschnittManager {
 	private readonly _mapLehrerByID: JavaMap<number, LehrerListeEintrag> = new HashMap<number, LehrerListeEintrag>();
 
 	private readonly faecherState = useFaecherState();
+
+	private readonly foerderschwerpunkteState = useFoerderschwerpunkteState();
 
 	// Comparator: Führt einen Vergleich von zwei Fächern durch
 	private static readonly _compFach: Comparator<FachDaten> = { compare: (a: FachDaten, b: FachDaten) => {
@@ -147,14 +144,12 @@ export class SchuelerLernabschnittManager {
 	 * @param klassen               der Katalog der Klassen
 	 * @param kurse                 der Katalog der Kurse
 	 * @param lehrer                der Katalog der Lehrer
-	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
 	public constructor(
 		schulform: Schulform,
 		schueler: SchuelerListeEintrag,
 		lernabschnittsdaten: SchuelerLernabschnittsdaten,
 		schuljahresabschnitt: Schuljahresabschnitt,
-		foerderschwerpunkte: List<FoerderschwerpunktEintrag>,
 		jahrgaenge: List<JahrgangsDaten>,
 		klassen: List<KlassenDaten>,
 		kurse: List<KursDaten>,
@@ -165,7 +160,6 @@ export class SchuelerLernabschnittManager {
 		this._lernabschnittsdaten = lernabschnittsdaten;
 		this._schuljahresabschnitt = schuljahresabschnitt;
 		this.initLeistungsdaten(lernabschnittsdaten.leistungsdaten);
-		this.initFoerderschwerpunkte(foerderschwerpunkte);
 		this.initJahrgaenge(jahrgaenge);
 		this.initKlassen(klassen);
 		this.initKurse(kurse);
@@ -180,22 +174,6 @@ export class SchuelerLernabschnittManager {
 	private initLeistungsdaten(leistungsdaten: List<SchuelerLeistungsdaten>): void {
 		for (const leistung of leistungsdaten) {
 			this.leistungAddInternal(leistung);
-		}
-	}
-
-	/**
-	 * Initialisiert die internen Datenstrukturen für die Förderschwerpunkt und führt dabei
-	 * eine Sortierung der internen Liste aus.
-	 *
-	 * @param foerderschwerpunkte   die Liste der Förderschwerpunkte für die Initialisierung
-	 */
-	private initFoerderschwerpunkte(foerderschwerpunkte: List<FoerderschwerpunktEintrag>): void {
-		this._foerderschwerpunkte.clear();
-		this._foerderschwerpunkte.addAll(foerderschwerpunkte);
-		this._foerderschwerpunkte.sort(FoerderschwerpunkteListeManager.comparator);
-		this._mapFoerderschwerpunktByID.clear();
-		for (const f of foerderschwerpunkte) {
-			this._mapFoerderschwerpunktByID.put(f.id, f);
 		}
 	}
 
@@ -459,16 +437,22 @@ export class SchuelerLernabschnittManager {
 	 * @throws DeveloperNotificationException falls kein Förderschwerpunkt mit der ID existiert
 	 */
 	public foerderschwerpunktGetByIdOrException(id: number): FoerderschwerpunktEintrag {
-		return DeveloperNotificationException.ifMapGetIsNull(this._mapFoerderschwerpunktByID, id);
+		const foerderschwerpunkt = this.foerderschwerpunkteState.foerderschwerpunkte.byId.get(id);
+		if (foerderschwerpunkt === undefined) {
+			throw new DeveloperNotificationException("Es existiert kein Förderschwerpunkt mit der ID " + id + ".");
+		}
+		return foerderschwerpunkt;
 	}
 
 	/**
-	 * Gibt die Liste der Förderschwerpunkte zurück.
+	 * Gibt die sortierte Liste der Förderschwerpunkte aus dem Katalog-State zurück.
 	 *
-	 * @return die Liste der Förderschwerpunkte
+	 * @return die sortierte Liste der Förderschwerpunkte
 	 */
 	public foerderschwerpunktGetMenge(): List<FoerderschwerpunktEintrag> {
-		return this._foerderschwerpunkte;
+		const liste = new ArrayList<FoerderschwerpunktEintrag>(this.foerderschwerpunkteState.foerderschwerpunkte.list);
+		liste.sort(FoerderschwerpunkteListeManager.comparator);
+		return liste;
 	}
 
 

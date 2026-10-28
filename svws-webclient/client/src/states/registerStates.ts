@@ -63,7 +63,7 @@ import { betriebeStateImpl } from "./kataloge/BetriebeStateImpl";
 import { betriebsartenStateImpl } from "./kataloge/BetriebsartenStateImpl";
 import { entlassgruendeStateImpl } from "./kataloge/EntlassgruendeStateImpl";
 import { fahrschuelerartenStateImpl } from "./kataloge/FahrschuelerartenStateImpl";
-import { foerderschwerpunkteStateImpl } from "./kataloge/FoerderschwerpunkteImpl";
+import { foerderschwerpunkteStateImpl } from "./kataloge/FoerderschwerpunkteStateImpl";
 import { orteStateImpl } from "./kataloge/OrteStateImpl";
 import { religionenStateImpl } from "./kataloge/ReligionenStateImpl";
 import { schulinterneFunktionenStateImpl } from "./kataloge/SchulinterneFunktionenStateImpl";
