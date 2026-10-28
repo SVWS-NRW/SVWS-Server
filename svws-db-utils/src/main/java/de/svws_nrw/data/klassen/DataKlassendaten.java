@@ -23,7 +23,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
+import de.svws_nrw.mapper.schueler.SchuelerMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
@@ -990,7 +990,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		if (attachSchueler) {
 			final List<DTOSchueler> schuelerDtosNichtGeloescht = getSchuelerDtosNichtGeloeschtByKlassenID(dto.ID);
 			for (final DTOSchueler schuelerDto : schuelerDtosNichtGeloescht) {
-				klassenDaten.schueler.add(DataSchuelerliste.mapToSchueler(schuelerDto, null));  // TODO Bestimme den Abschlussjahrgang
+				klassenDaten.schueler.add(SchuelerMapper.INSTANCE.toSchueler(schuelerDto));  // TODO Bestimme den Abschlussjahrgang
 			}
 		}
 

@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
@@ -155,27 +154,6 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		eintrag.istDuplikat = schueler.Duplikat;
 		eintrag.externeSchulNr = schueler.ExterneSchulNr;
 		return eintrag;
-	}
-
-
-	/**
-	 * Lambda-Ausdruck zum Befüllen des Core-DTOs Schueler aus DTOSchueler
-	 *
-	 * @param dto   das Schüler-DTO mit den zu mappenden Daten
-	 * @param abschlussjahrgang   der Abschlussjahrgang des Schülers oder null, falls dieser nicht gesetzt werden soll
-	 *
-	 * @return das Core-DTO mit den gemappten Daten
-	 */
-	public static Schueler mapToSchueler(final DTOSchueler dto, final Integer abschlussjahrgang) {
-		final Schueler schueler = new Schueler();
-		schueler.id = dto.ID;
-		schueler.nachname = dto.Nachname;
-		schueler.vorname = (dto.Vorname == null) ? "" : dto.Vorname;
-		schueler.geschlecht = dto.Geschlecht.id;
-		schueler.abschlussjahrgang = (abschlussjahrgang == null) ? -1 : abschlussjahrgang;
-		schueler.status = dto.idStatus;
-		schueler.externeSchulNr = dto.ExterneSchulNr;
-		return schueler;
 	}
 
 

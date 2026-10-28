@@ -14,7 +14,7 @@ import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
+import de.svws_nrw.mapper.schueler.SchuelerMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
@@ -271,7 +271,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 				((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>() : conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		final Map<Long, Schueler> mapSchueler = listSchueler.stream()
 				.filter(dto -> Boolean.FALSE.equals(dto.hatLoeschvermerk))
-				.map(dto -> DataSchuelerliste.mapToSchueler(dto, null))
+				.map(dto -> SchuelerMapper.INSTANCE.toSchueler(dto))
 				.collect(Collectors.toMap(s -> s.id, s -> s));
 		for (final @NotNull DTOKursSchueler kursSchueler : listKursSchueler) {
 			final List<Schueler> tmpList = result.get(kursSchueler.Kurs_ID);
@@ -467,7 +467,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 				listSchueler = new ArrayList<>();
 				mapKursSchueler.put(ks.Kurs_ID, listSchueler);
 			}
-			listSchueler.add(DataSchuelerliste.mapToSchueler(dtoSchueler, null));   // TODO Abschlussjahrgang bestimmen
+			listSchueler.add(SchuelerMapper.INSTANCE.toSchueler(dtoSchueler));   // TODO Abschlussjahrgang bestimmen
 		}
 		for (final KursDaten eintrag : daten) {
 			final List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);

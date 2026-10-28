@@ -46,6 +46,7 @@ import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
+import de.svws_nrw.mapper.schueler.SchuelerMapper;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
@@ -280,7 +281,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, blockung.Abi_Jahrgang, conn.getUser())) {
 				continue;
 			}
-			schuelerListe.add(DataSchuelerliste.mapToSchueler(dto, blockung.Abi_Jahrgang));
+			schuelerListe.add(SchuelerMapper.INSTANCE.toSchueler(dto, blockung.Abi_Jahrgang));
 		}
 		// Bestimme alle Schüler-IDs, welche in Kurs-Schüler-Zuordnungen von Blockungsergebnissen vorkommen, aber nicht zum Abiturjahrgang gehören
 		final List<Long> ergebnisIDs = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungZwischenergebnis.class, blockung.ID)
@@ -324,7 +325,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					final Integer abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByIDOrNull(s.idSchulgliederung),
 							schuljahresabschnitt.Jahr, s.jahrgang);
 					// Es wird nicht geprüft, ob es sich um Abgänger oder ähnliches handelt, da die Daten der Kurs-Schüler-Zuordnung sonst nicht mehr zugreifbar sind
-					schuelerListe.add(DataSchuelerliste.mapToSchueler(dto, abiturjahrgang));
+					schuelerListe.add(SchuelerMapper.INSTANCE.toSchueler(dto, abiturjahrgang));
 				}
 			}
 		}

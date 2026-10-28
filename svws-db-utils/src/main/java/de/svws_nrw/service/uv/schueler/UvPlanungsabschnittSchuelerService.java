@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.uv.UvPlanungsabschnittSchueler;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
+import de.svws_nrw.mapper.schueler.SchuelerMapper;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.uv.DTOUvPlanungsabschnittSchueler;
 import de.svws_nrw.db.dto.current.uv.DTOUvPlanungsabschnittSchuelerPK;
@@ -49,7 +49,7 @@ public final class UvPlanungsabschnittSchuelerService {
 		}
 		final Map<Long, DTOSchueler> schuelerMap = repository.getSchuelerByIds(uvList.stream().map(l -> l.idSchueler).toList()).stream()
 				.collect(Collectors.toMap(l -> l.ID, Function.identity()));
-		uvList.forEach(uv -> uv.daten = DataSchuelerliste.mapToSchueler(schuelerMap.get(uv.idSchueler), null));
+		uvList.forEach(uv -> uv.daten = SchuelerMapper.INSTANCE.toSchueler(schuelerMap.get(uv.idSchueler)));
 		return uvList;
 	}
 
