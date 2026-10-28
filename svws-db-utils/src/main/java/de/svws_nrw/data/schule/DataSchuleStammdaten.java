@@ -32,7 +32,7 @@ import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
@@ -586,8 +586,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionFlush();
 
 		// K_Datenschutz mit Verwendung Foto
-		final DTOKatalogEinwilligungsart foto = new DTOKatalogEinwilligungsart(1L, "Verwendung Foto", true, 32000);
-		foto.Schluessel = "FOTO";
+		final DTOEinwilligungsart foto = new DTOEinwilligungsart(1L, "Verwendung Foto", true, 32000);
+		foto.schluessel = "FOTO";
 		foto.personTyp = PersonTyp.SCHUELER;
 		conn.transactionPersist(foto);
 		conn.transactionFlush();

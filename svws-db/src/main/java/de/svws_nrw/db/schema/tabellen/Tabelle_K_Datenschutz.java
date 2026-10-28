@@ -15,11 +15,13 @@ public class Tabelle_K_Datenschutz extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
+			.setJavaName("id")
 			.setJavaComment("Eindeutige ID für den Datensatz");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(250)
 			.setNotNull()
+			.setJavaName("bezeichnung")
 			.setJavaComment("Eine kurze Bezeichnung der Einwilligungsart");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
@@ -27,10 +29,12 @@ public class Tabelle_K_Datenschutz extends SchemaTabelle {
 			.setDefault("+")
 			.setNotNull()
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
+			.setJavaName("istSichtbar")
 			.setJavaComment("Regelt die Sichtbarkeit der Einwilligungsart bei der Ansicht der Schülertabelle ");
 
 	/** Die Definition der Tabellenspalte Schluessel */
 	public final SchemaTabelleSpalte col_Schluessel = add("Schluessel", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)
+			.setJavaName("schluessel")
 			.setJavaComment("Fest vorgegebene Werte, die es in Schild-NRW später ermöglichen, die Einwilligungsart zu erkennen");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
@@ -44,10 +48,12 @@ public class Tabelle_K_Datenschutz extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
 			.setDefault("32000")
 			.setNotNull()
+			.setJavaName("sortierung")
 			.setJavaComment("Gibt die Reihenfolge der Einwilligungsarten bei der Darstellung an.");
 
 	/** Die Definition der Tabellenspalte Beschreibung */
 	public final SchemaTabelleSpalte col_Beschreibung = add("Beschreibung", SchemaDatentypen.TEXT, false)
+			.setJavaName("beschreibung")
 			.setJavaComment("Eine ausführliche Beschreibung der Einwilligungsart");
 
 	/** Die Definition der Tabellenspalte PersonArt */
@@ -66,7 +72,7 @@ public class Tabelle_K_Datenschutz extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.katalog");
-		setJavaClassName("DTOKatalogEinwilligungsart");
+		setJavaClassName("DTOEinwilligungsart");
 		setJavaComment("Tabelle für die Einwilligungsarten");
 	}
 

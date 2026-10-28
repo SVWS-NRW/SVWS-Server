@@ -17043,33 +17043,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getEinwilligungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten/{id : \d+}
-	 *
-	 * Liest die Daten der Einwilligungsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten der Einwilligungsart
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Einwilligungsart
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
-	 *   Code 404: Keine Einwilligungsart mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten der Einwilligungsart
-	 */
-	public async getEinwilligungsart(schema: string, id: number): Promise<Einwilligungsart> {
-		const path = "/db/{schema}/schule/einwilligungsarten/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result: string = await super.getJSON(path);
-		const text = result;
-		return Einwilligungsart.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der PATCH-Methode patchEinwilligungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten/{id : \d+}
 	 *
 	 * Passt die Einwilligungsart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Einwilligungsart besitzt.
@@ -17092,35 +17065,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = Einwilligungsart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteEinwilligungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsarten/{id : \d+}
-	 *
-	 * Entfernt eine Einwilligungsart der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Einwilligungsart wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Einwilligungsart
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
-	 *   Code 404: Einwilligungsart nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Einwilligungsart wurde erfolgreich entfernt.
-	 */
-	public async deleteEinwilligungsart(schema: string, id: number): Promise<Einwilligungsart> {
-		const path = "/db/{schema}/schule/einwilligungsarten/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result: string = await super.deleteJSON(path, null);
-		const text = result;
-		return Einwilligungsart.transpilerFromJSON(text);
 	}
 
 

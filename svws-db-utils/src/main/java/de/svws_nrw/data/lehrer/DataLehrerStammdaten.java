@@ -15,7 +15,6 @@ import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -25,6 +24,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
 import de.svws_nrw.service.lehrer.foto.LehrerFoto;
 import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
@@ -40,7 +40,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehrer, LehrerStammdaten> {
 
 	private final LernplattformRepository lernplattformRepository;
-	private final DataEinwilligungsarten dataEinwilligungsarten;
+	private final EinwilligungsartRepository einwilligungsartRepository;
 	private final LehrerFotoService lehrerFotoService;
 
 	/**
@@ -48,18 +48,18 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param lernplattformRepository {@link LernplattformRepository} Repository für den Lernplattformen-Katalog
-	 * @param dataEinwilligungsarten {@link DataEinwilligungsarten} Einwilligungsarten Service
+	 * @param einwilligungsartRepository {@link EinwilligungsartRepository} Repository für den Einwilligungsarten-Katalog
 	 * @param lehrerFotoService {@link LehrerFotoService} LehrerFotoService
 	 */
 	public DataLehrerStammdaten(
 			final DBEntityManager conn,
 			final LernplattformRepository lernplattformRepository,
-			final DataEinwilligungsarten dataEinwilligungsarten,
+			final EinwilligungsartRepository einwilligungsartRepository,
 			final LehrerFotoService lehrerFotoService
 	) {
 		super(conn);
 		this.lernplattformRepository = lernplattformRepository;
-		this.dataEinwilligungsarten = dataEinwilligungsarten;
+		this.einwilligungsartRepository = einwilligungsartRepository;
 		this.lehrerFotoService = lehrerFotoService;
 		setAttributesNotPatchable("id");
 		setAttributesRequiredOnCreation("kuerzel", "vorname", "nachname", "geschlecht", "personalTyp");
@@ -108,7 +108,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	}
 
 	private void createLehrerDatenschutz(final LehrerStammdaten newLehrer) {
-		final List<Long> idsEinwilligungsarten = dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.LEHRER);
+		final List<Long> idsEinwilligungsarten = einwilligungsartRepository.getAllIdsByPersonTyp(PersonTyp.LEHRER);
 
 		final List<DTOLehrerDatenschutz> initialLehrerDatenschutzSaetze = idsEinwilligungsarten.stream()
 				.map(id -> new DTOLehrerDatenschutz(newLehrer.id, id, false, false))

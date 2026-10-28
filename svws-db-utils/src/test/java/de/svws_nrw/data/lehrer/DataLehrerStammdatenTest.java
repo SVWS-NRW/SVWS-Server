@@ -42,7 +42,6 @@ import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.schule.PersonTyp;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.util.TestUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -52,6 +51,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
 import jakarta.ws.rs.core.Response;
 
@@ -63,7 +63,7 @@ class DataLehrerStammdatenTest {
 	private DBEntityManager conn;
 
 	@Mock
-	private DataEinwilligungsarten dataEinwilligungsarten;
+	private EinwilligungsartRepository einwilligungsartRepository;
 
 	@Mock
 	private LernplattformRepository lernplattformRepository;
@@ -80,7 +80,7 @@ class DataLehrerStammdatenTest {
 
 	@BeforeEach
 	void setUp() {
-		dataLehrerStammdaten = new DataLehrerStammdaten(conn, lernplattformRepository, dataEinwilligungsarten, lehrerFotoService);
+		dataLehrerStammdaten = new DataLehrerStammdaten(conn, lernplattformRepository, einwilligungsartRepository, lehrerFotoService);
 	}
 
 	@Test
@@ -102,13 +102,13 @@ class DataLehrerStammdatenTest {
 		when(this.conn.queryByKey(eq(DTOLehrer.class), any())).thenReturn(mockedLehrer);
 		when(this.conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
 		when(this.conn.transactionPersistAll(anyList())).thenReturn(true);
-		when(this.dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.LEHRER)).thenReturn(List.of(5L, 7L));
+		when(this.einwilligungsartRepository.getAllIdsByPersonTyp(PersonTyp.LEHRER)).thenReturn(List.of(5L, 7L));
 
 		this.dataLehrerStammdaten.addAsResponse(is);
 
 		verify(this.lernplattformRepository).getAllIds();
-		verify(this.dataEinwilligungsarten).getAllIdsByPersonTyp(PersonTyp.LEHRER);
-		verify(this.dataEinwilligungsarten, never()).getAll();
+		verify(this.einwilligungsartRepository).getAllIdsByPersonTyp(PersonTyp.LEHRER);
+		verify(this.einwilligungsartRepository, never()).getAll();
 
 		verify(this.conn, times(2)).transactionPersistAll(any(Collection.class));
 	}
@@ -122,7 +122,7 @@ class DataLehrerStammdatenTest {
 		when(this.conn.queryByKey(eq(DTOLehrer.class), any())).thenReturn(mockedLehrer);
 		when(this.conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
 		when(this.conn.transactionPersistAll(anyList())).thenReturn(true);
-		when(this.dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.LEHRER)).thenReturn(List.of(5L, 7L));
+		when(this.einwilligungsartRepository.getAllIdsByPersonTyp(PersonTyp.LEHRER)).thenReturn(List.of(5L, 7L));
 
 		this.dataLehrerStammdaten.addAsResponse(is);
 

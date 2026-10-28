@@ -6,6 +6,8 @@ import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJa
 import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangControllerImpl;
 import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationController;
 import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationControllerImpl;
+import de.svws_nrw.controller.schule.katalog.einwilligungsart.EinwilligungsartController;
+import de.svws_nrw.controller.schule.katalog.einwilligungsart.EinwilligungsartControllerImpl;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseControllerImpl;
 import de.svws_nrw.controller.schule.katalog.jahrgang.JahrgangController;
@@ -192,6 +194,15 @@ public final class KatalogControllerFactory {
 	 */
 	public LernplattformController getLernplattformController() {
 		return new LernplattformControllerImpl(serviceFactory.getLernplattformService());
+	}
+
+	/**
+	 * Erstellt einen neuen EinwilligungsartController.
+	 *
+	 * @return {@link EinwilligungsartController} - neu erzeugter Controller
+	 */
+	public EinwilligungsartController getEinwilligungsartController() {
+		return new EinwilligungsartControllerImpl(serviceFactory.getEinwilligungsartService());
 	}
 
 	/**

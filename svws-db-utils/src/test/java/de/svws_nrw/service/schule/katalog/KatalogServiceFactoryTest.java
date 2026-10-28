@@ -3,6 +3,7 @@ package de.svws_nrw.service.schule.katalog;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzJahrgangRepository;
 import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzRepository;
+import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
 import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
@@ -12,12 +13,15 @@ import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
 import de.svws_nrw.repo.schule.kataloge.religion.ReligionRepository;
 import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
+import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungService;
 import de.svws_nrw.service.lehrer.lernplattform.LehrerLernplattformService;
+import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
 import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzService;
+import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformService;
@@ -670,7 +674,9 @@ class KatalogServiceFactoryTest {
 					katalogRepositoryFactory,
 					eigeneSchuleServiceFactory,
 					() -> schuelerLernplattformService,
-					() -> lehrerLernplattformService
+					() -> lehrerLernplattformService,
+					() -> mock(SchuelerEinwilligungService.class),
+					() -> mock(LehrerEinwilligungService.class)
 			);
 		}
 
@@ -696,4 +702,52 @@ class KatalogServiceFactoryTest {
 			verify(katalogRepositoryFactory).getLernplattformRepository();
 		}
 	}
+
+	// -------------------------------------------------------------------------
+	// getEinwilligungsartService()
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getEinwilligungsartService()")
+	class GetEinwilligungsartService {
+
+		private final SchuelerEinwilligungService schuelerEinwilligungService = mock(SchuelerEinwilligungService.class);
+		private final LehrerEinwilligungService lehrerEinwilligungService = mock(LehrerEinwilligungService.class);
+
+		@BeforeEach
+		void setUp() {
+			when(katalogRepositoryFactory.getEinwilligungsartRepository()).thenReturn(mock(EinwilligungsartRepository.class));
+			underTest = KatalogServiceFactory.getNewInstance(
+					katalogRepositoryFactory,
+					eigeneSchuleServiceFactory,
+					() -> mock(SchuelerLernplattformService.class),
+					() -> mock(LehrerLernplattformService.class),
+					() -> schuelerEinwilligungService,
+					() -> lehrerEinwilligungService
+			);
+		}
+
+		@Test
+		@DisplayName("gibt eine nicht-null EinwilligungsartService-Instanz zurück")
+		void shouldReturnNonNullService() {
+			final EinwilligungsartService service = underTest.getEinwilligungsartService();
+
+			assertThat(service).isNotNull();
+		}
+
+		@Test
+		@DisplayName("gibt eine neue Instanz bei jedem Aufruf zurück")
+		void shouldReturnNewInstanceOnEachCall() {
+			assertThat(underTest.getEinwilligungsartService()).isNotSameAs(underTest.getEinwilligungsartService());
+		}
+
+		@Test
+		@DisplayName("ruft getEinwilligungsartRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToRepositoryFactory() {
+			underTest.getEinwilligungsartService();
+
+			verify(katalogRepositoryFactory).getEinwilligungsartRepository();
+		}
+	}
+
 }

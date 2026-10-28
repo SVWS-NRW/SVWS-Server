@@ -62,11 +62,11 @@ import de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabel
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetrieb;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetriebeAnsprechpartner;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetriebsart;
+import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOEinwilligungsart;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFahrschuelerart;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskelgruppen;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskeln;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOHaltestellen;
-import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKursarten;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrt;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrtsteil;
@@ -259,11 +259,11 @@ public final class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOBetrieb.class.getSimpleName(), MigrationDTOBetrieb.class);
              mapDTOName2DTOClass.put(MigrationDTOBetriebeAnsprechpartner.class.getSimpleName(), MigrationDTOBetriebeAnsprechpartner.class);
              mapDTOName2DTOClass.put(MigrationDTOBetriebsart.class.getSimpleName(), MigrationDTOBetriebsart.class);
+             mapDTOName2DTOClass.put(MigrationDTOEinwilligungsart.class.getSimpleName(), MigrationDTOEinwilligungsart.class);
              mapDTOName2DTOClass.put(MigrationDTOFahrschuelerart.class.getSimpleName(), MigrationDTOFahrschuelerart.class);
              mapDTOName2DTOClass.put(MigrationDTOFloskelgruppen.class.getSimpleName(), MigrationDTOFloskelgruppen.class);
              mapDTOName2DTOClass.put(MigrationDTOFloskeln.class.getSimpleName(), MigrationDTOFloskeln.class);
              mapDTOName2DTOClass.put(MigrationDTOHaltestellen.class.getSimpleName(), MigrationDTOHaltestellen.class);
-             mapDTOName2DTOClass.put(MigrationDTOKatalogEinwilligungsart.class.getSimpleName(), MigrationDTOKatalogEinwilligungsart.class);
              mapDTOName2DTOClass.put(MigrationDTOKursarten.class.getSimpleName(), MigrationDTOKursarten.class);
              mapDTOName2DTOClass.put(MigrationDTOOrt.class.getSimpleName(), MigrationDTOOrt.class);
              mapDTOName2DTOClass.put(MigrationDTOOrtsteil.class.getSimpleName(), MigrationDTOOrtsteil.class);
@@ -451,11 +451,11 @@ public final class MigrationDTOs {
              mapTablename2DTOClass.put("K_AllgAdresse", MigrationDTOBetrieb.class);
              mapTablename2DTOClass.put("AllgAdrAnsprechpartner", MigrationDTOBetriebeAnsprechpartner.class);
              mapTablename2DTOClass.put("K_Adressart", MigrationDTOBetriebsart.class);
+             mapTablename2DTOClass.put("K_Datenschutz", MigrationDTOEinwilligungsart.class);
              mapTablename2DTOClass.put("K_FahrschuelerArt", MigrationDTOFahrschuelerart.class);
              mapTablename2DTOClass.put("Floskelgruppen", MigrationDTOFloskelgruppen.class);
              mapTablename2DTOClass.put("Floskeln", MigrationDTOFloskeln.class);
              mapTablename2DTOClass.put("K_Haltestelle", MigrationDTOHaltestellen.class);
-             mapTablename2DTOClass.put("K_Datenschutz", MigrationDTOKatalogEinwilligungsart.class);
              mapTablename2DTOClass.put("EigeneSchule_Kursart", MigrationDTOKursarten.class);
              mapTablename2DTOClass.put("K_Ort", MigrationDTOOrt.class);
              mapTablename2DTOClass.put("K_Ortsteil", MigrationDTOOrtsteil.class);

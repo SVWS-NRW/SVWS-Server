@@ -62,7 +62,6 @@ import de.svws_nrw.data.schueler.DataSchuelerVermerkartenZusammenfassung;
 import de.svws_nrw.data.schule.DataBetriebAnsprechpartner;
 import de.svws_nrw.data.schule.DataBetriebe;
 import de.svws_nrw.data.schule.DataBetriebsarten;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
 import de.svws_nrw.data.schule.DataFloskelgruppen;
 import de.svws_nrw.data.schule.DataFloskeln;
@@ -94,6 +93,8 @@ import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.data.schule.DataTeilstandorte;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataVermerkarten;
+import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartCreateRequest;
+import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartPatchRequest;
 import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformCreateRequest;
 import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformPatchRequest;
 import de.svws_nrw.service.schule.katalog.religion.ReligionCreateRequest;
@@ -917,43 +918,18 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getEinwilligungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).getAllAsResponse(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Einwilligungsart.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Einwilligungsart
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Einwilligungsart
-	 */
-	@GET
-	@Path("/einwilligungsarten/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Einwilligungsart die zugehörigen Daten.",
-			description = "Liest die Daten der Einwilligungsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten "
-					+ "besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Einwilligungsart",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Einwilligungsart.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Einwilligungsart mit der angegebenen ID gefunden")
-	public Response getEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getEinwilligungsartController()
+				.getAll();
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Einwilligungsart.
 	 *
 	 * @param schema       das Datenbankschema, in welchem die Einwilligungsart erstellt wird
+	 * @param dto          die Daten der neuen Einwilligungsart
 	 * @param request      die Informationen zur HTTP-Anfrage
-	 * @param is           das JSON-Objekt
 	 *
 	 * @return die HTTP-Antwort mit der neuen Einwilligungsart
 	 */
@@ -969,11 +945,12 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response createEinwilligungsart(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der initiale Patch für die neue Einwilligungsart", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Einwilligungsart.class))) final EinwilligungsartCreateRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).addAsResponse(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getEinwilligungsartController()
+				.create(dto);
 	}
 
 
@@ -982,7 +959,7 @@ public class APISchule {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der Einwilligungsart
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch für die Einwilligungsart
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -1002,39 +979,12 @@ public class APISchule {
 	public Response patchEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Einwilligungsart", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
+							schema = @Schema(implementation = Einwilligungsart.class))) final EinwilligungsartPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen einer Einwilligungsart der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID der Einwilligungsart
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Einwilligungsart
-	 */
-	@DELETE
-	@Path("/einwilligungsarten/{id : \\d+}")
-	@Operation(summary = "Entfernt eine Einwilligungsart der Schule.",
-			description = "Entfernt eine Einwilligungsart der Schule."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Die Einwilligungsart wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Einwilligungsart.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Einwilligungsart nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getEinwilligungsartController()
+				.patch(id, patch);
 	}
 
 
@@ -1042,7 +992,7 @@ public class APISchule {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Einwilligungsarten der Schule.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           die IDs der Einwilligungsarten
+	 * @param ids          die IDs der Einwilligungsarten
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -1061,11 +1011,12 @@ public class APISchule {
 	public Response deleteEinwilligungsarten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Einwilligungsarten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
+				.getEinwilligungsartController()
+				.deleteMultiple(ids);
 	}
 
 

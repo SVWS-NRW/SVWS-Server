@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangMapper;
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationMapper;
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzMapper;
+import de.svws_nrw.mapper.schule.katalog.einwilligungsart.EinwilligungsartMapper;
 import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
 import de.svws_nrw.mapper.schule.katalog.jahrgang.JahrgangMapper;
 import de.svws_nrw.mapper.schule.katalog.lernplattform.LernplattformMapper;
@@ -18,13 +19,16 @@ import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
+import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungService;
 import de.svws_nrw.service.lehrer.lernplattform.LehrerLernplattformService;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationService;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzService;
+import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformService;
@@ -40,16 +44,22 @@ public final class KatalogServiceFactory {
 	private final EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 	private final Supplier<SchuelerLernplattformService> schuelerLernplattformServiceSupplier;
 	private final Supplier<LehrerLernplattformService> lehrerLernplattformServiceSupplier;
+	private final Supplier<SchuelerEinwilligungService> schuelerEinwilligungServiceSupplier;
+	private final Supplier<LehrerEinwilligungService> lehrerEinwilligungServiceSupplier;
 
 	private KatalogServiceFactory(
 			final KatalogRepositoryFactory katalogRepositoryFactory,
 			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory,
 			final Supplier<SchuelerLernplattformService> schuelerLernplattformServiceSupplier,
-			final Supplier<LehrerLernplattformService> lehrerLernplattformServiceSupplier) {
+			final Supplier<LehrerLernplattformService> lehrerLernplattformServiceSupplier,
+			final Supplier<SchuelerEinwilligungService> schuelerEinwilligungServiceSupplier,
+			final Supplier<LehrerEinwilligungService> lehrerEinwilligungServiceSupplier) {
 		this.katalogRepositoryFactory = katalogRepositoryFactory;
 		this.eigeneSchuleServiceFactory = eigeneSchuleServiceFactory;
 		this.schuelerLernplattformServiceSupplier = schuelerLernplattformServiceSupplier;
 		this.lehrerLernplattformServiceSupplier = lehrerLernplattformServiceSupplier;
+		this.schuelerEinwilligungServiceSupplier = schuelerEinwilligungServiceSupplier;
+		this.lehrerEinwilligungServiceSupplier = lehrerEinwilligungServiceSupplier;
 	}
 
 	/**
@@ -74,18 +84,32 @@ public final class KatalogServiceFactory {
 				() -> LehrerServiceFactory.getNewInstance(
 						LehrerRepositoryFactory.getNewInstance(),
 						EigeneSchuleRepositoryFactory.getNewInstance(),
-						repositoryFactory).getLehrerLernplattformService());
+						repositoryFactory).getLehrerLernplattformService(),
+				() -> SchuelerServiceFactory.getNewInstance(
+						BenutzerRepositoryFactory.getNewInstance(),
+						SchuelerRepositoryFactory.getNewInstance(),
+						repositoryFactory,
+						getNewInstance(repositoryFactory, eigeneSchuleRepositoryFactory),
+						EigeneSchuleRepositoryFactory.getNewInstance(),
+						eigeneSchuleRepositoryFactory).getSchuelerEinwilligungService(),
+				() -> LehrerServiceFactory.getNewInstance(
+						LehrerRepositoryFactory.getNewInstance(),
+						EigeneSchuleRepositoryFactory.getNewInstance(),
+						repositoryFactory).getLehrerEinwilligungService());
 	}
 
 	/**
 	 * Erzeugt eine neue Instanz der Service-Factory mit explizit übergebenen Quellen für die Services
-	 * der Zuordnungen von Schülern und Lehrern zu Lernplattformen. Diese werden erst beim Erstellen des
-	 * {@link LernplattformService} aufgelöst, da die zugehörigen Service-Factories selbst von dieser Factory abhängen.
+	 * der Zuordnungen von Schülern und Lehrern zu Lernplattformen sowie der Einwilligungen von Schülern und Lehrern.
+	 * Diese werden erst beim Erstellen des {@link LernplattformService} bzw. des {@link EinwilligungsartService} aufgelöst,
+	 * da die zugehörigen Service-Factories selbst von dieser Factory abhängen.
 	 *
 	 * @param repositoryFactory   die Factory für Katalog-Repositories
 	 * @param eigeneSchuleServiceFactory   die Factory für EigeneSchule-Services
 	 * @param schuelerLernplattformServiceSupplier   die Quelle für den {@link SchuelerLernplattformService}
 	 * @param lehrerLernplattformServiceSupplier   die Quelle für den {@link LehrerLernplattformService}
+	 * @param schuelerEinwilligungServiceSupplier   die Quelle für den {@link SchuelerEinwilligungService}
+	 * @param lehrerEinwilligungServiceSupplier   die Quelle für den {@link LehrerEinwilligungService}
 	 *
 	 * @return die neue Factory-Instanz
 	 */
@@ -93,9 +117,12 @@ public final class KatalogServiceFactory {
 			final KatalogRepositoryFactory repositoryFactory,
 			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory,
 			final Supplier<SchuelerLernplattformService> schuelerLernplattformServiceSupplier,
-			final Supplier<LehrerLernplattformService> lehrerLernplattformServiceSupplier) {
+			final Supplier<LehrerLernplattformService> lehrerLernplattformServiceSupplier,
+			final Supplier<SchuelerEinwilligungService> schuelerEinwilligungServiceSupplier,
+			final Supplier<LehrerEinwilligungService> lehrerEinwilligungServiceSupplier) {
 		return new KatalogServiceFactory(repositoryFactory, eigeneSchuleServiceFactory,
-				schuelerLernplattformServiceSupplier, lehrerLernplattformServiceSupplier);
+				schuelerLernplattformServiceSupplier, lehrerLernplattformServiceSupplier,
+				schuelerEinwilligungServiceSupplier, lehrerEinwilligungServiceSupplier);
 	}
 
 	/**
@@ -114,6 +141,20 @@ public final class KatalogServiceFactory {
 	 */
 	public MerkmalService getMerkmalService() {
 		return new MerkmalService(katalogRepositoryFactory.getMerkmalRepository(), MerkmalMapper.INSTANCE);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des EinwilligungsartService.
+	 *
+	 * @return eine neue Instanz des EinwilligungsartService
+	 */
+	public EinwilligungsartService getEinwilligungsartService() {
+		return new EinwilligungsartService(
+				katalogRepositoryFactory.getEinwilligungsartRepository(),
+				EinwilligungsartMapper.INSTANCE,
+				schuelerEinwilligungServiceSupplier.get(),
+				lehrerEinwilligungServiceSupplier.get()
+		);
 	}
 
 	/**

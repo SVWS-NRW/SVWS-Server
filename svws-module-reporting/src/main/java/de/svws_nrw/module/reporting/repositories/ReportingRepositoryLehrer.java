@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -189,7 +188,7 @@ public class ReportingRepositoryLehrer {
 				fehlendeIds -> new DataLehrerStammdaten(
 						this.reportingContext.conn(),
 						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
-						new DataEinwilligungsarten(this.reportingContext.conn()),
+						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).getListByIDsOhneFotos(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
@@ -233,7 +232,7 @@ public class ReportingRepositoryLehrer {
 			final List<LehrerStammdaten> alle = new DataLehrerStammdaten(
 					this.reportingContext.conn(),
 					KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
-					new DataEinwilligungsarten(this.reportingContext.conn()),
+					KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
 					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 			).getAllOhneFotos();
 			for (final LehrerStammdaten ls : alle) {

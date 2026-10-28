@@ -7,7 +7,7 @@ import de.svws_nrw.db.dto.current.katalog.DTOFloskelnJahrgaenge;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzkompetenz;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
@@ -247,7 +247,7 @@ public final class KatalogRepositoryFactory extends RepositoryFactory {
 	}
 
 	/**
-	 * Erstellt ein neues Repository für {@link DTOKatalogEinwilligungsart}.
+	 * Erstellt ein neues Repository für {@link DTOEinwilligungsart}.
 	 *
 	 * @return das Repository-Objekt
 	 */
