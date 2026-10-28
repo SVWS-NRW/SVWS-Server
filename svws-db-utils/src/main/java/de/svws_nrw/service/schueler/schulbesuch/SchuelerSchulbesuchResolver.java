@@ -110,6 +110,9 @@ public final class SchuelerSchulbesuchResolver {
 	/**
 	 * Setzt den Herkunftstyp "Kein Schulbesuch" für die vorherige Schule.
 	 * Bei {@code id == null} werden {@code LSSchulform} und {@code LSSchulformSIM} auf {@code null} gesetzt.
+	 * Bei gültiger ID wird zusätzlich {@code LSSchulNr} auf {@code null} gesetzt, da "Kein Schulbesuch" keine
+	 * vorherige Schule hat. Eine verbliebene Schulnummer (z. B. einer Schule, die nicht im Katalog vorhanden ist)
+	 * würde sonst verhindern, dass der Herkunftstyp beim Lesen wieder gemappt wird.
 	 *
 	 * @param entity die Schüler-Entity, deren Felder gesetzt werden
 	 * @param id     die ID des CoreType-Eintrags aus {@code HerkunftSonstige.json}; {@code null} löscht den Eintrag
@@ -123,6 +126,7 @@ public final class SchuelerSchulbesuchResolver {
 		}
 		final var herkunftSonstige = Optional.ofNullable(HerkunftSonstige.data().getEintragByID(id))
 				.orElseThrow(() -> new ApiOperationException(Response.Status.BAD_REQUEST, "Keine HerkunftSonstige mit der ID %d gefunden.".formatted(id)));
+		entity.LSSchulNr = null;
 		entity.LSSchulform = null;
 		entity.LSSchulformSIM = herkunftSonstige.kuerzel;
 	}
