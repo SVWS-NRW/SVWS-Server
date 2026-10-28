@@ -22,6 +22,11 @@ public final class LehrerLehramtControllerImpl implements LehrerLehramtControlle
 	}
 
 	@Override
+	public Response getByIdLehrer(final long idLehrer) {
+		return Responses.ok(service.getByIdLehrer(idLehrer));
+	}
+
+	@Override
 	public Response create(final LehrerLehramtCreateRequest dto) {
 		BeanValidator.validate(dto);
 		final var created = service.create(dto);
