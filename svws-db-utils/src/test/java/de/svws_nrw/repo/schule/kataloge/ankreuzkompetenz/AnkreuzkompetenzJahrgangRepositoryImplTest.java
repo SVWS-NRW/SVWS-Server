@@ -47,6 +47,21 @@ class AnkreuzkompetenzJahrgangRepositoryImplTest {
 
 
 	@Test
+	@DisplayName("Test: Bestimme alle Jahrgangszuordnungen einer Ankreuzkompetenz.")
+	void testFindListByIdAnkreuzkompetenz() {
+		final long idAnkreuzkompetenz = 4711L;
+		final var entities = List.of(
+				new DTOAnkreuzkompetenzJahrgang(1L, idAnkreuzkompetenz, 10L),
+				new DTOAnkreuzkompetenzJahrgang(2L, idAnkreuzkompetenz, 11L));
+
+		when(conn.queryList(DTOAnkreuzkompetenzJahrgang.QUERY_BY_IDANKREUZKOMPETENZ, DTOAnkreuzkompetenzJahrgang.class, idAnkreuzkompetenz))
+				.thenReturn(entities);
+
+		assertThat(repository.findListByIdAnkreuzkompetenz(idAnkreuzkompetenz)).containsExactlyElementsOf(entities);
+		verify(conn).queryList(DTOAnkreuzkompetenzJahrgang.QUERY_BY_IDANKREUZKOMPETENZ, DTOAnkreuzkompetenzJahrgang.class, idAnkreuzkompetenz);
+	}
+
+	@Test
 	@DisplayName("Test: Der Konstruktor setzt die ID-Zugriffe (getId/setId) korrekt auf das ID-Feld.")
 	void testConstructorAndIdAccess() {
 		// Teste getId indirekt via getMap()

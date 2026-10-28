@@ -14,7 +14,7 @@ import de.svws_nrw.db.dto.current.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
-import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzkompetenz;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
@@ -180,7 +180,7 @@ public final class EnmV1GetServiceKontext {
 	private Optional<DTOAnkreuzdaten> ankreuzkompetenzenKonfiguration = Optional.empty();
 
 	/** Eine Map mit den Katalog-Einträgen zu den Ankreuzkompetenzen */
-	private Map<Long, DTOAnkreuzfloskeln> mapKatalogAnkreuzkompetenzen;
+	private Map<Long, DTOAnkreuzkompetenz> mapKatalogAnkreuzkompetenzen;
 
 	/** Eine Map mit den Jahrgangszuordnungen der Ankreuzkompetenzen zugeordnet zu den jeweiligen Ankreuzkompetenz-IDs */
 	private Map<Long, List<DTOAnkreuzkompetenzJahrgang>> kompetenzZuordnungenByJahrgang;
@@ -847,7 +847,7 @@ public final class EnmV1GetServiceKontext {
 	 *
 	 * @return die Ankreuzkompetenz
 	 */
-	public DTOAnkreuzfloskeln getKatalogeintragAnkreuzkompetenz(final long id) {
+	public DTOAnkreuzkompetenz getKatalogeintragAnkreuzkompetenz(final long id) {
 		if (this.mapKatalogAnkreuzkompetenzen == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Daten-Kontext wurde nicht initialisiert.");
 		}

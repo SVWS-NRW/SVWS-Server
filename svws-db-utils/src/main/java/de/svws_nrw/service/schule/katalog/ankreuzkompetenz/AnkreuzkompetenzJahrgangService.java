@@ -54,6 +54,19 @@ public class AnkreuzkompetenzJahrgangService {
 	}
 
 	/**
+	 * Gibt die AnkreuzkompetenzJahrgangszuordnungen der Ankreuzkompetenz mit der angegebenen ID zurück.
+	 *
+	 * @param idAnkreuzkompetenz die ID der Ankreuzkompetenz
+	 *
+	 * @return die Liste der AnkreuzkompetenzJahrgangszuordnungen, leer wenn keine vorhanden sind
+	 */
+	public List<AnkreuzkompetenzJahrgangszuordnung> getByIdAnkreuzkompetenz(final long idAnkreuzkompetenz) {
+		return repository.findListByIdAnkreuzkompetenz(idAnkreuzkompetenz).stream()
+				.map(mapper::toApi)
+				.toList();
+	}
+
+	/**
 	 * Erstellt mehrere neue {@link AnkreuzkompetenzJahrgangszuordnung}.
 	 *
 	 * @param dtos die Daten für die neuen Einträge

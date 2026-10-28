@@ -29,7 +29,7 @@ import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationClient;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationServer;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisungPK;
-import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzkompetenz;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
@@ -763,7 +763,7 @@ public class NotenmodulLocalService {
 			final DTOSchuelerAnkreuzfloskeln schuelerankreuzkompetenz = schuelerAnkreuzkompetenzRepository.findById(patch.id)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Die Schüler-Ankreuzkompetenz-ID %d existiert nicht.".formatted(patch.id)));
 
-			final DTOAnkreuzfloskeln ankreuzkompetenz = ankreuzkompetenzRepository.findById(schuelerankreuzkompetenz.Floskel_ID)
+			final DTOAnkreuzkompetenz ankreuzkompetenz = ankreuzkompetenzRepository.findById(schuelerankreuzkompetenz.Floskel_ID)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND,
 							"Die Ankreuzkompetenz-ID %d existiert nicht.".formatted(schuelerankreuzkompetenz.Floskel_ID)));
 
@@ -775,16 +775,16 @@ public class NotenmodulLocalService {
 
 			final ENMConfigKlasse config = getKonfigurationErlaubt(lernabschnitt.Klassen_ID);
 
-			if (ankreuzkompetenz.Fach_ID != null) {
+			if (ankreuzkompetenz.idFach != null) {
 				// Prüfe die Berechtigung anhand der Leistungsdaten des Schülers in dem Fach der Kompetenz
 				final List<DTOSchuelerLeistungsdaten> leistungsdaten =
-						schuelerLeistungsdatenRepository.findListByLernabschnittAndFach(List.of(lernabschnitt.ID), List.of(ankreuzkompetenz.Fach_ID));
+						schuelerLeistungsdatenRepository.findListByLernabschnittAndFach(List.of(lernabschnitt.ID), List.of(ankreuzkompetenz.idFach));
 				final int berechtigung = pruefeBerechtigungPatchLeistung(leistungsdaten, lernabschnitt, authenticatedUser, config);
 				pruefeKonfigurationPatchErlaubt(berechtigung, config, "Note");
 			} else {
 				// Kompetenzen ohne Fach liegen bei der Klassenleitung, die dafür keine Freigabe der Noteneingabe braucht
 				final int berechtigung = pruefeBerechtigungPatchLernabschnitt(lernabschnitt, authenticatedUser);
-				pruefeKonfigurationPatchErlaubt(berechtigung, config, (ankreuzkompetenz.IstASV != 0) ? "ASV" : "Note");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, (ankreuzkompetenz.istASV != 0) ? "ASV" : "Note");
 			}
 
 			// Durchführen des Patches

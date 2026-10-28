@@ -102,7 +102,7 @@
         <class>de.svws_nrw.db.dto.migration.schild.faecher.MigrationDTOFaecherKatalogSchulformen</class>
         <class>de.svws_nrw.db.dto.migration.schild.gost.MigrationDTOFaecherNichtMoeglicheKombination</class>
         <class>de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzdaten</class>
-        <class>de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzfloskeln</class>
+        <class>de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzkompetenz</class>
         <class>de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOKindergarten</class>
         <class>de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOSchuelerAnkreuzfloskeln</class>
         <class>de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte</class>
@@ -300,7 +300,7 @@
         <class>de.svws_nrw.db.dto.current.schild.faecher.DTOFaecherKatalogSchulformen</class>
         <class>de.svws_nrw.db.dto.current.schild.gost.DTOFaecherNichtMoeglicheKombination</class>
         <class>de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten</class>
-        <class>de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln</class>
+        <class>de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzkompetenz</class>
         <class>de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten</class>
         <class>de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln</class>
         <class>de.svws_nrw.db.dto.current.schild.impexp.DTOEigeneImporte</class>

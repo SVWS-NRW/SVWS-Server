@@ -202,6 +202,16 @@ class KatalogControllerFactoryTest {
 	}
 
 	@Test
+	@DisplayName("getAnkreuzkompetenzController | gibt einen Controller zurück")
+	void getAnkreuzkompetenzController() {
+		final var controller = KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getAnkreuzkompetenzController();
+
+		assertNotNull(controller);
+	}
+
+	@Test
 	@DisplayName("getAnkreuzkompetenzJahrgangController | gibt einen Controller zurück")
 	void getAnkreuzkompetenzJahrgangController() {
 		final var controller = KatalogControllerFactory

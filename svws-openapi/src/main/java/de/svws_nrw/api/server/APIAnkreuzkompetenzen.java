@@ -1,6 +1,5 @@
 package de.svws_nrw.api.server;
 
-import java.io.InputStream;
 import java.util.List;
 
 import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
@@ -8,17 +7,10 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.AnkreuzkompetenzKonfiguration;
 import de.svws_nrw.core.data.schule.Ankreuzkompetenz;
 import de.svws_nrw.core.data.schule.AnkreuzkompetenzJahrgangszuordnung;
-import de.svws_nrw.core.types.ServerMode;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.schule.DataAnkreuzkompetenzen;
-import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
-import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzCreateRequest;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangCreateRequest;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationPatchRequest;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -132,23 +124,17 @@ public class APIAnkreuzkompetenzen {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ankreuzkompetenzen anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Ankreuzkompetenz-Einträge gefunden")
 	public Response getAnkreuzkompetenzen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> {
-					final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-					final var eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-					final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
-					final var ankreuzkompetenzJahrgangService = KatalogServiceFactory.getNewInstance(katalogRepositoryFactory, eigeneSchuleServiceFactory)
-							.getAnkreuzkompetenzJahrgangService();
-					return new DataAnkreuzkompetenzen(conn, ankreuzkompetenzJahrgangService).getListAsResponse();
-				},
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getAnkreuzkompetenzController()
+				.getAll();
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen einer Ankreuzkompetenz.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Create ausgeführt werden soll
-	 * @param is        der Input-Stream mit den Daten der Ankreuzkompetenz
+	 * @param dto       die Daten der Ankreuzkompetenz
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der neuen Ankreuzkompetenz
@@ -160,16 +146,20 @@ public class APIAnkreuzkompetenzen {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Ankreuzkompetenzen besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Ankreuzkompetenz wurde erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Ankreuzkompetenz.class)))
+	@ApiResponse(responseCode = "400", description = "Die übergebenen Daten sind fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Das Fach oder die Schulgliederung wurde nicht gefunden.")
+	@ApiResponse(responseCode = "409", description = "Die Schulgliederung ist für die Schulform nicht gültig.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response addAnkreuzkompetenz(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Ankreuzkompetenz ohne ID, welche automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Ankreuzkompetenz.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Ankreuzkompetenz.class))) final AnkreuzkompetenzCreateRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAnkreuzkompetenzen(conn, null).addAsResponse(is), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getAnkreuzkompetenzController()
+				.create(dto);
 	}
 
 	/**
@@ -177,57 +167,61 @@ public class APIAnkreuzkompetenzen {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der Ankreuzkompetenz
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return das Ergebnis der Patch-Operation
+	 * @return die HTTP-Antwort mit der geänderten Ankreuzkompetenz
 	 */
 	@PATCH
 	@Path("/{id : \\d+}")
 	@Operation(summary = "Passt die Ankreuzkompetenz mit der angegebenen ID an.",
-			description = "Passt die Ankreuzkompetenz mit der angegebenen ID an. "
+			description = "Passt die Ankreuzkompetenz mit der angegebenen ID an und gibt die geänderte Ankreuzkompetenz zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Ankreuzkompetenzen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Ankreuzkompetenz.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "404", description = "Keine Ankreuzkompetenz, kein Fach oder keine Schulgliederung gefunden")
+	@ApiResponse(responseCode = "409", description = "Die Schulgliederung ist für die Schulform nicht gültig.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchAnkreuzkompetenz(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Ankreuzkompetenz", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Ankreuzkompetenz.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Ankreuzkompetenz.class))) final AnkreuzkompetenzPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAnkreuzkompetenzen(conn, null).patchAsResponse(id, is), request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getAnkreuzkompetenzController()
+				.patch(id, patch);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen der Ankreuzkompetenz.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste von zu löschenden IDs
+	 * @param ids       die IDs der zu löschenden Ankreuzkompetenzen
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Ankreuzkompetenz
+	 * @return die HTTP-Antwort mit dem Ergebnis der Löschoperation je ID
 	 */
 	@DELETE
 	@Path("/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Ankreuzkompetenzen.", description = "Entfernt Ankreuzkompetenzen, insofern die Berechtigungen vorhanden sind")
-	@ApiResponse(responseCode = "200", description = "Die Ankreuzkompetenzen wurden erfolgreich entfernt.",
+	@Operation(summary = "Entfernt mehrere Ankreuzkompetenzen.",
+			description = "Entfernt Ankreuzkompetenzen, insofern die Berechtigungen vorhanden sind. "
+					+ "Ankreuzkompetenzen, die bereits bei Schülern verwendet werden, werden nicht gelöscht und in der Antwort als nicht gelöscht gemeldet.")
+	@ApiResponse(responseCode = "200", description = "Die Ergebnisse der Löschoperationen je ID",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
-	@ApiResponse(responseCode = "400", description = "Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Ankreuzkompetenzen zu löschen.")
-	@ApiResponse(responseCode = "404", description = "Es wurden keine Entitäten zu den IDs gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response deleteAnkreuzkompetenzen(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der zu löschenden Klassen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@RequestBody(description = "Die IDs der zu löschenden Ankreuzkompetenzen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataAnkreuzkompetenzen(conn, null).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)), request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
+				.getAnkreuzkompetenzController()
+				.delete(ids);
 	}
 
 	/**

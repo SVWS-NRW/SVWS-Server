@@ -16222,26 +16222,32 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchAnkreuzkompetenz für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/{id : \d+}
 	 *
-	 * Passt die Ankreuzkompetenz mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Ankreuzkompetenzen besitzt.
+	 * Passt die Ankreuzkompetenz mit der angegebenen ID an und gibt die geänderte Ankreuzkompetenz zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Ankreuzkompetenzen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Ankreuzkompetenz
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
-	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 404: Keine Ankreuzkompetenz, kein Fach oder keine Schulgliederung gefunden
+	 *   Code 409: Die Schulgliederung ist für die Schulform nicht gültig.
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<Ankreuzkompetenz>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert.
 	 */
-	public async patchAnkreuzkompetenz(data: Partial<Ankreuzkompetenz>, schema: string, id: number): Promise<void> {
+	public async patchAnkreuzkompetenz(data: Partial<Ankreuzkompetenz>, schema: string, id: number): Promise<Ankreuzkompetenz> {
 		const path = "/db/{schema}/schule/ankreuzkompetenzen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = Ankreuzkompetenz.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return Ankreuzkompetenz.transpilerFromJSON(text);
 	}
 
 
@@ -16301,7 +16307,10 @@ export class ApiServer extends BaseApi {
 	 *   Code 201: Die Ankreuzkompetenz wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Ankreuzkompetenz
+	 *   Code 400: Die übergebenen Daten sind fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Das Fach oder die Schulgliederung wurde nicht gefunden.
+	 *   Code 409: Die Schulgliederung ist für die Schulform nicht gültig.
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<Ankreuzkompetenz>} data - der Request-Body für die HTTP-Methode
@@ -16322,21 +16331,19 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteAnkreuzkompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/delete/multiple
 	 *
-	 * Entfernt Ankreuzkompetenzen, insofern die Berechtigungen vorhanden sind
+	 * Entfernt Ankreuzkompetenzen, insofern die Berechtigungen vorhanden sind. Ankreuzkompetenzen, die bereits bei Schülern verwendet werden, werden nicht gelöscht und in der Antwort als nicht gelöscht gemeldet.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Ankreuzkompetenzen wurden erfolgreich entfernt.
+	 *   Code 200: Die Ergebnisse der Löschoperationen je ID
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
-	 *   Code 400: Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Ankreuzkompetenzen zu löschen.
-	 *   Code 404: Es wurden keine Entitäten zu den IDs gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Ankreuzkompetenzen wurden erfolgreich entfernt.
+	 * @returns Die Ergebnisse der Löschoperationen je ID
 	 */
 	public async deleteAnkreuzkompetenzen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/ankreuzkompetenzen/delete/multiple"

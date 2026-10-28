@@ -85,7 +85,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFaecherKatalogKeys;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFaecherKatalogSchulformen;
 import de.svws_nrw.db.dto.current.schild.gost.DTOFaecherNichtMoeglicheKombination;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
-import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzkompetenz;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.impexp.DTOEigeneImporte;
@@ -393,7 +393,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOFaecherKatalogSchulformen.class.getSimpleName(), DTOFaecherKatalogSchulformen.class);
              mapDTOName2DTOClass.put(DTOFaecherNichtMoeglicheKombination.class.getSimpleName(), DTOFaecherNichtMoeglicheKombination.class);
              mapDTOName2DTOClass.put(DTOAnkreuzdaten.class.getSimpleName(), DTOAnkreuzdaten.class);
-             mapDTOName2DTOClass.put(DTOAnkreuzfloskeln.class.getSimpleName(), DTOAnkreuzfloskeln.class);
+             mapDTOName2DTOClass.put(DTOAnkreuzkompetenz.class.getSimpleName(), DTOAnkreuzkompetenz.class);
              mapDTOName2DTOClass.put(DTOKindergarten.class.getSimpleName(), DTOKindergarten.class);
              mapDTOName2DTOClass.put(DTOSchuelerAnkreuzfloskeln.class.getSimpleName(), DTOSchuelerAnkreuzfloskeln.class);
              mapDTOName2DTOClass.put(DTOEigeneImporte.class.getSimpleName(), DTOEigeneImporte.class);
@@ -696,7 +696,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("FachKatalog_Schulformen", DTOFaecherKatalogSchulformen.class);
              mapTablename2DTOClass.put("NichtMoeglAbiFachKombi", DTOFaecherNichtMoeglicheKombination.class);
              mapTablename2DTOClass.put("K_Ankreuzdaten", DTOAnkreuzdaten.class);
-             mapTablename2DTOClass.put("K_Ankreuzfloskeln", DTOAnkreuzfloskeln.class);
+             mapTablename2DTOClass.put("K_Ankreuzfloskeln", DTOAnkreuzkompetenz.class);
              mapTablename2DTOClass.put("K_Kindergarten", DTOKindergarten.class);
              mapTablename2DTOClass.put("SchuelerAnkreuzfloskeln", DTOSchuelerAnkreuzfloskeln.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte", DTOEigeneImporte.class);

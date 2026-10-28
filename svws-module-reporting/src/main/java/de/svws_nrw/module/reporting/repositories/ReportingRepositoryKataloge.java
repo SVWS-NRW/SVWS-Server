@@ -22,7 +22,6 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
-import de.svws_nrw.data.schule.DataAnkreuzkompetenzen;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
@@ -406,12 +405,7 @@ public class ReportingRepositoryKataloge {
 		if (mapAnkreuzkompetenzen == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Ankreuzkompetenzen.");
-				final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-				final var eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-				final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
-				final var ankreuzkompetenzJahrgangService = KatalogServiceFactory.getNewInstance(katalogRepositoryFactory, eigeneSchuleServiceFactory)
-						.getAnkreuzkompetenzJahrgangService();
-				mapAnkreuzkompetenzen = new DataAnkreuzkompetenzen(this.reportingContext.conn(), ankreuzkompetenzJahrgangService).getList().stream()
+				mapAnkreuzkompetenzen = getKatalogServiceFactory().getAnkreuzkompetenzService().getAll().stream()
 						.collect(Collectors.toMap(a -> a.id, a -> a));
 			} catch (final Exception e) {
 				throw fehlerKatalogdatenLaden("Ankreuzkompetenzen", e);

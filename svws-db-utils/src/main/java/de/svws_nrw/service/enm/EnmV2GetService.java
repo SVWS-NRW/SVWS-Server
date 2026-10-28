@@ -30,7 +30,7 @@ import de.svws_nrw.db.dto.current.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzkompetenz;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
@@ -431,7 +431,7 @@ public final class EnmV2GetService {
 	}
 
 
-	private boolean hatKompetenzFuerSchuelerAnkreuzkompetenzen(final ENMv2Klasse enmKlasse, final DTOAnkreuzfloskeln dtoAnkreuzkompetenz,
+	private boolean hatKompetenzFuerSchuelerAnkreuzkompetenzen(final ENMv2Klasse enmKlasse, final DTOAnkreuzkompetenz dtoAnkreuzkompetenz,
 			final Set<Long> fachIDs) {
 		// Bei einer allgemeinen Erstellung der ENM-Daten müssen alle Ankreuzkompetenzen übertragen werden
 		if (!kontext.istLehrerSpezifisch()) {
@@ -446,15 +446,15 @@ public final class EnmV2GetService {
 
 		// Bei einer Fachlehrer-Abfrage muss Fach-Lehrer-spezifisch geprüft werden
 		if ((lehrerFunktion == null) || (lehrerFunktion == ENMLehrerFunktion.FACHLEHRER)) {
-			if (dtoAnkreuzkompetenz.Fach_ID == null) {
+			if (dtoAnkreuzkompetenz.idFach == null) {
 				return enmKlasse.klassenlehrer.contains(kontext.getLehrerSpezfisch().ID);
 			}
-			return fachIDs.contains(dtoAnkreuzkompetenz.Fach_ID);
+			return fachIDs.contains(dtoAnkreuzkompetenz.idFach);
 		}
 
 		// Bei Klassenleitungen und Abteilungsleitungen wird die Klasse überprüft, in fremden Klassen zählt der eigene Unterricht im Fach
 		return kontext.istKlassenleitungOderAbteilungsleitung(enmKlasse.id, kontext.getLehrerSpezfisch().ID)
-				|| ((dtoAnkreuzkompetenz.Fach_ID != null) && fachIDs.contains(dtoAnkreuzkompetenz.Fach_ID));
+				|| ((dtoAnkreuzkompetenz.idFach != null) && fachIDs.contains(dtoAnkreuzkompetenz.idFach));
 	}
 
 
@@ -473,7 +473,7 @@ public final class EnmV2GetService {
 			return;
 		}
 		for (final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz : ankreuzkompetenzen) {
-			final DTOAnkreuzfloskeln dtoAnkreuzkompetenz = kontext.getKatalogeintragAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
+			final DTOAnkreuzkompetenz dtoAnkreuzkompetenz = kontext.getKatalogeintragAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
 			if (dtoAnkreuzkompetenz == null) { // DB-Error -> should not happen
 				throw new NullPointerException();
 			}
@@ -487,8 +487,8 @@ public final class EnmV2GetService {
 			final List<Long> jahrgaenge = kontext.getAnkreuzkompetenzJahrgaenge(ankreuzkompetenz.Floskel_ID);
 			final ENMv2Ankreuzkompetenz enmAnkreuzkompetenz = kontext.manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
 			if (enmAnkreuzkompetenz == null) {
-				kontext.manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
-						jahrgaenge, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
+				kontext.manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.id, (dtoAnkreuzkompetenz.istASV == 0), dtoAnkreuzkompetenz.idFach,
+						jahrgaenge, dtoAnkreuzkompetenz.floskelText, dtoAnkreuzkompetenz.sortierung);
 			}
 			// Füge die Schueler-Ankreuzkompetenz hinzu
 			final var ankreuzkompetenzTimestamps = kontext.getSchuelerAnkreuzkompetenzenTimestamps(ankreuzkompetenz.ID);

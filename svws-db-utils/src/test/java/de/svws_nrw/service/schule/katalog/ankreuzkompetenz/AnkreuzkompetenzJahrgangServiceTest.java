@@ -159,6 +159,42 @@ class AnkreuzkompetenzJahrgangServiceTest {
 	}
 
 	// -------------------------------------------------------------------------
+	// getByIdAnkreuzkompetenz
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getByIdAnkreuzkompetenz")
+	class GetByIdAnkreuzkompetenz {
+
+		@Test
+		@DisplayName("Gibt eine leere Liste zurück, wenn keine Zuordnungen vorhanden sind")
+		void getById_leer() {
+			when(repository.findListByIdAnkreuzkompetenz(10L)).thenReturn(List.of());
+
+			assertThat(service.getByIdAnkreuzkompetenz(10L)).isEmpty();
+			verify(mapper, never()).toApi(any());
+		}
+
+		@Test
+		@DisplayName("Mappt alle Zuordnungen der Ankreuzkompetenz auf das API-Modell")
+		void getById_mapptZuordnungen() {
+			final var entity2 = new DTOAnkreuzkompetenzJahrgang(2L, 10L, 5L);
+
+			final var apiModel2 = new AnkreuzkompetenzJahrgangszuordnung();
+			apiModel2.id = 2L;
+			apiModel2.idAnkreuzkompetenz = 10L;
+			apiModel2.idJahrgang = 5L;
+
+			when(repository.findListByIdAnkreuzkompetenz(10L)).thenReturn(List.of(entity, entity2));
+			when(mapper.toApi(entity)).thenReturn(apiModel);
+			when(mapper.toApi(entity2)).thenReturn(apiModel2);
+
+			assertThat(service.getByIdAnkreuzkompetenz(10L)).containsExactly(apiModel, apiModel2);
+		}
+
+	}
+
+	// -------------------------------------------------------------------------
 	// createMultiple
 	// -------------------------------------------------------------------------
 

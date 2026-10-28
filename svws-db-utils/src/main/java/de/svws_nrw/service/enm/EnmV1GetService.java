@@ -29,7 +29,7 @@ import de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzkompetenz;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
@@ -484,15 +484,15 @@ public final class EnmV1GetService {
 			return;
 		}
 		for (final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz : ankreuzkompetenzen) {
-			final DTOAnkreuzfloskeln dtoAnkreuzkompetenz = kontext.getKatalogeintragAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
+			final DTOAnkreuzkompetenz dtoAnkreuzkompetenz = kontext.getKatalogeintragAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
 			if (dtoAnkreuzkompetenz == null) { // DB-Error -> should not happen
 				throw new NullPointerException();
 			}
 
 			// Überspringe bei Lehrer-Spezifischen Daten die Ankreuzkompetezen, falls keine Fachlehrer-Zuordnung vorliegt bzw. der Lehrer kein Klassenlehrer ist
 			if ((kontext.istLehrerSpezifisch())
-					&& (((dtoAnkreuzkompetenz.Fach_ID == null) && !enmKlasse.klassenlehrer.contains(kontext.getLehrerSpezfisch().ID))
-							|| ((dtoAnkreuzkompetenz.Fach_ID != null) && !fachIDs.contains(dtoAnkreuzkompetenz.Fach_ID)))) {
+					&& (((dtoAnkreuzkompetenz.idFach == null) && !enmKlasse.klassenlehrer.contains(kontext.getLehrerSpezfisch().ID))
+							|| ((dtoAnkreuzkompetenz.idFach != null) && !fachIDs.contains(dtoAnkreuzkompetenz.idFach)))) {
 				continue;
 			}
 
@@ -500,8 +500,8 @@ public final class EnmV1GetService {
 			final String jahrgang = getJahrgangOfAnkreuzkompetenz(ankreuzkompetenz.ID, lernabschnitt.Fachklasse_ID);
 			final ENMv1Ankreuzkompetenz enmAnkreuzkompetenz = kontext.manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
 			if (enmAnkreuzkompetenz == null) {
-				kontext.manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
-						jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
+				kontext.manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.id, (dtoAnkreuzkompetenz.istASV == 0), dtoAnkreuzkompetenz.idFach,
+						jahrgang, dtoAnkreuzkompetenz.floskelText, dtoAnkreuzkompetenz.sortierung);
 			}
 			// Füge die Schueler-Ankreuzkompetenz hinzu
 			final var ankreuzkompetenzTimestamps = kontext.getSchuelerAnkreuzkompetenzenTimestamps(ankreuzkompetenz.ID);

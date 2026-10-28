@@ -17,6 +17,7 @@ public class Tabelle_K_Ankreuzfloskeln extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID der Ankreuzfloskel");
 
@@ -29,10 +30,12 @@ public class Tabelle_K_Ankreuzfloskeln extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Fach_ID */
 	public final SchemaTabelleSpalte col_Fach_ID = add("Fach_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idFach")
 			.setJavaComment("FachID zu der die Ankreuzfloskel gehört, null für individuelle Ankreuzfloskeln bzw. siehe Spalte IstASV");
 
 	/** Die Definition der Tabellenspalte IstASV */
 	public final SchemaTabelleSpalte col_IstASV = add("IstASV", SchemaDatentypen.INT, false)
+			.setJavaName("istASV")
 			.setDefault("0")
 			.setNotNull()
 			.setJavaComment("Gibt an, falls die Fach_ID null ist, ob es sich bei der Ankreuzfloskel um eine Floskel zum Arbeits- und Sozialverhalten"
@@ -46,33 +49,40 @@ public class Tabelle_K_Ankreuzfloskeln extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Gliederung */
 	public final SchemaTabelleSpalte col_Gliederung = add("Gliederung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
+			.setJavaName("schulgliederung")
 			.setJavaComment("Schulgliederung zu der die Ankreuzkompetenz gehört (nur wichtig bei BK)");
 
 	/** Die Definition der Tabellenspalte FloskelText */
 	public final SchemaTabelleSpalte col_FloskelText = add("FloskelText", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("floskelText")
 			.setNotNull()
 			.setJavaComment("Text der Ankreuzfloskel");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
+			.setJavaName("sortierung")
 			.setJavaComment("Sortierung der Ankreuzfloskel");
 
 	/** Die Definition der Tabellenspalte FachSortierung */
 	public final SchemaTabelleSpalte col_FachSortierung = add("FachSortierung", SchemaDatentypen.INT, false)
+			.setJavaName("fachSortierung")
 			.setJavaComment("Sortierung des Faches der Ankreuzfloskel");
 
 	/** Die Definition der Tabellenspalte Abschnitt */
 	public final SchemaTabelleSpalte col_Abschnitt = add("Abschnitt", SchemaDatentypen.INT, false)
+			.setJavaName("abschnitt")
 			.setJavaComment("Wird in welchen Abschnitten verwendet 1Hj 2HJ beide");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istSichtbar")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Sichtbarkeit der Ankreuzfloskel");
 
 	/** Die Definition der Tabellenspalte Aktiv */
 	public final SchemaTabelleSpalte col_Aktiv = add("Aktiv", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istAktiv")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Gibt an ob die Ankreuzfloskel aktiv ist");
@@ -96,7 +106,7 @@ public class Tabelle_K_Ankreuzfloskeln extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.grundschule");
-		setJavaClassName("DTOAnkreuzfloskeln");
+		setJavaClassName("DTOAnkreuzkompetenz");
 		setJavaComment("Einzelne Textbausteine, die den Fächer dann als Ankreuzkompetenzen zugewiesen werden können");
 	}
 

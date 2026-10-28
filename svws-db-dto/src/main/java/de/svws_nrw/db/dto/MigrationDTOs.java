@@ -53,7 +53,7 @@ import de.svws_nrw.db.dto.migration.schild.faecher.MigrationDTOFaecherKatalogKey
 import de.svws_nrw.db.dto.migration.schild.faecher.MigrationDTOFaecherKatalogSchulformen;
 import de.svws_nrw.db.dto.migration.schild.gost.MigrationDTOFaecherNichtMoeglicheKombination;
 import de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzdaten;
-import de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzkompetenz;
 import de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOKindergarten;
 import de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte;
@@ -250,7 +250,7 @@ public final class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOFaecherKatalogSchulformen.class.getSimpleName(), MigrationDTOFaecherKatalogSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOFaecherNichtMoeglicheKombination.class.getSimpleName(), MigrationDTOFaecherNichtMoeglicheKombination.class);
              mapDTOName2DTOClass.put(MigrationDTOAnkreuzdaten.class.getSimpleName(), MigrationDTOAnkreuzdaten.class);
-             mapDTOName2DTOClass.put(MigrationDTOAnkreuzfloskeln.class.getSimpleName(), MigrationDTOAnkreuzfloskeln.class);
+             mapDTOName2DTOClass.put(MigrationDTOAnkreuzkompetenz.class.getSimpleName(), MigrationDTOAnkreuzkompetenz.class);
              mapDTOName2DTOClass.put(MigrationDTOKindergarten.class.getSimpleName(), MigrationDTOKindergarten.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuelerAnkreuzfloskeln.class.getSimpleName(), MigrationDTOSchuelerAnkreuzfloskeln.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporte.class.getSimpleName(), MigrationDTOEigeneImporte.class);
@@ -442,7 +442,7 @@ public final class MigrationDTOs {
              mapTablename2DTOClass.put("FachKatalog_Schulformen", MigrationDTOFaecherKatalogSchulformen.class);
              mapTablename2DTOClass.put("NichtMoeglAbiFachKombi", MigrationDTOFaecherNichtMoeglicheKombination.class);
              mapTablename2DTOClass.put("K_Ankreuzdaten", MigrationDTOAnkreuzdaten.class);
-             mapTablename2DTOClass.put("K_Ankreuzfloskeln", MigrationDTOAnkreuzfloskeln.class);
+             mapTablename2DTOClass.put("K_Ankreuzfloskeln", MigrationDTOAnkreuzkompetenz.class);
              mapTablename2DTOClass.put("K_Kindergarten", MigrationDTOKindergarten.class);
              mapTablename2DTOClass.put("SchuelerAnkreuzfloskeln", MigrationDTOSchuelerAnkreuzfloskeln.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte", MigrationDTOEigeneImporte.class);

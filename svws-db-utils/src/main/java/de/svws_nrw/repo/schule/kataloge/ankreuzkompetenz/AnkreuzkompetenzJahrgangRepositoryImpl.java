@@ -1,5 +1,7 @@
 package de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz;
 
+import java.util.List;
+
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.katalog.DTOAnkreuzkompetenzJahrgang;
 import de.svws_nrw.repo.RepositoryImpl;
@@ -17,6 +19,11 @@ public final class AnkreuzkompetenzJahrgangRepositoryImpl extends RepositoryImpl
 	 */
 	public AnkreuzkompetenzJahrgangRepositoryImpl(final DBEntityManager conn) {
 		super(conn, DTOAnkreuzkompetenzJahrgang.class, o -> o.id, (o, id) -> o.id = id);
+	}
+
+	@Override
+	public List<DTOAnkreuzkompetenzJahrgang> findListByIdAnkreuzkompetenz(final long idAnkreuzkompetenz) {
+		return conn.queryList(DTOAnkreuzkompetenzJahrgang.QUERY_BY_IDANKREUZKOMPETENZ, DTOAnkreuzkompetenzJahrgang.class, idAnkreuzkompetenz);
 	}
 
 }

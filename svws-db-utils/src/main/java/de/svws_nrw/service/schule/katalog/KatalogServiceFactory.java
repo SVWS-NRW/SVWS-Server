@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangMapper;
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationMapper;
+import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzMapper;
 import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
 import de.svws_nrw.mapper.schule.katalog.jahrgang.JahrgangMapper;
 import de.svws_nrw.mapper.schule.katalog.lernplattform.LernplattformMapper;
@@ -23,6 +24,7 @@ import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationService;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformService;
@@ -185,6 +187,21 @@ public final class KatalogServiceFactory {
 				katalogRepositoryFactory.getJahrgangRepository(),
 				JahrgangMapper.INSTANCE,
 				eigeneSchuleServiceFactory.getSchuleService()
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des AnkreuzkompetenzService.
+	 *
+	 * @return eine neue Instanz des AnkreuzkompetenzService.
+	 */
+	public AnkreuzkompetenzService getAnkreuzkompetenzService() {
+		return new AnkreuzkompetenzService(
+				katalogRepositoryFactory.getAnkreuzkompetenzRepository(),
+				katalogRepositoryFactory.getFachRepository(),
+				getAnkreuzkompetenzJahrgangService(),
+				eigeneSchuleServiceFactory.getSchuleService(),
+				AnkreuzkompetenzMapper.INSTANCE
 		);
 	}
 
