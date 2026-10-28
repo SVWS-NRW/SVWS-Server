@@ -101,9 +101,10 @@ class SchuelerSchulbesuchResolverTest {
 		}
 
 		@Test
-		@DisplayName("gueltige id - setzt LSSchulform=null und LSSchulformSIM=kuerzel")
+		@DisplayName("gueltige id - setzt LSSchulNr=null, LSSchulform=null und LSSchulformSIM=kuerzel")
 		void gueltigeId_setztFelder() {
 			final var entity = new DTOSchueler(1L, "123", true);
+			entity.LSSchulNr = "100001";
 			entity.LSSchulform = "vorher";
 			entity.LSSchulformSIM = "vorher";
 			final var eintrag = HerkunftSonstige.data()
@@ -111,8 +112,24 @@ class SchuelerSchulbesuchResolverTest {
 
 			SchuelerSchulbesuchResolver.patchHerkunftSonstigeVorherigeSchule(entity, eintrag.id);
 
+			assertThat(entity.LSSchulNr).isNull();
 			assertThat(entity.LSSchulform).isNull();
 			assertThat(entity.LSSchulformSIM).isEqualTo(eintrag.kuerzel);
+		}
+
+		@Test
+		@DisplayName("gueltige id - Herkunftstyp wird nach dem Patch wieder gemappt, auch wenn vorher eine Schulnummer gesetzt war")
+		void gueltigeId_mitVorhandenerSchulnummer_wirdGemappt() {
+			final var entity = new DTOSchueler(1L, "123", true);
+			entity.LSSchulNr = "100001";
+			final var eintrag = HerkunftSonstige.data()
+					.getWerte().getFirst().historie().getLast();
+
+			SchuelerSchulbesuchResolver.patchHerkunftSonstigeVorherigeSchule(entity, eintrag.id);
+			final var target = new SchuelerSchulbesuchsdaten();
+			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target);
+
+			assertThat(target.idHerkunftSonstigeVorherigeSchule).isEqualTo(eintrag.id);
 		}
 	}
 
