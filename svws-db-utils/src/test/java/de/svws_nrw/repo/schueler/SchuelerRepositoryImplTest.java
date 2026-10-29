@@ -3,6 +3,8 @@ package de.svws_nrw.repo.schueler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -146,6 +148,41 @@ class SchuelerRepositoryImplTest {
 				.containsEntry(testSchueler1.ID, testSchueler1);
 	}
 
+
+	@Test
+	@DisplayName("Test: getListNichtGeloescht liefert ohne nurAktive alle Schüler ohne Löschvermerk.")
+	void testGetListNichtGeloescht() {
+		final String query = "SELECT e FROM DTOSchueler e WHERE (e.hatLoeschvermerk IS NULL OR e.hatLoeschvermerk = false)";
+
+		when(conn.queryList(query, DTOSchueler.class)).thenReturn(List.of(testSchueler1, testSchueler2));
+
+		final List<DTOSchueler> result = repository.getListNichtGeloescht(false);
+
+		assertThat(result).hasSize(2).containsExactlyInAnyOrder(testSchueler1, testSchueler2);
+		verify(conn).queryList(query, DTOSchueler.class);
+	}
+
+	@Test
+	@DisplayName("Test: getListNichtGeloescht liefert mit nurAktive zusätzlich nur Schüler mit dem Status AKTIV.")
+	void testGetListNichtGeloeschtNurAktive() {
+		final String query = "SELECT e FROM DTOSchueler e WHERE (e.hatLoeschvermerk IS NULL OR e.hatLoeschvermerk = false) AND e.idStatus = ?1";
+		final long idStatus = SchuelerStatus.AKTIV.historie().getLast().id;
+
+		when(conn.queryList(query, DTOSchueler.class, idStatus)).thenReturn(List.of(testSchueler1));
+
+		final List<DTOSchueler> result = repository.getListNichtGeloescht(true);
+
+		assertThat(result).containsExactly(testSchueler1);
+		verify(conn).queryList(query, DTOSchueler.class, idStatus);
+	}
+
+	@Test
+	@DisplayName("Test: getListNichtGeloescht liefert eine leere Liste, wenn keine Schüler gefunden werden.")
+	void testGetListNichtGeloeschtLeer() {
+		when(conn.queryList(anyString(), eq(DTOSchueler.class))).thenReturn(List.of());
+
+		assertThat(repository.getListNichtGeloescht(false)).isEmpty();
+	}
 
 	@Test
 	@DisplayName("Test: Prüfe, ob die ID korrekt gesetzt wird.")

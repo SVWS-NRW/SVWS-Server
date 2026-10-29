@@ -81,6 +81,17 @@ public interface SchuelerRepository extends Repository<DTOSchueler> {
 	Map<Long, DTOSchueler> getMapByStatusAndSchuljahresabschnitte(Collection<Long> idsSchuljahresabschnitte, Collection<Long> status);
 
 	/**
+	 * Gibt die Liste aller Schüler ohne Löschvermerk zurück, unabhängig vom Schuljahresabschnitt.
+	 * Ein nicht gesetzter Löschvermerk (NULL) wird dabei wie ein nicht vorhandener Löschvermerk behandelt.
+	 *
+	 * @param nurAktive   gibt an, ob nur Schüler mit dem Status {@code AKTIV} zurückgegeben werden sollen
+	 *
+	 * @return die Liste der Schüler
+	 */
+	List<DTOSchueler> getListNichtGeloescht(boolean nurAktive);
+
+
+	/**
 	 * Gibt die IDs aller Schüler zurück, unabhängig von Status und Löschvermerk.
 	 *
 	 * @return die aufsteigend sortierten IDs aller Schüler

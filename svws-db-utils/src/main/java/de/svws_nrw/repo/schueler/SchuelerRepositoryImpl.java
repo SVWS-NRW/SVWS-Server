@@ -66,6 +66,15 @@ public final class SchuelerRepositoryImpl extends RepositoryImpl<DTOSchueler> im
 	}
 
 	@Override
+	public List<DTOSchueler> getListNichtGeloescht(final boolean nurAktive) {
+		final String queryNichtGeloescht = "SELECT e FROM DTOSchueler e WHERE (e.hatLoeschvermerk IS NULL OR e.hatLoeschvermerk = false)";
+		if (nurAktive) {
+			return conn.queryList(queryNichtGeloescht + " AND e.idStatus = ?1", DTOSchueler.class, SchuelerStatus.AKTIV.historie().getLast().id);
+		}
+		return conn.queryList(queryNichtGeloescht, DTOSchueler.class);
+	}
+
+	@Override
 	public List<Long> getAllIds() {
 		return conn.queryList("SELECT e.ID FROM DTOSchueler e ORDER BY e.ID", Long.class);
 	}
