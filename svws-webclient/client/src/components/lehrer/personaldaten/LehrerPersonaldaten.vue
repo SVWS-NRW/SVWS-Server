@@ -65,6 +65,7 @@
 				<svws-ui-input-number placeholder="Pflichtstundensoll"
 					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll"
 					@change="personalabschnittsdatenModelProxy.patch"
+					:validation="() => personalabschnittsdatenModelProxy.getFehler('pflichtstundensoll')"
 					:decimal-places="1" :steps="0.5" :readonly statistics />
 				<ui-select label="Einsatzstatus"
 					v-model="personalabschnittsdatenModelProxy.einsatzstatus.value"
