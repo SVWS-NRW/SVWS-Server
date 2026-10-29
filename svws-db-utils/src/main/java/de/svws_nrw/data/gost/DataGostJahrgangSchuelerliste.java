@@ -9,7 +9,8 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.data.DataManager;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
+import de.svws_nrw.mapper.schueler.SchuelerListeEintragComparator;
+import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
@@ -96,13 +97,13 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 		// Erstelle die Schülerliste
 		return schuelerListe.stream()
 				.map(s -> {
-					final SchuelerListeEintrag sle = DataSchuelerliste.erstelleSchuelerlistenEintrag(s,
+					final SchuelerListeEintrag sle = SchuelerListeEintragMapper.INSTANCE.toSchuelerListeEintrag(s,
 							mapSchuljahresabschnitte.get(mapAktAbschnitte.get(s.ID).Schuljahresabschnitts_ID).Jahr, mapAktAbschnitte.get(s.ID), mapJahrgaenge,
 							schulform);
 					sle.abiturjahrgang = this.abijahrgang;
 					return sle;
 				})
-				.sorted(DataSchuelerliste.dataComparator)
+				.sorted(SchuelerListeEintragComparator.INSTANCE)
 				.toList();
 	}
 

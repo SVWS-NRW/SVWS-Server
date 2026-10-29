@@ -12,7 +12,7 @@ import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.data.gost.DataGostJahrgangSchuelerliste;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
+import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -105,7 +105,7 @@ public final class GostKlausurenAllDataRepository {
 			return new ArrayList<>();
 		}
 		final List<DTOSchueler> schuelerListe = conn.queryList(DTOSchueler.QUERY_LIST_BY_ID, DTOSchueler.class, schuelerIds);
-		return schuelerListe.stream().map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, schuljahr, null, null, null)).toList();
+		return schuelerListe.stream().map(s -> SchuelerListeEintragMapper.INSTANCE.toSchuelerListeEintrag(s, schuljahr, null, null, null)).toList();
 	}
 
 	/**

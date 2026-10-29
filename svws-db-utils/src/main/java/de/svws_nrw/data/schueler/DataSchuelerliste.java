@@ -1,18 +1,13 @@
 package de.svws_nrw.data.schueler;
 
 import java.io.InputStream;
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -31,6 +26,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.schueler.SchuelerListeEintragComparator;
+import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
@@ -98,100 +95,6 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-
-
-	/**
-	 * Diese Funktion erstellt einen {@link SchuelerListeEintrag} anhand der Schülerinformation
-	 * aus den Datenbank-DTOs {@link DTOSchueler} und {@link DTOSchuelerLernabschnittsdaten}.
-	 *
-	 * @param schueler       die DB-Informationen zum Schüler
-	 * @param schuljahr      das Schuljahr
-	 * @param aktAbschnitt   die DB-Informationen zu dem aktuellen Schülerlernabschnitt
-	 * @param mapJahrgaenge  die Jahrgangsdefinitionen, welche ihrer ID zugeordnet sind.
-	 * @param schulform      die Schulform der Schule
-	 *
-	 * @return der Schülerlisteneintrag
-	 */
-	public static SchuelerListeEintrag erstelleSchuelerlistenEintrag(final DTOSchueler schueler, final int schuljahr,
-			final DTOSchuelerLernabschnittsdaten aktAbschnitt, final Map<Long, DTOJahrgang> mapJahrgaenge, final Schulform schulform) {
-		final SchuelerListeEintrag eintrag = new SchuelerListeEintrag();
-		eintrag.id = schueler.ID;
-		eintrag.nachname = Objects.toString(schueler.Nachname, "");
-		eintrag.vorname = Objects.toString(schueler.Vorname, "");
-		eintrag.geschlecht = (schueler.Geschlecht == null) ? "" : schueler.Geschlecht.kuerzel;
-		eintrag.geburtsdatum = schueler.Geburtsdatum;
-		eintrag.idSchuljahresabschnittSchueler = schueler.Schuljahresabschnitts_ID;
-		if (aktAbschnitt == null) {
-			eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
-			eintrag.idKlasse = -1L;
-			eintrag.idJahrgang = -1L;
-			eintrag.epJahre = null;
-			eintrag.jahrgang = "";
-			eintrag.idSchulgliederung = -1L;
-		} else {
-			eintrag.idSchuljahresabschnitt = aktAbschnitt.Schuljahresabschnitts_ID;
-			eintrag.idKlasse = (aktAbschnitt.Klassen_ID == null) ? -1 : aktAbschnitt.Klassen_ID;
-			final DTOJahrgang jg = mapJahrgaenge.get(aktAbschnitt.Jahrgang_ID);
-			if (jg == null) {
-				eintrag.idJahrgang = -1L;
-				eintrag.jahrgang = "";
-			} else {
-				eintrag.idJahrgang = jg.ID;
-				eintrag.jahrgang = Objects.toString(jg.ASDJahrgang, "");
-			}
-			eintrag.epJahre = aktAbschnitt.EPJahre;
-			if (aktAbschnitt.Schulgliederung == null) {
-				final Schulgliederung sgl = Schulgliederung.getDefault(schulform);
-				final SchulgliederungKatalogEintrag sglke = (sgl == null) ? null : sgl.daten(schuljahr);
-				eintrag.idSchulgliederung = (sglke == null) ? -1L : sglke.id;
-			} else {
-				final var schulgliederung = Schulgliederung.data().getWertBySchluessel(aktAbschnitt.Schulgliederung);
-				final var schulgliederungEintrag = (schulgliederung == null) ? null : schulgliederung.daten(schuljahr);
-				eintrag.idSchulgliederung = (schulgliederungEintrag == null) ? null : schulgliederungEintrag.id;
-			}
-		}
-		eintrag.status = schueler.idStatus;
-		eintrag.istDuplikat = schueler.Duplikat;
-		eintrag.externeSchulNr = schueler.ExterneSchulNr;
-		return eintrag;
-	}
-
-
-	/**
-	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link SchuelerListeEintrag}.
-	 */
-	public static final Comparator<SchuelerListeEintrag> dataComparator = (a, b) -> {
-		if ((a.idKlasse == null) && (b.idKlasse != null)) {
-			return -1;
-		} else if ((a.idKlasse != null) && (b.idKlasse == null)) {
-			return 1;
-		} else if ((a.idKlasse == null) && (b.idKlasse == null)) {
-			return 0;
-		}
-		int result = Long.compare(a.idKlasse, b.idKlasse);
-		final Collator collator = Collator.getInstance(Locale.GERMAN);
-		if (result == 0) {
-			if ((a.nachname == null) && (b.nachname != null)) {
-				return -1;
-			} else if ((a.nachname != null) && (b.nachname == null)) {
-				return 1;
-			} else if ((a.nachname == null) && (b.nachname == null)) {
-				return 0;
-			}
-			result = collator.compare(a.nachname, b.nachname);
-		}
-		if (result == 0) {
-			if ((a.vorname == null) && (b.vorname != null)) {
-				return -1;
-			} else if ((a.vorname != null) && (b.vorname == null)) {
-				return 1;
-			} else if ((a.vorname == null) && (b.vorname == null)) {
-				return 0;
-			}
-			result = collator.compare(a.vorname, b.vorname);
-		}
-		return result;
-	};
 
 
 	/**
@@ -303,10 +206,10 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			if (sja == null) {
 				continue;
 			}
-			final SchuelerListeEintrag sle = erstelleSchuelerlistenEintrag(s, sja.schuljahr, mapAbschnitte.get(s.ID), mapJahrgaenge, schulform);
+			final SchuelerListeEintrag sle = SchuelerListeEintragMapper.INSTANCE.toSchuelerListeEintrag(s, sja.schuljahr, mapAbschnitte.get(s.ID), mapJahrgaenge, schulform);
 			schuelerListe.add(sle);
 		}
-		schuelerListe.sort(dataComparator);
+		schuelerListe.sort(SchuelerListeEintragComparator.INSTANCE);
 		// Ermittle die Kurse, welche von den Schülern belegt wurden.
 		getSchuelerKurse(conn, schuelerListe, abschnitt);
 		// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.

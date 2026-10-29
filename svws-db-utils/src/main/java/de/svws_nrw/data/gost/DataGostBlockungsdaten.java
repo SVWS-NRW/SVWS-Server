@@ -45,8 +45,8 @@ import de.svws_nrw.core.utils.gost.GostFachwahlManager;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.mapper.schueler.SchuelerMapper;
+import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
@@ -310,7 +310,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 								"Für die Schüler-ID %d aus der Blockung konnte der aktuelle Lernabschnitt nicht bestimmt werden.".formatted(s.ID));
 					}
 					tmpSchuelerListe
-							.add(DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapSchuljahresabschnitte.get(abschnitt.Schuljahresabschnitts_ID).Jahr,
+							.add(SchuelerListeEintragMapper.INSTANCE.toSchuelerListeEintrag(s, mapSchuljahresabschnitte.get(abschnitt.Schuljahresabschnitts_ID).Jahr,
 									abschnitt, mapJahrgaenge, schulform));
 				}
 				for (final SchuelerListeEintrag s : tmpSchuelerListe) {
