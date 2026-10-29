@@ -1,4 +1,5 @@
 import { ValidatorSsmlSchuelerStammdatenMigrationshintergrundGeburtsland } from '../../../asd/validate/schueler/ValidatorSsmlSchuelerStammdatenMigrationshintergrundGeburtsland';
+import { ValidatorSsmkSchuelerStammdatenMigrationshintergrundKombination } from '../../../asd/validate/schueler/ValidatorSsmkSchuelerStammdatenMigrationshintergrundKombination';
 import { ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr } from '../../../asd/validate/schueler/ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr';
 import { ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter } from '../../../asd/validate/schueler/ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter';
 import { ValidatorSsmsSchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie } from '../../../asd/validate/schueler/ValidatorSsmsSchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie';
@@ -26,6 +27,7 @@ export class ValidatorSsmSchuelerStammdatenMigrationshintergrund extends Validat
 	 */
 	public constructor(idSchuljahresabschnitt: Supplier<number | null>, geburtsdatum: Supplier<string | null>, idGeburtsland: Supplier<number | null>, idGeburtslandMutter: Supplier<number | null>, idGeburtslandVater: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, idVerkehrspracheFamilie: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._validatoren.add(new ValidatorSsmkSchuelerStammdatenMigrationshintergrundKombination(idGeburtsland, idGeburtslandMutter, idGeburtslandVater, idVerkehrspracheFamilie, hatMigrationshintergrund, kontext));
 		this._validatoren.add(new ValidatorSsmlSchuelerStammdatenMigrationshintergrundGeburtsland(idGeburtsland, hatMigrationshintergrund, kontext));
 		this._validatoren.add(new ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter(idGeburtslandMutter, hatMigrationshintergrund, kontext));
 		this._validatoren.add(new ValidatorSsmsSchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(idSchuljahresabschnitt, idVerkehrspracheFamilie, hatMigrationshintergrund, kontext));

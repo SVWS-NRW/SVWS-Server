@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsmk10SchuelerStammdatenMigrationshintergrundKombination",
+    "historie" : [ {
+      "praefix" : "SSMK10",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Migrationshintergrund-Kombination",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Geburtsland'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [""],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Migrationshintergrund des Schülers: Wenn ein Migrationshintergrund vorhanden ist, dürfen die Felder 'Geburtsland', 'Geburtsland Mutter', 'Geburtsland Vater' und 'Verkehrssprache' nicht allesamt mit Deutschland bzw. Deutsch belegt sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.hatMigrationshintergrund = TRUE ∧ (SchuelerStammdaten.idGeburtsland ∧ SchuelerStammdaten.idGeburtslandMutter ∧ SchuelerStammdaten.idGeburtslandVater ≙ Bezeichner 'DEU' in Nationalitaeten.json) ∧ SchuelerStammdaten.idVerkehrssprache ≙ Bezeichner 'DE' in Verkehrssprache.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

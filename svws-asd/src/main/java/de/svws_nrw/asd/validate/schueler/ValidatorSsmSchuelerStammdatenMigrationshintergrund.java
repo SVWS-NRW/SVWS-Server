@@ -39,6 +39,8 @@ public final class ValidatorSsmSchuelerStammdatenMigrationshintergrund extends V
 		super(kontext);
 
 		_validatoren.add(
+				new ValidatorSsmkSchuelerStammdatenMigrationshintergrundKombination(idGeburtsland, idGeburtslandMutter, idGeburtslandVater, idVerkehrspracheFamilie, hatMigrationshintergrund, kontext));
+		_validatoren.add(
 				new ValidatorSsmlSchuelerStammdatenMigrationshintergrundGeburtsland(idGeburtsland, hatMigrationshintergrund, kontext));
 		_validatoren.add(
 				new ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter(idGeburtslandMutter, hatMigrationshintergrund, kontext));
