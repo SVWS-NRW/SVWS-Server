@@ -35,6 +35,7 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
+import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
 import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.types.schueler.Herkunftsarten;
@@ -46,6 +47,7 @@ import de.svws_nrw.asd.types.schule.Laender;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Orte;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
@@ -710,7 +712,15 @@ public class AggregationKlassenStatistikExport {
 						if (schueler.idHerkunftSchulformVorherigeSchule != null) {
 							final String herkunftSchulformVorherigeSchule =
 									HerkunftSchulform.data().getWertByIDOrNull(schueler.idHerkunftSchulformVorherigeSchule).name();
-							if ("SK".equals(herkunftSchulformVorherigeSchule)) {
+							if ("HI".equals(herkunftSchulformVorherigeSchule) || "WF".equals(herkunftSchulformVorherigeSchule)) {
+
+								herkunftsschulform = "FW";
+
+							} else	if ("KS".equals(herkunftSchulformVorherigeSchule) || "SR".equals(herkunftSchulformVorherigeSchule)) {
+
+									herkunftsschulform = "S";
+
+							} else if ("SK".equals(herkunftSchulformVorherigeSchule)) {
 
 								herkunftsschulform = "SE";
 
@@ -730,6 +740,34 @@ public class AggregationKlassenStatistikExport {
 
 							} else if ("SF".equals(herkunftSchulformVorherigeSchule)) {
 								herkunftsschulform = "XS";
+
+							} else if (("BK".equals(statistikGesamt.schule.schulform) || "SB".equals(statistikGesamt.schule.schulform)) && ("BK".equals(herkunftSchulformVorherigeSchule) || "SB".equals(herkunftSchulformVorherigeSchule))) {
+								herkunftsschulform = HerkunftBildungsgang.data().getSchluesselByIDOrNull(schueler.idSchulgliederungVorherigeSchule);
+
+							} else if ("WB".equals(statistikGesamt.schule.schulform) && ("BK".equals(herkunftSchulformVorherigeSchule) || "SB".equals(herkunftSchulformVorherigeSchule))) {
+
+								String sgl = Schulgliederung.data().getWertByIDOrNull(schueler.idSchulgliederungVorherigeSchule).name();
+								if ("A01".equals(sgl) || "A02".equals(sgl) || "A03".equals(sgl) || "A04".equals(sgl) || "A12".equals(sgl) || "A13".equals(sgl) || "A14".equals(sgl) || "A15".equals(sgl) || "A16".equals(sgl) || "A17".equals(sgl) || "A18".equals(sgl) || "A19".equals(sgl)) {
+									herkunftsschulform = "BS";
+								} else if ("B06".equals(sgl) || "B07".equals(sgl) || "B08".equals(sgl) || "B09".equals(sgl) || "B10".equals(sgl) || "C01".equals(sgl) || "C02".equals(sgl) || "C03".equals(sgl) || "C12".equals(sgl) || "C13".equals(sgl)) {
+									herkunftsschulform = "BF";
+								} else if ("C05".equals(sgl) || "C06".equals(sgl) || "C07".equals(sgl) || "C08".equals(sgl) || "C11".equals(sgl) || "D05".equals(sgl) || "D06".equals(sgl)) {
+									herkunftsschulform = "FO";
+								} else if ("D01".equals(sgl) || "D02".equals(sgl)) {
+									herkunftsschulform = "BY";
+								} else if ("E01".equals(sgl) || "E02".equals(sgl) || "E03".equals(sgl) || "E04".equals(sgl) || "E05".equals(sgl) || "E07".equals(sgl) || "E13".equals(sgl)) {
+									herkunftsschulform = "FS";
+								} else {
+									herkunftsschulform = "";
+								}
+
+							} else if ("WB".equals(statistikGesamt.schule.schulform) && "WB".equals(herkunftSchulformVorherigeSchule)) {
+								herkunftsschulform = HerkunftBildungsgang.data().getSchluesselByIDOrNull(schueler.idSchulgliederungVorherigeSchule);
+
+								if (schueler.idSchulgliederungVorherigeSchule == null) {
+									herkunftsschulform = "";
+								}
+
 							} else {
 								herkunftsschulform = HerkunftSchulform.data().getSchluesselByIDOrNull(schueler.idHerkunftSchulformVorherigeSchule);
 							}
@@ -745,7 +783,11 @@ public class AggregationKlassenStatistikExport {
 										HerkunftSchulform.data().getWertByIDOrNull(idSchulform) == null ? null
 												: HerkunftSchulform.data().getWertByIDOrNull(idSchulform).name();
 								if (schulform_Bezeichner != null) {
-									if ("SK".equals(schulform_Bezeichner)) {
+									if ("HI".equals(schulform_Bezeichner) || "WF".equals(schulform_Bezeichner)) {
+										herkunftsschulform = "FW";
+									} else if ("KS".equals(schulform_Bezeichner) || "SR".equals(schulform_Bezeichner) || "SG".equals(schulform_Bezeichner)) {
+										herkunftsschulform = "S";
+									} else if ("SK".equals(schulform_Bezeichner)) {
 										herkunftsschulform = "SE";
 									} else if ("V".equals(schulform_Bezeichner)) {
 
@@ -763,7 +805,29 @@ public class AggregationKlassenStatistikExport {
 										} else {
 											herkunftsschulform = "H";
 										}
+									} else if (("BK".equals(statistikGesamt.schule.schulform) || "SB".equals(statistikGesamt.schule.schulform)) && ("BK".equals(schulform_Bezeichner) || "SB".equals(schulform_Bezeichner))) {
+										herkunftsschulform = HerkunftBildungsgang.data().getSchluesselByIDOrNull(schueler.idSchulgliederungVorherigeSchule);
+									} else if ("WB".equals(statistikGesamt.schule.schulform) && ("BK".equals(schulform_Bezeichner) || "SB".equals(schulform_Bezeichner))) {
 
+										String sgl = Schulgliederung.data().getWertByIDOrNull(schueler.idSchulgliederungVorherigeSchule).name();
+										if ("A01".equals(sgl) || "A02".equals(sgl) || "A03".equals(sgl) || "A04".equals(sgl) || "A12".equals(sgl) || "A13".equals(sgl) || "A14".equals(sgl) || "A15".equals(sgl) || "A16".equals(sgl) || "A17".equals(sgl) || "A18".equals(sgl) || "A19".equals(sgl)) {
+											herkunftsschulform = "BS";
+										} else if ("B06".equals(sgl) || "B07".equals(sgl) || "B08".equals(sgl) || "B09".equals(sgl) || "B10".equals(sgl) || "C01".equals(sgl) || "C02".equals(sgl) || "C03".equals(sgl) || "C12".equals(sgl) || "C13".equals(sgl)) {
+											herkunftsschulform = "BF";
+										} else if ("C05".equals(sgl) || "C06".equals(sgl) || "C07".equals(sgl) || "C08".equals(sgl) || "C11".equals(sgl) || "D05".equals(sgl) || "D06".equals(sgl)) {
+											herkunftsschulform = "FO";
+										} else if ("D01".equals(sgl) || "D02".equals(sgl)) {
+											herkunftsschulform = "BY";
+										} else if ("E01".equals(sgl) || "E02".equals(sgl) || "E03".equals(sgl) || "E04".equals(sgl) || "E05".equals(sgl) || "E07".equals(sgl) || "E13".equals(sgl)) {
+											herkunftsschulform = "FS";
+										} else {
+											herkunftsschulform = "";
+										}
+									} else if ("WB".equals(statistikGesamt.schule.schulform) && "WB".equals(schulform_Bezeichner)) {
+										herkunftsschulform = HerkunftBildungsgang.data().getSchluesselByIDOrNull(schueler.idSchulgliederungVorherigeSchule);
+										if (schueler.idSchulgliederungVorherigeSchule == null) {
+											herkunftsschulform = "";
+										}
 									} else {
 										herkunftsschulform = HerkunftSchulform.data().getSchluesselByIDOrNull(idSchulform);
 									}
