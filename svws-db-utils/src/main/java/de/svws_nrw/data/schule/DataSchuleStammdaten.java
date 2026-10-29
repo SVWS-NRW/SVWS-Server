@@ -48,6 +48,10 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
+import de.svws_nrw.repo.schule.SchuljahresabschnitteRepositoryImpl;
+import de.svws_nrw.service.schule.SchuljahresabschnittService;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -127,7 +131,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static SchuleStammdaten getStammdaten(final DBEntityManager conn) throws ApiOperationException {
+	public static SchuleStammdaten getStammdaten(final DBEntityManager conn) {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schuldaten für die Schule vorhanden.");
@@ -137,12 +141,17 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat keinen gültigen aktuellen Schuljahresabschnitt.");
 		}
 		final SchuleStammdaten daten = map(schule);
-		daten.abschnitte.addAll((new DataSchuljahresabschnitte(conn)).getAbschnitte());
+		daten.abschnitte.addAll(createSchuljahresabschnittService(conn).getList());
 		return daten;
 	}
 
+	@Nonnull
+	private static SchuljahresabschnittService createSchuljahresabschnittService(final DBEntityManager conn) {
+		return new SchuljahresabschnittService(new SchuljahresabschnitteRepositoryImpl(conn), SchuljahresabschnittMapper.INSTANCE);
+	}
+
 	@Override
-	public Response get(final Long id) throws ApiOperationException {
+	public Response get(final Long id) {
 		final SchuleStammdaten daten = getStammdaten(conn);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -168,7 +177,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response getSchulnummerResponse() throws ApiOperationException {
+	public Response getSchulnummerResponse() {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -194,7 +203,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
+	public Response patch(final Long id, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
@@ -287,7 +296,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response getSchullogo() throws ApiOperationException {
+	public Response getSchullogo() {
 		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
 		if (logo == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -318,7 +327,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response putSchullogo(final InputStream is) throws ApiOperationException {
+	public Response putSchullogo(final InputStream is) {
 		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
 		if (logo == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -338,7 +347,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response init(final int schulnummer) throws ApiOperationException {
+	public Response init(final int schulnummer) {
 		// Prüfe, ob bereits ein Eintrag in der Tabelle EigeneSchule vorliegt...
 		DTOEigeneSchule eigeneSchule = conn.querySingle(DTOEigeneSchule.class);
 		if (eigeneSchule != null) {

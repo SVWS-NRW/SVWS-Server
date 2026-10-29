@@ -13,11 +13,12 @@ import de.svws_nrw.data.gost.DataGostJahrgangSchuelerliste;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
-import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenAllDataService;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 
 /**
  * Repository für externe Lesedaten der vollständigen GOSt-Klausurplanungsdaten.
@@ -65,7 +66,7 @@ public final class GostKlausurenAllDataRepository {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<GostFach> getFaecherByAbiturjahr(final int abiturjahr) throws ApiOperationException {
+	public List<GostFach> getFaecherByAbiturjahr(final int abiturjahr) {
 		return DataGostFaecher.getFaecherManager(conn, abiturjahr).faecher();
 	}
 
@@ -78,7 +79,9 @@ public final class GostKlausurenAllDataRepository {
 	 * @return der Schuljahresabschnitt oder null
 	 */
 	public Schuljahresabschnitt getSchuljahresabschnitt(final int schuljahr, final int abschnitt) {
-		return DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, schuljahr, abschnitt);
+		return EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance()).getSchuljahresabschnittService()
+				.findBySchuljahrAndAbschnitt(schuljahr, abschnitt)
+				.orElse(null);
 	}
 
 	/**

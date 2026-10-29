@@ -1,13 +1,12 @@
 package de.svws_nrw.data.schule;
 
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.schuljahresabschnitt.v1.SchuljahresabschnittV1;
+import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -16,8 +15,8 @@ import jakarta.ws.rs.core.Response;
  */
 public class DataSchuljahresabschnitteV1 {
 
-	/** Der DataManager für den Zugriff auf Schuljahresabschnitt Informationen */
-	private final DataSchuljahresabschnitte dataSchuljahresabschnitte;
+	/** Der Service für den Zugriff auf Schuljahresabschnitt Informationen */
+	private final SchuljahresabschnittService service;
 
 	/**
 	 * Comparator zur Sortierung von Schuljahresabschnitten von Neuster absteigend zu Ältester.
@@ -33,10 +32,10 @@ public class DataSchuljahresabschnitteV1 {
 	/**
 	 * Standardkonstruktor
 	 *
-	 * @param dataSchuljahresabschnitte interner Schuljahresabschnitt-Manager
+	 * @param service   der Service für den Zugriff auf die Schuljahresabschnitte
 	 */
-	public DataSchuljahresabschnitteV1(final DataSchuljahresabschnitte dataSchuljahresabschnitte) {
-		this.dataSchuljahresabschnitte = dataSchuljahresabschnitte;
+	public DataSchuljahresabschnitteV1(final SchuljahresabschnittService service) {
+		this.service = service;
 	}
 
 	/**
@@ -45,9 +44,7 @@ public class DataSchuljahresabschnitteV1 {
 	 * @return    eine Liste der verfügbaren Schuljahresabschnitte als Response
 	 */
 	public Response getAllAsResponse() {
-		final List<SchuljahresabschnittV1> schuljahresabschnitte = Optional.of(this.dataSchuljahresabschnitte.getAbschnitte())
-				.orElse(Collections.emptyList())
-				.stream()
+		final List<SchuljahresabschnittV1> schuljahresabschnitte = this.service.getList().stream()
 				.map(this::map)
 				.sorted(SORT_BY_SCHULJAHR_AND_ABSCHNITT_DESC)
 				.toList();

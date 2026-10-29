@@ -12,7 +12,6 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
@@ -20,8 +19,10 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurslehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -70,7 +71,48 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	}
 
 
-	private DTOGostBlockungKurslehrer getKurslehrer(final DTOGostBlockungKurs kurs, final Long idLehrer) throws ApiOperationException {
+	/**
+	 * Erstellt einen Service für den Zugriff auf die Schuljahresabschnitte.
+	 *
+	 * @return der Service für die Schuljahresabschnitte
+	 */
+	private static SchuljahresabschnittService getSchuljahresabschnittService() {
+		return EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance()).getSchuljahresabschnittService();
+	}
+
+
+	/**
+	 * Bestimmt den aktuellen Schuljahresabschnitt der Schule.
+	 *
+	 * @param schule   die Schule
+	 *
+	 * @return der aktuelle Schuljahresabschnitt der Schule
+	 *
+	 * @throws ApiOperationException   wenn der Schuljahresabschnitt der Schule nicht bestimmt werden kann
+	 */
+	private static Schuljahresabschnitt getSchuleSchuljahresabschnitt(final DTOEigeneSchule schule) {
+		return getSchuljahresabschnittService().getById(schule.Schuljahresabschnitts_ID);
+	}
+
+
+	/**
+	 * Bestimmt den Schuljahresabschnitt der Blockung. Ist dieser noch nicht angelegt, so wird der aktuelle
+	 * Schuljahresabschnitt der Schule verwendet.
+	 *
+	 * @param blockung                     die Blockung
+	 * @param schuleSchuljahresabschnitt   der aktuelle Schuljahresabschnitt der Schule
+	 *
+	 * @return der Schuljahresabschnitt der Blockung oder ersatzweise der aktuelle Schuljahresabschnitt der Schule
+	 */
+	private static Schuljahresabschnitt getBlockungsabschnittOrDefault(final DTOGostBlockung blockung, final Schuljahresabschnitt schuleSchuljahresabschnitt) {
+		final int schuljahr = blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang);
+		return getSchuljahresabschnittService()
+				.findBySchuljahrAndAbschnitt(schuljahr, blockung.Halbjahr.halbjahr)
+				.orElse(schuleSchuljahresabschnitt);
+	}
+
+
+	private DTOGostBlockungKurslehrer getKurslehrer(final DTOGostBlockungKurs kurs, final Long idLehrer) {
 		if (idLehrer == null) {
 			final List<DTOGostBlockungKurslehrer> tmp =
 					conn.queryList(DTOGostBlockungKurslehrer.QUERY_BY_BLOCKUNG_KURS_ID, DTOGostBlockungKurslehrer.class, idKurs);
@@ -91,12 +133,9 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 
 
 	@Override
-	public Response get(final Long idLehrer) throws ApiOperationException {
+	public Response get(final Long idLehrer) {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (dtoSchuleSchuljahresabschnitt == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
-		}
+		final Schuljahresabschnitt schuleSchuljahresabschnitt = getSchuleSchuljahresabschnitt(schule);
 		final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
 		if (kurs == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -105,12 +144,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
-		// Bestimme den Schuljahresabschnitt (oder null) für die Blockung, sofern der Schuljahresabschnitt schon angelegt ist.
-		Schuljahresabschnitt lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn,
-				blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang), blockung.Halbjahr.halbjahr);
-		if (lehrerSchuljahresabschnitt == null) {
-			lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.dtoMapper.apply(dtoSchuleSchuljahresabschnitt);
-		}
+		final Schuljahresabschnitt blockungsabschnitt = getBlockungsabschnittOrDefault(blockung, schuleSchuljahresabschnitt);
 		final DTOGostBlockungKurslehrer kurslehrer = getKurslehrer(kurs, idLehrer);
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, kurslehrer.Lehrer_ID);
 		if (lehrer == null) {
@@ -118,7 +152,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		}
 		final List<DTOLehrerAbschnittsdaten> abschnitte =
 				conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2",
-						DTOLehrerAbschnittsdaten.class, lehrer.ID, lehrerSchuljahresabschnitt.id);
+						DTOLehrerAbschnittsdaten.class, lehrer.ID, blockungsabschnitt.id);
 		final DTOLehrerAbschnittsdaten abschnitt = (abschnitte.size() != 1) ? null : abschnitte.get(0);
 		final GostBlockungKursLehrer daten = dtoMapper(schule, kurslehrer, lehrer, abschnitt);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -127,7 +161,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 
 
 	@Override
-	public Response patch(final Long idLehrer, final InputStream is) throws ApiOperationException {
+	public Response patch(final Long idLehrer, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() <= 0) {
 			return Response.status(Status.OK).build();
@@ -184,13 +218,10 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response addKurslehrer(final long idLehrer) throws ApiOperationException {
+	public Response addKurslehrer(final long idLehrer) {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (dtoSchuleSchuljahresabschnitt == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
-		}
+		final Schuljahresabschnitt schuleSchuljahresabschnitt = getSchuleSchuljahresabschnitt(schule);
 		// Prüfe, ob ein Kurs mit der ID für eine Blockung existiert
 		final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
 		if (kurs == null) {
@@ -200,12 +231,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
-		// Bestimme den Schuljahresabschnitt (oder null) für die Blockung, sofern der Schuljahresabschnitt schon angelegt ist.
-		Schuljahresabschnitt lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn,
-				blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang), blockung.Halbjahr.halbjahr);
-		if (lehrerSchuljahresabschnitt == null) {
-			lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.dtoMapper.apply(dtoSchuleSchuljahresabschnitt);
-		}
+		final Schuljahresabschnitt blockungsabschnitt = getBlockungsabschnittOrDefault(blockung, schuleSchuljahresabschnitt);
 		// Prüfe, ob ein Lehrer mit der ID existiert
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
 		if (lehrer == null) {
@@ -213,7 +239,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		}
 		final List<DTOLehrerAbschnittsdaten> abschnitte =
 				conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2",
-						DTOLehrerAbschnittsdaten.class, lehrer.ID, lehrerSchuljahresabschnitt.id);
+						DTOLehrerAbschnittsdaten.class, lehrer.ID, blockungsabschnitt.id);
 		final DTOLehrerAbschnittsdaten abschnitt = (abschnitte.size() != 1) ? null : abschnitte.get(0);
 		// Prüfe, ob der Lehrer bereits dem Kurs zugeordnet ist, das darf nicht der Fall sein
 		DTOGostBlockungKurslehrer kurslehrer = conn.queryByKey(DTOGostBlockungKurslehrer.class, idKurs, idLehrer);
@@ -246,7 +272,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response deleteKurslehrer(final long idLehrer) throws ApiOperationException {
+	public Response deleteKurslehrer(final long idLehrer) {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);

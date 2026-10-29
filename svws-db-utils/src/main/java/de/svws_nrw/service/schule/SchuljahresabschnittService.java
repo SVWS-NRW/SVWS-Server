@@ -1,6 +1,7 @@
 package de.svws_nrw.service.schule;
 
 import java.util.List;
+import java.util.Optional;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils;
@@ -53,10 +54,23 @@ public final class SchuljahresabschnittService {
 	 *
 	 * @throws ApiOperationException   wenn kein Schuljahresabschnitt zur ID gefunden wurde
 	 */
-	public Schuljahresabschnitt getById(final Long id) throws ApiOperationException {
+	public Schuljahresabschnitt getById(final Long id) {
 		return repository.findById(id)
 				.map(mapper::toApi)
 				.orElseThrow(() -> new ApiOperationException(Response.Status.NOT_FOUND, ABSCHNITT_NICHT_GEFUNDEN.formatted(id)));
+	}
+
+
+	/**
+	 * Bestimmt den Schuljahresabschnitt anhand von Schuljahr und Abschnitt, sofern dieser existiert.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param abschnitt   der Abschnitt
+	 *
+	 * @return der Schuljahresabschnitt oder ein leeres Optional, falls er nicht existiert
+	 */
+	public Optional<Schuljahresabschnitt> findBySchuljahrAndAbschnitt(final int schuljahr, final int abschnitt) {
+		return repository.findBySchuljahrAndAbschnitt(schuljahr, abschnitt).map(mapper::toApi);
 	}
 
 
@@ -83,7 +97,7 @@ public final class SchuljahresabschnittService {
 	 * @throws ApiOperationException   wenn die Kombination aus Schuljahr und Abschnitt bereits existiert oder
 	 *                                 ein angegebener vorheriger oder folgender Schuljahresabschnitt nicht existiert
 	 */
-	public Schuljahresabschnitt create(final SchuljahresabschnittCreateRequest request) throws ApiOperationException {
+	public Schuljahresabschnitt create(final SchuljahresabschnittCreateRequest request) {
 		return TransactionSupport.transactional(() -> {
 			validateCreate(request);
 			final DTOSchuljahresabschnitte created = repository.create(mapper.toDomain(request));
@@ -105,7 +119,7 @@ public final class SchuljahresabschnittService {
 	 *                                 oder folgender Schuljahresabschnitt nicht existiert oder ein Schuljahresabschnitt
 	 *                                 mit sich selbst verknüpft werden soll
 	 */
-	public Schuljahresabschnitt patch(final long id, final SchuljahresabschnittPatchRequest request) throws ApiOperationException {
+	public Schuljahresabschnitt patch(final long id, final SchuljahresabschnittPatchRequest request) {
 		return TransactionSupport.transactional(() -> {
 			final DTOSchuljahresabschnitte entity = repository.findById(id)
 					.orElseThrow(() -> new ApiOperationException(Response.Status.NOT_FOUND, ABSCHNITT_NICHT_GEFUNDEN.formatted(id)));

@@ -84,7 +84,6 @@ import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
-import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
@@ -113,8 +112,10 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRau
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepositoryImpl;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -131,13 +132,13 @@ public final class DataUntis {
 	}
 
 	private static void _importGPU001(final Logger logger, final DBEntityManager conn, final long idSchuljahresabschnitt,
-			final String beginn, final String beschreibung, final List<UntisGPU001> unterrichte, final int wochentyp, final boolean ignoreMissing)
-			throws ApiOperationException {
+			final String beginn, final String beschreibung, final List<UntisGPU001> unterrichte, final int wochentyp, final boolean ignoreMissing) {
 		// Prüfe die ID des Schuljahresabschnitts
 		logger.logLn("-> Prüfe, ob der Schuljahresabschnitt existiert... ");
 		final Schuljahresabschnitt schuljahresabschnitt;
 		try {
-			schuljahresabschnitt = new DataSchuljahresabschnitte(conn).getByID(idSchuljahresabschnitt);
+			schuljahresabschnitt = EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance()).getSchuljahresabschnittService()
+					.getById(idSchuljahresabschnitt);
 		} catch (final ApiOperationException e) {
 			logger.logLn(2, "[Fehler] - Die ID des Schuljahresabschnitts %d ist ungültig.".formatted(idSchuljahresabschnitt));
 			throw e;
@@ -495,7 +496,7 @@ public final class DataUntis {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static boolean importUntisRaeume(final DBEntityManager conn, final Logger logger, final byte[] csv) throws ApiOperationException {
+	public static boolean importUntisRaeume(final DBEntityManager conn, final Logger logger, final byte[] csv) {
 		// Lese zunächst die Informationen zur Schule aus der SVWS-Datenbank und überprüfe die Schulform
 		logger.logLn("-> Lese Informationen zu der Schule ein...");
 		logger.modifyIndent(2);
@@ -687,7 +688,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
 	 */
 	private static @NotNull String getGPU003(final @NotNull Logger logger, final @NotNull List<DTOKlassen> klassen,
-			final @NotNull Map<Long, DTOJahrgang> mapJahrgang, final @NotNull Map<Long, List<DTOLehrer>> mapKlassenlehrer) throws ApiOperationException {
+			final @NotNull Map<Long, DTOJahrgang> mapJahrgang, final @NotNull Map<Long, List<DTOLehrer>> mapKlassenlehrer) {
 		logger.logLn("-> Erstelle Liste der Klassen für GPU003.txt");
 		logger.modifyIndent(2);
 		try {
@@ -716,7 +717,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	private static @NotNull String getGPU003bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
-			final long idSchuljahresabschnitt) throws ApiOperationException {
+			final long idSchuljahresabschnitt) {
 		logger.log("Ermittle GPU003-Daten für die Klassen...");
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null) {
@@ -770,7 +771,7 @@ public final class DataUntis {
 	 *
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
-	public static Response exportGPU003(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
+	public static Response exportGPU003(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) {
 		final @NotNull String daten = getGPU003bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU003.txt\"").build();
 	}
@@ -833,7 +834,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
 	 */
 	private static @NotNull String getGPU004(final @NotNull Logger logger, final @NotNull List<DTOLehrer> lehrer,
-			final @NotNull Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitte) throws ApiOperationException {
+			final @NotNull Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitte) {
 		logger.logLn("-> Erstelle Liste der Lehrer für GPU004.txt");
 		logger.modifyIndent(2);
 		try {
@@ -862,7 +863,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	private static @NotNull String getGPU004bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
-			final long idSchuljahresabschnitt) throws ApiOperationException {
+			final long idSchuljahresabschnitt) {
 		logger.log("Ermittle GPU004-Daten für die Lehrer...");
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null) {
@@ -923,7 +924,7 @@ public final class DataUntis {
 	 *
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
-	public static Response exportGPU004(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
+	public static Response exportGPU004(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) {
 		final @NotNull String daten = getGPU004bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU004.txt\"").build();
 	}
@@ -986,7 +987,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
 	 */
 	private static @NotNull String getGPU006(final @NotNull Logger logger, final @NotNull List<DTOFach> faecher, final @NotNull List<DTOKurs> kurse,
-			final @NotNull Map<String, FachgruppeKatalogEintrag> mapFachgruppe) throws ApiOperationException {
+			final @NotNull Map<String, FachgruppeKatalogEintrag> mapFachgruppe) {
 		logger.logLn("-> Erstelle Liste der Fächer bzw. Kurse für GPU006.txt");
 		logger.modifyIndent(2);
 		try {
@@ -1015,7 +1016,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	private static @NotNull String getGPU006bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
-			final long idSchuljahresabschnitt) throws ApiOperationException {
+			final long idSchuljahresabschnitt) {
 		logger.log("Ermittle GPU006-Daten für die Fächer bzw. die Kurse...");
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null) {
@@ -1068,7 +1069,7 @@ public final class DataUntis {
 	 *
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
-	public static Response exportGPU006(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) throws ApiOperationException {
+	public static Response exportGPU006(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt) {
 		final @NotNull String daten = getGPU006bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt);
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU006.txt\"").build();
 	}
@@ -1118,8 +1119,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
 	 */
 	private static @NotNull String getGPU010(final @NotNull Logger logger, final @NotNull List<DTOSchueler> schueler,
-			final @NotNull Map<Long, DTOKlassen> mapKlasse, final int idVariante)
-			throws ApiOperationException {
+			final @NotNull Map<Long, DTOKlassen> mapKlasse, final int idVariante) {
 		logger.logLn("-> Erstelle Liste der Schüler für GPU010.txt");
 		logger.modifyIndent(2);
 		try {
@@ -1149,7 +1149,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	private static @NotNull String getGPU010bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
-			final long idSchuljahresabschnitt, final int idVariante) throws ApiOperationException {
+			final long idSchuljahresabschnitt, final int idVariante) {
 		logger.log("Ermittle GPU010-Daten für die Schüler...");
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null) {
@@ -1196,8 +1196,7 @@ public final class DataUntis {
 	 *
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
-	public static Response exportGPU010(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final int idVariante)
-			throws ApiOperationException {
+	public static Response exportGPU010(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final int idVariante) {
 		final @NotNull String daten = getGPU010bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, idVariante);
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU010.txt\"").build();
 	}
@@ -1303,8 +1302,7 @@ public final class DataUntis {
 	private static @NotNull String getGPU015(final @NotNull Logger logger, final @NotNull List<KursDaten> kurse, final @NotNull List<DTOFach> faecher,
 			final @NotNull Map<Long, DTOSchueler> mapSchueler, final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte,
 			final HashMap2D<Long, Long, DTOSchuelerLeistungsdaten> mapLeistungsdaten, final Map<Long, DTOKlassen> mapKlassen,
-			final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte, final int idVariante)
-			throws ApiOperationException {
+			final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte, final int idVariante) {
 		logger.logLn("-> Erstelle Liste der Kurs-Fachwahlen für GPU015.txt");
 		logger.modifyIndent(2);
 		try {
@@ -1336,7 +1334,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	private static @NotNull String getGPU015bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
-			final long idSchuljahresabschnitt, final String gpu002, final int idVariante) throws ApiOperationException {
+			final long idSchuljahresabschnitt, final String gpu002, final int idVariante) {
 		logger.log("Ermittle GPU015-Daten für die Fachwahlen...");
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null) {
@@ -1435,8 +1433,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	public static Response exportGPU015(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final InputStream gpu002,
-			final int idVariante)
-			throws ApiOperationException {
+			final int idVariante) {
 		final @NotNull String daten = getGPU015bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, JSONMapper.toString(gpu002), idVariante);
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU015.txt\"").build();
 	}
@@ -1582,8 +1579,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
 	 */
 	private static @NotNull String getGPU017(final @NotNull Logger logger, final @NotNull GostKlausurplanManager manager,
-			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVariante)
-			throws ApiOperationException {
+			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVariante) {
 		logger.logLn("-> Erstelle Liste der Klausurdaten für GPU017.txt");
 		logger.modifyIndent(2);
 		try {
@@ -1613,7 +1609,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	private static @NotNull String getGPU017bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
-			final long idSchuljahresabschnitt, final String gpu002, final int idVariante) throws ApiOperationException {
+			final long idSchuljahresabschnitt, final String gpu002, final int idVariante) {
 		logger.log("Ermittle GPU017-Daten...");
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null) {
@@ -1675,7 +1671,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	public static Response exportGPU017(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final InputStream gpu002,
-			final int idVariante) throws ApiOperationException {
+			final int idVariante) {
 		final @NotNull String daten = getGPU017bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, JSONMapper.toString(gpu002), idVariante);
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU017.txt\"").build();
 	}
@@ -1761,7 +1757,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen der CSV-Daten entsteht
 	 */
 	private static @NotNull String getGPU019(final @NotNull Logger logger, final @NotNull List<KursDaten> kurse, final @NotNull List<DTOFach> faecher,
-			final @NotNull List<DTOKlassen> klassen, final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte) throws ApiOperationException {
+			final @NotNull List<DTOKlassen> klassen, final HashMap2D<String, String, List<UntisGPU002>> mapUnterrichte) {
 		logger.logLn("-> Erstelle Liste der Schienenzuordnungen für GPU019.txt");
 		logger.modifyIndent(2);
 		try {
@@ -1791,7 +1787,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
 	private static @NotNull String getGPU019bySchuljahresabschnitt(final @NotNull DBEntityManager conn, final @NotNull Logger logger,
-			final long idSchuljahresabschnitt, final String gpu002) throws ApiOperationException {
+			final long idSchuljahresabschnitt, final String gpu002) {
 		logger.log("Ermittle GPU019-Daten für die Schienenzuordnungen...");
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (schuljahresabschnitt == null) {
@@ -1846,8 +1842,7 @@ public final class DataUntis {
 	 *
 	 * @throws ApiOperationException   wenn ein Fehler beim Erstellen des Exportes auftritt
 	 */
-	public static Response exportGPU019(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final InputStream gpu002)
-			throws ApiOperationException {
+	public static Response exportGPU019(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt, final InputStream gpu002) {
 		final @NotNull String daten = getGPU019bySchuljahresabschnitt(conn, logger, idSchuljahresabschnitt, JSONMapper.toString(gpu002));
 		return Response.ok(daten).header("Content-Disposition", "attachment; filename=\"GPU019.txt\"").build();
 	}
@@ -1980,7 +1975,7 @@ public final class DataUntis {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Response exportUntisBlockungsergebnisse(final DBEntityManager conn, final Logger logger, final long idSchuljahresabschnitt,
-			final LongAndStringLists params, final int idVariante) throws ApiOperationException {
+			final LongAndStringLists params, final int idVariante) {
 		// Prüfe den Schuljahresabschnitt auf Gültigkeit
 		logger.log("Prüfe, ob der Schuljahresabschnitt mit der ID %d in der Datenbank existiert... ".formatted(idSchuljahresabschnitt));
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);

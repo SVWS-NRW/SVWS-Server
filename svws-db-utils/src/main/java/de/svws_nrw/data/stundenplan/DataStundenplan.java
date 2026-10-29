@@ -24,7 +24,6 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.kurse.DataKurse;
-import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
@@ -35,6 +34,9 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenStundenplanHookRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -57,7 +59,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	}
 
 	@Override
-	public Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+	public Long getID(final Map<String, Object> attributes) {
 		return JSONMapper.convertToLong(attributes.get("id"), false);
 	}
 
@@ -71,19 +73,19 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	@Override
-	public Stundenplan getById(final Long id) throws ApiOperationException {
+	public Stundenplan getById(final Long id) {
 		final DTOStundenplan dto = getDTO(id);
 		return map(dto);
 	}
 
 	@Override
-	protected long getLongId(final DTOStundenplan dto) throws ApiOperationException {
+	protected long getLongId(final DTOStundenplan dto) {
 		return dto.ID;
 	}
 
 
 	@Override
-	protected Stundenplan map(final DTOStundenplan stundenplan) throws ApiOperationException {
+	protected Stundenplan map(final DTOStundenplan stundenplan) {
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, stundenplan.Schuljahresabschnitts_ID);
 		if (schuljahresabschnitt == null) {
 			return null;
@@ -126,8 +128,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	}
 
 	@Override
-	protected void mapAttribute(final DTOStundenplan dto, final String name, final Object value, final Map<String, Object> map)
-			throws ApiOperationException {
+	protected void mapAttribute(final DTOStundenplan dto, final String name, final Object value, final Map<String, Object> map) {
 		switch (name) {
 			case "id" -> dto.ID = JSONMapper.convertToLong(value, false);
 			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false);
@@ -202,7 +203,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public DTOStundenplan getDTO(final Long id) throws ApiOperationException {
+	public DTOStundenplan getDTO(final Long id) {
 		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Stundenplan darf nicht null sein.");
 		}
@@ -225,7 +226,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	 *
 	 * @throws ApiOperationException falls kein Stundenplan mit der ID gefunden wurde
 	 */
-	public static DTOStundenplan getDTOStundenplan(final DBEntityManager conn, final Long id) throws ApiOperationException {
+	public static DTOStundenplan getDTOStundenplan(final DBEntityManager conn, final Long id) {
 		return new DataStundenplan(conn).getDTO(id);
 	}
 
@@ -243,7 +244,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@Override
-	public Stundenplan add(final Map<String, Object> initAttributes) throws ApiOperationException {
+	public Stundenplan add(final Map<String, Object> initAttributes) {
 		final Stundenplan stundenplan = super.add(initAttributes);
 		// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
 		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, stundenplan.idSchuljahresabschnitt, false);
@@ -262,7 +263,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@Override
-	public void checkBeforePersist(final DTOStundenplan dto, final Map<String, Object> patchedAttributes) throws ApiOperationException {
+	public void checkBeforePersist(final DTOStundenplan dto, final Map<String, Object> patchedAttributes) {
 		if (Boolean.TRUE.equals(dto.Aktiv) && (patchedAttributes.containsKey("gueltigAb") || patchedAttributes.containsKey("gueltigBis") || patchedAttributes.containsKey("aktiv"))) {
 			final List<StundenplanListeEintrag> plaene = DataStundenplanListe.getStundenplaene(conn, dto.Schuljahresabschnitts_ID);
 			for (final StundenplanListeEintrag plan : plaene) {
@@ -278,7 +279,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	}
 
 	@Override
-	protected void saveDatabaseDTO(final DTOStundenplan dto) throws ApiOperationException {
+	protected void saveDatabaseDTO(final DTOStundenplan dto) {
 		super.saveDatabaseDTO(dto);
 		final GostKlausurenStundenplanHookRepository hookRepository = getGostKlausurenStundenplanHookRepository();
 		hookRepository.handleStundenplangueltigkeitMinus(dto);
@@ -286,7 +287,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	}
 
 	@Override
-	protected void deleteDatabaseDTO(final DTOStundenplan dto) throws ApiOperationException {
+	protected void deleteDatabaseDTO(final DTOStundenplan dto) {
 		final String cacheBeginn = dto.Beginn;
 		final String cacheEnde = dto.Ende;
 		dto.Beginn = "1970-01-01";
@@ -310,7 +311,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	 * @return die Response mit dem Core-DTO
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response addStundenplanAsCopy(final InputStream isStundenplanNeu, final long idAlt) throws ApiOperationException {
+	public Response addStundenplanAsCopy(final InputStream isStundenplanNeu, final long idAlt) {
 		final Logger logger = new Logger();
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
@@ -347,10 +348,11 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(response).build();
 	}
 
-	private Long getIdSchuljahresabschnittNeuIfDifferent(final Stundenplan alt, final Stundenplan neu) throws ApiOperationException {
+	private Long getIdSchuljahresabschnittNeuIfDifferent(final Stundenplan alt, final Stundenplan neu) {
 		if (alt.idSchuljahresabschnitt != neu.idSchuljahresabschnitt) {
-			final DataSchuljahresabschnitte dataSja = new DataSchuljahresabschnitte(conn);
-			final Schuljahresabschnitt sjaNeu = dataSja.getByID(neu.idSchuljahresabschnitt);
+			final SchuljahresabschnittService schuljahresabschnittService =
+					EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance()).getSchuljahresabschnittService();
+			final Schuljahresabschnitt sjaNeu = schuljahresabschnittService.getById(neu.idSchuljahresabschnitt);
 			if ((sjaNeu.abschnitt != 2) || (sjaNeu.idVorigerAbschnitt != alt.idSchuljahresabschnitt)) {
 				throw new ApiOperationException(Status.BAD_REQUEST,
 					"Der zu kopierende Stundenplan muss im gleichen Schuljahr liegen wie der neue Stundenplan.");

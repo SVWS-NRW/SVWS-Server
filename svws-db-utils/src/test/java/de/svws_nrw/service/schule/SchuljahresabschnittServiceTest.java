@@ -101,6 +101,31 @@ class SchuljahresabschnittServiceTest {
 	}
 
 
+	// --- findBySchuljahrAndAbschnitt ---
+
+	@Test
+	@DisplayName("findBySchuljahrAndAbschnitt | liefert korrekt gemappte Daten")
+	void findBySchuljahrAndAbschnitt_success() {
+		final var dto = new DTOSchuljahresabschnitte(7L, 2025, 2);
+		dto.VorigerAbschnitt_ID = 6L;
+		when(repoMock.findBySchuljahrAndAbschnitt(2025, 2)).thenReturn(Optional.of(dto));
+
+		final var result = service.findBySchuljahrAndAbschnitt(2025, 2);
+
+		assertThat(result).get()
+				.extracting("id", "schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
+				.containsExactly(7L, 2025, 2, 6L, null);
+	}
+
+	@Test
+	@DisplayName("findBySchuljahrAndAbschnitt | unbekannte Kombination liefert ein leeres Optional")
+	void findBySchuljahrAndAbschnitt_empty() {
+		when(repoMock.findBySchuljahrAndAbschnitt(2025, 2)).thenReturn(Optional.empty());
+
+		assertThat(service.findBySchuljahrAndAbschnitt(2025, 2)).isEmpty();
+	}
+
+
 	// --- getList ---
 
 	@Test
