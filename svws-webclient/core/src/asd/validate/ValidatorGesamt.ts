@@ -177,7 +177,7 @@ export class ValidatorGesamt extends Validator {
 		for (const kurs of gesamt.kurse) {
 			const list: List<Validator> = new ArrayList<Validator>();
 			list.add(new ValidatorUfUnterrichtsverteilungsdatenFach({ get: () => kurs.idFach }, this.kontext()));
-			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft({ get: () => kurs.lehrer }, { get: () => gesamt.lehrer }, this.kontext()));
+			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft({ get: () => kurs.idLehrer }, { get: () => gesamt.lehrer }, this.kontext()));
 			list.add(new ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden({ get: () => kurs.wochenstundenLehrer }, this.kontext()));
 			list.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden({ get: () => kurs.wochenstunden as number }, this.kontext()));
 			list.add(new ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft({ get: () => kurs.weitereLehrer }, { get: () => gesamt.lehrer }, this.kontext()));

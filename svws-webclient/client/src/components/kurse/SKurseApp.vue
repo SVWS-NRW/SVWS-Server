@@ -60,7 +60,7 @@
 	const lehrerkuerzel = computed<string>(() => {
 		let s = '';
 		if (kurseAuswahlState.manager.hasDaten()) {
-			const idLehrer = kurseAuswahlState.manager.daten().lehrer;
+			const idLehrer = kurseAuswahlState.manager.daten().idLehrer;
 			const lehrer = idLehrer === null ? null : kurseAuswahlState.manager.lehrer.get(idLehrer);
 			s = (lehrer === null) ? " " : lehrer.kuerzel;
 			// TODO Zusatzkräfte

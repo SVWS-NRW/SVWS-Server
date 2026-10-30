@@ -35,7 +35,7 @@ export class KursDaten extends JavaObject {
 	/**
 	 * Die ID des Kurslehrers.
 	 */
-	public lehrer: number | null = null;
+	public idLehrer: number | null = null;
 
 	/**
 	 * Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird.
@@ -135,7 +135,7 @@ export class KursDaten extends JavaObject {
 		if (obj.idFach === undefined)
 			throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		result.lehrer = (obj.lehrer === undefined) ? null : obj.lehrer === null ? null : obj.lehrer;
+		result.idLehrer = (obj.idLehrer === undefined) ? null : obj.idLehrer === null ? null : obj.idLehrer;
 		if (obj.kursartAllg === undefined)
 			throw new Error('invalid json format, missing attribute kursartAllg');
 		result.kursartAllg = obj.kursartAllg;
@@ -191,7 +191,7 @@ export class KursDaten extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"idFach" : ' + obj.idFach.toString() + ',';
-		result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
+		result += '"idLehrer" : ' + ((obj.idLehrer === null) ? 'null' : obj.idLehrer.toString()) + ',';
 		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
@@ -254,8 +254,8 @@ export class KursDaten extends JavaObject {
 		if (obj.idFach !== undefined) {
 			result += '"idFach" : ' + obj.idFach.toString() + ',';
 		}
-		if (obj.lehrer !== undefined) {
-			result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
+		if (obj.idLehrer !== undefined) {
+			result += '"idLehrer" : ' + ((obj.idLehrer === null) ? 'null' : obj.idLehrer.toString()) + ',';
 		}
 		if (obj.kursartAllg !== undefined) {
 			result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';

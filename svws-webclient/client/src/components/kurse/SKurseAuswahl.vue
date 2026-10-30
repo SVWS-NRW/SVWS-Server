@@ -21,7 +21,7 @@
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="kurseAuswahlState.manager.jahrgaenge.list()" :item-text="text" :item-filter="find" autocomplete />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="kurseAuswahlState.manager.schulgliederungen.list()" :item-text="text_schulgliederung" autocomplete />
 				</template>
-				<template #cell(lehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
+				<template #cell(idLehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
 				<template #actions v-if="serverState.hasDev && hatKompetenzAendern">
@@ -70,7 +70,7 @@
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
-		{ key: "lehrer", label: "Fachlehrer", sortable: true },
+		{ key: "idLehrer", label: "Fachlehrer", sortable: true },
 		{ key: "idJahrgaenge", label: "JG", tooltip: "Jahrgang", sortable: true, span: 0.5 },
 		{ key: "schueler", label: "Schüler", span: 0.5, align: "right" },
 	];

@@ -122,13 +122,13 @@ export class SchuelerLeistungsdatenModelProxy extends ModelProxy<SchuelerLeistun
 		if (kurs.kursartAllg !== kursart?.daten(this.schuljahr())?.kuerzelAllg) {
 			const { kursart, abifach } = this.bestimmeKursartUndAbifach(kurs, leistung);
 			this.proxy.kursID = kurs.id;
-			this.proxy.lehrerID = kurs.lehrer;
+			this.proxy.lehrerID = kurs.idLehrer;
 			this.proxy.kursart = kursart?.daten(this.schuljahr())?.kuerzel ?? null;
 			this.proxy.abifach = abifach;
 			this.proxy.wochenstunden = kurs.wochenstunden;
 		} else {
 			this.proxy.kursID = kurs.id;
-			this.proxy.lehrerID = kurs.lehrer;
+			this.proxy.lehrerID = kurs.idLehrer;
 			this.proxy.wochenstunden = kurs.wochenstunden;
 		}
 

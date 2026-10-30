@@ -41,7 +41,7 @@ public class KursDaten {
 
 	/** Die ID des Kurslehrers. */
 	@Schema(description = "die ID des Kurslehrers", example = "42", nullable = true)
-	public Long lehrer;
+	public Long idLehrer;
 
 	/** Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird. */
 	@Schema(description = "die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird", example = "GK")

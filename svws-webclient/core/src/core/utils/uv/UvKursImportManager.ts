@@ -128,8 +128,8 @@ export class UvKursImportManager extends JavaObject {
 				for (const schueler of kurs.schueler) {
 					quellkurs.schuelerIds.add(schueler.id);
 				}
-				if (kurs.lehrer !== null) {
-					quellkurs.lehrerIds.add(kurs.lehrer);
+				if (kurs.idLehrer !== null) {
+					quellkurs.lehrerIds.add(kurs.idLehrer);
 				}
 				for (const lehrer of kurs.weitereLehrer) {
 					quellkurs.lehrerIds.add(lehrer.idLehrer);

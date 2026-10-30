@@ -649,7 +649,7 @@ public class AggregationUvdStatistikExport {
 
 			if (kursStatistikGesamt != null) {
 				uvdExportStammsatz.wochenstunden = kursStatistikGesamt.wochenstundenLehrer;
-				final LehrerStatistikGesamt lehrer = lehrerIdMap.get(kursStatistikGesamt.lehrer);
+				final LehrerStatistikGesamt lehrer = lehrerIdMap.get(kursStatistikGesamt.idLehrer);
 				uvdExportStammsatz.kuerzel = (lehrer != null) ? lehrer.kuerzel : "";
 			} else {
 				uvdExportStammsatz.wochenstunden = 0;

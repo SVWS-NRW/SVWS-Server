@@ -45,7 +45,7 @@ public class KursStatistikGesamt {
 
 	/** Die ID des Kurslehrers. */
 	@Schema(description = "die ID des Kurslehrers", example = "42", nullable = true)
-	public Long lehrer;
+	public Long idLehrer;
 
 	/** Die Wochenstunden des Kurslehrers in dem Kurs. */
 	@Schema(description = "die Wochenstunden des Kurslehrers in dem Kurs", example = "3")

@@ -5002,7 +5002,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public kursLehrerByKursklausur(k: GostKursklausur): LehrerListeEintrag | null {
 		const kurs: KursDaten = this.kursdatenByKursklausur(k);
-		return (kurs.lehrer === null) ? null : this.getLehrerMap().get(kurs.lehrer);
+		return (kurs.idLehrer === null) ? null : this.getLehrerMap().get(kurs.idLehrer);
 	}
 
 	/**

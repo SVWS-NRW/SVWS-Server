@@ -100,7 +100,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		daten.kuerzel = dto.KurzBez;
 		daten.idJahrgaenge.addAll(convertJahrgaenge(dto));
 		daten.idFach = dto.Fach_ID;
-		daten.lehrer = dto.Lehrer_ID;
+		daten.idLehrer = dto.Lehrer_ID;
 		daten.kursartAllg = (dto.KursartAllg == null) ? "" : dto.KursartAllg;
 		daten.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
 		daten.istSichtbar = (dto.Sichtbar == null) || dto.Sichtbar;
@@ -123,7 +123,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		switch (name) {
 			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false, name);
 			case "idFach" -> mapIdFach(dto, name, value);
-			case "lehrer" -> mapLehrer(dto, name, value);
+			case "idLehrer" -> mapLehrer(dto, name, value);
 			case "kuerzel" -> dto.KurzBez =
 					JSONMapper.convertToString(value, false, false, Schema.tab_Kurse.col_KurzBez.datenlaenge(), name);
 			case "kursartAllg" -> // TODO Prüfe Kursart

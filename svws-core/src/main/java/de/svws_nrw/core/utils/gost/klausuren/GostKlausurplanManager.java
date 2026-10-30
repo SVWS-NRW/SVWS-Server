@@ -5350,7 +5350,7 @@ public class GostKlausurplanManager {
 	 */
 	public LehrerListeEintrag kursLehrerByKursklausur(final @NotNull GostKursklausur k) {
 		final @NotNull KursDaten kurs = kursdatenByKursklausur(k);
-		return (kurs.lehrer == null) ? null : getLehrerMap().get(kurs.lehrer);
+		return (kurs.idLehrer == null) ? null : getLehrerMap().get(kurs.idLehrer);
 	}
 
 

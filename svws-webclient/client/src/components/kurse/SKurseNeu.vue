@@ -66,8 +66,8 @@
 	const isLoading = ref<boolean>(false);
 
 	const idLehrer = computed({
-		get: () => kurseAuswahlState.manager.lehrer.get(data.value.lehrer ?? -1),
-		set: (v: LehrerListeEintrag | null) => data.value.lehrer = v?.id ?? null,
+		get: () => kurseAuswahlState.manager.lehrer.get(data.value.idLehrer ?? -1),
+		set: (v: LehrerListeEintrag | null) => data.value.idLehrer = v?.id ?? null,
 	});
 
 	const idFach = computed({

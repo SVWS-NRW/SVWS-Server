@@ -123,8 +123,8 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 			if (schuelerIDs != null) {
 				kurs.schueler.addAll(schuelerIDs);
 			}
-			if (k.lehrer != null) {
-				kurs.lehrer.add(k.lehrer);
+			if (k.idLehrer != null) {
+				kurs.lehrer.add(k.idLehrer);
 			}
 			final List<Long> zusatzkraefteIDs = mapKursZusatzkraefte.get(k.id);
 			if (zusatzkraefteIDs != null) {

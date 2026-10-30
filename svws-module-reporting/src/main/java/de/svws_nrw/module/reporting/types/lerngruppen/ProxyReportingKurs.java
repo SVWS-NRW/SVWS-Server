@@ -97,12 +97,12 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 		// Wenn es einen Kursleiter gibt, prüfe, ob auch er bei den Zusatzkräften ist, und addiere hier seine beiden Wochenstunden.
 		final Map<Long, Double> mapKurslehrer = new LinkedHashMap<>();
-		if (kursDaten.lehrer != null) {
-			if (mapZusatzKurslehrer.containsKey(kursDaten.lehrer)) {
-				mapKurslehrer.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer + mapZusatzKurslehrer.get(kursDaten.lehrer));
-				mapZusatzKurslehrer.remove(kursDaten.lehrer);
+		if (kursDaten.idLehrer != null) {
+			if (mapZusatzKurslehrer.containsKey(kursDaten.idLehrer)) {
+				mapKurslehrer.put(kursDaten.idLehrer, kursDaten.wochenstundenLehrer + mapZusatzKurslehrer.get(kursDaten.idLehrer));
+				mapZusatzKurslehrer.remove(kursDaten.idLehrer);
 			} else {
-				mapKurslehrer.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer);
+				mapKurslehrer.put(kursDaten.idLehrer, kursDaten.wochenstundenLehrer);
 			}
 		}
 		if (!mapZusatzKurslehrer.isEmpty()) {

@@ -39,7 +39,7 @@ export class KursStatistikGesamt extends JavaObject {
 	/**
 	 * Die ID des Kurslehrers.
 	 */
-	public lehrer: number | null = null;
+	public idLehrer: number | null = null;
 
 	/**
 	 * Die Wochenstunden des Kurslehrers in dem Kurs.
@@ -97,7 +97,7 @@ export class KursStatistikGesamt extends JavaObject {
 		if (obj.wochenstunden === undefined)
 			throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
-		result.lehrer = (obj.lehrer === undefined) ? null : obj.lehrer === null ? null : obj.lehrer;
+		result.idLehrer = (obj.idLehrer === undefined) ? null : obj.idLehrer === null ? null : obj.idLehrer;
 		if (obj.wochenstundenLehrer === undefined)
 			throw new Error('invalid json format, missing attribute wochenstundenLehrer');
 		result.wochenstundenLehrer = obj.wochenstundenLehrer;
@@ -125,7 +125,7 @@ export class KursStatistikGesamt extends JavaObject {
 		result += '"idFach" : ' + obj.idFach.toString() + ',';
 		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
-		result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
+		result += '"idLehrer" : ' + ((obj.idLehrer === null) ? 'null' : obj.idLehrer.toString()) + ',';
 		result += '"wochenstundenLehrer" : ' + obj.wochenstundenLehrer.toString() + ',';
 		result += '"weitereLehrer" : [ ';
 		for (let i = 0; i < obj.weitereLehrer.size(); i++) {
@@ -168,8 +168,8 @@ export class KursStatistikGesamt extends JavaObject {
 		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
-		if (obj.lehrer !== undefined) {
-			result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
+		if (obj.idLehrer !== undefined) {
+			result += '"idLehrer" : ' + ((obj.idLehrer === null) ? 'null' : obj.idLehrer.toString()) + ',';
 		}
 		if (obj.wochenstundenLehrer !== undefined) {
 			result += '"wochenstundenLehrer" : ' + obj.wochenstundenLehrer.toString() + ',';

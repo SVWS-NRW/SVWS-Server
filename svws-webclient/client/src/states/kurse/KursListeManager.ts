@@ -204,8 +204,8 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 			for (const s of k.schueler) {
 				this._mapKursHatSchueler.put(s.id, k.id, k);
 			}
-			if (k.lehrer !== null) {
-				this._mapLehrerInKurs.put(k.lehrer, k.id, k);
+			if (k.idLehrer !== null) {
+				this._mapLehrerInKurs.put(k.idLehrer, k.id, k);
 			}
 			this._mapKursHatFach.put(k.idFach, k.id, k);
 			for (const idJahrgang of k.idJahrgaenge) {
@@ -284,16 +284,16 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 
 			if (field === "kuerzel") {
 				cmp = KursUtils.comparator.compare(a, b);
-			} else if (field === "lehrer") {
-				if ((a.lehrer === null) && (b.lehrer === null)) {
+			} else if (field === "idLehrer") {
+				if ((a.idLehrer === null) && (b.idLehrer === null)) {
 					cmp = 0;
-				} else if (a.lehrer === null) {
+				} else if (a.idLehrer === null) {
 					cmp = -1;
-				} else if (b.lehrer === null) {
+				} else if (b.idLehrer === null) {
 					cmp = 1;
 				} else {
-					const la: LehrerListeEintrag | null = this.lehrer.get(a.lehrer);
-					const lb: LehrerListeEintrag | null = this.lehrer.get(b.lehrer);
+					const la: LehrerListeEintrag | null = this.lehrer.get(a.idLehrer);
+					const lb: LehrerListeEintrag | null = this.lehrer.get(b.idLehrer);
 					if ((la === null) && (lb === null)) {
 						cmp = 0;
 					} else if (la === null) {
@@ -361,7 +361,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 			}
 		}
 		if (this.lehrer.auswahlExists()) {
-			const hatEinenLehrer: boolean = (eintrag.lehrer !== null) && (this.lehrer.auswahlHasKey(eintrag.lehrer));
+			const hatEinenLehrer: boolean = (eintrag.idLehrer !== null) && (this.lehrer.auswahlHasKey(eintrag.idLehrer));
 			if (!hatEinenLehrer) {
 				return false;
 			}

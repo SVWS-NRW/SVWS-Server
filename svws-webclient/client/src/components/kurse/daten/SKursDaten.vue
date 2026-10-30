@@ -137,10 +137,10 @@
 
 	const lehrer = computed<LehrerListeEintrag | null>({
 		get: () => {
-			const idLehrer = data().lehrer;
+			const idLehrer = data().idLehrer;
 			return (idLehrer === null) ? null : kurseAuswahlState.manager.lehrer.get(idLehrer);
 		},
-		set: (value) => void kurseAuswahlState.patch({ lehrer: value?.id ?? null }),
+		set: (value) => void kurseAuswahlState.patch({ idLehrer: value?.id ?? null }),
 	});
 
 	const lehrerAktiv = computed<List<LehrerListeEintrag>>(() => {

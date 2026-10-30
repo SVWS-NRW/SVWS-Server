@@ -214,7 +214,7 @@ class DataKurseTest {
 				.hasFieldOrPropertyWithValue("kuerzel", dto.KurzBez)
 				.hasFieldOrPropertyWithValue("idJahrgaenge", List.of(4L, 5L, 6L, 7L))
 				.hasFieldOrPropertyWithValue("idFach", dto.Fach_ID)
-				.hasFieldOrPropertyWithValue("lehrer", dto.Lehrer_ID)
+				.hasFieldOrPropertyWithValue("idLehrer", dto.Lehrer_ID)
 				.hasFieldOrPropertyWithValue("kursartAllg", dto.KursartAllg)
 				.hasFieldOrPropertyWithValue("sortierung", dto.Sortierung)
 				.hasFieldOrPropertyWithValue("istSichtbar", dto.Sichtbar)
@@ -292,7 +292,7 @@ class DataKurseTest {
 		final var dto = getDto();
 		when(this.conn.queryByKey(DTOLehrer.class, 3L)).thenReturn(mock(DTOLehrer.class));
 
-		this.data.mapAttribute(dto, "lehrer", 3L, null);
+		this.data.mapAttribute(dto, "idLehrer", 3L, null);
 
 		assertThat(dto.Lehrer_ID).isEqualTo(3);
 	}
@@ -303,7 +303,7 @@ class DataKurseTest {
 		final var dto = getDto();
 		dto.Lehrer_ID = 45L;
 
-		this.data.mapAttribute(dto, "lehrer", null, null);
+		this.data.mapAttribute(dto, "idLehrer", null, null);
 
 		assertThat(dto.Lehrer_ID).isNull();
 	}
@@ -313,7 +313,7 @@ class DataKurseTest {
 	void mapAttributeTest_idNotMatching() {
 		when(this.conn.queryByKey(DTOLehrer.class, 3L)).thenReturn(null);
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(getDto(), "lehrer", 3L, null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(getDto(), "idLehrer", 3L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)

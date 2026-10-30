@@ -287,7 +287,7 @@ public final class ValidatorGesamt extends Validator {
 					() -> kurs.idFach,
 					this.kontext()));
 			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft(
-					() -> kurs.lehrer,
+					() -> kurs.idLehrer,
 					() -> gesamt.lehrer,
 					this.kontext()));
 			list.add(new ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden(

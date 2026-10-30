@@ -66,7 +66,7 @@ public final class KurseStatistikService {
 		daten.kuerzel = dto.KurzBez;
 		daten.idJahrgaenge.addAll(convertJahrgaenge(dto));
 		daten.idFach = dto.Fach_ID;
-		daten.lehrer = dto.Lehrer_ID;
+		daten.idLehrer = dto.Lehrer_ID;
 		daten.kursartAllg = (dto.KursartAllg == null) ? "" : dto.KursartAllg;
 		daten.wochenstunden = (dto.WochenStd == null) ? 0 : dto.WochenStd;
 		daten.wochenstundenLehrer = (dto.WochenstdKL == null) ? daten.wochenstunden : dto.WochenstdKL;
