@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlj00SchuelerLernabschnittsdatenJahrgang",
+    "historie" : [ {
+      "praefix" : "SLJ00",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Lernabschnittsdaten-Jahrgang",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "Feld 'Jahrgang'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [""],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Jahrgang des Schülers: Das Feld 'Jahrgang' darf nicht leer sein",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerLernabschnittsdaten.jahrgangID = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }
