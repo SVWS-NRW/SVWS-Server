@@ -1,5 +1,5 @@
 {
-	"version": 6,
+	"version": 7,
 	"daten": [ {
 		"bezeichner": "BK",
 		"idStatistik": "1",
@@ -8,7 +8,7 @@
 			"schluessel": "BK",
 			"kuerzel": "BK",
 			"text": "Berufskolleg",
-			"schulformen": ["FW", "HI", "GE", "GY", "SG"],
+			"schulformen": ["BK", "SB", "FW", "HI", "GE", "GY", "SG", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -254,7 +254,7 @@
 			"schluessel": "WB",
 			"kuerzel": "WB",
 			"text": "Weiterbildungskolleg",
-			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "PS", "SG"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "PS", "SG", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -267,7 +267,7 @@
 			"schluessel": "WF",
 			"kuerzel": "WF",
 			"text": "Freie Waldorfförderschule",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -276,7 +276,7 @@
 			"schluessel": "WF",
 			"kuerzel": "WF",
 			"text": "Freie Waldorfförderschule",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -289,7 +289,7 @@
 			"schluessel": "V",
 			"kuerzel": "V",
 			"text": "Volksschule",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -298,7 +298,7 @@
 			"schluessel": "V",
 			"kuerzel": "V",
 			"text": "Volksschule",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -311,7 +311,7 @@
 			"schluessel": "KS",
 			"kuerzel": "KS",
 			"text": "Klinikschule",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -320,7 +320,7 @@
 			"schluessel": "KS",
 			"kuerzel": "KS",
 			"text": "Klinikschule",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -333,7 +333,7 @@
 			"schluessel": "SB",
 			"kuerzel": "SB",
 			"text": "Förderschule im Bereich Berufskolleg",
-			"schulformen": [ "FW", "HI", "GE", "GY", "SG"],
+			"schulformen": ["BK", "SB", "FW", "HI", "GE", "GY", "SG", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -346,7 +346,7 @@
 			"schluessel": "SR",
 			"kuerzel": "SR",
 			"text": "Förderschule im Bereich Realschule",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -355,7 +355,7 @@
 			"schluessel": "SR",
 			"kuerzel": "SR",
 			"text": "Förderschule im Bereich Realschule",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -368,7 +368,7 @@
 			"schluessel": "SG",
 			"kuerzel": "SG",
 			"text": "Förderschule im Bereich Gymnasium",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -377,7 +377,7 @@
 			"schluessel": "SG",
 			"kuerzel": "SG",
 			"text": "Förderschule im Bereich Gymnasium",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -390,7 +390,7 @@
 			"schluessel": "SF",
 			"kuerzel": "SF",
 			"text": "Sonstige Schulform",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -399,7 +399,7 @@
 			"schluessel": "SF",
 			"kuerzel": "SF",
 			"text": "Sonstige Schulform",
-			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G",				"GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
