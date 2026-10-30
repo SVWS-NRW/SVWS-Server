@@ -109,7 +109,7 @@ export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 	anmeldedatum = computed<string | null>({
 		get: () => this.proxy.anmeldedatum,
 		set: (value: string | null) => {
-			this.proxy.anmeldedatum = value;
+			this.proxy.anmeldedatum = ((value === null) || (value === "")) ? null : value;
 			this.proxy.aufnahmedatum = null;
 		},
 	});
@@ -117,9 +117,14 @@ export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 	aufnahmedatum = computed<string | null>({
 		get: () => this.proxy.aufnahmedatum,
 		set: (value: string | null) => {
-			this.proxy.aufnahmedatum = value;
+			this.proxy.aufnahmedatum = ((value === null) || (value === "")) ? null : value;
 			this.proxy.beginnBildungsgang = null;
 		},
+	});
+
+	beginnBildungsgang = computed<string | null>({
+		get: () => this.proxy.beginnBildungsgang,
+		set: (value: string | null) => this.proxy.beginnBildungsgang = ((value === null) || (value === "")) ? null : value,
 	});
 
 	einschulungsart = computed<EinschulungsartKatalogEintrag | null>({

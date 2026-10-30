@@ -110,15 +110,15 @@ public final class SchuelerStammdatenService {
 	}
 
 	/**
-	 * Legt einen neuen Schüler anhand der übergebenen Importdaten an.
+	 * Legt einen neuen Schüler anhand der übergebenen Daten an.
 	 * <p>
 	 * Validiert vor dem Anlegen Geschlecht, Schülerstatus und Religion.
 	 *
-	 * @param dto die {@link SchuelerImportData} mit den Pflichtfeldern des neuen Schülers
+	 * @param dto die {@link SchuelerStammdatenCreateRequest} mit den Pflichtfeldern des neuen Schülers
 	 * @return die {@link SchuelerStammdaten} des neu angelegten Schülers
 	 * @throws ApiOperationException mit {@code 400 BAD_REQUEST} wenn Geschlecht, Status oder Religion ungültig sind
 	 */
-	public SchuelerStammdaten create(final SchuelerImportData dto) {
+	public SchuelerStammdaten create(final SchuelerStammdatenCreateRequest dto) {
 		return TransactionSupport.transactional(() -> {
 			this.validateCreate(dto);
 			final var guId = String.format("{%s}", UUID.randomUUID());
@@ -272,10 +272,10 @@ public final class SchuelerStammdatenService {
 
 	// Validation
 
-	private void validateCreate(final SchuelerImportData dto) {
-		validateIdGeschlecht(dto.idGeschlecht());
-		validateIdSchuelerStatus(dto.idSchuelerStatus());
-		validateIdReligionDirect(dto.idReligion());
+	private void validateCreate(final SchuelerStammdatenCreateRequest dto) {
+		validateIdGeschlecht(dto.geschlecht);
+		validateIdSchuelerStatus(dto.status);
+		validateIdReligionDirect(dto.idReligion);
 	}
 
 	private void validateIdReligionDirect(final Long idReligion) {

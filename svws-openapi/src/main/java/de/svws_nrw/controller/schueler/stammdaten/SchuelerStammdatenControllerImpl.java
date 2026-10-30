@@ -3,7 +3,6 @@ package de.svws_nrw.controller.schueler.stammdaten;
 import java.util.List;
 
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenBatchPatchRequest;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenPatchRequest;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenService;
@@ -29,13 +28,6 @@ public final class SchuelerStammdatenControllerImpl implements SchuelerStammdate
 	@Override
 	public Response getList(final List<Long> ids) {
 		return Responses.ok(service.getList(ids));
-	}
-
-	@Override
-	public Response create(final SchuelerImportData dto) {
-		BeanValidator.validate(dto);
-		final var created = service.create(dto);
-		return Responses.created(created);
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package de.svws_nrw.controller.schueler.stammdaten;
 
 import java.util.List;
 
-import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenBatchPatchRequest;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenPatchRequest;
 import jakarta.ws.rs.core.Response;
@@ -24,14 +23,6 @@ public interface SchuelerStammdatenController {
 	 * @return die Response
 	 */
 	Response getList(List<Long> ids);
-
-	/**
-	 * Erstellt einen neuen Schüler und gibt dessen Stammdaten zurück.
-	 *
-	 * @param request das Request-Objekt mit den Importdaten
-	 * @return die Response
-	 */
-	Response create(SchuelerImportData request);
 
 	/**
 	 * Führt einen Patch für die Stammdaten eines Schülers aus.

@@ -43,14 +43,13 @@ import de.svws_nrw.data.schueler.DataSchuelerFoerderempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
-import de.svws_nrw.data.schueler.DataSchuelerNeu;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
-import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import de.svws_nrw.service.schueler.create.SchuelerCreateRequest;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungPatchRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
@@ -252,7 +251,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Hinzufügen eines neuen Schülers mit Lernabschnitt.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der Input-Stream mit den Daten der SchülerStammdaten
+	 * @param input     die Daten des neuen Schülers mit Lernabschnitt und Schulbesuch
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit den erstellen SchülerStammdaten
@@ -269,19 +268,12 @@ public class APISchueler {
 	public Response addSchueler(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Schülers und dem dazugehörigen Lernabschnitt", required =	true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerNeu.class))) final InputStream is,
+							schema = @Schema(implementation = SchuelerNeu.class))) final SchuelerCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> {
-					final var schuelerServiceFactory = SchuelerServiceFactory.getNewInstance();
-					final var schuelerstammdatenService = schuelerServiceFactory.getSchuelerStammdatenService();
-					final var schulbesuchService = schuelerServiceFactory.getSchulbesuchService();
-					final var lernplattformService = schuelerServiceFactory.getSchuelerLernplattformService();
-					final var einwilligungService = schuelerServiceFactory.getSchuelerEinwilligungService();
-					return new DataSchuelerNeu(schuelerstammdatenService, schuelerServiceFactory.getSchuelerLernabschnittService(), schulbesuchService,
-							lernplattformService, einwilligungService).add(is);
-				},
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return SchuelerControllerFactory
+				.withWriteAccess(request)
+				.getSchuelerCreateController()
+				.create(input);
 	}
 
 	/**

@@ -5,7 +5,7 @@ import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenCreateRequest;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenPatchRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -58,21 +58,21 @@ class SchuelerStammdatenMapperTest {
 		return entity;
 	}
 
-	private SchuelerImportData createImportData() {
-		return new SchuelerImportData(
-				"Mustermann",
-				"Max",
-				"Max Moritz",
-				GESCHLECHT_M,
-				"2000-01-01",
-				STATUS_NEUAUFNAHME,
-				"2024-08-01",
-				"2024-09-01",
-				"2024-09-01",
-				2,
-				1L,
-				10L
-		);
+	private SchuelerStammdatenCreateRequest createCreateRequest() {
+		final var request = new SchuelerStammdatenCreateRequest();
+		request.nachname = "Mustermann";
+		request.vorname = "Max";
+		request.alleVornamen = "Max Moritz";
+		request.geschlecht = GESCHLECHT_M;
+		request.geburtsdatum = "2000-01-01";
+		request.status = STATUS_NEUAUFNAHME;
+		request.anmeldedatum = "2024-08-01";
+		request.aufnahmedatum = "2024-09-01";
+		request.beginnBildungsgang = "2024-09-01";
+		request.dauerBildungsgang = 2;
+		request.idReligion = 1L;
+		request.idSchuljahresabschnitt = 10L;
+		return request;
 	}
 
 	// -------------------------------------------------------------------------
@@ -277,7 +277,7 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt GU_ID korrekt")
 		void toDomain_mapptGuId() {
-			final var request = createImportData();
+			final var request = createCreateRequest();
 
 			final var result = mapper.toDomain(request, "TEST-GU-ID");
 
@@ -287,7 +287,7 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt Nachname und Vorname korrekt")
 		void toDomain_mapptNachnameUndVorname() {
-			final var request = createImportData();
+			final var request = createCreateRequest();
 
 			final var result = mapper.toDomain(request, "GU-1");
 
@@ -300,7 +300,7 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt Geschlecht korrekt aus ID")
 		void toDomain_mapptGeschlecht() {
-			final var request = createImportData();
+			final var request = createCreateRequest();
 
 			final var result = mapper.toDomain(request, "GU-1");
 
@@ -310,7 +310,7 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt idStatus korrekt")
 		void toDomain_mapptIdStatus() {
-			final var request = createImportData();
+			final var request = createCreateRequest();
 
 			final var result = mapper.toDomain(request, "GU-1");
 
@@ -320,7 +320,7 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt Datums-Felder korrekt")
 		void toDomain_mapptDatumsFelder() {
-			final var request = createImportData();
+			final var request = createCreateRequest();
 
 			final var result = mapper.toDomain(request, "GU-1");
 
@@ -334,7 +334,7 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt DauerBildungsgang korrekt")
 		void toDomain_mapptDauerBildungsgang() {
-			final var request = createImportData();
+			final var request = createCreateRequest();
 
 			final var result = mapper.toDomain(request, "GU-1");
 
@@ -344,7 +344,7 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt Religion_ID korrekt")
 		void toDomain_mapptReligionId() {
-			final var request = createImportData();
+			final var request = createCreateRequest();
 
 			final var result = mapper.toDomain(request, "GU-1");
 
@@ -354,7 +354,7 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt Schuljahresabschnitts_ID korrekt")
 		void toDomain_mapptSchuljahresabschnittsId() {
-			final var request = createImportData();
+			final var request = createCreateRequest();
 
 			final var result = mapper.toDomain(request, "GU-1");
 
@@ -364,11 +364,12 @@ class SchuelerStammdatenMapperTest {
 		@Test
 		@DisplayName("Mappt null-DauerBildungsgang korrekt")
 		void toDomain_mapptNullDauerBildungsgang() {
-			final var request = new SchuelerImportData(
-					"Mustermann", "Max", null,
-					GESCHLECHT_M, "2000-01-01", STATUS_NEUAUFNAHME,
-					null, null, null, null, null, null
-			);
+			final var request = new SchuelerStammdatenCreateRequest();
+			request.nachname = "Mustermann";
+			request.vorname = "Max";
+			request.geschlecht = GESCHLECHT_M;
+			request.geburtsdatum = "2000-01-01";
+			request.status = STATUS_NEUAUFNAHME;
 
 			final var result = mapper.toDomain(request, "GU-1");
 

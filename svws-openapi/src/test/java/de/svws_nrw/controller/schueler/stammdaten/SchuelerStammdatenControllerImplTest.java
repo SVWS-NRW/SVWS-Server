@@ -4,7 +4,6 @@ import java.util.List;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenPatchRequest;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenService;
 import de.svws_nrw.validation.BeanValidator;
@@ -110,48 +109,6 @@ class SchuelerStammdatenControllerImplTest {
 				.isEmpty();
 
 		verify(schuelerStammdatenService, times(1)).getList(ids);
-	}
-
-	@Test
-	@DisplayName("create | Erfolg")
-	void create_success() {
-		final var dto = mock(SchuelerImportData.class);
-		final var created = mock(SchuelerStammdaten.class);
-
-		beanValidatorMock
-				.when(() -> BeanValidator.validate(dto))
-				.thenAnswer(invocation -> null);
-
-		when(schuelerStammdatenService.create(dto)).thenReturn(created);
-
-		assertThat(schuelerStammdatenControllerImpl.create(dto))
-				.isInstanceOf(Response.class)
-				.hasFieldOrPropertyWithValue("status", Response.Status.CREATED.getStatusCode())
-				.extracting(Response::getEntity)
-				.isNotNull()
-				.isEqualTo(created);
-
-		beanValidatorMock.verify(
-				() -> BeanValidator.validate(dto),
-				times(1)
-		);
-		verify(schuelerStammdatenService, times(1)).create(dto);
-	}
-
-	@Test
-	@DisplayName("create | Validierungsfehler")
-	void create_validationError() {
-		final var dto = mock(SchuelerImportData.class);
-
-		beanValidatorMock
-				.when(() -> BeanValidator.validate(dto))
-				.thenThrow(new ValidationException("Validation failed"));
-
-		assertThatThrownBy(() -> schuelerStammdatenControllerImpl.create(dto))
-				.isInstanceOf(ValidationException.class)
-				.hasMessage("Validation failed");
-
-		verify(schuelerStammdatenService, never()).create(any());
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package de.svws_nrw.controller.schueler;
 
+import de.svws_nrw.controller.schueler.create.SchuelerCreateController;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
@@ -162,6 +163,16 @@ class SchuelerControllerFactoryTest {
 		assertNotNull(factory);
 
 		final SchuelerEinwilligungController controller = factory.getSchuelerEinwilligungController();
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("withWriteAccess | getSchuelerCreateController gibt einen Controller zurück")
+	void getSchuelerCreateController() {
+		final var factory = SchuelerControllerFactory.withWriteAccess(request);
+		assertNotNull(factory);
+
+		final SchuelerCreateController controller = factory.getSchuelerCreateController();
 		assertNotNull(controller);
 	}
 

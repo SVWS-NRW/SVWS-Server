@@ -29,7 +29,7 @@
 					:manager="einschulungsartManager"
 					:removable="true" />
 				<svws-ui-text-input placeholder="Beginn Bildungsgang" type="date" v-if="schulenMitBKoderSK"
-					v-model="model.proxy.beginnBildungsgang" />
+					v-model="model.beginnBildungsgang.value" />
 				<svws-ui-input-number placeholder="Dauer Bildungsgang" v-if="schulenMitBKoderSK"
 					v-model="model.proxy.dauerBildungsgang" />
 			</svws-ui-input-wrapper>

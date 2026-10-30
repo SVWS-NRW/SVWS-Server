@@ -283,7 +283,7 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("create - ungültiges Geschlecht -> BAD_REQUEST")
 	void create_ungueltigesGeschlecht() {
-		final var dto = buildImportData(GESCHLECHT_INVALID, STATUS_NEUAUFNAHME, null);
+		final var dto = buildCreateRequest(GESCHLECHT_INVALID, STATUS_NEUAUFNAHME, null);
 
 		assertThatException()
 				.isThrownBy(() -> service.create(dto))
@@ -294,7 +294,7 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("create - ungültiger Schülerstatus -> BAD_REQUEST")
 	void create_ungueltigerStatus() {
-		final var dto = buildImportData(GESCHLECHT_M, STATUS_INVALID, null);
+		final var dto = buildCreateRequest(GESCHLECHT_M, STATUS_INVALID, null);
 
 		assertThatException()
 				.isThrownBy(() -> service.create(dto))
@@ -305,7 +305,7 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("create - Religion nicht gefunden -> BAD_REQUEST")
 	void create_religionNichtGefunden() {
-		final var dto = buildImportData(GESCHLECHT_M, STATUS_NEUAUFNAHME, 42L);
+		final var dto = buildCreateRequest(GESCHLECHT_M, STATUS_NEUAUFNAHME, 42L);
 		when(religionRepository.existsById(42L)).thenReturn(false);
 
 		assertThatException()
@@ -317,8 +317,8 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("create - erfolgreich ohne Religion")
 	void create_erfolgreich_ohneReligion() {
-		final var dto = buildImportData(GESCHLECHT_M, STATUS_NEUAUFNAHME, null);
-		when(mapper.toDomain(any(SchuelerImportData.class), any(String.class))).thenReturn(entity);
+		final var dto = buildCreateRequest(GESCHLECHT_M, STATUS_NEUAUFNAHME, null);
+		when(mapper.toDomain(any(SchuelerStammdatenCreateRequest.class), any(String.class))).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		stubToApi(apiModel);
 
@@ -330,9 +330,9 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("create - erfolgreich mit gültiger Religion")
 	void create_erfolgreich_mitReligion() {
-		final var dto = buildImportData(GESCHLECHT_M, STATUS_NEUAUFNAHME, 1L);
+		final var dto = buildCreateRequest(GESCHLECHT_M, STATUS_NEUAUFNAHME, 1L);
 		when(religionRepository.existsById(1L)).thenReturn(true);
-		when(mapper.toDomain(any(SchuelerImportData.class), any(String.class))).thenReturn(entity);
+		when(mapper.toDomain(any(SchuelerStammdatenCreateRequest.class), any(String.class))).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		stubToApi(apiModel);
 
@@ -772,21 +772,18 @@ class SchuelerStammdatenServiceTest {
 	// Hilfsmethoden
 	// =========================================================================
 
-	private static SchuelerImportData buildImportData(final int idGeschlecht, final int idSchuelerStatus, final Long idReligion) {
-		return new SchuelerImportData(
-				"Mustermann",
-				"Max",
-				null,
-				idGeschlecht,
-				"2000-01-01",
-				idSchuelerStatus,
-				"2024-08-01",
-				"2024-08-15",
-				null,
-				null,
-				idReligion,
-				1L
-		);
+	private static SchuelerStammdatenCreateRequest buildCreateRequest(final int idGeschlecht, final int idSchuelerStatus, final Long idReligion) {
+		final var request = new SchuelerStammdatenCreateRequest();
+		request.nachname = "Mustermann";
+		request.vorname = "Max";
+		request.geschlecht = idGeschlecht;
+		request.geburtsdatum = "2000-01-01";
+		request.status = idSchuelerStatus;
+		request.anmeldedatum = "2024-08-01";
+		request.aufnahmedatum = "2024-08-15";
+		request.idReligion = idReligion;
+		request.idSchuljahresabschnitt = 1L;
+		return request;
 	}
 
 	private void stubEmptyBulkContext() {

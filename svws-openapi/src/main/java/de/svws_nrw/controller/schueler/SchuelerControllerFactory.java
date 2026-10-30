@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.schueler;
 
+import de.svws_nrw.controller.schueler.create.SchuelerCreateController;
+import de.svws_nrw.controller.schueler.create.SchuelerCreateControllerImpl;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungControllerImpl;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
@@ -189,6 +191,15 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerEinwilligungController getSchuelerEinwilligungController() {
 		return new SchuelerEinwilligungControllerImpl(schuelerServiceFactory.getSchuelerEinwilligungService());
+	}
+
+	/**
+	 * Erstellt eine neue SchuelerCreateController-Instanz.
+	 *
+	 * @return ein neuer SchuelerCreateController mit dem konfigurierten SchuelerCreateService
+	 */
+	public SchuelerCreateController getSchuelerCreateController() {
+		return new SchuelerCreateControllerImpl(schuelerServiceFactory.getSchuelerCreateService());
 	}
 
 }

@@ -20,6 +20,7 @@ import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
+import de.svws_nrw.service.schueler.create.SchuelerCreateService;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
@@ -284,6 +285,21 @@ public final class SchuelerServiceFactory {
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				katalogRepositoryFactory.getEinwilligungsartRepository(),
 				SchuelerEinwilligungMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerCreateService}.
+	 *
+	 * @return ein neuer {@code SchuelerCreateService} mit allen erforderlichen Abhängigkeiten
+	 */
+	public SchuelerCreateService getSchuelerCreateService() {
+		return new SchuelerCreateService(
+				this.getSchuelerStammdatenService(),
+				this.getSchuelerLernabschnittService(),
+				this.getSchulbesuchService(),
+				this.getSchuelerLernplattformService(),
+				this.getSchuelerEinwilligungService()
 		);
 	}
 

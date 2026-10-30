@@ -8,7 +8,7 @@ import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.mapper.JsonNullableMapper;
-import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenCreateRequest;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenPatchRequest;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -96,12 +96,12 @@ public interface SchuelerStammdatenMapper {
 	SchuelerStammdaten toApi(DTOSchueler entity);
 
 	/**
-	 * Mappt einen {@link SchuelerImportData} auf eine neue {@link DTOSchueler}-Entity.
-	 * Nur die für den Import relevanten Felder werden übertragen.
+	 * Mappt einen {@link SchuelerStammdatenCreateRequest} auf eine neue {@link DTOSchueler}-Entity.
+	 * Nur die für das Anlegen relevanten Felder werden übertragen.
 	 * Alle weiteren Felder (ID, Schuljahresabschnitts_ID, Boolean-Defaults,
 	 * Staatsangehörigkeit, Wohnort etc.) obliegen dem Service via {@code initDTO}.
 	 *
-	 * @param request die Import-Daten mit den zu übernehmenden Feldern
+	 * @param request der Create-Request mit den zu übernehmenden Feldern
 	 * @param guId    die bereits generierte GU_ID des Schülers
 	 * @return die befüllte {@link DTOSchueler}-Entity
 	 */
@@ -110,8 +110,8 @@ public interface SchuelerStammdatenMapper {
 	@Mapping(target = "Nachname", source = "request.nachname")
 	@Mapping(target = "Vorname", source = "request.vorname")
 	@Mapping(target = "AlleVornamen", source = "request.alleVornamen")
-	@Mapping(target = "Geschlecht", source = "request.idGeschlecht", qualifiedByName = "mapIdGeschlecht")
-	@Mapping(target = "idStatus", source = "request.idSchuelerStatus")
+	@Mapping(target = "Geschlecht", source = "request.geschlecht", qualifiedByName = "mapIdGeschlecht")
+	@Mapping(target = "idStatus", source = "request.status")
 	@Mapping(target = "Geburtsdatum", source = "request.geburtsdatum")
 	@Mapping(target = "Religion_ID", source = "request.idReligion")
 	@Mapping(target = "AnmeldeDatum", source = "request.anmeldedatum")
@@ -119,7 +119,7 @@ public interface SchuelerStammdatenMapper {
 	@Mapping(target = "BeginnBildungsgang", source = "request.beginnBildungsgang")
 	@Mapping(target = "DauerBildungsgang", source = "request.dauerBildungsgang")
 	@Mapping(target = "Schuljahresabschnitts_ID", source = "request.idSchuljahresabschnitt")
-	DTOSchueler toDomain(SchuelerImportData request, String guId);
+	DTOSchueler toDomain(SchuelerStammdatenCreateRequest request, String guId);
 
 	/**
 	 * Wendet die Änderungen eines {@link SchuelerStammdatenPatchRequest} auf eine bestehende
