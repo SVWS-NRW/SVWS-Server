@@ -95,6 +95,9 @@
 					:hat-update-kompetenz="!readonly" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
+		<svws-ui-content-card title="Schulinterne Funktionen">
+			<lehrer-personaldaten-funktionen />
+		</svws-ui-content-card>
 	</div>
 </template>
 

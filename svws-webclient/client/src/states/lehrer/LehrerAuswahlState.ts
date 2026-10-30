@@ -1,6 +1,7 @@
 import type { InjectionKey } from "vue";
 
 import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
+import type { LehrerFunktion } from "@core/asd/data/lehrer/LehrerFunktion";
 import type { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
 import type { LehrerLehrbefaehigungEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungEintrag";
 import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
@@ -142,6 +143,9 @@ export interface LehrerAuswahlState extends GenericAuswahlState<LehrerListeManag
 
 	removeAnrechnung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void>;
 
+	addFunktionen(data: List<Partial<LehrerFunktion>>): Promise<void>;
+
+	removeFunktion(data: LehrerFunktion): Promise<void>;
 
 	get lehrerUnterrichtsfaecher(): List<LehrerUnterrichtsfach>;
 

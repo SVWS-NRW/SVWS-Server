@@ -1,4 +1,5 @@
 import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
+import type { LehrerFunktion } from "@core/asd/data/lehrer/LehrerFunktion";
 import type { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
 import type { LehrerLehrbefaehigungEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungEintrag";
 import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
@@ -467,6 +468,20 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
 		await api.server.deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(api.schema, data.id);
 		abschnitt.anrechnungen.remove(data);
+		this.commit();
+	};
+
+	public async addFunktionen(data: List<Partial<LehrerFunktion>>): Promise<void> {
+		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
+		const result = await api.server.createLehrerFunktionen(data, api.schema);
+		abschnitt.funktionen.addAll(result);
+		this.commit();
+	};
+
+	public async removeFunktion(data: LehrerFunktion): Promise<void> {
+		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
+		await api.server.deleteLehrerFunktion(api.schema, data.id);
+		abschnitt.funktionen.remove(data);
 		this.commit();
 	};
 
