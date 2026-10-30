@@ -33,8 +33,8 @@ def svws_version = version
 def base_url = (project.hasProperty('svws_installer_downloads_base_url')) ? project.svws_installer_downloads_base_url : System.getenv("SVWS_INSTALLER_DOWNLOADS_BASE_URL")
 
 def jdk = "21"
-def jdk_version = "21.0.11"
-def jdk_fix = "10"
+def jdk_version = "21.0.13"
+def jdk_fix = "9"
 def jdk_win_url = (base_url == null)
 		? "https://github.com/adoptium/temurin${jdk}-binaries/releases/download/jdk-${jdk_version}+${jdk_fix}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 		: "${base_url}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
