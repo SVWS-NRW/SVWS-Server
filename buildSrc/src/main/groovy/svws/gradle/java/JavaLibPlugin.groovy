@@ -31,7 +31,7 @@ class JavaLibPlugin implements Plugin<Project> {
 	void addDatabase() {
 		def versionPersistenceAPI = '3.2.0';
 		def versionEclipselink = '4.0.9';
-		def versionMariaDB = '3.5.9';
+		def versionMariaDB = '3.5.11';
 		def versionSQLite = '3.53.2.0';
 		def versionUCanAccess = '5.1.8';
 		def versionJackcess = '5.1.7';
