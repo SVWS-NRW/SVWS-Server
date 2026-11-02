@@ -1,4 +1,4 @@
-import { ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung } from '../../../asd/validate/lehrer/ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung';
+import { ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung } from '../../../asd/validate/lehrer/ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -21,7 +21,7 @@ export class ValidatorLplfLehrerPersonaldatenLehramtFachrichtung extends Validat
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
-		this._validatoren.add(new ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(schuljahr, idFachrichtung, kontext));
+		this._validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(schuljahr, idFachrichtung, kontext));
 	}
 
 	protected pruefe(): boolean {
