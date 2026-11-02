@@ -23,23 +23,29 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 import de.svws_nrw.data.TransactionSupport;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Testet den Service für den Zugriff auf die Schuljahresabschnitte
+ * Testet den Service für den Zugriff auf und das Anlegen von Schuljahresabschnitten
  */
 @ExtendWith(MockitoExtension.class)
 class SchuljahresabschnittServiceTest {
 
+	private static final long ID_NEU = 99L;
+
 	@Mock
 	private SchuljahresabschnitteRepository repoMock;
+
+	@Mock
+	private EigeneSchuleRepository eigeneSchuleRepoMock;
 
 	private SchuljahresabschnittService service;
 
@@ -47,7 +53,7 @@ class SchuljahresabschnittServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new SchuljahresabschnittService(repoMock, SchuljahresabschnittMapper.INSTANCE);
+		service = new SchuljahresabschnittService(repoMock, eigeneSchuleRepoMock, SchuljahresabschnittMapper.INSTANCE);
 		transactionSupportMock = mockStatic(TransactionSupport.class);
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
@@ -58,11 +64,19 @@ class SchuljahresabschnittServiceTest {
 		transactionSupportMock.close();
 	}
 
-	private static SchuljahresabschnittCreateRequest createRequest(final int schuljahr, final int abschnitt) {
-		final var request = new SchuljahresabschnittCreateRequest();
-		request.schuljahr = schuljahr;
-		request.abschnitt = abschnitt;
-		return request;
+	private void stubCreate() {
+		when(repoMock.create(any(DTOSchuljahresabschnitte.class))).thenAnswer(invocation -> {
+			final DTOSchuljahresabschnitte dto = invocation.getArgument(0);
+			dto.ID = ID_NEU;
+			return dto;
+		});
+	}
+
+	private void stubAktiverAbschnitt(final DTOSchuljahresabschnitte aktiv) {
+		final var schule = new DTOEigeneSchule(1L);
+		schule.Schuljahresabschnitts_ID = aktiv.ID;
+		when(eigeneSchuleRepoMock.findFirst()).thenReturn(Optional.of(schule));
+		when(repoMock.findById(aktiv.ID)).thenReturn(Optional.of(aktiv));
 	}
 
 	private void assertApiError(final Runnable aufruf, final Response.Status status, final String meldung) {
@@ -185,203 +199,248 @@ class SchuljahresabschnittServiceTest {
 	}
 
 
-	// --- create ---
+	// --- createVorErstem ---
 
 	@Test
-	@DisplayName("create | Erfolg ohne Verknüpfungen")
-	void create_success() {
-		final var request = createRequest(2026, 1);
+	@DisplayName("createVorErstem | legt den ersten Abschnitt im selben Schuljahr an und verknüpft den bisher ersten Abschnitt")
+	void createVorErstem_imSelbenSchuljahr() {
+		final var erster = new DTOSchuljahresabschnitte(10L, 2025, 2);
+		when(repoMock.getAll()).thenReturn(List.of(erster));
+		when(repoMock.findBySchuljahrAndAbschnitt(2025, 1)).thenReturn(Optional.empty());
+		stubCreate();
+
+		final var result = service.createVorErstem();
+
+		assertThat(result).extracting("id", "schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
+				.containsExactly(ID_NEU, 2025, 1, null, 10L);
+		assertThat(erster.VorigerAbschnitt_ID).isEqualTo(ID_NEU);
+		verify(repoMock).update(erster);
+	}
+
+	@Test
+	@DisplayName("createVorErstem | wechselt beim Anlegen vor Abschnitt 1 in den letzten Abschnitt des Vorjahres")
+	void createVorErstem_jahreswechsel() {
+		final var erster = new DTOSchuljahresabschnitte(10L, 2025, 1);
+		when(repoMock.getAll()).thenReturn(List.of(erster));
+		when(repoMock.findBySchuljahrAndAbschnitt(2024, 2)).thenReturn(Optional.empty());
+		stubCreate();
+
+		final var result = service.createVorErstem();
+
+		assertThat(result).extracting("schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
+				.containsExactly(2024, 2, null, 10L);
+		assertThat(erster.VorigerAbschnitt_ID).isEqualTo(ID_NEU);
+	}
+
+	@Test
+	@DisplayName("createVorErstem | bestimmt den ersten Abschnitt unabhängig von der Reihenfolge der Datenbank")
+	void createVorErstem_waehltErstenAus() {
+		final var neu = new DTOSchuljahresabschnitte(12L, 2026, 2);
+		final var alt = new DTOSchuljahresabschnitte(10L, 2025, 2);
+		final var mittel = new DTOSchuljahresabschnitte(11L, 2026, 1);
+		when(repoMock.getAll()).thenReturn(List.of(neu, alt, mittel));
+		when(repoMock.findBySchuljahrAndAbschnitt(2025, 1)).thenReturn(Optional.empty());
+		stubCreate();
+
+		final var result = service.createVorErstem();
+
+		assertThat(result.idFolgeAbschnitt).isEqualTo(10L);
+		assertThat(alt.VorigerAbschnitt_ID).isEqualTo(ID_NEU);
+		assertThat(mittel.VorigerAbschnitt_ID).isNull();
+		assertThat(neu.VorigerAbschnitt_ID).isNull();
+	}
+
+	@Test
+	@DisplayName("createVorErstem | ohne vorhandenen Abschnitt wird abgelehnt")
+	void createVorErstem_keineAbschnitte() {
+		when(repoMock.getAll()).thenReturn(List.of());
+
+		assertApiError(service::createVorErstem, Response.Status.BAD_REQUEST,
+				"Es existiert noch kein Schuljahresabschnitt, vor oder nach dem ein neuer Schuljahresabschnitt angelegt werden könnte.");
+		verify(repoMock, never()).create(any(DTOSchuljahresabschnitte.class));
+	}
+
+	@Test
+	@DisplayName("createVorErstem | ungültige Halbjahresabschnittsnummer des ersten Schuljahresabschnitts wird abgelehnt")
+	void createVorErstem_ungueltigeHalbjahresabschnittsnummer() {
+		when(repoMock.getAll()).thenReturn(List.of(new DTOSchuljahresabschnitte(10L, 2025, 3)));
+
+		assertApiError(service::createVorErstem, Response.Status.BAD_REQUEST,
+				"Der Schuljahresabschnitt mit der ID 10 hat die Halbjahresabschnittsnummer 3. Erlaubt sind nur die Nummern 1 bis 2.");
+		verify(repoMock, never()).create(any(DTOSchuljahresabschnitte.class));
+	}
+
+	@Test
+	@DisplayName("createVorErstem | bereits vorhandener Abschnitt wird abgelehnt")
+	void createVorErstem_existiertBereits() {
+		final var erster = new DTOSchuljahresabschnitte(10L, 2025, 2);
+		when(repoMock.getAll()).thenReturn(List.of(erster));
+		when(repoMock.findBySchuljahrAndAbschnitt(2025, 1)).thenReturn(Optional.of(new DTOSchuljahresabschnitte(5L, 2025, 1)));
+
+		assertApiError(service::createVorErstem, Response.Status.BAD_REQUEST,
+				"Der Schuljahresabschnitt für das Schuljahr 2025 und den Halbjahresabschnitt 1 existiert bereits.");
+		verify(repoMock, never()).create(any(DTOSchuljahresabschnitte.class));
+		verify(repoMock, never()).update(any(DTOSchuljahresabschnitte.class));
+	}
+
+
+	// --- createNachLetztem ---
+
+	@Test
+	@DisplayName("createNachLetztem | legt den letzten Abschnitt im selben Schuljahr an und verknüpft den bisher letzten Schuljahresabschnitt")
+	void createNachLetztem_imSelbenSchuljahr() {
+		final var aktiv = new DTOSchuljahresabschnitte(10L, 2025, 1);
+		when(repoMock.getAll()).thenReturn(List.of(aktiv));
+		stubAktiverAbschnitt(aktiv);
+		when(repoMock.findBySchuljahrAndAbschnitt(2025, 2)).thenReturn(Optional.empty());
+		stubCreate();
+
+		final var result = service.createNachLetztem();
+
+		assertThat(result).extracting("id", "schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
+				.containsExactly(ID_NEU, 2025, 2, 10L, null);
+		assertThat(aktiv.FolgeAbschnitt_ID).isEqualTo(ID_NEU);
+		verify(repoMock).update(aktiv);
+	}
+
+	@Test
+	@DisplayName("createNachLetztem | wechselt beim Anlegen nach dem letzten Abschnitt eines Schuljahres in das Folgejahr")
+	void createNachLetztem_jahreswechsel() {
+		final var aktiv = new DTOSchuljahresabschnitte(10L, 2025, 2);
+		when(repoMock.getAll()).thenReturn(List.of(aktiv));
+		stubAktiverAbschnitt(aktiv);
 		when(repoMock.findBySchuljahrAndAbschnitt(2026, 1)).thenReturn(Optional.empty());
-		when(repoMock.create(any(DTOSchuljahresabschnitte.class))).thenAnswer(invocation -> {
-			final DTOSchuljahresabschnitte entity = invocation.getArgument(0);
-			entity.ID = 42L;
-			return entity;
-		});
+		stubCreate();
 
-		final var result = service.create(request);
+		final var result = service.createNachLetztem();
 
-		assertThat(result)
-				.extracting("id", "schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
-				.containsExactly(42L, 2026, 1, null, null);
-		verify(repoMock, never()).existsById(any());
+		assertThat(result).extracting("schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
+				.containsExactly(2026, 1, 10L, null);
+		assertThat(aktiv.FolgeAbschnitt_ID).isEqualTo(ID_NEU);
 	}
 
 	@Test
-	@DisplayName("create | Erfolg mit existierendem Vorgänger und Folgeabschnitt")
-	void create_successWithLinks() {
-		final var request = createRequest(2026, 2);
-		request.idVorigerAbschnitt = 41L;
-		request.idFolgeAbschnitt = 43L;
+	@DisplayName("createNachLetztem | erlaubt den dritten Abschnitt hinter dem aktiven Abschnitt")
+	void createNachLetztem_dritterAbschnittNachAktivem() {
+		final var aktiv = new DTOSchuljahresabschnitte(10L, 2025, 1);
+		final var a2 = new DTOSchuljahresabschnitte(11L, 2025, 2);
+		final var a3 = new DTOSchuljahresabschnitte(12L, 2026, 1);
+		when(repoMock.getAll()).thenReturn(List.of(aktiv, a2, a3));
+		stubAktiverAbschnitt(aktiv);
 		when(repoMock.findBySchuljahrAndAbschnitt(2026, 2)).thenReturn(Optional.empty());
-		when(repoMock.existsById(41L)).thenReturn(true);
-		when(repoMock.existsById(43L)).thenReturn(true);
-		when(repoMock.create(any(DTOSchuljahresabschnitte.class))).thenAnswer(invocation -> {
-			final DTOSchuljahresabschnitte entity = invocation.getArgument(0);
-			entity.ID = 42L;
-			return entity;
-		});
+		stubCreate();
 
-		final var result = service.create(request);
+		final var result = service.createNachLetztem();
 
-		assertThat(result)
-				.extracting("id", "schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
-				.containsExactly(42L, 2026, 2, 41L, 43L);
+		assertThat(result).extracting("schuljahr", "abschnitt", "idVorigerAbschnitt").containsExactly(2026, 2, 12L);
+		assertThat(a3.FolgeAbschnitt_ID).isEqualTo(ID_NEU);
 	}
 
 	@Test
-	@DisplayName("create | bereits vorhandene Kombination aus Schuljahr und Abschnitt wird abgelehnt")
-	void create_duplicate() {
-		final var request = createRequest(2026, 1);
-		when(repoMock.findBySchuljahrAndAbschnitt(2026, 1)).thenReturn(Optional.of(new DTOSchuljahresabschnitte(5L, 2026, 1)));
+	@DisplayName("createNachLetztem | lehnt den Abschnitt ab, wenn bereits drei Abschnitte hinter dem aktiven Abschnitt existieren")
+	void createNachLetztem_zukunftsgrenzeErreicht() {
+		final var aktiv = new DTOSchuljahresabschnitte(10L, 2025, 1);
+		final var a2 = new DTOSchuljahresabschnitte(11L, 2025, 2);
+		final var a3 = new DTOSchuljahresabschnitte(12L, 2026, 1);
+		final var a4 = new DTOSchuljahresabschnitte(13L, 2026, 2);
+		when(repoMock.getAll()).thenReturn(List.of(aktiv, a2, a3, a4));
+		stubAktiverAbschnitt(aktiv);
 
-		assertApiError(() -> service.create(request), Response.Status.BAD_REQUEST,
-				"Der Schuljahresabschnitt für das Schuljahr 2026 und den Abschnitt 1 existiert bereits.");
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST,
+				"Es dürfen höchstens 3 Schuljahresabschnitte nach dem aktiven Schuljahresabschnitt angelegt werden.");
+		verify(repoMock, never()).create(any(DTOSchuljahresabschnitte.class));
+		verify(repoMock, never()).update(any(DTOSchuljahresabschnitte.class));
+	}
+
+	@Test
+	@DisplayName("createNachLetztem | zählt die Zukunftsgrenze über den Jahreswechsel hinweg")
+	void createNachLetztem_zukunftsgrenzeUeberJahreswechsel() {
+		final var aktiv = new DTOSchuljahresabschnitte(10L, 2025, 2);
+		final var letzter = new DTOSchuljahresabschnitte(13L, 2027, 1);
+		when(repoMock.getAll()).thenReturn(List.of(aktiv, letzter));
+		stubAktiverAbschnitt(aktiv);
+
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST,
+				"Es dürfen höchstens 3 Schuljahresabschnitte nach dem aktiven Schuljahresabschnitt angelegt werden.");
+	}
+
+	@Test
+	@DisplayName("createNachLetztem | ohne vorhandenen Abschnitt wird abgelehnt")
+	void createNachLetztem_keineAbschnitte() {
+		when(repoMock.getAll()).thenReturn(List.of());
+
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST,
+				"Es existiert noch kein Schuljahresabschnitt, vor oder nach dem ein neuer Schuljahresabschnitt angelegt werden könnte.");
+	}
+
+	@Test
+	@DisplayName("createNachLetztem | ohne Eintrag für die eigene Schule wird abgelehnt")
+	void createNachLetztem_keineSchule() {
+		when(repoMock.getAll()).thenReturn(List.of(new DTOSchuljahresabschnitte(10L, 2025, 1)));
+		when(eigeneSchuleRepoMock.findFirst()).thenReturn(Optional.empty());
+
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST, "Für die Schule ist kein aktiver Schuljahresabschnitt gesetzt.");
 		verify(repoMock, never()).create(any(DTOSchuljahresabschnitte.class));
 	}
 
 	@Test
-	@DisplayName("create | unbekannter Vorgänger wird abgelehnt")
-	void create_unknownVorgaenger() {
-		final var request = createRequest(2026, 2);
-		request.idVorigerAbschnitt = 5L;
-		when(repoMock.findBySchuljahrAndAbschnitt(2026, 2)).thenReturn(Optional.empty());
-		when(repoMock.existsById(5L)).thenReturn(false);
+	@DisplayName("createNachLetztem | ohne gesetzten aktiven Abschnitt wird abgelehnt")
+	void createNachLetztem_keinAktiverAbschnitt() {
+		when(repoMock.getAll()).thenReturn(List.of(new DTOSchuljahresabschnitte(10L, 2025, 1)));
+		when(eigeneSchuleRepoMock.findFirst()).thenReturn(Optional.of(new DTOEigeneSchule(1L)));
 
-		assertApiError(() -> service.create(request), Response.Status.BAD_REQUEST,
-				"Der angegebene vorherige Schuljahresabschnitt mit der ID 5 existiert nicht.");
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST, "Für die Schule ist kein aktiver Schuljahresabschnitt gesetzt.");
 		verify(repoMock, never()).create(any(DTOSchuljahresabschnitte.class));
 	}
 
 	@Test
-	@DisplayName("create | unbekannter Folgeabschnitt wird abgelehnt")
-	void create_unknownFolgeabschnitt() {
-		final var request = createRequest(2026, 2);
-		request.idFolgeAbschnitt = 6L;
-		when(repoMock.findBySchuljahrAndAbschnitt(2026, 2)).thenReturn(Optional.empty());
-		when(repoMock.existsById(6L)).thenReturn(false);
+	@DisplayName("createNachLetztem | nicht vorhandener aktiver Abschnitt wird abgelehnt")
+	void createNachLetztem_aktiverAbschnittNichtGefunden() {
+		when(repoMock.getAll()).thenReturn(List.of(new DTOSchuljahresabschnitte(10L, 2025, 1)));
+		final var schule = new DTOEigeneSchule(1L);
+		schule.Schuljahresabschnitts_ID = 77L;
+		when(eigeneSchuleRepoMock.findFirst()).thenReturn(Optional.of(schule));
+		when(repoMock.findById(77L)).thenReturn(Optional.empty());
 
-		assertApiError(() -> service.create(request), Response.Status.BAD_REQUEST,
-				"Der angegebene folgende Schuljahresabschnitt mit der ID 6 existiert nicht.");
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST, "Der aktive Schuljahresabschnitt mit der ID 77 wurde nicht gefunden.");
+	}
+
+	@Test
+	@DisplayName("createNachLetztem | ungültige Halbjahresabschnittsnummer des letzten Schuljahresabschnitts wird abgelehnt")
+	void createNachLetztem_ungueltigeHalbjahresabschnittsnummerLetzter() {
+		final var aktiv = new DTOSchuljahresabschnitte(10L, 2025, 1);
+		final var letzter = new DTOSchuljahresabschnitte(11L, 2025, 3);
+		when(repoMock.getAll()).thenReturn(List.of(aktiv, letzter));
+		stubAktiverAbschnitt(aktiv);
+
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST,
+				"Der Schuljahresabschnitt mit der ID 11 hat die Halbjahresabschnittsnummer 3. Erlaubt sind nur die Nummern 1 bis 2.");
+	}
+
+	@Test
+	@DisplayName("createNachLetztem | ungültige Halbjahresabschnittsnummer des aktiven Schuljahresabschnitts wird abgelehnt")
+	void createNachLetztem_ungueltigeHalbjahresabschnittsnummerAktiver() {
+		final var aktiv = new DTOSchuljahresabschnitte(10L, 2025, 0);
+		final var letzter = new DTOSchuljahresabschnitte(11L, 2025, 2);
+		when(repoMock.getAll()).thenReturn(List.of(aktiv, letzter));
+		stubAktiverAbschnitt(aktiv);
+
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST,
+				"Der Schuljahresabschnitt mit der ID 10 hat die Halbjahresabschnittsnummer 0. Erlaubt sind nur die Nummern 1 bis 2.");
+	}
+
+	@Test
+	@DisplayName("createNachLetztem | bereits vorhandener Abschnitt wird abgelehnt")
+	void createNachLetztem_existiertBereits() {
+		final var aktiv = new DTOSchuljahresabschnitte(10L, 2025, 1);
+		when(repoMock.getAll()).thenReturn(List.of(aktiv));
+		stubAktiverAbschnitt(aktiv);
+		when(repoMock.findBySchuljahrAndAbschnitt(2025, 2)).thenReturn(Optional.of(new DTOSchuljahresabschnitte(5L, 2025, 2)));
+
+		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST,
+				"Der Schuljahresabschnitt für das Schuljahr 2025 und den Halbjahresabschnitt 2 existiert bereits.");
 		verify(repoMock, never()).create(any(DTOSchuljahresabschnitte.class));
-	}
-
-
-	// --- patch ---
-
-	@Test
-	@DisplayName("patch | setzt beide Verknüpfungen")
-	void patch_setsLinks() {
-		final var entity = new DTOSchuljahresabschnitte(11L, 2025, 2);
-		final var request = new SchuljahresabschnittPatchRequest();
-		request.idVorigerAbschnitt = JsonNullable.of(10L);
-		request.idFolgeAbschnitt = JsonNullable.of(12L);
-		when(repoMock.findById(11L)).thenReturn(Optional.of(entity));
-		when(repoMock.existsById(10L)).thenReturn(true);
-		when(repoMock.existsById(12L)).thenReturn(true);
-
-		final var result = service.patch(11L, request);
-
-		assertThat(result)
-				.extracting("id", "schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
-				.containsExactly(11L, 2025, 2, 10L, 12L);
-		assertThat(entity.VorigerAbschnitt_ID).isEqualTo(10L);
-		assertThat(entity.FolgeAbschnitt_ID).isEqualTo(12L);
-	}
-
-	@Test
-	@DisplayName("patch | ändert nur die im Request gesetzten Felder")
-	void patch_onlyChangesPresentFields() {
-		final var entity = new DTOSchuljahresabschnitte(11L, 2025, 2);
-		entity.VorigerAbschnitt_ID = 10L;
-		entity.FolgeAbschnitt_ID = 12L;
-		final var request = new SchuljahresabschnittPatchRequest();
-		request.idFolgeAbschnitt = JsonNullable.of(13L);
-		when(repoMock.findById(11L)).thenReturn(Optional.of(entity));
-		when(repoMock.existsById(13L)).thenReturn(true);
-
-		final var result = service.patch(11L, request);
-
-		assertThat(result).extracting("idVorigerAbschnitt", "idFolgeAbschnitt").containsExactly(10L, 13L);
-		verify(repoMock, never()).existsById(10L);
-	}
-
-	@Test
-	@DisplayName("patch | ein explizites null löst die Verknüpfung ohne Existenzprüfung")
-	void patch_explicitNullClearsLink() {
-		final var entity = new DTOSchuljahresabschnitte(11L, 2025, 2);
-		entity.VorigerAbschnitt_ID = 10L;
-		entity.FolgeAbschnitt_ID = 12L;
-		final var request = new SchuljahresabschnittPatchRequest();
-		request.idVorigerAbschnitt = JsonNullable.of(null);
-		when(repoMock.findById(11L)).thenReturn(Optional.of(entity));
-
-		final var result = service.patch(11L, request);
-
-		assertThat(result).extracting("idVorigerAbschnitt", "idFolgeAbschnitt").containsExactly(null, 12L);
-		verify(repoMock, never()).existsById(any());
-	}
-
-	@Test
-	@DisplayName("patch | unbekannter Schuljahresabschnitt liefert NOT_FOUND")
-	void patch_notFound() {
-		final var request = new SchuljahresabschnittPatchRequest();
-		when(repoMock.findById(11L)).thenReturn(Optional.empty());
-
-		assertApiError(() -> service.patch(11L, request), Response.Status.NOT_FOUND, "Der Schuljahresabschnitt mit der ID 11 wurde nicht gefunden.");
-	}
-
-	@Test
-	@DisplayName("patch | ein Abschnitt darf nicht sein eigener Vorgänger sein")
-	void patch_ownVorgaenger() {
-		final var entity = new DTOSchuljahresabschnitte(11L, 2025, 2);
-		final var request = new SchuljahresabschnittPatchRequest();
-		request.idVorigerAbschnitt = JsonNullable.of(11L);
-		when(repoMock.findById(11L)).thenReturn(Optional.of(entity));
-
-		assertApiError(() -> service.patch(11L, request), Response.Status.BAD_REQUEST,
-				"Ein Schuljahresabschnitt darf nicht sein eigener vorheriger Schuljahresabschnitt sein.");
-		assertThat(entity.VorigerAbschnitt_ID).isNull();
-	}
-
-	@Test
-	@DisplayName("patch | ein Abschnitt darf nicht sein eigener Folgeabschnitt sein")
-	void patch_ownFolgeabschnitt() {
-		final var entity = new DTOSchuljahresabschnitte(11L, 2025, 2);
-		final var request = new SchuljahresabschnittPatchRequest();
-		request.idFolgeAbschnitt = JsonNullable.of(11L);
-		when(repoMock.findById(11L)).thenReturn(Optional.of(entity));
-
-		assertApiError(() -> service.patch(11L, request), Response.Status.BAD_REQUEST,
-				"Ein Schuljahresabschnitt darf nicht sein eigener folgender Schuljahresabschnitt sein.");
-		assertThat(entity.FolgeAbschnitt_ID).isNull();
-	}
-
-	@Test
-	@DisplayName("patch | unbekannter Vorgänger wird abgelehnt")
-	void patch_unknownVorgaenger() {
-		final var entity = new DTOSchuljahresabschnitte(11L, 2025, 2);
-		final var request = new SchuljahresabschnittPatchRequest();
-		request.idVorigerAbschnitt = JsonNullable.of(5L);
-		when(repoMock.findById(11L)).thenReturn(Optional.of(entity));
-		when(repoMock.existsById(5L)).thenReturn(false);
-
-		assertApiError(() -> service.patch(11L, request), Response.Status.BAD_REQUEST,
-				"Der angegebene vorherige Schuljahresabschnitt mit der ID 5 existiert nicht.");
-		assertThat(entity.VorigerAbschnitt_ID).isNull();
-	}
-
-	@Test
-	@DisplayName("patch | unbekannter Folgeabschnitt wird abgelehnt")
-	void patch_unknownFolgeabschnitt() {
-		final var entity = new DTOSchuljahresabschnitte(11L, 2025, 2);
-		final var request = new SchuljahresabschnittPatchRequest();
-		request.idFolgeAbschnitt = JsonNullable.of(6L);
-		when(repoMock.findById(11L)).thenReturn(Optional.of(entity));
-		when(repoMock.existsById(6L)).thenReturn(false);
-
-		assertApiError(() -> service.patch(11L, request), Response.Status.BAD_REQUEST,
-				"Der angegebene folgende Schuljahresabschnitt mit der ID 6 existiert nicht.");
-		assertThat(entity.FolgeAbschnitt_ID).isNull();
+		verify(repoMock, never()).update(any(DTOSchuljahresabschnitte.class));
 	}
 
 }

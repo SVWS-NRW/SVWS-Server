@@ -6,6 +6,7 @@ import java.util.List;
 import de.svws_nrw.core.data.schuljahresabschnitt.v1.SchuljahresabschnittV1;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.ws.rs.core.Response;
@@ -26,11 +27,14 @@ class DataSchuljahresabschnitteV1Test {
 	@Mock
 	private SchuljahresabschnitteRepository repositoryMock;
 
+	@Mock
+	private EigeneSchuleRepository eigeneSchuleRepositoryMock;
+
 	private DataSchuljahresabschnitteV1 cut;
 
 	@BeforeEach
 	void setUp() {
-		cut = new DataSchuljahresabschnitteV1(new SchuljahresabschnittService(repositoryMock, SchuljahresabschnittMapper.INSTANCE));
+		cut = new DataSchuljahresabschnitteV1(new SchuljahresabschnittService(repositoryMock, eigeneSchuleRepositoryMock, SchuljahresabschnittMapper.INSTANCE));
 	}
 
 	@Test

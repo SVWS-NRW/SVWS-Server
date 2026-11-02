@@ -22,6 +22,7 @@ import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.controller.schule.logoverwaltung.LogoverwaltungControllerFactory;
+import de.svws_nrw.controller.schule.schuljahresabschnitt.SchuljahresabschnittControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
@@ -3716,5 +3717,62 @@ public class APISchule {
 		return LogoverwaltungControllerFactory.withWriteAccess(request)
 				.getController()
 				.delete(ids);
+	}
+
+	/**
+	 * Die OpenAPI-Methode zum Anlegen eines Schuljahresabschnitts am Anfang der Zeitachse. Der neue Abschnitt wird unmittelbar vor dem zeitlich ersten
+	 * (ältesten) vorhandenen Abschnitt angelegt, also vor dem Abschnitt mit dem kleinsten Schuljahr und dem kleinsten Halbjahresabschnitt.
+	 * Liegt der erste Abschnitt z.B. im Schuljahr 2025 im Halbjahresabschnitt 1, wird der Halbjahresabschnitt 2 des Schuljahres 2024 angelegt.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return der angelegte Schuljahresabschnitt
+	 */
+	@POST
+	@Path("/schuljahresabschnitte/vor-erstem")
+	@Operation(summary = "Legt den Schuljahresabschnitt vor dem ersten vorhandenen Schuljahresabschnitt an.",
+			description = "Legt den Schuljahresabschnitt direkt vor dem ersten vorhandenen Schuljahresabschnitt an und verknüpft beide Schuljahresabschnitte. "
+					+ "Schuljahr, Halbjahresabschnitt und Verknüpfung werden vom Server bestimmt, sodass keine Lücken entstehen. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+	@ApiResponse(responseCode = "201", description = "Der angelegte Schuljahresabschnitt",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Schuljahresabschnitt.class)))
+	@ApiResponse(responseCode = "400", description = "Der Schuljahresabschnitt kann nicht angelegt werden (z.B. weil noch kein Schuljahresabschnitt existiert).")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuljahresabschnitte anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createVorErstemSchuljahresabschnitt(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return SchuljahresabschnittControllerFactory.withWriteAccess(request)
+				.getController()
+				.createVorErstem();
+	}
+
+	/**
+	 * Die OpenAPI-Methode zum Anlegen eines Schuljahresabschnitts am Ende der Zeitachse. Der neue Abschnitt wird unmittelbar nach dem zeitlich
+	 * letzten (jüngsten) vorhandenen Abschnitt angelegt, also nach dem Abschnitt mit dem größten Schuljahr und dem größten Halbjahresabschnitt.
+	 * Liegt der letzte Abschnitt z.B. im Schuljahr 2026 im Halbjahresabschnitt 2, wird der Halbjahresabschnitt 1 des Schuljahres 2027 angelegt.
+	 * Hinter dem aktiven Schuljahresabschnitt dürfen dabei höchstens 3 Abschnitte liegen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return der angelegte Schuljahresabschnitt
+	 */
+	@POST
+	@Path("/schuljahresabschnitte/nach-letztem")
+	@Operation(summary = "Legt den Schuljahresabschnitt nach dem letzten vorhandenen Schuljahresabschnitt an.",
+			description = "Legt den Schuljahresabschnitt direkt nach dem letzten vorhandenen Schuljahresabschnitt an und verknüpft beide Schuljahresabschnitte. "
+					+ "Schuljahr, Halbjahresabschnitt und Verknüpfung werden vom Server bestimmt, sodass keine Lücken entstehen. "
+					+ "Es dürfen höchstens 3 Schuljahresabschnitte hinter dem aktiven Schuljahresabschnitt angelegt werden. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+	@ApiResponse(responseCode = "201", description = "Der angelegte Schuljahresabschnitt",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Schuljahresabschnitt.class)))
+	@ApiResponse(responseCode = "400", description = "Der Schuljahresabschnitt kann nicht angelegt werden "
+			+ "(z.B. weil kein aktiver Schuljahresabschnitt gesetzt ist oder die Zukunftsgrenze erreicht wurde).")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuljahresabschnitte anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createNachLetztemSchuljahresabschnitt(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return SchuljahresabschnittControllerFactory.withWriteAccess(request)
+				.getController()
+				.createNachLetztem();
 	}
 }

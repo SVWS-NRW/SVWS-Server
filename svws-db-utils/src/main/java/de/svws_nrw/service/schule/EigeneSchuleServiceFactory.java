@@ -52,7 +52,8 @@ public final class EigeneSchuleServiceFactory {
 	 * @return der Service für die Schuljahresabschnitte
 	 */
 	public SchuljahresabschnittService getSchuljahresabschnittService() {
-		return new SchuljahresabschnittService(eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(), SchuljahresabschnittMapper.INSTANCE);
+		return new SchuljahresabschnittService(eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(), eigeneSchuleRepositoryFactory.getSchuleRepository(),
+				SchuljahresabschnittMapper.INSTANCE);
 	}
 
 

@@ -203,6 +203,7 @@ import { SchuleStammdaten } from '../asd/data/schule/SchuleStammdaten';
 import { SchulformKatalogEintrag } from '../asd/data/schule/SchulformKatalogEintrag';
 import { SchulgliederungKatalogEintrag } from '../asd/data/schule/SchulgliederungKatalogEintrag';
 import { SchulinterneFunktion } from '../core/data/schule/SchulinterneFunktion';
+import { Schuljahresabschnitt } from '../asd/data/schule/Schuljahresabschnitt';
 import { Schulleitung } from '../asd/data/schule/Schulleitung';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SchulwechselAbgang } from '../core/data/schule/SchulwechselAbgang';
@@ -18981,6 +18982,58 @@ export class ApiServer extends BaseApi {
 			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
 		});
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createNachLetztemSchuljahresabschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schuljahresabschnitte/nach-letztem
+	 *
+	 * Legt den Schuljahresabschnitt direkt nach dem letzten vorhandenen Schuljahresabschnitt an und verknüpft beide Schuljahresabschnitte. Schuljahr, Halbjahresabschnitt und Verknüpfung werden vom Server bestimmt, sodass keine Lücken entstehen. Es dürfen höchstens 3 Schuljahresabschnitte hinter dem aktiven Schuljahresabschnitt angelegt werden. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der angelegte Schuljahresabschnitt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Schuljahresabschnitt
+	 *   Code 400: Der Schuljahresabschnitt kann nicht angelegt werden (z.B. weil kein aktiver Schuljahresabschnitt gesetzt ist oder die Zukunftsgrenze erreicht wurde).
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuljahresabschnitte anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der angelegte Schuljahresabschnitt
+	 */
+	public async createNachLetztemSchuljahresabschnitt(schema: string): Promise<Schuljahresabschnitt> {
+		const path = "/db/{schema}/schule/schuljahresabschnitte/nach-letztem"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.postJSON(path, null);
+		const text = result;
+		return Schuljahresabschnitt.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createVorErstemSchuljahresabschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schuljahresabschnitte/vor-erstem
+	 *
+	 * Legt den Schuljahresabschnitt direkt vor dem ersten vorhandenen Schuljahresabschnitt an und verknüpft beide Schuljahresabschnitte. Schuljahr, Halbjahresabschnitt und Verknüpfung werden vom Server bestimmt, sodass keine Lücken entstehen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der angelegte Schuljahresabschnitt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Schuljahresabschnitt
+	 *   Code 400: Der Schuljahresabschnitt kann nicht angelegt werden (z.B. weil noch kein Schuljahresabschnitt existiert).
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuljahresabschnitte anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der angelegte Schuljahresabschnitt
+	 */
+	public async createVorErstemSchuljahresabschnitt(schema: string): Promise<Schuljahresabschnitt> {
+		const path = "/db/{schema}/schule/schuljahresabschnitte/vor-erstem"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.postJSON(path, null);
+		const text = result;
+		return Schuljahresabschnitt.transpilerFromJSON(text);
 	}
 
 

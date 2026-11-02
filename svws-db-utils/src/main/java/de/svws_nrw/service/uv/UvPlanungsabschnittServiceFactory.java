@@ -2,12 +2,11 @@ package de.svws_nrw.service.uv;
 
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.uv.UvGrunddatenRepositoryFactory;
 import de.svws_nrw.repo.uv.UvPlanungsabschnittRepositoryFactory;
-import de.svws_nrw.service.schule.SchuljahresabschnittService;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.uv.klassen.UvKlasseService;
 import de.svws_nrw.service.uv.klassen.UvKlassenLehrerService;
 import de.svws_nrw.service.uv.kurse.UvKursImportService;
@@ -38,8 +37,8 @@ public final class UvPlanungsabschnittServiceFactory {
 	/** die Factory für die Planungsabschnitt-Repositories */
 	private final UvPlanungsabschnittRepositoryFactory planungsabschnittRepositoryFactory;
 
-	/** die Factory für die Schule-Repositories */
-	private final EigeneSchuleRepositoryFactory schuleRepositoryFactory;
+	/** die Factory für die Schule-Services */
+	private final EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
 	/** die Factory für die Schüler-Repositories */
 	private final SchuelerRepositoryFactory schuelerRepositoryFactory;
@@ -60,7 +59,7 @@ public final class UvPlanungsabschnittServiceFactory {
 	 */
 	private UvPlanungsabschnittServiceFactory(final UvPlanungsabschnittRepositoryFactory planungsabschnittRepositoryFactory) {
 		this.planungsabschnittRepositoryFactory = planungsabschnittRepositoryFactory;
-		this.schuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
+		this.eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance());
 		this.schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
 		this.klassenRepositoryFactory = KlassenRepositoryFactory.getNewInstance();
 		this.katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
@@ -112,7 +111,7 @@ public final class UvPlanungsabschnittServiceFactory {
 	 */
 	public UvPlanungsabschnittSchuelerImportService getUvPlanungsabschnittSchuelerImportService() {
 		return new UvPlanungsabschnittSchuelerImportService(
-				new SchuljahresabschnittService(schuleRepositoryFactory.getSchuljahresabschnitteRepository(), SchuljahresabschnittMapper.INSTANCE),
+				eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				klassenRepositoryFactory.getKlassenRepository(),
@@ -150,7 +149,7 @@ public final class UvPlanungsabschnittServiceFactory {
 	public UvLerngruppeKlassenImportService getUvLerngruppeKlassenImportService() {
 		return new UvLerngruppeKlassenImportService(
 				getUvKlasseService(),
-				new SchuljahresabschnittService(schuleRepositoryFactory.getSchuljahresabschnitteRepository(), SchuljahresabschnittMapper.INSTANCE),
+				eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
 				new UvStundentafelFachService(grunddatenRepositoryFactory.getUvStundentafelFachRepository()),
 				planungsabschnittRepositoryFactory.getUvLerngruppeRepository(),
 				getUvLerngruppeService());

@@ -1,5 +1,6 @@
 package de.svws_nrw.service.schule;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,38 +10,61 @@ import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Ein Service für den Zugriff auf die Schuljahresabschnitte der Schule.
  * <p>
- * Stellt Lese-, Erstellungs- und Änderungsoperationen für Schuljahresabschnitte bereit und führt Validierungen durch.
+ * Stellt Leseoperationen für Schuljahresabschnitte bereit und legt neue Schuljahresabschnitte an.
+ * <p>
+ * Schuljahresabschnitte werden immer nur am Anfang oder am Ende der bestehenden Kette angelegt, sodass keine Lücken in der
+ * Historie entstehen. Schuljahr, Halbjahresabschnitt und die Verknüpfung mit den Nachbarabschnitten bestimmt der Service selbst.
+ * Es werden keine weiteren Daten (z.B. Klassen, Lernabschnitte oder Lehrerabschnittsdaten) für den neuen Schuljahresabschnitt angelegt.
  */
 public final class SchuljahresabschnittService {
 
-	private static final String ABSCHNITT_NICHT_GEFUNDEN = "Der Schuljahresabschnitt mit der ID %d wurde nicht gefunden.";
-	private static final String ABSCHNITT_EXISTIERT_BEREITS = "Der Schuljahresabschnitt für das Schuljahr %d und den Abschnitt %d existiert bereits.";
-	private static final String VORGAENGER_NICHT_GEFUNDEN = "Der angegebene vorherige Schuljahresabschnitt mit der ID %d existiert nicht.";
-	private static final String FOLGEABSCHNITT_NICHT_GEFUNDEN = "Der angegebene folgende Schuljahresabschnitt mit der ID %d existiert nicht.";
-	private static final String EIGENER_VORGAENGER = "Ein Schuljahresabschnitt darf nicht sein eigener vorheriger Schuljahresabschnitt sein.";
-	private static final String EIGENER_FOLGEABSCHNITT = "Ein Schuljahresabschnitt darf nicht sein eigener folgender Schuljahresabschnitt sein.";
+	private static final String SCHULJAHRESABSCHNITT_NICHT_GEFUNDEN = "Der Schuljahresabschnitt mit der ID %d wurde nicht gefunden.";
 
-	/** Das Repository für die Schuljahresabschnitte */
+	/** Die Anzahl der Halbjahresabschnitte pro Schuljahr. Dieser Wert ist fest vorgegeben und nicht änderbar. */
+	static final int HALBJAHRESABSCHNITTE_PRO_SCHULJAHR = 2;
+
+	/** Die maximale Anzahl an Schuljahresabschnitten, die hinter dem aktiven Schuljahresabschnitt angelegt sein dürfen. */
+	static final int MAX_SCHULJAHRESABSCHNITTE_NACH_AKTIVEM = 3;
+
+	private static final String KEINE_SCHULJAHRESABSCHNITTE = "Es existiert noch kein Schuljahresabschnitt, vor oder nach dem ein neuer Schuljahresabschnitt angelegt werden könnte.";
+	private static final String KEIN_AKTIVER_SCHULJAHRESABSCHNITT = "Für die Schule ist kein aktiver Schuljahresabschnitt gesetzt.";
+	private static final String AKTIVER_SCHULJAHRESABSCHNITT_NICHT_GEFUNDEN = "Der aktive Schuljahresabschnitt mit der ID %d wurde nicht gefunden.";
+	private static final String UNGUELTIGE_HALBJAHRESABSCHNITTSNUMMER =
+			"Der Schuljahresabschnitt mit der ID %d hat die Halbjahresabschnittsnummer %d. Erlaubt sind nur die Nummern 1 bis %d.";
+	private static final String SCHULJAHRESABSCHNITT_EXISTIERT_BEREITS = "Der Schuljahresabschnitt für das Schuljahr %d und den Halbjahresabschnitt %d existiert bereits.";
+	private static final String ZUKUNFTSGRENZE_ERREICHT =
+			"Es dürfen höchstens %d Schuljahresabschnitte nach dem aktiven Schuljahresabschnitt angelegt werden.";
+
+	private static final Comparator<DTOSchuljahresabschnitte> NACH_SCHULJAHR_UND_HALBJAHRESABSCHNITT =
+			Comparator.<DTOSchuljahresabschnitte>comparingInt(sja -> sja.Jahr)
+					.thenComparingInt(sja -> sja.Abschnitt);
+
 	private final SchuljahresabschnitteRepository repository;
-
-	/** Der Mapper zur Konvertierung zwischen Datenbank-DTOs, Requests und API-Objekten */
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 	private final SchuljahresabschnittMapper mapper;
 
 
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param repository   das Repository für die Schuljahresabschnitte
-	 * @param mapper       der Mapper zur Konvertierung zwischen Datenbank-DTOs, Requests und API-Objekten
+	 * @param repository               das Repository für die Schuljahresabschnitte
+	 * @param eigeneSchuleRepository   das Repository für die Daten der eigenen Schule
+	 * @param mapper                   der Mapper zur Konvertierung zwischen Datenbank-DTOs und API-Objekten
 	 */
-	public SchuljahresabschnittService(final SchuljahresabschnitteRepository repository, final SchuljahresabschnittMapper mapper) {
+	public SchuljahresabschnittService(
+			final SchuljahresabschnitteRepository repository,
+			final EigeneSchuleRepository eigeneSchuleRepository,
+			final SchuljahresabschnittMapper mapper
+	) {
 		this.repository = repository;
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.mapper = mapper;
 	}
 
@@ -57,25 +81,25 @@ public final class SchuljahresabschnittService {
 	public Schuljahresabschnitt getById(final Long id) {
 		return repository.findById(id)
 				.map(mapper::toApi)
-				.orElseThrow(() -> new ApiOperationException(Response.Status.NOT_FOUND, ABSCHNITT_NICHT_GEFUNDEN.formatted(id)));
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, SCHULJAHRESABSCHNITT_NICHT_GEFUNDEN.formatted(id)));
 	}
 
 
 	/**
-	 * Bestimmt den Schuljahresabschnitt anhand von Schuljahr und Abschnitt, sofern dieser existiert.
+	 * Bestimmt den Schuljahresabschnitt anhand von Schuljahr und Halbjahresabschnitt, sofern dieser existiert.
 	 *
-	 * @param schuljahr   das Schuljahr
-	 * @param abschnitt   der Abschnitt
+	 * @param schuljahr             das Schuljahr
+	 * @param halbjahresabschnitt   die Nummer des Halbjahresabschnitts innerhalb des Schuljahres
 	 *
 	 * @return der Schuljahresabschnitt oder ein leeres Optional, falls er nicht existiert
 	 */
-	public Optional<Schuljahresabschnitt> findBySchuljahrAndAbschnitt(final int schuljahr, final int abschnitt) {
-		return repository.findBySchuljahrAndAbschnitt(schuljahr, abschnitt).map(mapper::toApi);
+	public Optional<Schuljahresabschnitt> findBySchuljahrAndAbschnitt(final int schuljahr, final int halbjahresabschnitt) {
+		return repository.findBySchuljahrAndAbschnitt(schuljahr, halbjahresabschnitt).map(mapper::toApi);
 	}
 
 
 	/**
-	 * Gibt eine Liste aller Schuljahresabschnitte zurück, aufsteigend sortiert nach Schuljahr und Abschnitt.
+	 * Gibt eine Liste aller Schuljahresabschnitte zurück, aufsteigend sortiert nach Schuljahr und Halbjahresabschnitt.
 	 *
 	 * @return die sortierte Liste der Schuljahresabschnitte
 	 */
@@ -103,86 +127,144 @@ public final class SchuljahresabschnittService {
 
 
 	/**
-	 * Erstellt einen neuen Schuljahresabschnitt. Die Operation wird in einer Transaktion ausgeführt.
+	 * Legt den Schuljahresabschnitt direkt vor dem ersten vorhandenen Schuljahresabschnitt an. Die Operation wird in
+	 * einer Transaktion ausgeführt:
+	 * <ol>
+	 *   <li>Der erste vorhandene Schuljahresabschnitt wird bestimmt und seine Halbjahresabschnittsnummer geprüft.</li>
+	 *   <li>Der Vorgänger wird berechnet (2025/1 hat den Vorgänger 2024/2) und auf Existenz geprüft.</li>
+	 *   <li>Der neue Schuljahresabschnitt wird angelegt und erhält den bisher ersten Schuljahresabschnitt als Folgeabschnitt.</li>
+	 *   <li>Beim bisher ersten Schuljahresabschnitt wird der neue Schuljahresabschnitt als Vorgänger eingetragen.</li>
+	 * </ol>
 	 *
-	 * @param request   die Daten für den neuen Schuljahresabschnitt
+	 * @return der angelegte Schuljahresabschnitt
 	 *
-	 * @return der erstellte Schuljahresabschnitt
-	 *
-	 * @throws ApiOperationException   wenn die Kombination aus Schuljahr und Abschnitt bereits existiert oder
-	 *                                 ein angegebener vorheriger oder folgender Schuljahresabschnitt nicht existiert
+	 * @throws ApiOperationException   wenn noch kein Schuljahresabschnitt existiert, der erste Schuljahresabschnitt eine
+	 *                                 ungültige Halbjahresabschnittsnummer hat oder der neue Schuljahresabschnitt bereits existiert
 	 */
-	public Schuljahresabschnitt create(final SchuljahresabschnittCreateRequest request) {
+	public Schuljahresabschnitt createVorErstem() {
 		return TransactionSupport.transactional(() -> {
-			validateCreate(request);
-			final DTOSchuljahresabschnitte created = repository.create(mapper.toDomain(request));
-			return mapper.toApi(created);
+			final var erster = getErstenSchuljahresabschnitt();
+			validateHalbjahresabschnittsnummer(erster);
+			final var neuer = create(getVorgaengerPosition(erster), null, erster.ID);
+			erster.VorigerAbschnitt_ID = neuer.ID;
+			repository.update(erster);
+			return mapper.toApi(neuer);
 		});
 	}
 
 
 	/**
-	 * Ändert einen bestehenden Schuljahresabschnitt teilweise. Nur die im Request gesetzten Felder werden
-	 * geändert. Die Operation wird in einer Transaktion ausgeführt.
+	 * Legt den Schuljahresabschnitt direkt nach dem letzten vorhandenen Schuljahresabschnitt an. Die Operation wird in
+	 * einer Transaktion ausgeführt:
+	 * <ol>
+	 *   <li>Der letzte vorhandene und der aktive Schuljahresabschnitt der Schule werden bestimmt und ihre Halbjahresabschnittsnummern geprüft.</li>
+	 *   <li>Es wird geprüft, dass höchstens {@value #MAX_SCHULJAHRESABSCHNITTE_NACH_AKTIVEM} Schuljahresabschnitte hinter dem aktiven Schuljahresabschnitt liegen.</li>
+	 *   <li>Der Nachfolger wird berechnet (2026/2 hat den Nachfolger 2027/1) und auf Existenz geprüft.</li>
+	 *   <li>Der neue Schuljahresabschnitt wird angelegt und erhält den bisher letzten Schuljahresabschnitt als Vorgänger.</li>
+	 *   <li>Beim bisher letzten Schuljahresabschnitt wird der neue Schuljahresabschnitt als Folgeabschnitt eingetragen.</li>
+	 * </ol>
 	 *
-	 * @param id        die ID des zu ändernden Schuljahresabschnittes
-	 * @param request   die zu ändernden Felder
+	 * @return der angelegte Schuljahresabschnitt
 	 *
-	 * @return der geänderte Schuljahresabschnitt
-	 *
-	 * @throws ApiOperationException   wenn der Schuljahresabschnitt nicht gefunden wurde, ein angegebener vorheriger
-	 *                                 oder folgender Schuljahresabschnitt nicht existiert oder ein Schuljahresabschnitt
-	 *                                 mit sich selbst verknüpft werden soll
+	 * @throws ApiOperationException   wenn noch kein Schuljahresabschnitt existiert, kein aktiver Schuljahresabschnitt gesetzt ist,
+	 *                                 der letzte oder aktive Schuljahresabschnitt eine ungültige
+	 *                                 Halbjahresabschnittsnummer hat, die Zukunftsgrenze erreicht ist oder der neue
+	 *                                 Schuljahresabschnitt bereits existiert
 	 */
-	public Schuljahresabschnitt patch(final long id, final SchuljahresabschnittPatchRequest request) {
+	public Schuljahresabschnitt createNachLetztem() {
 		return TransactionSupport.transactional(() -> {
-			final DTOSchuljahresabschnitte entity = repository.findById(id)
-					.orElseThrow(() -> new ApiOperationException(Response.Status.NOT_FOUND, ABSCHNITT_NICHT_GEFUNDEN.formatted(id)));
-			validatePatch(id, request);
-			mapper.patch(request, entity);
-			return mapper.toApi(entity);
+			final var letzter = getLetztenSchuljahresabschnitt();
+			final var aktiver = getAktivenSchuljahresabschnitt();
+
+			validateHalbjahresabschnittsnummer(letzter);
+			validateHalbjahresabschnittsnummer(aktiver);
+			validateZukunftsgrenze(letzter, aktiver);
+
+			final var neuer = create(getNachfolgerPosition(letzter), letzter.ID, null);
+			letzter.FolgeAbschnitt_ID = neuer.ID;
+
+			repository.update(letzter);
+			return mapper.toApi(neuer);
 		});
 	}
 
 
-	private void validateCreate(final SchuljahresabschnittCreateRequest request) {
-		if (repository.findBySchuljahrAndAbschnitt(request.schuljahr, request.abschnitt).isPresent()) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, ABSCHNITT_EXISTIERT_BEREITS.formatted(request.schuljahr, request.abschnitt));
-		}
-		validateVorgaenger(request.idVorigerAbschnitt, null);
-		validateFolgeabschnitt(request.idFolgeAbschnitt, null);
+	private DTOSchuljahresabschnitte getErstenSchuljahresabschnitt() {
+		return repository.getAll().stream()
+				.min(NACH_SCHULJAHR_UND_HALBJAHRESABSCHNITT)
+				.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, KEINE_SCHULJAHRESABSCHNITTE));
 	}
 
 
-	private void validatePatch(final long id, final SchuljahresabschnittPatchRequest request) {
-		request.idVorigerAbschnitt.ifPresent(idVoriger -> validateVorgaenger(idVoriger, id));
-		request.idFolgeAbschnitt.ifPresent(idFolge -> validateFolgeabschnitt(idFolge, id));
+	private DTOSchuljahresabschnitte getLetztenSchuljahresabschnitt() {
+		return repository.getAll().stream()
+				.max(NACH_SCHULJAHR_UND_HALBJAHRESABSCHNITT)
+				.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, KEINE_SCHULJAHRESABSCHNITTE));
 	}
 
 
-	private void validateVorgaenger(final Long idVoriger, final Long idAbschnitt) {
-		if (idVoriger == null) {
-			return;
-		}
-		if (idVoriger.equals(idAbschnitt)) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, EIGENER_VORGAENGER);
-		}
-		if (!repository.existsById(idVoriger)) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, VORGAENGER_NICHT_GEFUNDEN.formatted(idVoriger));
+	private DTOSchuljahresabschnitte getAktivenSchuljahresabschnitt() {
+		final var idAktiv = eigeneSchuleRepository.findFirst()
+				.map(schule -> schule.Schuljahresabschnitts_ID)
+				.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, KEIN_AKTIVER_SCHULJAHRESABSCHNITT));
+
+		return repository.findById(idAktiv)
+				.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, AKTIVER_SCHULJAHRESABSCHNITT_NICHT_GEFUNDEN.formatted(idAktiv)));
+	}
+
+
+	private static void validateHalbjahresabschnittsnummer(final DTOSchuljahresabschnitte schuljahresabschnitt) {
+		if ((schuljahresabschnitt.Abschnitt < 1) || (schuljahresabschnitt.Abschnitt > HALBJAHRESABSCHNITTE_PRO_SCHULJAHR)) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					UNGUELTIGE_HALBJAHRESABSCHNITTSNUMMER.formatted(schuljahresabschnitt.ID, schuljahresabschnitt.Abschnitt,
+							HALBJAHRESABSCHNITTE_PRO_SCHULJAHR));
 		}
 	}
 
 
-	private void validateFolgeabschnitt(final Long idFolge, final Long idAbschnitt) {
-		if (idFolge == null) {
-			return;
+	private static void validateZukunftsgrenze(final DTOSchuljahresabschnitte letzter, final DTOSchuljahresabschnitte aktiver) {
+		if ((getZeitachsenIndex(letzter) - getZeitachsenIndex(aktiver)) >= MAX_SCHULJAHRESABSCHNITTE_NACH_AKTIVEM) {
+			throw new ApiOperationException(Status.BAD_REQUEST, ZUKUNFTSGRENZE_ERREICHT.formatted(MAX_SCHULJAHRESABSCHNITTE_NACH_AKTIVEM));
 		}
-		if (idFolge.equals(idAbschnitt)) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, EIGENER_FOLGEABSCHNITT);
+	}
+
+
+	// Bestimmt die fortlaufende Nummer eines Schuljahresabschnitts auf der Zeitachse aller Schuljahresabschnitte
+	private static int getZeitachsenIndex(final DTOSchuljahresabschnitte schuljahresabschnitt) {
+		return (schuljahresabschnitt.Jahr * HALBJAHRESABSCHNITTE_PRO_SCHULJAHR) + (schuljahresabschnitt.Abschnitt - 1);
+	}
+
+
+	private static Position getVorgaengerPosition(final DTOSchuljahresabschnitte schuljahresabschnitt) {
+		return (schuljahresabschnitt.Abschnitt > 1)
+				? new Position(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt - 1)
+				: new Position(schuljahresabschnitt.Jahr - 1, HALBJAHRESABSCHNITTE_PRO_SCHULJAHR);
+	}
+
+
+	private static Position getNachfolgerPosition(final DTOSchuljahresabschnitte schuljahresabschnitt) {
+		return (schuljahresabschnitt.Abschnitt < HALBJAHRESABSCHNITTE_PRO_SCHULJAHR)
+				? new Position(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt + 1)
+				: new Position(schuljahresabschnitt.Jahr + 1, 1);
+	}
+
+
+	private DTOSchuljahresabschnitte create(final Position position, final Long idVorigerAbschnitt, final Long idFolgeAbschnitt) {
+		final var schuljahresabschnittExistiertBereits = repository.findBySchuljahrAndAbschnitt(position.schuljahr(), position.halbjahresabschnittsnummer())
+				.isPresent();
+		if (schuljahresabschnittExistiertBereits) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					SCHULJAHRESABSCHNITT_EXISTIERT_BEREITS.formatted(position.schuljahr(), position.halbjahresabschnittsnummer()));
 		}
-		if (!repository.existsById(idFolge)) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, FOLGEABSCHNITT_NICHT_GEFUNDEN.formatted(idFolge));
-		}
+		final var neuer = new DTOSchuljahresabschnitte(0, position.schuljahr(), position.halbjahresabschnittsnummer());
+		neuer.VorigerAbschnitt_ID = idVorigerAbschnitt;
+		neuer.FolgeAbschnitt_ID = idFolgeAbschnitt;
+		return repository.create(neuer);
+	}
+
+
+	// Die Lage eines Schuljahresabschnitts, bestehend aus Schuljahr und Halbjahresabschnittsnummer
+	private record Position(int schuljahr, int halbjahresabschnittsnummer) {
 	}
 
 }

@@ -49,6 +49,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryImpl;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepositoryImpl;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.annotation.Nonnull;
@@ -147,7 +148,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 	@Nonnull
 	private static SchuljahresabschnittService createSchuljahresabschnittService(final DBEntityManager conn) {
-		return new SchuljahresabschnittService(new SchuljahresabschnitteRepositoryImpl(conn), SchuljahresabschnittMapper.INSTANCE);
+		return new SchuljahresabschnittService(new SchuljahresabschnitteRepositoryImpl(conn), new EigeneSchuleRepositoryImpl(conn),
+				SchuljahresabschnittMapper.INSTANCE);
 	}
 
 	@Override
