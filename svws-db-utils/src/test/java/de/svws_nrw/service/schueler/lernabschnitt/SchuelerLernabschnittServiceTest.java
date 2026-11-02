@@ -1164,6 +1164,35 @@ class SchuelerLernabschnittServiceTest {
 		}
 
 		@Test
+		@DisplayName("Schüler hat im Schuljahresabschnitt bereits einen Lernabschnitt mit Wechsel-Nr. 0 - CONFLICT, es wird nichts angelegt")
+		void create_lernabschnittBereitsVorhanden() {
+			final var vorhanden = createEntity(5L, ID_SCHULJAHRESABSCHNITT);
+			vorhanden.WechselNr = 0;
+			when(repository.findListBySchuelerAndSchuljahresabschnitt(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT)).thenReturn(List.of(vorhanden));
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+
+			assertThatThrownBy(() -> service.create(dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.CONFLICT)
+					.hasMessage("Der Schüler mit der ID %d hat im Schuljahresabschnitt mit der ID %d bereits einen Lernabschnitt."
+							.formatted(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT));
+			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
+		}
+
+		@Test
+		@DisplayName("Schüler hat im Schuljahresabschnitt nur einen Lernabschnitt mit Wechsel-Nr. größer 0 - Lernabschnitt wird angelegt")
+		void create_nurLernabschnittMitWechselNrGroesserNullVorhanden() {
+			final var vorhanden = createEntity(5L, ID_SCHULJAHRESABSCHNITT);
+			vorhanden.WechselNr = 1;
+			when(repository.findListBySchuelerAndSchuljahresabschnitt(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT)).thenReturn(List.of(vorhanden));
+			stubMapper();
+
+			service.create(createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT));
+
+			verify(repository).create(any(DTOSchuelerLernabschnittsdaten.class));
+		}
+
+		@Test
 		@DisplayName("Klasse gehört zu einem anderen Schuljahresabschnitt - BAD_REQUEST")
 		void create_klasseAndererSchuljahresabschnitt() {
 			when(klassenRepository.existsById(46L)).thenReturn(true);

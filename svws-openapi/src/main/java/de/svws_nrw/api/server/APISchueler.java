@@ -730,6 +730,7 @@ public class APISchueler {
 			schema = @Schema(implementation = SchuelerLernabschnittsdaten.class)))
 	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerlernabschnittsdaten anzulegen.")
+	@ApiResponse(responseCode = "409", description = "Der Schüler hat in dem Schuljahresabschnitt bereits einen Lernabschnitt.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response createSchuelerLernabschnittsdaten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des neuen Schülerlernabschnitts", required = true,

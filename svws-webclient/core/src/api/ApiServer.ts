@@ -14613,6 +14613,7 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: SchuelerLernabschnittsdaten
 	 *   Code 400: Die Eingabedaten sind fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerlernabschnittsdaten anzulegen.
+	 *   Code 409: Der Schüler hat in dem Schuljahresabschnitt bereits einen Lernabschnitt.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<SchuelerLernabschnittsdaten>} data - der Request-Body für die HTTP-Methode

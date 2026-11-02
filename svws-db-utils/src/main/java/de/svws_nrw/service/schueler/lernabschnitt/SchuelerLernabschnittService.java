@@ -164,6 +164,7 @@ public final class SchuelerLernabschnittService {
 	 * @return der neu angelegte {@link SchuelerLernabschnittsdaten}
 	 *
 	 * @throws ApiOperationException   FORBIDDEN, wenn der Benutzer keine Rechte auf die Klasse hat,
+	 *                                 CONFLICT, wenn der Schüler in dem Schuljahresabschnitt bereits einen Lernabschnitt hat,
 	 *                                 BAD_REQUEST, wenn der Schüler, der Schuljahresabschnitt oder eine referenzierte ID (z. B. Lehrer, Klasse,
 	 *                                 Jahrgang, Förderschwerpunkt, Schwerpunkt, Fachklasse) oder ein Katalogwert nicht existiert,
 	 *                                 die Klasse nicht zum Schuljahresabschnitt oder nicht zum Jahrgang passt, das Enddatum
@@ -175,6 +176,7 @@ public final class SchuelerLernabschnittService {
 			final int schuljahr = getSchuljahrByIdAbschnitt(List.of(dto.schuljahresabschnitt)).get(dto.schuljahresabschnitt);
 			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(dto.klassenID.orElse(null));
 			validateIdSchueler(dto.schuelerID);
+			validateKeinLernabschnittVorhanden(dto.schuelerID, dto.schuljahresabschnitt);
 			final Schulform schulform = eigeneSchuleService.getSchulform();
 			final var entity = mapper.toDomain(dto);
 			validateRequest(dto, schuljahr, schulform, entity);
@@ -246,6 +248,16 @@ public final class SchuelerLernabschnittService {
 	private void validateIdSchueler(final Long idSchueler) {
 		if (!schuelerRepository.existsById(idSchueler)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein Schüler mit der ID %d.".formatted(idSchueler));
+		}
+	}
+
+	private void validateKeinLernabschnittVorhanden(final long idSchueler, final long idSchuljahresabschnitt) {
+		// Das Anlegen vergibt immer die Wechsel-Nr. 0, der Unique-Index auf Schüler, Abschnitt und Wechsel-Nr. würde sonst verletzt
+		final boolean vorhanden = repository.findListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt).stream()
+				.anyMatch(lernabschnitt -> (lernabschnitt.WechselNr != null) && (lernabschnitt.WechselNr == 0));
+		if (vorhanden) {
+			throw new ApiOperationException(Status.CONFLICT,
+					"Der Schüler mit der ID %d hat im Schuljahresabschnitt mit der ID %d bereits einen Lernabschnitt.".formatted(idSchueler, idSchuljahresabschnitt));
 		}
 	}
 
