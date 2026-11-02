@@ -82,7 +82,14 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 			]);
 		}
 		if (to === this) {
-			return this.getRouteDefaultChild();
+			return this.getRouteSelectedChild();
+		}
+		if (!to.name.startsWith(this.data.view.name)) {
+			for (const child of this.children) {
+				if (to.name.startsWith(child.name)) {
+					this.data.setView(child, this.children);
+				}
+			}
 		}
 	}
 
