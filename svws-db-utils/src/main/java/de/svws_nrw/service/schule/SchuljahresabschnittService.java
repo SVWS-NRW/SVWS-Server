@@ -88,6 +88,21 @@ public final class SchuljahresabschnittService {
 
 
 	/**
+	 * Gibt eine Liste der Schuljahresabschnitte der angegebenen Schuljahre zurück, aufsteigend sortiert nach Schuljahr und Abschnitt.
+	 *
+	 * @param schuljahre   die Schuljahre
+	 *
+	 * @return die sortierte Liste der Schuljahresabschnitte, leer wenn zu den Schuljahren keine Abschnitte existieren
+	 */
+	public List<Schuljahresabschnitt> getListBySchuljahre(final List<Integer> schuljahre) {
+		return repository.findListBySchuljahre(schuljahre).stream()
+				.map(mapper::toApi)
+				.sorted(SchuljahresabschnittsUtils.comparator)
+				.toList();
+	}
+
+
+	/**
 	 * Erstellt einen neuen Schuljahresabschnitt. Die Operation wird in einer Transaktion ausgeführt.
 	 *
 	 * @param request   die Daten für den neuen Schuljahresabschnitt

@@ -2,8 +2,10 @@ package de.svws_nrw.service.schule;
 
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
+import jakarta.ws.rs.core.Response.Status;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -146,6 +149,52 @@ class EigeneSchuleServiceTest {
 			service.getSchulform();
 
 			verify(eigeneSchuleRepository).getSchulform();
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// hatGymnasialeOberstufe()
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("hatGymnasialeOberstufe()")
+	class HatGymnasialeOberstufe {
+
+		private void bereiteVor(final Schulform schulform, final int schuljahr) {
+			final long abschnittId = 1L;
+			when(eigeneSchuleRepository.getIdSchuljahresabschnitt()).thenReturn(abschnittId);
+			when(schulejahresabschnitteRepository.getById(abschnittId)).thenReturn(schuljahresabschnitt(abschnittId, schuljahr, 1));
+			when(eigeneSchuleRepository.getSchulform()).thenReturn(schulform);
+		}
+
+		@Test
+		@DisplayName("gibt true zurück bei einer Schulform mit gymnasialer Oberstufe")
+		void hatGymnasialeOberstufe_gymnasium_returnsTrue() {
+			bereiteVor(Schulform.GY, 2025);
+
+			assertThat(service.hatGymnasialeOberstufe()).isTrue();
+		}
+
+		@Test
+		@DisplayName("gibt false zurück bei einer Schulform ohne gymnasiale Oberstufe")
+		void hatGymnasialeOberstufe_grundschule_returnsFalse() {
+			bereiteVor(Schulform.G, 2025);
+
+			assertThat(service.hatGymnasialeOberstufe()).isFalse();
+		}
+
+		@Test
+		@DisplayName("wirft einen Fehler, wenn die Schulform im aktuellen Schuljahr nicht im Katalog gültig ist")
+		void hatGymnasialeOberstufe_schulformNichtGueltig_throws() {
+			// Die Gemeinschaftsschule ist nur bis zum Schuljahr 2022 im Katalog gültig
+			bereiteVor(Schulform.GM, 2025);
+
+			assertThatThrownBy(() -> service.hatGymnasialeOberstufe())
+					.isInstanceOfSatisfying(ApiOperationException.class, e -> {
+						assertThat(e.getStatus()).isEqualTo(Status.INTERNAL_SERVER_ERROR);
+						assertThat(e.getBody()).isEqualTo(
+								"Der Schulform-Katalog-Eintrag für die Schulform der Schule konnte für das aktuelle Schuljahr 2025 nicht bestimmt werden.");
+					});
 		}
 	}
 }

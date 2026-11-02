@@ -1,5 +1,6 @@
 package de.svws_nrw.service.gost;
 
+import de.svws_nrw.mapper.gost.GostJahrgangMapper;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
@@ -9,6 +10,7 @@ import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.crypto.CryptoServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 
 /**
@@ -149,6 +151,22 @@ public final class GostServiceFactory {
 				katalogRepositoryFactory.getJahrgangRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository());
+	}
+
+
+	/**
+	 * Erstellt einen neuen Service für die Liste der Abiturjahrgänge der gymnasialen Oberstufe
+	 *
+	 * @return der Service
+	 */
+	public GostJahrgangslisteService getGostJahrgangslisteService() {
+		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
+		return new GostJahrgangslisteService(eigeneSchuleServiceFactory.getSchuleService(),
+				eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
+				katalogRepositoryFactory.getJahrgangRepository(),
+				gostRepositoryFactory.getGostJahrgangsdatenRepository(),
+				gostRepositoryFactory.getGostJahrgangsinformationenRepository(),
+				GostJahrgangMapper.INSTANCE);
 	}
 
 

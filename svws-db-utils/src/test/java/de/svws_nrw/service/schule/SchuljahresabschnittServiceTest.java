@@ -2,6 +2,7 @@ package de.svws_nrw.service.schule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
@@ -156,6 +157,31 @@ class SchuljahresabschnittServiceTest {
 		when(repoMock.getAll()).thenReturn(List.of());
 
 		assertThat(service.getList()).isEmpty();
+	}
+
+
+	// --- getListBySchuljahre ---
+
+	@Test
+	@DisplayName("getListBySchuljahre | fragt die Schuljahre ab, mappt die DTOs und sortiert nach Schuljahr und Abschnitt")
+	void getListBySchuljahre_sortedAndMapped() {
+		final var dto1 = new DTOSchuljahresabschnitte(1L, 2026, 1);
+		final var dto2 = new DTOSchuljahresabschnitte(2L, 2026, 2);
+		final var dto3 = new DTOSchuljahresabschnitte(3L, 2027, 1);
+		when(repoMock.findListBySchuljahre(List.of(2027, 2026))).thenReturn(List.of(dto3, dto2, dto1));
+
+		final var result = service.getListBySchuljahre(List.of(2027, 2026));
+
+		assertThat(result).extracting("id").containsExactly(1L, 2L, 3L);
+		assertThat(result).extracting("schuljahr", "abschnitt").containsExactly(tuple(2026, 1), tuple(2026, 2), tuple(2027, 1));
+	}
+
+	@Test
+	@DisplayName("getListBySchuljahre | ohne Treffer wird eine leere Liste geliefert")
+	void getListBySchuljahre_empty() {
+		when(repoMock.findListBySchuljahre(List.of(2030))).thenReturn(List.of());
+
+		assertThat(service.getListBySchuljahre(List.of(2030))).isEmpty();
 	}
 
 

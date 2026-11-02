@@ -258,7 +258,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		result.jahrgaenge.addAll(getJahrgangService().getAll());
 
 		if (conn.getUser().schuleHatGymOb()) {
-			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn, schuljahresabschnitt));
+			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(schuljahresabschnitt));
 		}
 
 		// ermittle ggf. weitere Klassen

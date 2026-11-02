@@ -69,6 +69,15 @@ public final class GostRepositoryFactory extends RepositoryFactory {
 	}
 
 	/**
+	 * Erstellt ein neues Repository für die aggregierten Informationen zu den Jahrgängen der gymnasialen Oberstufe.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public GostJahrgangsinformationenRepository getGostJahrgangsinformationenRepository() {
+		return getOrCreate(GostJahrgangsinformationenRepository.class, () -> new GostJahrgangsinformationenRepositoryImpl(conn));
+	}
+
+	/**
 	 * Erstellt ein neues Repository für {@link DTOGostSchueler}.
 	 *
 	 * @return das Repository-Objekt

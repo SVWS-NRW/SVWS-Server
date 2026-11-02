@@ -17,13 +17,11 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
-import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
@@ -38,6 +36,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.GostJahrgangslisteService;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
@@ -74,85 +73,22 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
 
 	/**
-	 * Bestimmt die Liste der Abiturjahrgänge
+	 * Bestimmt die Liste der Abiturjahrgänge. Die Bestimmung erfolgt im {@link GostJahrgangslisteService}, welcher die
+	 * Datenbankverbindung des aktuellen Requests verwendet. Der Aufruf ist daher nur innerhalb eines Requests möglich.
 	 *
-	 * @param conn        die Datenbankverbindung
 	 * @param abschnitt   der Schuljahresabschnitt auf den sich die Anfrage (und die damit die Jahrgänge) bezieht
 	 *
 	 * @return die Liste der Abiturjahrgänge
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostJahrgang> getGostJahrgangsliste(final DBEntityManager conn, final Schuljahresabschnitt abschnitt) throws ApiOperationException {
-		if (!conn.getUser().schuleHatGymOb()) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat eine Schulform ohne gymnasiale Oberstufe.");
-		}
-
-		// Bestimme die Jahrgänge der Schule
-		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
-		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty())) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Jahrgänge gefunden werden.");
-		}
-
-		// Bestimme die allgemeinen Jahrgangsinformationen für die Gost für alle Jahrgänge der DB
-		final HashMap2D<Long, String, DTOGostJahrgangsinformationen> mapJahrgangsinfos = DTOGostJahrgangsinformationen.getMapJahrgangsinformationen(conn);
-
-		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
-		final ArrayList<GostJahrgang> daten = new ArrayList<>();
-		final List<DTOGostJahrgangsdaten> dtos = conn.queryAll(DTOGostJahrgangsdaten.class);
-		if (dtos != null) {
-			dtos.sort((a, b) -> Integer.compare(a.Abi_Jahrgang, b.Abi_Jahrgang));
-			for (final DTOGostJahrgangsdaten jahrgangsdaten : dtos) {
-				if (jahrgangsdaten.Abi_Jahrgang < 0) {
-					continue;
-				}
-				final GostJahrgang eintrag = new GostJahrgang();
-				eintrag.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
-				final int restjahre = jahrgangsdaten.Abi_Jahrgang - abschnitt.schuljahr;
-				for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
-					final Schulform schulform = conn.getUser().schuleGetSchulform();
-					Integer jahrgangRestjahre = JahrgaengeUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
-							jahrgang.ASDJahrgang);
-					if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgaengeUtils.istSekI(jahrgang.ASDJahrgang)) {
-						jahrgangRestjahre += 3;
-					}
-					if ((jahrgangRestjahre != null) && (restjahre == jahrgangRestjahre)) {
-						eintrag.jahrgang = jahrgang.ASDJahrgang;
-						if (JahrgaengeUtils.istGymOb(jahrgang.ASDJahrgang)) {
-							break;
-						}
-					}
-				}
-				eintrag.halbjahr = abschnitt.abschnitt;
-				eintrag.bezeichnung = "Abi " + eintrag.abiturjahr + ((eintrag.jahrgang == null) ? "" : " (" + eintrag.jahrgang + ")");
-				eintrag.istAbgeschlossen = (restjahre < 1);
-				// Ergänze die Information, ob bereits eine Blockung persistiert wurde anhand der angelegten Kurse in den entsprechenden Lernabschnitten
-				final @NotNull List<Schuljahresabschnitt> abschnitte =
-						conn.getUser().schuleGetAbschnitteBySchuljahre(eintrag.abiturjahr - 1, eintrag.abiturjahr - 2, eintrag.abiturjahr - 3);
-				for (final Schuljahresabschnitt a : abschnitte) {
-					final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(eintrag.abiturjahr, a.schuljahr, a.abschnitt);
-					final DTOGostJahrgangsinformationen info = mapJahrgangsinfos.getOrNull(a.id, halbjahr.jahrgang);
-					eintrag.istBlockungFestgelegt[halbjahr.id] = (info == null) ? false : (info.anzahlKurse > 0);
-					eintrag.existierenNotenInLeistungsdaten[halbjahr.id] = (info == null) ? false : (info.anzahlNoten > 0);
-				}
-				daten.add(eintrag);
-			}
-		}
-
-		// Füge einen Eintrag ein, der für keinen Abiturjahrgang steht - also für
-		// allgemeine Informationen zu Abiturjahrgängen
-		final GostJahrgang eintrag = new GostJahrgang();
-		eintrag.abiturjahr = -1;
-		eintrag.jahrgang = null;
-		eintrag.bezeichnung = "Allgemeine Vorlagen";
-		eintrag.istAbgeschlossen = false;
-		daten.add(0, eintrag);
-		return daten;
+	public static List<GostJahrgang> getGostJahrgangsliste(final Schuljahresabschnitt abschnitt) throws ApiOperationException {
+		return GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangslisteService().getList(abschnitt);
 	}
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-		final List<GostJahrgang> daten = getGostJahrgangsliste(conn, this.schuljahresabschnitt);
+		final List<GostJahrgang> daten = getGostJahrgangsliste(this.schuljahresabschnitt);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
