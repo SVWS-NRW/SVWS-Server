@@ -60,10 +60,14 @@ public final class LehrerLehramtService {
 	 *
 	 * @param idLehrer   die ID des Lehrers
 	 * @return Liste der zugehörigen {@link LehrerLehramtEintrag}-Objekte, leer wenn keine vorhanden oder die ID null ist
+	 * @throws ApiOperationException mit {@code 404 NOT_FOUND} wenn kein Lehrer mit der ID existiert
 	 */
 	public List<LehrerLehramtEintrag> getByIdLehrer(final Long idLehrer) {
 		if (idLehrer == null) {
 			return Collections.emptyList();
+		}
+		if (!lehrerRepository.existsById(idLehrer)) {
+			throw new ApiOperationException(Response.Status.NOT_FOUND, "Kein Lehrer zur ID %d gefunden".formatted(idLehrer));
 		}
 		return mapListToApi(lehramtRepository.findByIdsLehrer(List.of(idLehrer)));
 	}

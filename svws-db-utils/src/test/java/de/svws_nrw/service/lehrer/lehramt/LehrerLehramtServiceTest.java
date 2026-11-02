@@ -160,8 +160,23 @@ class LehrerLehramtServiceTest {
 		}
 
 		@Test
+		@DisplayName("Wirft 404, wenn der Lehrer nicht existiert")
+		void getByIdLehrer_lehrerNichtVorhanden() {
+			when(lehrerRepository.existsById(ID_LEHRER)).thenReturn(false);
+
+			assertThatException()
+					.isThrownBy(() -> service.getByIdLehrer(ID_LEHRER))
+					.isInstanceOfSatisfying(ApiOperationException.class, e -> {
+						assertThat(e.getStatus()).isEqualTo(Response.Status.NOT_FOUND);
+						assertThat(e.getMessage()).contains("Kein Lehrer zur ID");
+					});
+			verify(lehramtRepository, never()).findByIdsLehrer(any());
+		}
+
+		@Test
 		@DisplayName("Gibt leere Liste zurück, wenn keine Lehrämter vorhanden sind")
 		void getByIdLehrer_leer() {
+			when(lehrerRepository.existsById(ID_LEHRER)).thenReturn(true);
 			when(lehramtRepository.findByIdsLehrer(List.of(ID_LEHRER))).thenReturn(List.of());
 
 			final var result = service.getByIdLehrer(ID_LEHRER);
@@ -172,6 +187,7 @@ class LehrerLehramtServiceTest {
 		@Test
 		@DisplayName("Gibt alle Lehrämter des Lehrers gemappt zurück")
 		void getByIdLehrer() {
+			when(lehrerRepository.existsById(ID_LEHRER)).thenReturn(true);
 			when(lehramtRepository.findByIdsLehrer(List.of(ID_LEHRER))).thenReturn(List.of(entity));
 			stubMapListToApi(List.of(entity), List.of(apiModel));
 
