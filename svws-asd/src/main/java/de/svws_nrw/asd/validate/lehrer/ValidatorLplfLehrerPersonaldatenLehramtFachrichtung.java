@@ -32,7 +32,7 @@ public final class ValidatorLplfLehrerPersonaldatenLehramtFachrichtung extends V
 
 		final @NotNull Supplier<@NotNull Integer> schuljahr = () ->  kontext.getSchuljahrBySchuljahresabschnitt(getNotNullSupplierLong(idSchuljahresabschnitt));
 
-		_validatoren.add(new ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(schuljahr, idFachrichtung, kontext));
+		_validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(schuljahr, idFachrichtung, kontext));
 
 	}
 

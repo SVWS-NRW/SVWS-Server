@@ -47,7 +47,7 @@ class TestValidatorIka00IntKatalogKonfessionenAsdKatalog {
 	@DisplayName("Tests für ValidatorIka00IntKatalogKonfessionenAsdKatalog")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
-	void testValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(final Long idKatalog, final boolean result) {
+	void testValidatorIka00IntKatalogKonfessionenAsdKatalog(final Long idKatalog, final boolean result) {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
