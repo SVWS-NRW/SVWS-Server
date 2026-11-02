@@ -212,25 +212,37 @@ public final class SchuelerStammdatenService {
 	/**
 	 * Markiert die Schüler mit den angegebenen IDs als gelöscht, ohne ihre Datensätze
 	 * physisch aus der Datenbank zu entfernen.
+	 * Für jede übergebene ID (mehrfach übergebene IDs werden nur einmal berücksichtigt) enthält die
+	 * Rückgabeliste genau einen Eintrag. Nicht gefundene IDs werden nicht verarbeitet, sondern mit einer
+	 * Fehlermeldung markiert; die übrigen IDs sind davon nicht betroffen.
 	 *
 	 * @param idsToDelete Liste der zu löschenden Schüler-IDs
 	 *
 	 * @return Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
 	 */
 	public List<SimpleOperationResponse> softDelete(final List<Long> idsToDelete) {
-		return TransactionSupport.transactional(() -> this.repository.findListByIds(idsToDelete).stream()
-				.map(entity -> {
-					entity.hatLoeschvermerk = true;
-					return SimpleOperationResponse.ofSuccess(entity.ID);
-				})
-				.sorted(Comparator.comparingLong(r -> r.id))
-				.toList()
-		);
+		return TransactionSupport.transactional(() -> {
+			final Map<Long, DTOSchueler> entitiesById = this.repository.findListByIds(idsToDelete).stream()
+					.collect(Collectors.toMap(e -> e.ID, e -> e, (a, b) -> a));
+			return idsToDelete.stream()
+					.distinct()
+					.map(id -> processSoftDelete(id, entitiesById.get(id)))
+					.sorted(Comparator.comparingLong(r -> r.id))
+					.toList();
+		});
+	}
+
+	private SimpleOperationResponse processSoftDelete(final long id, final DTOSchueler entity) {
+		if (entity == null) {
+			return SimpleOperationResponse.ofError(id, "Schueler mit ID %d wurde nicht gefunden.".formatted(id));
+		}
+		entity.hatLoeschvermerk = true;
+		return SimpleOperationResponse.ofSuccess(id);
 	}
 
 	/**
 	 * Löscht die Schüler mit den angegebenen IDs.
-	 * Nicht gefundene IDs werden stillschweigend ignoriert.
+	 * Nicht gefundene IDs werden nicht gelöscht, sondern mit einer Fehlermeldung markiert.
 	 * Jeder Eintrag in der Rückgabeliste enthält die ID und ob die Löschung erfolgreich war.
 	 *
 	 * @param idsToDelete Liste der zu löschenden Schüler-IDs

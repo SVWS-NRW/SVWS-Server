@@ -676,27 +676,55 @@ class SchuelerStammdatenServiceTest {
 	}
 
 	@Test
-	@DisplayName("softDelete - nicht gefundene ID wird ignoriert")
+	@DisplayName("softDelete - nicht gefundene ID wird als Fehler zurückgegeben")
 	void softDelete_nichtGefunden() {
 		when(repository.findListByIds(List.of(99L))).thenReturn(List.of());
 
 		final var result = service.softDelete(List.of(99L));
 
-		assertThat(result).isEmpty();
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst().id).isEqualTo(99L);
+		assertThat(result.getFirst().success).isFalse();
+		assertThat(result.getFirst().log).isNotEmpty();
+		assertThat(result.getFirst().log.getFirst()).isEqualTo("Schueler mit ID 99 wurde nicht gefunden.");
 		verify(repository, never()).delete(anyList());
 	}
 
 	@Test
-	@DisplayName("softDelete - teilweise gefundene IDs: nur gefundene Schüler werden zurückgegeben")
+	@DisplayName("softDelete - teilweise gefundene IDs: gefundene werden markiert, nicht gefundene als Fehler zurückgegeben")
 	void softDelete_teilweiseGefunden() {
 		when(repository.findListByIds(List.of(1L, 99L))).thenReturn(List.of(entity));
 
 		final var result = service.softDelete(List.of(1L, 99L));
 
 		assertThat(entity.hatLoeschvermerk).isTrue();
-		assertThat(result).hasSize(1);
-		assertThat(result.getFirst().id).isEqualTo(1L);
-		assertThat(result.getFirst().success).isTrue();
+		assertThat(result).hasSize(2);
+		assertThat(result.get(0).id).isEqualTo(1L);
+		assertThat(result.get(0).success).isTrue();
+		assertThat(result.get(1).id).isEqualTo(99L);
+		assertThat(result.get(1).success).isFalse();
+	}
+
+	@Test
+	@DisplayName("softDelete - leere ID-Liste liefert leere Antwort")
+	void softDelete_leereListe() {
+		when(repository.findListByIds(List.of())).thenReturn(List.of());
+
+		final var result = service.softDelete(List.of());
+
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	@DisplayName("softDelete - doppelte IDs liefern genau einen Eintrag je ID")
+	void softDelete_doppelteIds() {
+		when(repository.findListByIds(List.of(1L, 1L, 99L, 99L))).thenReturn(List.of(entity));
+
+		final var result = service.softDelete(List.of(1L, 1L, 99L, 99L));
+
+		assertThat(entity.hatLoeschvermerk).isTrue();
+		assertThat(result).extracting(r -> r.id).containsExactly(1L, 99L);
+		assertThat(result).extracting(r -> r.success).containsExactly(true, false);
 	}
 
 	@Test
