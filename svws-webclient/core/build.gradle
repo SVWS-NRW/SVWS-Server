@@ -20,7 +20,7 @@ clean.dependsOn cleanCore
 
 tasks.register('testCore', NpmRun) {
 	group = "svws"
-	dependsOn ':svws-webclient:core:assemble'
+	dependsOn rootProject.npmPrepare, ':svws-openapi:assembleTranspiled'
 	inputs.files file("$projectDir/src")
 	outputs.dir file("$projectDir/build/coverage")
 	args = ['test:coverage']

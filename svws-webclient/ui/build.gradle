@@ -22,6 +22,7 @@ task cleanUi(type: Delete) {
 clean.dependsOn cleanUi
 
 task testUi(type: NpmRun) {
+	dependsOn rootProject.npmPrepare
 	dependsOn ':svws-openapi:assembleTranspiled'
 	group = "testing"
 	inputs.files fileTree(dir: "$projectDir/src").matching { exclude "**/*.md" },
