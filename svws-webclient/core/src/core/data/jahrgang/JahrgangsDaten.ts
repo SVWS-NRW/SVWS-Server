@@ -74,9 +74,6 @@ export class JahrgangsDaten extends JavaObject {
 	public referenziertInAnderenTabellen: boolean | null = null;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
