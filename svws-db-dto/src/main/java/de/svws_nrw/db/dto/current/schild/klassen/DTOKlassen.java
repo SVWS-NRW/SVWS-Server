@@ -1,6 +1,7 @@
 package de.svws_nrw.db.dto.current.schild.klassen;
 
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 
 
@@ -15,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
+import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterSerializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDeserializer;
 
@@ -26,7 +29,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Klassen")
-@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "Ankreuzzeugnisse"})
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "Ankreuzzeugnisse", "istJva", "istReformpaedagogik"})
 public final class DTOKlassen {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -149,6 +152,18 @@ public final class DTOKlassen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ankreuzzeugnisse */
 	public static final String QUERY_LIST_BY_ANKREUZZEUGNISSE = "SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istJva */
+	public static final String QUERY_BY_ISTJVA = "SELECT e FROM DTOKlassen e WHERE e.istJva = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istJva */
+	public static final String QUERY_LIST_BY_ISTJVA = "SELECT e FROM DTOKlassen e WHERE e.istJva IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istReformpaedagogik */
+	public static final String QUERY_BY_ISTREFORMPAEDAGOGIK = "SELECT e FROM DTOKlassen e WHERE e.istReformpaedagogik = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istReformpaedagogik */
+	public static final String QUERY_LIST_BY_ISTREFORMPAEDAGOGIK = "SELECT e FROM DTOKlassen e WHERE e.istReformpaedagogik IN ?1";
+
 	/** ID der Klasse in der Klassen- Versetzuungstabelle */
 	@Id
 	@Column(name = "ID")
@@ -249,6 +264,22 @@ public final class DTOKlassen {
 	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Ankreuzzeugnisse;
 
+	/** Gibt an, ob die Klasse an einer JVA unterrichtet wird oder nicht */
+	@Column(name = "istJva")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean istJva;
+
+	/** Gibt an, ob in der Klasse reformpädagogisch unterrichtet wird oder nicht */
+	@Column(name = "istReformpaedagogik")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean istReformpaedagogik;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKlassen ohne eine Initialisierung der Attribute.
 	 */
@@ -261,14 +292,18 @@ public final class DTOKlassen {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Schuljahresabschnitts_ID   der Wert für das Attribut Schuljahresabschnitts_ID
 	 * @param Klasse   der Wert für das Attribut Klasse
+	 * @param istJva   der Wert für das Attribut istJva
+	 * @param istReformpaedagogik   der Wert für das Attribut istReformpaedagogik
 	 */
-	public DTOKlassen(final long ID, final long Schuljahresabschnitts_ID, final String Klasse) {
+	public DTOKlassen(final long ID, final long Schuljahresabschnitts_ID, final String Klasse, final Boolean istJva, final Boolean istReformpaedagogik) {
 		this.ID = ID;
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
 		if (Klasse == null) {
 			throw new NullPointerException("Klasse must not be null");
 		}
 		this.Klasse = Klasse;
+		this.istJva = istJva;
+		this.istReformpaedagogik = istReformpaedagogik;
 	}
 
 
@@ -303,7 +338,7 @@ public final class DTOKlassen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKlassen(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Bezeichnung=" + this.Bezeichnung + ", ASDKlasse=" + this.ASDKlasse + ", Klasse=" + this.Klasse + ", Jahrgang_ID=" + this.Jahrgang_ID + ", FKlasse=" + this.FKlasse + ", VKlasse=" + this.VKlasse + ", OrgFormKrz=" + this.OrgFormKrz + ", ASDSchulformNr=" + this.ASDSchulformNr + ", Fachklasse_ID=" + this.Fachklasse_ID + ", PruefOrdnung=" + this.PruefOrdnung + ", Sortierung=" + this.Sortierung + ", Klassenart=" + this.Klassenart + ", SommerSem=" + this.SommerSem + ", NotenGesperrt=" + this.NotenGesperrt + ", AdrMerkmal=" + this.AdrMerkmal + ", Ankreuzzeugnisse=" + this.Ankreuzzeugnisse + ")";
+		return "DTOKlassen(ID=" + this.ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Bezeichnung=" + this.Bezeichnung + ", ASDKlasse=" + this.ASDKlasse + ", Klasse=" + this.Klasse + ", Jahrgang_ID=" + this.Jahrgang_ID + ", FKlasse=" + this.FKlasse + ", VKlasse=" + this.VKlasse + ", OrgFormKrz=" + this.OrgFormKrz + ", ASDSchulformNr=" + this.ASDSchulformNr + ", Fachklasse_ID=" + this.Fachklasse_ID + ", PruefOrdnung=" + this.PruefOrdnung + ", Sortierung=" + this.Sortierung + ", Klassenart=" + this.Klassenart + ", SommerSem=" + this.SommerSem + ", NotenGesperrt=" + this.NotenGesperrt + ", AdrMerkmal=" + this.AdrMerkmal + ", Ankreuzzeugnisse=" + this.Ankreuzzeugnisse + ", istJva=" + this.istJva + ", istReformpaedagogik=" + this.istReformpaedagogik + ")";
 	}
 
 }

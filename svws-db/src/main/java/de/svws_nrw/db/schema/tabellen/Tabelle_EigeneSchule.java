@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.StringToIntegerConverter;
@@ -213,11 +214,11 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Gruppen8Bis1 */
 	public final SchemaTabelleSpalte col_Gruppen8Bis1 = add("Gruppen8Bis1", SchemaDatentypen.INT, false)
-			.setJavaComment("Schule hat Betreuung 8 bis 13");
+			.setJavaComment("DEPRECATED: Schule hat Betreuung 8 bis 13");
 
 	/** Die Definition der Tabellenspalte Gruppen13Plus */
 	public final SchemaTabelleSpalte col_Gruppen13Plus = add("Gruppen13Plus", SchemaDatentypen.INT, false)
-			.setJavaComment("Gruppen in der 13Plus-Betreuung");
+			.setJavaComment("DEPRECATED: Gruppen in der 13Plus-Betreuung");
 
 	/** Die Definition der Tabellenspalte InternatsplaetzeM */
 	public final SchemaTabelleSpalte col_InternatsplaetzeM = add("InternatsplaetzeM", SchemaDatentypen.INT, false)
@@ -310,6 +311,73 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_SchuljahrAbschnitt = add("SchuljahrAbschnitt", SchemaDatentypen.INT, false)
 			.setVeraltet(SchemaRevisionen.REV_1)
 			.setJavaComment("Aktueller Abschnitt der Datenbank");
+
+	/** Die Definition der Tabellenspalte idGebundenerGanztag */
+	public final SchemaTabelleSpalte col_idGebundenerGanztag = add("idGebundenerGanztag", SchemaDatentypen.BIGINT, false)
+			.setNotNull()
+			.setDefault("1")
+			.setJavaComment("Die ID der Form des gebundenen Ganztags (siehe FormGebundenerGanztag.java)")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte idFormOffenerGanztag */
+	public final SchemaTabelleSpalte col_idFormOffenerGanztag = add("idFormOffenerGanztag", SchemaDatentypen.BIGINT, false)
+			.setNotNull()
+			.setDefault("3")
+			.setJavaComment("Die ID der Form des offenen Ganztags (siehe FormOffenerGanztag.java)")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte istOffenerGanztag */
+	public final SchemaTabelleSpalte col_istOffenerGanztag = add("istOffenerGanztag", SchemaDatentypen.INT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob ein offener Ganztag angeboten wird oder nicht")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte idBilingualerUnterricht */
+	public final SchemaTabelleSpalte col_idBilingualerUnterricht = add("idBilingualerUnterricht", SchemaDatentypen.BIGINT, false)
+			.setNotNull()
+			.setDefault("1")
+			.setJavaComment("Die ID der Form, wie bilingualer Unterricht an der Schule erteilt wird")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte hatRealschuleHauptschulbildungsgang */
+	public final SchemaTabelleSpalte col_hatRealschuleHauptschulbildungsgang = add("hatRealschuleHauptschulbildungsgang", SchemaDatentypen.INT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob eine Realschule einen Hauptschulbildungsgang anbietet oder nicht")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte hatInternationaleKontakte */
+	public final SchemaTabelleSpalte col_hatInternationaleKontakte = add("hatInternationaleKontakte", SchemaDatentypen.INT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob die Schule internationale Kontakte pflegt oder nicht")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte hatKonfessionelleKooperation */
+	public final SchemaTabelleSpalte col_hatKonfessionelleKooperation = add("hatKonfessionelleKooperation", SchemaDatentypen.INT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob an der Schule eine konfessionelle Kooperation vorhanden ist oder nicht")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte idTalentschule */
+	public final SchemaTabelleSpalte col_idTalentschule = add("idTalentschule", SchemaDatentypen.BIGINT, false)
+			.setNotNull()
+			.setDefault("1")
+			.setJavaComment("Gibt an, ob es sich um eine Talentschule handelt oder nicht")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte idReformpaedagogik */
+	public final SchemaTabelleSpalte col_idReformpaedagogik = add("idReformpaedagogik", SchemaDatentypen.BIGINT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setJavaComment("Gibt die Art der Reformpädagogik an, nach der an der Schule unterrichtet wird")
+			.setRevision(SchemaRevisionen.REV_81);
 
 
 	/** Die Definition des Fremdschlüssels EigeneSchule_Schuljahreabschnitt_FK */

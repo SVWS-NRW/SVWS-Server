@@ -34,7 +34,7 @@ class SchuelerLernabschnittRepositoryImplTest {
 	private final DTOSchuelerLernabschnittsdaten testSchuelerLernabschnitt1 = getTestLernabschnitt1();
 
 	private static DTOSchuelerLernabschnittsdaten getTestLernabschnitt1() {
-		final var testLernabschnitt = new DTOSchuelerLernabschnittsdaten(10L, 100L, 42L, false, false);
+		final var testLernabschnitt = new DTOSchuelerLernabschnittsdaten(10L, 100L, 42L, false, false, 1L);
 		testLernabschnitt.Klassen_ID = 1L;
 		testLernabschnitt.WechselNr = 0;
 		return testLernabschnitt;
@@ -43,7 +43,7 @@ class SchuelerLernabschnittRepositoryImplTest {
 	private final DTOSchuelerLernabschnittsdaten testSchuelerLernabschnitt2 = getTestLernabschnitt2();
 
 	private static DTOSchuelerLernabschnittsdaten getTestLernabschnitt2() {
-		final var testLernabschnitt = new DTOSchuelerLernabschnittsdaten(11L, 101L, 42L, false, false);
+		final var testLernabschnitt = new DTOSchuelerLernabschnittsdaten(11L, 101L, 42L, false, false, 1L);
 		testLernabschnitt.Klassen_ID = 1L;
 		testLernabschnitt.WechselNr = 0;
 		return testLernabschnitt;
@@ -52,7 +52,7 @@ class SchuelerLernabschnittRepositoryImplTest {
 	private final DTOSchuelerLernabschnittsdaten testSchuelerLernabschnitt3 = getTestLernabschnitt3();
 
 	private static DTOSchuelerLernabschnittsdaten getTestLernabschnitt3() {
-		final var testLernabschnitt = new DTOSchuelerLernabschnittsdaten(12L, 102L, 42L, false, false);
+		final var testLernabschnitt = new DTOSchuelerLernabschnittsdaten(12L, 102L, 42L, false, false, 1L);
 		testLernabschnitt.Klassen_ID = 2L;
 		testLernabschnitt.WechselNr = 0;
 		return testLernabschnitt;
@@ -149,7 +149,7 @@ class SchuelerLernabschnittRepositoryImplTest {
 	@Test
 	@DisplayName("Test: Prüfe, ob die ID korrekt gesetzt wird.")
 	void testCreate() {
-		final DTOSchuelerLernabschnittsdaten neu = new DTOSchuelerLernabschnittsdaten(10L, 100L, 42L, false, false);
+		final DTOSchuelerLernabschnittsdaten neu = new DTOSchuelerLernabschnittsdaten(10L, 100L, 42L, false, false, 1L);
 		final long neueId = 999L;
 
 		when(conn.transactionGetNextID(DTOSchuelerLernabschnittsdaten.class)).thenReturn(neueId);
@@ -214,7 +214,7 @@ class SchuelerLernabschnittRepositoryImplTest {
 	void testGetMapAllLernabschnittIDsBySchuelerIDs() {
 		final List<Long> idsSchueler = Arrays.asList(100L, 101L);
 		final String query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1";
-		final DTOSchuelerLernabschnittsdaten d4 = new DTOSchuelerLernabschnittsdaten(13L, 100L, 43L, false, false);
+		final DTOSchuelerLernabschnittsdaten d4 = new DTOSchuelerLernabschnittsdaten(13L, 100L, 43L, false, false, 1L);
 		d4.WechselNr = 1;
 
 		when(conn.queryList(query, DTOSchuelerLernabschnittsdaten.class, idsSchueler))
@@ -249,7 +249,7 @@ class SchuelerLernabschnittRepositoryImplTest {
 	void testFindListBySchuelerAndSchuljahresabschnitt() {
 		final long idSchueler = testSchuelerLernabschnitt1.Schueler_ID;
 		final long idSchuljahresabschnitt = testSchuelerLernabschnitt1.Schuljahresabschnitts_ID;
-		final var lernabschnittVorWechsel = new DTOSchuelerLernabschnittsdaten(9L, idSchueler, idSchuljahresabschnitt, false, false);
+		final var lernabschnittVorWechsel = new DTOSchuelerLernabschnittsdaten(9L, idSchueler, idSchuljahresabschnitt, false, false, 1L);
 		lernabschnittVorWechsel.WechselNr = 1;
 		final String query =
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 ORDER BY e.ID";

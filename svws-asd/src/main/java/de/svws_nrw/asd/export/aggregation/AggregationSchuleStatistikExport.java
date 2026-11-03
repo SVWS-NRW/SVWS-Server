@@ -147,7 +147,7 @@ public class AggregationSchuleStatistikExport {
 		statistikExport.schuleStatistikExport.webAdresse = statistikGesamt.schule.webAdresse;
 		statistikExport.schuleStatistikExport.zeitmodel = statistikGesamt.schule.dauerUnterrichtseinheit != 45 ? 1 : 45;
 		//TODO: Wo ist der zugehörige Katalog? Einbinden.
-		statistikExport.schuleStatistikExport.gebundenerGanztag = statistikGesamt.schule.idGebundenerGanztag; // ?Katalog
+		statistikExport.schuleStatistikExport.gebundenerGanztag = (int) statistikGesamt.schule.idGebundenerGanztag; // ?Katalog
 		statistikExport.schuleStatistikExport.istOffenerGanztag = statistikGesamt.schule.istOffenerGanztag;
 		statistikExport.schuleStatistikExport.formOffenerGanztag =
 				FormOffenerGanztag.data().getNameByIDOrNull(statistikGesamt.schule.idFormOffenerGanztag);

@@ -103,6 +103,10 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "Die ID der Klassenart in Bezug auf den Schüler (z.B. Regelklasse)", example = "7000")
 	public Long idKlassenart = 7000L;
 
+	/** Die ID der Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung (siehe Core-Type Betreuungsart) */
+	@Schema(description = "Die ID der Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung", example = "1")
+	public long idBetreuung = 1;
+
 	/** Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt */
 	@Schema(description = "die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt", example = "0")
 	public int fehlstundenGesamt = 0;

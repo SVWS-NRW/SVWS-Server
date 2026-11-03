@@ -16,10 +16,16 @@ import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.schule.FormBilingualerUnterricht;
+import de.svws_nrw.asd.types.schule.FormGebundenerGanztag;
+import de.svws_nrw.asd.types.schule.FormOffenerGanztag;
 import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
+import de.svws_nrw.asd.types.schule.Reformpaedagogik;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Talentschule;
+import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
 import de.svws_nrw.core.types.schule.PersonTyp;
@@ -110,6 +116,16 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt4);
 		}
 		daten.dauerUnterrichtseinheit = (schule.DauerUnterrichtseinheit == null) ? 45 : schule.DauerUnterrichtseinheit;
+		daten.idGebundenerGanztag = schule.idGebundenerGanztag;
+		daten.istOffenerGanztag = Boolean.TRUE.equals(schule.istOffenerGanztag);
+		daten.idFormOffenerGanztag = schule.idFormOffenerGanztag;
+		daten.istJva = Boolean.TRUE.equals(schule.JVAZeigen);
+		daten.idBilingualerUnterricht = schule.idBilingualerUnterricht;
+		daten.hatRealschuleHauptschulbildungsgang = Boolean.TRUE.equals(schule.hatRealschuleHauptschulbildungsgang);
+		daten.hatInternationaleKontakte = Boolean.TRUE.equals(schule.hatInternationaleKontakte);
+		daten.hatKonfessionelleKooperation = Boolean.TRUE.equals(schule.hatKonfessionelleKooperation);
+		daten.idTalentschule = schule.idTalentschule;
+		daten.idReformpaedagogik = schule.idReformpaedagogik;
 		return daten;
 	}
 
@@ -204,6 +220,27 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	}
 
 
+	/**
+	 * Konvertiert den übergebenen Wert in eine ID und prüft, ob diese in dem übergebenen Katalog (Core-Type) vorhanden ist.
+	 *
+	 * @param value       der zu konvertierende Wert
+	 * @param katalog     der Manager des Katalogs, gegen den geprüft wird
+	 * @param attribut    der Name des Attributes (für die Fehlermeldung)
+	 *
+	 * @return die ID
+	 *
+	 * @throws ApiOperationException   falls der Wert keine gültige ID des Katalogs ist
+	 */
+	private static long convertToKatalogId(final Object value, final CoreTypeDataManager<?, ?> katalog, final String attribut)
+			throws ApiOperationException {
+		final long idKatalog = JSONMapper.convertToLong(value, false, attribut);
+		if (katalog.getWertByIDOrNull(idKatalog) == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Attribut %s: Die ID %d ist im zugehörigen Katalog nicht vorhanden.".formatted(attribut, idKatalog));
+		}
+		return idKatalog;
+	}
+
+
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);
@@ -280,6 +317,16 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 					}
 
 					case "dauerUnterrichtseinheit" -> schule.DauerUnterrichtseinheit = JSONMapper.convertToInteger(value, false); // TODO Dauer in Minuten prüfen, evtl. einschränken
+					case "idGebundenerGanztag" -> schule.idGebundenerGanztag = convertToKatalogId(value, FormGebundenerGanztag.data(), key);
+					case "istOffenerGanztag" -> schule.istOffenerGanztag = JSONMapper.convertToBoolean(value, false, key);
+					case "idFormOffenerGanztag" -> schule.idFormOffenerGanztag = convertToKatalogId(value, FormOffenerGanztag.data(), key);
+					case "istJva" -> schule.JVAZeigen = JSONMapper.convertToBoolean(value, false, key);
+					case "idBilingualerUnterricht" -> schule.idBilingualerUnterricht = convertToKatalogId(value, FormBilingualerUnterricht.data(), key);
+					case "hatRealschuleHauptschulbildungsgang" -> schule.hatRealschuleHauptschulbildungsgang = JSONMapper.convertToBoolean(value, false, key);
+					case "hatInternationaleKontakte" -> schule.hatInternationaleKontakte = JSONMapper.convertToBoolean(value, false, key);
+					case "hatKonfessionelleKooperation" -> schule.hatKonfessionelleKooperation = JSONMapper.convertToBoolean(value, false, key);
+					case "idTalentschule" -> schule.idTalentschule = convertToKatalogId(value, Talentschule.data(), key);
+					case "idReformpaedagogik" -> schule.idReformpaedagogik = convertToKatalogId(value, Reformpaedagogik.data(), key);
 					case "abschnitte" -> throw new ApiOperationException(Status.BAD_REQUEST);
 
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);
@@ -379,7 +426,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionPersist(schuljahresabschnitt);
 		conn.transactionFlush();
 		// Initialisiere die Daten in der Tabelle EigeneSchule
-		eigeneSchule = new DTOEigeneSchule(1L);
+		eigeneSchule = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
 		final Schulform schulform = switch (schulEintrag.SF) {
 			case "81" -> Schulform.S;
 			default -> Schulform.data().getWertBySchluessel(schulEintrag.SF);

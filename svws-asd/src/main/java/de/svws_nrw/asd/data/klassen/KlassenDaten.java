@@ -117,4 +117,12 @@ public class KlassenDaten {
 	@Schema(description = "gibt am WBK an, ob die Klassen im Sommersemester angefangen hat", example = "false")
 	public boolean beginnSommersemester = false;
 
+	/** Gibt an, ob die Klasse an einer Justizvollzugsanstalt (JVA) unterrichtet wird */
+	@Schema(description = "gibt an, ob die Klasse an einer JVA unterrichtet wird", example = "false")
+	public boolean istJva = false;
+
+	/** Gibt an, ob in der Klasse reformpädagogisch unterrichtet wird */
+	@Schema(description = "gibt an, ob in der Klasse reformpädagogisch unterrichtet wird", example = "false")
+	public boolean istReformpaedagogik = false;
+
 }

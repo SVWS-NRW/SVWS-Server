@@ -222,7 +222,7 @@ class DataKlassenlisteTest {
 
 	@Test
 	void getListBySchuljahresabschnittIDAsResponseWithASDKlasseKuerzerAlsDreiZeichen() {
-		final DTOKlassen klasse = new DTOKlassen(1L, 1L, "05");
+		final DTOKlassen klasse = new DTOKlassen(1L, 1L, "05", false, false);
 		klasse.Jahrgang_ID = 10L;
 		klasse.Bezeichnung = "Klasse ohne Parallelitaet";
 		klasse.ASDKlasse = "05"; // kürzer als 3 Zeichen → parallelitaet = null
@@ -247,7 +247,7 @@ class DataKlassenlisteTest {
 
 	@Test
 	void getListBySchuljahresabschnittIDAsResponseWithASDKlasseNull() {
-		final DTOKlassen klasse = new DTOKlassen(1L, 1L, "05");
+		final DTOKlassen klasse = new DTOKlassen(1L, 1L, "05", false, false);
 		klasse.Jahrgang_ID = 10L;
 		klasse.Bezeichnung = "Klasse mit null ASDKlasse";
 		klasse.ASDKlasse = null; // null → parallelitaet = null
@@ -273,7 +273,7 @@ class DataKlassenlisteTest {
 
 
 	private static DTOKlassen createDTOKlasse(final long id, final String kuerzel) {
-		final DTOKlassen klasse = new DTOKlassen(id, 1L, kuerzel);
+		final DTOKlassen klasse = new DTOKlassen(id, 1L, kuerzel, false, false);
 		klasse.Jahrgang_ID = 10L;
 		klasse.Bezeichnung = "Dies ist ein Mock der Klasse %s".formatted(kuerzel);
 		klasse.ASDKlasse = kuerzel;

@@ -663,12 +663,12 @@ public final class MigrationDTOEigeneSchule {
 	@JsonProperty
 	public Integer DauerUnterrichtseinheit;
 
-	/** Schule hat Betreuung 8 bis 13 */
+	/** DEPRECATED: Schule hat Betreuung 8 bis 13 */
 	@Column(name = "Gruppen8Bis1")
 	@JsonProperty
 	public Integer Gruppen8Bis1;
 
-	/** Gruppen in der 13Plus-Betreuung */
+	/** DEPRECATED: Gruppen in der 13Plus-Betreuung */
 	@Column(name = "Gruppen13Plus")
 	@JsonProperty
 	public Integer Gruppen13Plus;

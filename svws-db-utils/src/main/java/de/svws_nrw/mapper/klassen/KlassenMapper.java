@@ -76,6 +76,8 @@ public interface KlassenMapper {
 	@Mapping(source = "Ankreuzzeugnisse",         target = "verwendungAnkreuzkompetenzen")
 	@Mapping(source = "Fachklasse_ID",            target = "idFachklasse")
 	@Mapping(source = "SommerSem",                target = "beginnSommersemester")
+	@Mapping(source = "istJva",                   target = "istJva")
+	@Mapping(source = "istReformpaedagogik",      target = "istReformpaedagogik")
 	KlassenDaten toKlassenDaten(DTOKlassen dto, @Context KlassenMappingContext ctx);
 
 	/**

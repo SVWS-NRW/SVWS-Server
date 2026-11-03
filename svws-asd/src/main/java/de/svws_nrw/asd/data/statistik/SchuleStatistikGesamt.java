@@ -85,7 +85,7 @@ public class SchuleStatistikGesamt {
 
 	/** Gebundener Ganztag */
 	@Schema(description = "Gebundener Ganztag", example = "1")
-	public int idGebundenerGanztag;
+	public long idGebundenerGanztag;
 
 	/** Offener Ganztag */
 	@Schema(description = "Offener Ganztag", example = "false")

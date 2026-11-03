@@ -87,7 +87,7 @@ class DataSchuelerKAoADatenTest {
 		schuljahresabschnitt.schuljahr = 2024;
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false, 1L);
 		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L)).thenReturn(lernabschnittsdaten);
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
@@ -103,7 +103,7 @@ class DataSchuelerKAoADatenTest {
 		schuljahresabschnitt.schuljahr = 2024;
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false, 1L);
 		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L)).thenReturn(lernabschnittsdaten);
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
@@ -168,7 +168,7 @@ class DataSchuelerKAoADatenTest {
 	@Test
 	@DisplayName("map | erfolg")
 	void map() throws ApiOperationException {
-		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true);
+		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true, 1L);
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 456L)).thenReturn(lernabschnitt);
 		final var schuljahresabschnitt = new Schuljahresabschnitt();
 		schuljahresabschnitt.schuljahr = 2024;
@@ -203,7 +203,7 @@ class DataSchuelerKAoADatenTest {
 	@Test
 	@DisplayName("map | field null")
 	void mapFieldsNull() throws ApiOperationException {
-		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true);
+		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true, 1L);
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 456L)).thenReturn(lernabschnitt);
 		final var schuljahresabschnitt = new Schuljahresabschnitt();
 		schuljahresabschnitt.schuljahr = 2024;
@@ -237,7 +237,7 @@ class DataSchuelerKAoADatenTest {
 	@Test
 	@DisplayName("getAll")
 	void getAll() throws ApiOperationException {
-		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true);
+		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true, 1L);
 		final var dto = new DTOSchuelerKAoADaten(1L, 456L, 3L);
 		dto.idMerkmal = 4L;
 		dto.idZusatzmerkmal = 5L;
@@ -280,7 +280,7 @@ class DataSchuelerKAoADatenTest {
 	@MethodSource("provideMappingAttributes")
 	void mapAttributeTest(final String key, final Object value) {
 		final var expectedDTO = new DTOSchuelerKAoADaten(0, 7L, 0);
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 2L, false, false);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 2L, false, false, 1L);
 		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 2L))
 				.thenReturn(List.of(lernabschnittsdaten));
@@ -335,7 +335,7 @@ class DataSchuelerKAoADatenTest {
 		initAttributes.put(MERKMAL, 51L);
 		initAttributes.put(ZUSATZMERKMAL, 68);
 		initAttributes.put(BEMERKUNG, "schule ist toll!");
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false, 1L);
 		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
 				.thenReturn(List.of(lernabschnittsdaten));
@@ -359,7 +359,7 @@ class DataSchuelerKAoADatenTest {
 		initAttributes.put(MERKMAL, 51L);
 		initAttributes.put(ZUSATZMERKMAL, 68);
 		initAttributes.put(BEMERKUNG, "schule ist toll!");
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false, 1L);
 		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
 				.thenReturn(lernabschnittsdaten);
@@ -385,7 +385,7 @@ class DataSchuelerKAoADatenTest {
 		initAttributes.put(BEMERKUNG, "schule ist toll!");
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenThrow(DeveloperNotificationException.class);
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false, 1L);
 		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L)).thenReturn(lernabschnittsdaten);
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
@@ -402,7 +402,7 @@ class DataSchuelerKAoADatenTest {
 	@DisplayName("validateTests")
 	@MethodSource("provideValidateTestsObjects")
 	void validateTests(final Map<String, Object> initAttributes, final String errorMessage, final Response.Status errorCode) {
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false, 1L);
 		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
 				.thenReturn(lernabschnittsdaten);

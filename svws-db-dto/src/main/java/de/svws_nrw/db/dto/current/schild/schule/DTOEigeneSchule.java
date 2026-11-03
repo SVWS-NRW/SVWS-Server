@@ -1,6 +1,7 @@
 package de.svws_nrw.db.dto.current.schild.schule;
 
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.StringToIntegerConverter;
@@ -17,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
+import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterSerializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDeserializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterSerializer;
@@ -32,7 +35,7 @@ import de.svws_nrw.csv.converter.current.StringToIntegerConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule")
-@JsonPropertyOrder({"ID", "SchulformNr", "SchulformKuerzel", "SchulformBez", "SchultraegerArt", "SchultraegerNr", "SchulNr", "Bezeichnung1", "Bezeichnung2", "Bezeichnung3", "Strassenname", "HausNr", "HausNrZusatz", "PLZ", "Ort", "Telefon", "Fax", "Email", "Ganztags", "Schuljahresabschnitts_ID", "AnzahlAbschnitte", "AbschnittBez", "BezAbschnitt1", "BezAbschnitt2", "BezAbschnitt3", "BezAbschnitt4", "Fremdsprachen", "JVAZeigen", "RefPaedagogikZeigen", "AnzJGS_Jahr", "IstHauptsitz", "NotenGesperrt", "ZurueckgestelltAnzahl", "ZurueckgestelltWeibl", "ZurueckgestelltAuslaender", "ZurueckgestelltAuslaenderWeibl", "ZurueckgestelltAussiedler", "ZurueckgestelltAussiedlerWeibl", "TeamTeaching", "AbiGruppenprozess", "DauerUnterrichtseinheit", "Gruppen8Bis1", "Gruppen13Plus", "InternatsplaetzeM", "InternatsplaetzeW", "InternatsplaetzeNeutral", "WebAdresse", "Land"})
+@JsonPropertyOrder({"ID", "SchulformNr", "SchulformKuerzel", "SchulformBez", "SchultraegerArt", "SchultraegerNr", "SchulNr", "Bezeichnung1", "Bezeichnung2", "Bezeichnung3", "Strassenname", "HausNr", "HausNrZusatz", "PLZ", "Ort", "Telefon", "Fax", "Email", "Ganztags", "Schuljahresabschnitts_ID", "AnzahlAbschnitte", "AbschnittBez", "BezAbschnitt1", "BezAbschnitt2", "BezAbschnitt3", "BezAbschnitt4", "Fremdsprachen", "JVAZeigen", "RefPaedagogikZeigen", "AnzJGS_Jahr", "IstHauptsitz", "NotenGesperrt", "ZurueckgestelltAnzahl", "ZurueckgestelltWeibl", "ZurueckgestelltAuslaender", "ZurueckgestelltAuslaenderWeibl", "ZurueckgestelltAussiedler", "ZurueckgestelltAussiedlerWeibl", "TeamTeaching", "AbiGruppenprozess", "DauerUnterrichtseinheit", "Gruppen8Bis1", "Gruppen13Plus", "InternatsplaetzeM", "InternatsplaetzeW", "InternatsplaetzeNeutral", "WebAdresse", "Land", "idGebundenerGanztag", "idFormOffenerGanztag", "istOffenerGanztag", "idBilingualerUnterricht", "hatRealschuleHauptschulbildungsgang", "hatInternationaleKontakte", "hatKonfessionelleKooperation", "idTalentschule", "idReformpaedagogik"})
 public final class DTOEigeneSchule {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -335,6 +338,60 @@ public final class DTOEigeneSchule {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Land */
 	public static final String QUERY_LIST_BY_LAND = "SELECT e FROM DTOEigeneSchule e WHERE e.Land IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idGebundenerGanztag */
+	public static final String QUERY_BY_IDGEBUNDENERGANZTAG = "SELECT e FROM DTOEigeneSchule e WHERE e.idGebundenerGanztag = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idGebundenerGanztag */
+	public static final String QUERY_LIST_BY_IDGEBUNDENERGANZTAG = "SELECT e FROM DTOEigeneSchule e WHERE e.idGebundenerGanztag IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idFormOffenerGanztag */
+	public static final String QUERY_BY_IDFORMOFFENERGANZTAG = "SELECT e FROM DTOEigeneSchule e WHERE e.idFormOffenerGanztag = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idFormOffenerGanztag */
+	public static final String QUERY_LIST_BY_IDFORMOFFENERGANZTAG = "SELECT e FROM DTOEigeneSchule e WHERE e.idFormOffenerGanztag IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istOffenerGanztag */
+	public static final String QUERY_BY_ISTOFFENERGANZTAG = "SELECT e FROM DTOEigeneSchule e WHERE e.istOffenerGanztag = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istOffenerGanztag */
+	public static final String QUERY_LIST_BY_ISTOFFENERGANZTAG = "SELECT e FROM DTOEigeneSchule e WHERE e.istOffenerGanztag IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idBilingualerUnterricht */
+	public static final String QUERY_BY_IDBILINGUALERUNTERRICHT = "SELECT e FROM DTOEigeneSchule e WHERE e.idBilingualerUnterricht = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idBilingualerUnterricht */
+	public static final String QUERY_LIST_BY_IDBILINGUALERUNTERRICHT = "SELECT e FROM DTOEigeneSchule e WHERE e.idBilingualerUnterricht IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes hatRealschuleHauptschulbildungsgang */
+	public static final String QUERY_BY_HATREALSCHULEHAUPTSCHULBILDUNGSGANG = "SELECT e FROM DTOEigeneSchule e WHERE e.hatRealschuleHauptschulbildungsgang = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes hatRealschuleHauptschulbildungsgang */
+	public static final String QUERY_LIST_BY_HATREALSCHULEHAUPTSCHULBILDUNGSGANG = "SELECT e FROM DTOEigeneSchule e WHERE e.hatRealschuleHauptschulbildungsgang IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes hatInternationaleKontakte */
+	public static final String QUERY_BY_HATINTERNATIONALEKONTAKTE = "SELECT e FROM DTOEigeneSchule e WHERE e.hatInternationaleKontakte = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes hatInternationaleKontakte */
+	public static final String QUERY_LIST_BY_HATINTERNATIONALEKONTAKTE = "SELECT e FROM DTOEigeneSchule e WHERE e.hatInternationaleKontakte IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes hatKonfessionelleKooperation */
+	public static final String QUERY_BY_HATKONFESSIONELLEKOOPERATION = "SELECT e FROM DTOEigeneSchule e WHERE e.hatKonfessionelleKooperation = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes hatKonfessionelleKooperation */
+	public static final String QUERY_LIST_BY_HATKONFESSIONELLEKOOPERATION = "SELECT e FROM DTOEigeneSchule e WHERE e.hatKonfessionelleKooperation IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idTalentschule */
+	public static final String QUERY_BY_IDTALENTSCHULE = "SELECT e FROM DTOEigeneSchule e WHERE e.idTalentschule = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idTalentschule */
+	public static final String QUERY_LIST_BY_IDTALENTSCHULE = "SELECT e FROM DTOEigeneSchule e WHERE e.idTalentschule IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idReformpaedagogik */
+	public static final String QUERY_BY_IDREFORMPAEDAGOGIK = "SELECT e FROM DTOEigeneSchule e WHERE e.idReformpaedagogik = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idReformpaedagogik */
+	public static final String QUERY_LIST_BY_IDREFORMPAEDAGOGIK = "SELECT e FROM DTOEigeneSchule e WHERE e.idReformpaedagogik IN ?1";
+
 	/** ID des Datensatzes der eigenen Schule */
 	@Id
 	@Column(name = "ID")
@@ -568,12 +625,12 @@ public final class DTOEigeneSchule {
 	@JsonProperty
 	public Integer DauerUnterrichtseinheit;
 
-	/** Schule hat Betreuung 8 bis 13 */
+	/** DEPRECATED: Schule hat Betreuung 8 bis 13 */
 	@Column(name = "Gruppen8Bis1")
 	@JsonProperty
 	public Integer Gruppen8Bis1;
 
-	/** Gruppen in der 13Plus-Betreuung */
+	/** DEPRECATED: Gruppen in der 13Plus-Betreuung */
 	@Column(name = "Gruppen13Plus")
 	@JsonProperty
 	public Integer Gruppen13Plus;
@@ -603,6 +660,63 @@ public final class DTOEigeneSchule {
 	@JsonProperty
 	public String Land;
 
+	/** Die ID der Form des gebundenen Ganztags (siehe FormGebundenerGanztag.java) */
+	@Column(name = "idGebundenerGanztag")
+	@JsonProperty
+	public long idGebundenerGanztag;
+
+	/** Die ID der Form des offenen Ganztags (siehe FormOffenerGanztag.java) */
+	@Column(name = "idFormOffenerGanztag")
+	@JsonProperty
+	public long idFormOffenerGanztag;
+
+	/** Gibt an, ob ein offener Ganztag angeboten wird oder nicht */
+	@Column(name = "istOffenerGanztag")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean istOffenerGanztag;
+
+	/** Die ID der Form, wie bilingualer Unterricht an der Schule erteilt wird */
+	@Column(name = "idBilingualerUnterricht")
+	@JsonProperty
+	public long idBilingualerUnterricht;
+
+	/** Gibt an, ob eine Realschule einen Hauptschulbildungsgang anbietet oder nicht */
+	@Column(name = "hatRealschuleHauptschulbildungsgang")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean hatRealschuleHauptschulbildungsgang;
+
+	/** Gibt an, ob die Schule internationale Kontakte pflegt oder nicht */
+	@Column(name = "hatInternationaleKontakte")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean hatInternationaleKontakte;
+
+	/** Gibt an, ob an der Schule eine konfessionelle Kooperation vorhanden ist oder nicht */
+	@Column(name = "hatKonfessionelleKooperation")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean hatKonfessionelleKooperation;
+
+	/** Gibt an, ob es sich um eine Talentschule handelt oder nicht */
+	@Column(name = "idTalentschule")
+	@JsonProperty
+	public long idTalentschule;
+
+	/** Gibt die Art der Reformpädagogik an, nach der an der Schule unterrichtet wird */
+	@Column(name = "idReformpaedagogik")
+	@JsonProperty
+	public long idReformpaedagogik;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOEigeneSchule ohne eine Initialisierung der Attribute.
 	 */
@@ -613,9 +727,27 @@ public final class DTOEigeneSchule {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOEigeneSchule ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
+	 * @param idGebundenerGanztag   der Wert für das Attribut idGebundenerGanztag
+	 * @param idFormOffenerGanztag   der Wert für das Attribut idFormOffenerGanztag
+	 * @param istOffenerGanztag   der Wert für das Attribut istOffenerGanztag
+	 * @param idBilingualerUnterricht   der Wert für das Attribut idBilingualerUnterricht
+	 * @param hatRealschuleHauptschulbildungsgang   der Wert für das Attribut hatRealschuleHauptschulbildungsgang
+	 * @param hatInternationaleKontakte   der Wert für das Attribut hatInternationaleKontakte
+	 * @param hatKonfessionelleKooperation   der Wert für das Attribut hatKonfessionelleKooperation
+	 * @param idTalentschule   der Wert für das Attribut idTalentschule
+	 * @param idReformpaedagogik   der Wert für das Attribut idReformpaedagogik
 	 */
-	public DTOEigeneSchule(final long ID) {
+	public DTOEigeneSchule(final long ID, final long idGebundenerGanztag, final long idFormOffenerGanztag, final Boolean istOffenerGanztag, final long idBilingualerUnterricht, final Boolean hatRealschuleHauptschulbildungsgang, final Boolean hatInternationaleKontakte, final Boolean hatKonfessionelleKooperation, final long idTalentschule, final long idReformpaedagogik) {
 		this.ID = ID;
+		this.idGebundenerGanztag = idGebundenerGanztag;
+		this.idFormOffenerGanztag = idFormOffenerGanztag;
+		this.istOffenerGanztag = istOffenerGanztag;
+		this.idBilingualerUnterricht = idBilingualerUnterricht;
+		this.hatRealschuleHauptschulbildungsgang = hatRealschuleHauptschulbildungsgang;
+		this.hatInternationaleKontakte = hatInternationaleKontakte;
+		this.hatKonfessionelleKooperation = hatKonfessionelleKooperation;
+		this.idTalentschule = idTalentschule;
+		this.idReformpaedagogik = idReformpaedagogik;
 	}
 
 
@@ -650,7 +782,7 @@ public final class DTOEigeneSchule {
 	 */
 	@Override
 	public String toString() {
-		return "DTOEigeneSchule(ID=" + this.ID + ", SchulformNr=" + this.SchulformNr + ", SchulformKuerzel=" + this.SchulformKuerzel + ", SchulformBez=" + this.SchulformBez + ", SchultraegerArt=" + this.SchultraegerArt + ", SchultraegerNr=" + this.SchultraegerNr + ", SchulNr=" + this.SchulNr + ", Bezeichnung1=" + this.Bezeichnung1 + ", Bezeichnung2=" + this.Bezeichnung2 + ", Bezeichnung3=" + this.Bezeichnung3 + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", PLZ=" + this.PLZ + ", Ort=" + this.Ort + ", Telefon=" + this.Telefon + ", Fax=" + this.Fax + ", Email=" + this.Email + ", Ganztags=" + this.Ganztags + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", AnzahlAbschnitte=" + this.AnzahlAbschnitte + ", AbschnittBez=" + this.AbschnittBez + ", BezAbschnitt1=" + this.BezAbschnitt1 + ", BezAbschnitt2=" + this.BezAbschnitt2 + ", BezAbschnitt3=" + this.BezAbschnitt3 + ", BezAbschnitt4=" + this.BezAbschnitt4 + ", Fremdsprachen=" + this.Fremdsprachen + ", JVAZeigen=" + this.JVAZeigen + ", RefPaedagogikZeigen=" + this.RefPaedagogikZeigen + ", AnzJGS_Jahr=" + this.AnzJGS_Jahr + ", IstHauptsitz=" + this.IstHauptsitz + ", NotenGesperrt=" + this.NotenGesperrt + ", ZurueckgestelltAnzahl=" + this.ZurueckgestelltAnzahl + ", ZurueckgestelltWeibl=" + this.ZurueckgestelltWeibl + ", ZurueckgestelltAuslaender=" + this.ZurueckgestelltAuslaender + ", ZurueckgestelltAuslaenderWeibl=" + this.ZurueckgestelltAuslaenderWeibl + ", ZurueckgestelltAussiedler=" + this.ZurueckgestelltAussiedler + ", ZurueckgestelltAussiedlerWeibl=" + this.ZurueckgestelltAussiedlerWeibl + ", TeamTeaching=" + this.TeamTeaching + ", AbiGruppenprozess=" + this.AbiGruppenprozess + ", DauerUnterrichtseinheit=" + this.DauerUnterrichtseinheit + ", Gruppen8Bis1=" + this.Gruppen8Bis1 + ", Gruppen13Plus=" + this.Gruppen13Plus + ", InternatsplaetzeM=" + this.InternatsplaetzeM + ", InternatsplaetzeW=" + this.InternatsplaetzeW + ", InternatsplaetzeNeutral=" + this.InternatsplaetzeNeutral + ", WebAdresse=" + this.WebAdresse + ", Land=" + this.Land + ")";
+		return "DTOEigeneSchule(ID=" + this.ID + ", SchulformNr=" + this.SchulformNr + ", SchulformKuerzel=" + this.SchulformKuerzel + ", SchulformBez=" + this.SchulformBez + ", SchultraegerArt=" + this.SchultraegerArt + ", SchultraegerNr=" + this.SchultraegerNr + ", SchulNr=" + this.SchulNr + ", Bezeichnung1=" + this.Bezeichnung1 + ", Bezeichnung2=" + this.Bezeichnung2 + ", Bezeichnung3=" + this.Bezeichnung3 + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", PLZ=" + this.PLZ + ", Ort=" + this.Ort + ", Telefon=" + this.Telefon + ", Fax=" + this.Fax + ", Email=" + this.Email + ", Ganztags=" + this.Ganztags + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", AnzahlAbschnitte=" + this.AnzahlAbschnitte + ", AbschnittBez=" + this.AbschnittBez + ", BezAbschnitt1=" + this.BezAbschnitt1 + ", BezAbschnitt2=" + this.BezAbschnitt2 + ", BezAbschnitt3=" + this.BezAbschnitt3 + ", BezAbschnitt4=" + this.BezAbschnitt4 + ", Fremdsprachen=" + this.Fremdsprachen + ", JVAZeigen=" + this.JVAZeigen + ", RefPaedagogikZeigen=" + this.RefPaedagogikZeigen + ", AnzJGS_Jahr=" + this.AnzJGS_Jahr + ", IstHauptsitz=" + this.IstHauptsitz + ", NotenGesperrt=" + this.NotenGesperrt + ", ZurueckgestelltAnzahl=" + this.ZurueckgestelltAnzahl + ", ZurueckgestelltWeibl=" + this.ZurueckgestelltWeibl + ", ZurueckgestelltAuslaender=" + this.ZurueckgestelltAuslaender + ", ZurueckgestelltAuslaenderWeibl=" + this.ZurueckgestelltAuslaenderWeibl + ", ZurueckgestelltAussiedler=" + this.ZurueckgestelltAussiedler + ", ZurueckgestelltAussiedlerWeibl=" + this.ZurueckgestelltAussiedlerWeibl + ", TeamTeaching=" + this.TeamTeaching + ", AbiGruppenprozess=" + this.AbiGruppenprozess + ", DauerUnterrichtseinheit=" + this.DauerUnterrichtseinheit + ", Gruppen8Bis1=" + this.Gruppen8Bis1 + ", Gruppen13Plus=" + this.Gruppen13Plus + ", InternatsplaetzeM=" + this.InternatsplaetzeM + ", InternatsplaetzeW=" + this.InternatsplaetzeW + ", InternatsplaetzeNeutral=" + this.InternatsplaetzeNeutral + ", WebAdresse=" + this.WebAdresse + ", Land=" + this.Land + ", idGebundenerGanztag=" + this.idGebundenerGanztag + ", idFormOffenerGanztag=" + this.idFormOffenerGanztag + ", istOffenerGanztag=" + this.istOffenerGanztag + ", idBilingualerUnterricht=" + this.idBilingualerUnterricht + ", hatRealschuleHauptschulbildungsgang=" + this.hatRealschuleHauptschulbildungsgang + ", hatInternationaleKontakte=" + this.hatInternationaleKontakte + ", hatKonfessionelleKooperation=" + this.hatKonfessionelleKooperation + ", idTalentschule=" + this.idTalentschule + ", idReformpaedagogik=" + this.idReformpaedagogik + ")";
 	}
 
 }

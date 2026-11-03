@@ -694,7 +694,7 @@ public final class MigrationDTOSchuelerLernabschnittsdaten {
 	@JsonProperty
 	public String OrgFormKrz;
 
-	/** TODO DEPRECATED: Reformpädagogik */
+	/** DEPRECATED: Reformpädagogik */
 	@Column(name = "RefPaed")
 	@JsonProperty
 	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)

@@ -402,6 +402,7 @@
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOSchulwechselAbgang</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOSchulwechselDokument</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOSchulwechselErfolgreicheBewerbung</class>
+        <class>de.svws_nrw.db.dto.current.schild.schule.DTOStatistikKommentar</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOStundentafel</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOStundentafelFaecher</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte</class>

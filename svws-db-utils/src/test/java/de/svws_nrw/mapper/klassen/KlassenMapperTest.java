@@ -50,7 +50,7 @@ class KlassenMapperTest {
 	}
 
 	private static DTOKlassen createKlasse(final long id, final String kuerzel) {
-		return new DTOKlassen(id, 11L, kuerzel);
+		return new DTOKlassen(id, 11L, kuerzel, false, false);
 	}
 
 
@@ -72,6 +72,8 @@ class KlassenMapperTest {
 			dto.Ankreuzzeugnisse = true;
 			dto.Fachklasse_ID = 99L;
 			dto.SommerSem = true;
+			dto.istJva = true;
+			dto.istReformpaedagogik = true;
 			dto.VKlasse = "06a";
 			dto.FKlasse = "08a";
 			dto.OrgFormKrz = AllgemeinbildendOrganisationsformen.HALBTAG.daten(SCHULJAHR).kuerzel;
@@ -97,6 +99,8 @@ class KlassenMapperTest {
 			assertThat(result.verwendungAnkreuzkompetenzen).isTrue();
 			assertThat(result.idFachklasse).isEqualTo(99L);
 			assertThat(result.beginnSommersemester).isTrue();
+			assertThat(result.istJva).isTrue();
+			assertThat(result.istReformpaedagogik).isTrue();
 			assertThat(result.idAllgemeinbildendOrganisationsform).isEqualTo(AllgemeinbildendOrganisationsformen.HALBTAG.daten(SCHULJAHR).id);
 			assertThat(result.idSchulgliederung).isEqualTo(Schulgliederung.getDefault(Schulform.GY).daten(SCHULJAHR).id);
 			assertThat(result.idKlassenart).isEqualTo(Klassenart.RK.daten(SCHULJAHR).id);
@@ -116,6 +120,8 @@ class KlassenMapperTest {
 			assertThat(result.noteneingabeGesperrt).isFalse();
 			assertThat(result.verwendungAnkreuzkompetenzen).isFalse();
 			assertThat(result.beginnSommersemester).isFalse();
+			assertThat(result.istJva).isFalse();
+			assertThat(result.istReformpaedagogik).isFalse();
 			assertThat(result.kuerzelVorgaengerklasse).isNull();
 			assertThat(result.idVorgaengerklasse).isNull();
 			assertThat(result.kuerzelFolgeklasse).isNull();

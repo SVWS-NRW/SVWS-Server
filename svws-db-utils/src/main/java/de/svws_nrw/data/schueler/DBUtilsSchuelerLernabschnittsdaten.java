@@ -37,7 +37,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 */
 	private static DTOSchuelerLernabschnittsdaten createDefault(final long idNew, final long idSchueler, final Schuljahresabschnitt schuljahresabschnitt,
 			final DTOKlassen klasse, final DTOJahrgang jahrgang) {
-		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.id, false, false);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.id, false, false, 1L);
 		lernabschnitt.WechselNr = 0;
 		lernabschnitt.Hochrechnung = null;
 		lernabschnitt.SemesterWertung = true;
@@ -200,6 +200,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			sla.AOSF = slaPrev.AOSF;
 			sla.Autist = slaPrev.Autist;
 			sla.ZieldifferentesLernen = slaPrev.ZieldifferentesLernen;
+			sla.idBetreuung = slaPrev.idBetreuung;
 			sla.Folgeklasse_ID = null;
 			sla.Wiederholung = pruefeWiederholung(conn, schuljahresabschnitt, idSchueler, sla.Jahrgang_ID);
 			if (!conn.transactionPersist(sla)) {

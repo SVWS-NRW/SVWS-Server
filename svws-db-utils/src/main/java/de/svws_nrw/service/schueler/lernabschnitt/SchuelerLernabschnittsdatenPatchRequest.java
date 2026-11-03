@@ -83,6 +83,10 @@ public class SchuelerLernabschnittsdatenPatchRequest {
 	@Schema(description = "Die ID der Klassenart in Bezug auf den Schüler (z.B. Regelklasse).", example = "7000")
 	public JsonNullable<Long> idKlassenart = JsonNullable.undefined();
 
+	/** Die ID der Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung. */
+	@Schema(description = "Die ID der Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung.", example = "1")
+	public JsonNullable<@NotNull Long> idBetreuung = JsonNullable.undefined();
+
 	/** Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt. */
 	@Schema(description = "Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt.", example = "0")
 	public JsonNullable<@Min(0) @Max(99999) Integer> fehlstundenGesamt = JsonNullable.undefined();

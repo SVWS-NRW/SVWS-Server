@@ -51,6 +51,16 @@ public final class SchuleStatistikService {
 		daten.webAdresse = dtoSchule.WebAdresse;
 		daten.idSchuljahresabschnitt = dtoSchule.Schuljahresabschnitts_ID;
 		daten.dauerUnterrichtseinheit = (dtoSchule.DauerUnterrichtseinheit == null) ? 45 : dtoSchule.DauerUnterrichtseinheit;
+		daten.idGebundenerGanztag = dtoSchule.idGebundenerGanztag;
+		daten.istOffenerGanztag = Boolean.TRUE.equals(dtoSchule.istOffenerGanztag);
+		daten.idFormOffenerGanztag = dtoSchule.idFormOffenerGanztag;
+		daten.istJva = Boolean.TRUE.equals(dtoSchule.JVAZeigen);
+		daten.idBilingualerUnterricht = dtoSchule.idBilingualerUnterricht;
+		daten.hatRealschuleHauptschulbildungsgang = Boolean.TRUE.equals(dtoSchule.hatRealschuleHauptschulbildungsgang);
+		daten.hatInternationaleKontakte = Boolean.TRUE.equals(dtoSchule.hatInternationaleKontakte);
+		daten.hatKonfessionelleKooperation = Boolean.TRUE.equals(dtoSchule.hatKonfessionelleKooperation);
+		daten.idTalentschule = dtoSchule.idTalentschule;
+		daten.idReformpaedagogik = dtoSchule.idReformpaedagogik;
 		daten.abschnitte.addAll(schuljahresabschnitte);
 		return daten;
 	}

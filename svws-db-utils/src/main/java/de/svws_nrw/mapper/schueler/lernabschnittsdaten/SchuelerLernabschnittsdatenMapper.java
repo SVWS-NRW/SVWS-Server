@@ -317,6 +317,7 @@ public interface SchuelerLernabschnittsdatenMapper {
 	@Mapping(target = "Autist", constant = "false")
 	@Mapping(target = "ZieldifferentesLernen", constant = "false")
 	@Mapping(target = "Wiederholung", constant = "false")
+	@Mapping(target = "idBetreuung", constant = "1L")
 	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	DTOSchuelerLernabschnittsdaten toDomain(SchuelerLernabschnittCreateRequest dto);
 
@@ -364,6 +365,7 @@ public interface SchuelerLernabschnittsdatenMapper {
 	@Mapping(target = "BilingualerZweig", source = "bilingualerZweig")
 	@Mapping(target = "Jahrgang_ID", source = "jahrgangID")
 	@Mapping(target = "Klassenart", source = "idKlassenart", qualifiedByName = "mapKlassenartKuerzel")
+	@Mapping(target = "idBetreuung", source = "idBetreuung")
 	@Mapping(target = "Schulgliederung", source = "idSchulgliederung", qualifiedByName = "mapSchulgliederungKuerzel")
 	@Mapping(target = "OrgFormKrz", source = "idOrganisationsform", qualifiedByName = "mapOrganisationsformKuerzel")
 	@Mapping(target = "EPJahre", source = "idEpJahre", qualifiedByName = "mapEpJahre")

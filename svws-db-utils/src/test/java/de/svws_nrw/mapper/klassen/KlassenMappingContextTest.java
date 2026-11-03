@@ -33,8 +33,8 @@ class KlassenMappingContextTest {
 	@Test
 	@DisplayName("Übergebene Maps und Listen werden unverändert übernommen")
 	void werteWerdenUebernommen() {
-		final Map<String, DTOKlassen> vorher = Map.of("06a", new DTOKlassen(1L, 10L, "06a"));
-		final Map<String, DTOKlassen> nachher = Map.of("08a", new DTOKlassen(2L, 12L, "08a"));
+		final Map<String, DTOKlassen> vorher = Map.of("06a", new DTOKlassen(1L, 10L, "06a", false, false));
+		final Map<String, DTOKlassen> nachher = Map.of("08a", new DTOKlassen(2L, 12L, "08a", false, false));
 		final List<Long> leitungen = List.of(3L);
 		final List<Schueler> schueler = List.of(new Schueler());
 

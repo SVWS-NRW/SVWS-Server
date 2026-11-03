@@ -98,6 +98,56 @@ export class SchuleStammdaten extends JavaObject {
 	public dauerUnterrichtseinheit: number = 0;
 
 	/**
+	 * Die ID der Form des gebundenen Ganztags
+	 */
+	public idGebundenerGanztag: number = 0;
+
+	/**
+	 * Gibt an, ob ein offener Ganztag angeboten wird
+	 */
+	public istOffenerGanztag: boolean = false;
+
+	/**
+	 * Die ID der Form des offenen Ganztags
+	 */
+	public idFormOffenerGanztag: number = 0;
+
+	/**
+	 * Gibt an, ob die Schule in einer Justizvollzugsanstalt unterrichtet
+	 */
+	public istJva: boolean = false;
+
+	/**
+	 * Die ID der Form des bilingualen Unterrichts
+	 */
+	public idBilingualerUnterricht: number = 0;
+
+	/**
+	 * Gibt an, ob eine Realschule einen Hauptschulbildungsgang anbietet
+	 */
+	public hatRealschuleHauptschulbildungsgang: boolean = false;
+
+	/**
+	 * Gibt an, ob die Schule internationale Kontakte pflegt
+	 */
+	public hatInternationaleKontakte: boolean = false;
+
+	/**
+	 * Gibt an, ob an der Schule eine konfessionelle Kooperation vorhanden ist
+	 */
+	public hatKonfessionelleKooperation: boolean = false;
+
+	/**
+	 * Die ID der Form der Talentschule
+	 */
+	public idTalentschule: number = 0;
+
+	/**
+	 * Die ID der Art der Reformpädagogik, nach der an der Schule unterrichtet wird
+	 */
+	public idReformpaedagogik: number = 0;
+
+	/**
 	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind.
 	 */
 	public readonly abschnitte: List<Schuljahresabschnitt> = new ArrayList<Schuljahresabschnitt>();
@@ -155,6 +205,36 @@ export class SchuleStammdaten extends JavaObject {
 		if (obj.dauerUnterrichtseinheit === undefined)
 			throw new Error('invalid json format, missing attribute dauerUnterrichtseinheit');
 		result.dauerUnterrichtseinheit = obj.dauerUnterrichtseinheit;
+		if (obj.idGebundenerGanztag === undefined)
+			throw new Error('invalid json format, missing attribute idGebundenerGanztag');
+		result.idGebundenerGanztag = obj.idGebundenerGanztag;
+		if (obj.istOffenerGanztag === undefined)
+			throw new Error('invalid json format, missing attribute istOffenerGanztag');
+		result.istOffenerGanztag = obj.istOffenerGanztag;
+		if (obj.idFormOffenerGanztag === undefined)
+			throw new Error('invalid json format, missing attribute idFormOffenerGanztag');
+		result.idFormOffenerGanztag = obj.idFormOffenerGanztag;
+		if (obj.istJva === undefined)
+			throw new Error('invalid json format, missing attribute istJva');
+		result.istJva = obj.istJva;
+		if (obj.idBilingualerUnterricht === undefined)
+			throw new Error('invalid json format, missing attribute idBilingualerUnterricht');
+		result.idBilingualerUnterricht = obj.idBilingualerUnterricht;
+		if (obj.hatRealschuleHauptschulbildungsgang === undefined)
+			throw new Error('invalid json format, missing attribute hatRealschuleHauptschulbildungsgang');
+		result.hatRealschuleHauptschulbildungsgang = obj.hatRealschuleHauptschulbildungsgang;
+		if (obj.hatInternationaleKontakte === undefined)
+			throw new Error('invalid json format, missing attribute hatInternationaleKontakte');
+		result.hatInternationaleKontakte = obj.hatInternationaleKontakte;
+		if (obj.hatKonfessionelleKooperation === undefined)
+			throw new Error('invalid json format, missing attribute hatKonfessionelleKooperation');
+		result.hatKonfessionelleKooperation = obj.hatKonfessionelleKooperation;
+		if (obj.idTalentschule === undefined)
+			throw new Error('invalid json format, missing attribute idTalentschule');
+		result.idTalentschule = obj.idTalentschule;
+		if (obj.idReformpaedagogik === undefined)
+			throw new Error('invalid json format, missing attribute idReformpaedagogik');
+		result.idReformpaedagogik = obj.idReformpaedagogik;
 		if (obj.abschnitte !== undefined) {
 			for (const elem of obj.abschnitte) {
 				result.abschnitte.add(Schuljahresabschnitt.transpilerFromJSON(JSON.stringify(elem)));
@@ -183,6 +263,16 @@ export class SchuleStammdaten extends JavaObject {
 		result += '"anzJGS_Jahr" : ' + obj.anzJGS_Jahr.toString() + ',';
 		result += '"schuleAbschnitte" : ' + SchuleAbschnitte.transpilerToJSON(obj.schuleAbschnitte) + ',';
 		result += '"dauerUnterrichtseinheit" : ' + obj.dauerUnterrichtseinheit.toString() + ',';
+		result += '"idGebundenerGanztag" : ' + obj.idGebundenerGanztag.toString() + ',';
+		result += '"istOffenerGanztag" : ' + obj.istOffenerGanztag.toString() + ',';
+		result += '"idFormOffenerGanztag" : ' + obj.idFormOffenerGanztag.toString() + ',';
+		result += '"istJva" : ' + obj.istJva.toString() + ',';
+		result += '"idBilingualerUnterricht" : ' + obj.idBilingualerUnterricht.toString() + ',';
+		result += '"hatRealschuleHauptschulbildungsgang" : ' + obj.hatRealschuleHauptschulbildungsgang.toString() + ',';
+		result += '"hatInternationaleKontakte" : ' + obj.hatInternationaleKontakte.toString() + ',';
+		result += '"hatKonfessionelleKooperation" : ' + obj.hatKonfessionelleKooperation.toString() + ',';
+		result += '"idTalentschule" : ' + obj.idTalentschule.toString() + ',';
+		result += '"idReformpaedagogik" : ' + obj.idReformpaedagogik.toString() + ',';
 		result += '"abschnitte" : [ ';
 		for (let i = 0; i < obj.abschnitte.size(); i++) {
 			const elem = obj.abschnitte.get(i);
@@ -251,6 +341,36 @@ export class SchuleStammdaten extends JavaObject {
 		}
 		if (obj.dauerUnterrichtseinheit !== undefined) {
 			result += '"dauerUnterrichtseinheit" : ' + obj.dauerUnterrichtseinheit.toString() + ',';
+		}
+		if (obj.idGebundenerGanztag !== undefined) {
+			result += '"idGebundenerGanztag" : ' + obj.idGebundenerGanztag.toString() + ',';
+		}
+		if (obj.istOffenerGanztag !== undefined) {
+			result += '"istOffenerGanztag" : ' + obj.istOffenerGanztag.toString() + ',';
+		}
+		if (obj.idFormOffenerGanztag !== undefined) {
+			result += '"idFormOffenerGanztag" : ' + obj.idFormOffenerGanztag.toString() + ',';
+		}
+		if (obj.istJva !== undefined) {
+			result += '"istJva" : ' + obj.istJva.toString() + ',';
+		}
+		if (obj.idBilingualerUnterricht !== undefined) {
+			result += '"idBilingualerUnterricht" : ' + obj.idBilingualerUnterricht.toString() + ',';
+		}
+		if (obj.hatRealschuleHauptschulbildungsgang !== undefined) {
+			result += '"hatRealschuleHauptschulbildungsgang" : ' + obj.hatRealschuleHauptschulbildungsgang.toString() + ',';
+		}
+		if (obj.hatInternationaleKontakte !== undefined) {
+			result += '"hatInternationaleKontakte" : ' + obj.hatInternationaleKontakte.toString() + ',';
+		}
+		if (obj.hatKonfessionelleKooperation !== undefined) {
+			result += '"hatKonfessionelleKooperation" : ' + obj.hatKonfessionelleKooperation.toString() + ',';
+		}
+		if (obj.idTalentschule !== undefined) {
+			result += '"idTalentschule" : ' + obj.idTalentschule.toString() + ',';
+		}
+		if (obj.idReformpaedagogik !== undefined) {
+			result += '"idReformpaedagogik" : ' + obj.idReformpaedagogik.toString() + ',';
 		}
 		if (obj.abschnitte !== undefined) {
 			result += '"abschnitte" : [ ';

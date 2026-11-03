@@ -190,7 +190,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_RefPaed = add("RefPaed", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 			.setDefault("-")
 			.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
-			.setJavaComment("TODO DEPRECATED: Reformpädagogik");
+			.setJavaComment("DEPRECATED: Reformpädagogik");
 
 	/** Die Definition der Tabellenspalte Klassenart */
 	public final SchemaTabelleSpalte col_Klassenart = add("Klassenart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
@@ -380,6 +380,13 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_PrognoseLog = add("PrognoseLog", SchemaDatentypen.TEXT, false)
 			.setRevision(SchemaRevisionen.REV_44)
 			.setJavaComment("Text für die Ergebnisse der Abschlussberechnungen für die Prognose");
+
+	/** Die Definition der Tabellenspalte idBetreuung */
+	public final SchemaTabelleSpalte col_idBetreuung = add("idBetreuung", SchemaDatentypen.BIGINT, false)
+			.setNotNull()
+			.setDefault("1")
+			.setJavaComment("Die Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung")
+			.setRevision(SchemaRevisionen.REV_81);
 
 
 

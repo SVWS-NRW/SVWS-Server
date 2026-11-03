@@ -50,6 +50,16 @@ export class KlassenStatistikGesamt extends JavaObject {
 	 */
 	public teilstandort: string = "";
 
+	/**
+	 * Gibt an, ob die Klasse an einer Justizvollzugsanstalt (JVA) unterrichtet wird
+	 */
+	public istJva: boolean = false;
+
+	/**
+	 * Gibt an, ob in der Klasse reformpädagogisch unterrichtet wird
+	 */
+	public istReformpaedagogik: boolean = false;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -96,6 +106,12 @@ export class KlassenStatistikGesamt extends JavaObject {
 		if (obj.teilstandort === undefined)
 			throw new Error('invalid json format, missing attribute teilstandort');
 		result.teilstandort = obj.teilstandort;
+		if (obj.istJva === undefined)
+			throw new Error('invalid json format, missing attribute istJva');
+		result.istJva = obj.istJva;
+		if (obj.istReformpaedagogik === undefined)
+			throw new Error('invalid json format, missing attribute istReformpaedagogik');
+		result.istReformpaedagogik = obj.istReformpaedagogik;
 		return result;
 	}
 
@@ -124,6 +140,8 @@ export class KlassenStatistikGesamt extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"teilstandort" : ' + JSON.stringify(obj.teilstandort) + ',';
+		result += '"istJva" : ' + obj.istJva.toString() + ',';
+		result += '"istReformpaedagogik" : ' + obj.istReformpaedagogik.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -171,6 +189,12 @@ export class KlassenStatistikGesamt extends JavaObject {
 		}
 		if (obj.teilstandort !== undefined) {
 			result += '"teilstandort" : ' + JSON.stringify(obj.teilstandort) + ',';
+		}
+		if (obj.istJva !== undefined) {
+			result += '"istJva" : ' + obj.istJva.toString() + ',';
+		}
+		if (obj.istReformpaedagogik !== undefined) {
+			result += '"istReformpaedagogik" : ' + obj.istReformpaedagogik.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

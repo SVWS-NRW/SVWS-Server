@@ -235,7 +235,7 @@ class DataManagerRevisedTest {
 	@Test
 	void patchAsResponse() throws ApiOperationException {
 		final Map<String, Object> input = Map.of("kuerzel", "55a");
-		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a");
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", false, false);
 
 		when(conn.queryByKey(DTOKlassen.class, 1L)).thenReturn(dto);
 		when(conn.transactionPersist(dto)).thenReturn(true);
@@ -258,7 +258,7 @@ class DataManagerRevisedTest {
 
 	@Test
 	void patchAsResponseWithFailureWhilePersisting() {
-		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a");
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", false, false);
 
 		when(conn.queryByKey(DTOKlassen.class, 1L)).thenReturn(dto);
 		when(conn.transactionPersist(dto)).thenReturn(false);
@@ -324,7 +324,7 @@ class DataManagerRevisedTest {
 	void patchAsResponseWithAttributIsNotPatchable() {
 		cut.setAttributesNotPatchable("id");
 
-		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a");
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", false, false);
 		when(conn.queryByKey(DTOKlassen.class, 1L)).thenReturn(dto);
 
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
@@ -453,7 +453,7 @@ class DataManagerRevisedTest {
 	void deleteAsResponse() throws ApiOperationException {
 		cut = spy(cut);
 
-		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a");
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", false, false);
 
 		when(conn.queryByKey(DTOKlassen.class, 1L)).thenReturn(dto);
 		when(conn.transactionRemove(dto)).thenReturn(true);
@@ -497,8 +497,8 @@ class DataManagerRevisedTest {
 	void deleteMultipleAsResponse() throws ApiOperationException {
 		cut = spy(cut);
 
-		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a");
-		final DTOKlassen dto2 = new DTOKlassen(2, 2L, "6a");
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", false, false);
+		final DTOKlassen dto2 = new DTOKlassen(2, 2L, "6a", false, false);
 		final List<Long> inputIDs = List.of(1L, 2L);
 
 		when(conn.queryByKeyList(DTOKlassen.class, inputIDs)).thenReturn(List.of(dto, dto2));
@@ -639,7 +639,7 @@ class DataManagerRevisedTest {
 	@Test
 	void checkBenutzerFunktionsbezogeneKompetenzKlasseWithFehlenderKompetenzAndWeitereLogInformationen() {
 		final Benutzer userMock = mock(Benutzer.class);
-		final DTOKlassen klasseMock = new DTOKlassen(1L, 10L, "5a");
+		final DTOKlassen klasseMock = new DTOKlassen(1L, 10L, "5a", false, false);
 		final DTOSchuljahresabschnitte schuljahresabschnittMock = new DTOSchuljahresabschnitte(10L, 2024, 1);
 
 		when(conn.getUser()).thenReturn(userMock);

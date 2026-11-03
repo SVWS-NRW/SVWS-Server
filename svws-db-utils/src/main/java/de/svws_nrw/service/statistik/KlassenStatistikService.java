@@ -59,6 +59,8 @@ public final class KlassenStatistikService {
 		daten.parallelitaet = ((dtoKlasse.ASDKlasse == null) || (dtoKlasse.ASDKlasse.length() < 3)) ? null : dtoKlasse.ASDKlasse.substring(2);
 		daten.sortierung = dtoKlasse.Sortierung;
 		daten.teilstandort = Objects.toString(dtoKlasse.AdrMerkmal, "");
+		daten.istJva = Boolean.TRUE.equals(dtoKlasse.istJva);
+		daten.istReformpaedagogik = Boolean.TRUE.equals(dtoKlasse.istReformpaedagogik);
 
 		daten.klassenLeitungen = klassenleitungen;
 		daten.idsSchueler = idsSchueler;

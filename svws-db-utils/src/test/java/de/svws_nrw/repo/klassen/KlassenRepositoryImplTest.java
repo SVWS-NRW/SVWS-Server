@@ -42,7 +42,7 @@ class KlassenRepositoryImplTest {
 	@DisplayName("Test: getListBySchuljahresabschnitt() liefert die Liste der Klassen.")
 	void testGetListBySchuljahresabschnitt() {
 		final long idSchuljahresabschnitt = 123L;
-		final DTOKlassen klasse1 = new DTOKlassen(1L, idSchuljahresabschnitt, "07a");
+		final DTOKlassen klasse1 = new DTOKlassen(1L, idSchuljahresabschnitt, "07a", false, false);
 		final List<DTOKlassen> expectedList = List.of(klasse1);
 
 		when(conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, idSchuljahresabschnitt))
@@ -58,8 +58,8 @@ class KlassenRepositoryImplTest {
 	@DisplayName("Test: getMapBySchuljahresabschnitt() liefert die Klassen und erzeugt daraus eine Map.")
 	void testGetMapBySchuljahresabschnitt() {
 		final long idSchuljahresabschnitt = 456L;
-		final DTOKlassen klasse1 = new DTOKlassen(1L, idSchuljahresabschnitt, "07a");
-		final DTOKlassen klasse2 = new DTOKlassen(2L, idSchuljahresabschnitt, "07b");
+		final DTOKlassen klasse1 = new DTOKlassen(1L, idSchuljahresabschnitt, "07a", false, false);
+		final DTOKlassen klasse2 = new DTOKlassen(2L, idSchuljahresabschnitt, "07b", false, false);
 
 		when(conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, idSchuljahresabschnitt))
 				.thenReturn(List.of(klasse1, klasse2));
@@ -78,7 +78,7 @@ class KlassenRepositoryImplTest {
 	@DisplayName("Test: Der Konstruktor setzt die ID-Zugriffe (getId/setId) korrekt auf das ID-Feld von DTOKlassen.")
 	void testConstructorAndIdAccess() {
 		// Teste getId indirekt via getMap()
-		final DTOKlassen k = new DTOKlassen(999L, 1L, "08a");
+		final DTOKlassen k = new DTOKlassen(999L, 1L, "08a", false, false);
 		when(conn.queryAll(DTOKlassen.class)).thenReturn(List.of(k));
 		assertThat(repository.getMap()).containsEntry(999L, k);
 
@@ -98,8 +98,8 @@ class KlassenRepositoryImplTest {
 		@DisplayName("Treffer: Es werden nur die vorhandenen Klassen geliefert, fehlende IDs werden nicht geliefert.")
 		void testTreffer() {
 			final List<Long> ids = List.of(1L, 2L, 99L);
-			final DTOKlassen klasse1 = new DTOKlassen(1L, 10L, "07a");
-			final DTOKlassen klasse2 = new DTOKlassen(2L, 10L, "07b");
+			final DTOKlassen klasse1 = new DTOKlassen(1L, 10L, "07a", false, false);
+			final DTOKlassen klasse2 = new DTOKlassen(2L, 10L, "07b", false, false);
 			when(conn.queryByKeyList(DTOKlassen.class, ids)).thenReturn(List.of(klasse1, klasse2));
 
 			assertThat(repository.findListByIds(ids)).containsExactly(klasse1, klasse2);
@@ -131,7 +131,7 @@ class KlassenRepositoryImplTest {
 		@Test
 		@DisplayName("Treffer: Die Klasse wird geliefert.")
 		void testTreffer() {
-			final DTOKlassen klasse = new DTOKlassen(1L, 10L, "07a");
+			final DTOKlassen klasse = new DTOKlassen(1L, 10L, "07a", false, false);
 			when(conn.queryList(QUERY_BY_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, "07a", 10L)).thenReturn(List.of(klasse));
 
 			assertThat(repository.findByKuerzelAndSchuljahresabschnitt("07a", 10L)).containsSame(klasse);
@@ -171,7 +171,7 @@ class KlassenRepositoryImplTest {
 		@Test
 		@DisplayName("Treffer über das Kürzel: Das ASD-Kürzel wird nicht mehr abgefragt.")
 		void testTrefferUeberKuerzel() {
-			final DTOKlassen klasse = new DTOKlassen(1L, 10L, "07a");
+			final DTOKlassen klasse = new DTOKlassen(1L, 10L, "07a", false, false);
 			when(conn.queryList(QUERY_BY_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, "07a", 10L)).thenReturn(List.of(klasse));
 
 			assertThat(repository.findByKuerzelOrASDKuerzelAndSchuljahresabschnitt("07a", "07A", 10L)).containsSame(klasse);
@@ -181,7 +181,7 @@ class KlassenRepositoryImplTest {
 		@Test
 		@DisplayName("Kein Treffer über das Kürzel: Die Klasse wird über das ASD-Kürzel geliefert.")
 		void testTrefferUeberASDKuerzel() {
-			final DTOKlassen klasse = new DTOKlassen(1L, 10L, "07a");
+			final DTOKlassen klasse = new DTOKlassen(1L, 10L, "07a", false, false);
 			when(conn.queryList(QUERY_BY_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, "07x", 10L)).thenReturn(Collections.emptyList());
 			when(conn.queryList(QUERY_BY_ASD_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, "07A", 10L)).thenReturn(List.of(klasse));
 
@@ -191,7 +191,7 @@ class KlassenRepositoryImplTest {
 		@Test
 		@DisplayName("Kürzel null: Die Klasse wird über das ASD-Kürzel geliefert, ohne nach dem Kürzel zu suchen.")
 		void testKuerzelNull() {
-			final DTOKlassen klasse = new DTOKlassen(1L, 10L, "07a");
+			final DTOKlassen klasse = new DTOKlassen(1L, 10L, "07a", false, false);
 			when(conn.queryList(QUERY_BY_ASD_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, "07A", 10L)).thenReturn(List.of(klasse));
 
 			assertThat(repository.findByKuerzelOrASDKuerzelAndSchuljahresabschnitt(null, "07A", 10L)).containsSame(klasse);
@@ -226,8 +226,8 @@ class KlassenRepositoryImplTest {
 		@Test
 		@DisplayName("Mehrere Treffer: Es wird wie im Bestand der erste Treffer geliefert.")
 		void testMehrereTreffer() {
-			final DTOKlassen erste = new DTOKlassen(1L, 10L, "07a");
-			final DTOKlassen zweite = new DTOKlassen(2L, 10L, "07a");
+			final DTOKlassen erste = new DTOKlassen(1L, 10L, "07a", false, false);
+			final DTOKlassen zweite = new DTOKlassen(2L, 10L, "07a", false, false);
 			when(conn.queryList(QUERY_BY_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, "07a", 10L)).thenReturn(List.of(erste, zweite));
 
 			assertThat(repository.findByKuerzelOrASDKuerzelAndSchuljahresabschnitt("07a", null, 10L)).containsSame(erste);

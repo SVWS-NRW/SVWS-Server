@@ -114,6 +114,11 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public idKlassenart: number | null = 7000;
 
 	/**
+	 * Die ID der Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung (siehe Core-Type Betreuungsart)
+	 */
+	public idBetreuung: number = 1;
+
+	/**
 	 * Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt
 	 */
 	public fehlstundenGesamt: number = 0;
@@ -294,6 +299,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.schwerpunktID = (obj.schwerpunktID === undefined) ? null : obj.schwerpunktID === null ? null : obj.schwerpunktID;
 		result.idOrganisationsform = (obj.idOrganisationsform === undefined) ? null : obj.idOrganisationsform === null ? null : obj.idOrganisationsform;
 		result.idKlassenart = (obj.idKlassenart === undefined) ? null : obj.idKlassenart === null ? null : obj.idKlassenart;
+		if (obj.idBetreuung === undefined)
+			throw new Error('invalid json format, missing attribute idBetreuung');
+		result.idBetreuung = obj.idBetreuung;
 		if (obj.fehlstundenGesamt === undefined)
 			throw new Error('invalid json format, missing attribute fehlstundenGesamt');
 		result.fehlstundenGesamt = obj.fehlstundenGesamt;
@@ -367,6 +375,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"schwerpunktID" : ' + ((obj.schwerpunktID === null) ? 'null' : obj.schwerpunktID.toString()) + ',';
 		result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : obj.idOrganisationsform.toString()) + ',';
 		result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
+		result += '"idBetreuung" : ' + obj.idBetreuung.toString() + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
 		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
 		result += '"fehlstundenGrenzwert" : ' + ((obj.fehlstundenGrenzwert === null) ? 'null' : obj.fehlstundenGrenzwert.toString()) + ',';
@@ -468,6 +477,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		}
 		if (obj.idKlassenart !== undefined) {
 			result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
+		}
+		if (obj.idBetreuung !== undefined) {
+			result += '"idBetreuung" : ' + obj.idBetreuung.toString() + ',';
 		}
 		if (obj.fehlstundenGesamt !== undefined) {
 			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';

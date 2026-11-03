@@ -54,6 +54,10 @@ public class SchuelerLernabschnittStatistikGesamt {
 	@Schema(description = "Die ID der Klassenart in Bezug auf den Schüler (z.B. Regelklasse)", example = "7000")
 	public Long idKlassenart = 7000L;
 
+	/** Die ID der Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung (siehe Core-Type Betreuungsart) */
+	@Schema(description = "Die ID der Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung", example = "1")
+	public long idBetreuung = 1;
+
 	/** Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht */
 	@Schema(description = "gibt an, ob eine Schwerbehinderung nachgwiesen ist oder nicht", example = "false")
 	public boolean hatSchwerbehinderungsNachweis = false;

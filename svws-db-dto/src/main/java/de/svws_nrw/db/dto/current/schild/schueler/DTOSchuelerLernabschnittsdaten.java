@@ -35,7 +35,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerLernabschnittsdaten")
-@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "WechselNr", "Hochrechnung", "SemesterWertung", "PruefOrdnung", "Klassen_ID", "Tutor_ID", "Verspaetet", "NPV_Fach_ID", "NPV_NoteKrz", "NPV_Datum", "NPAA_Fach_ID", "NPAA_NoteKrz", "NPAA_Datum", "NPBQ_Fach_ID", "NPBQ_NoteKrz", "NPBQ_Datum", "VersetzungKrz", "AbschlussArt", "AbschlIstPrognose", "Konferenzdatum", "ZeugnisDatum", "Schulgliederung", "ASDJahrgang", "EPJahre", "Jahrgang_ID", "Fachklasse_ID", "Schwerpunkt_ID", "ZeugnisBem", "Schwerbehinderung", "Foerderschwerpunkt_ID", "OrgFormKrz", "RefPaed", "Klassenart", "SumFehlStd", "SumFehlStdU", "Wiederholung", "Gesamtnote_GS", "Gesamtnote_NW", "Folgeklasse_ID", "Foerderschwerpunkt2_ID", "Abschluss", "Abschluss_B", "DSNote", "AV_Leist", "AV_Zuv", "AV_Selbst", "SV_Verant", "SV_Konfl", "SV_Koop", "MoeglNPFaecher", "Zertifikate", "DatumFHR", "PruefAlgoErgebnis", "Zeugnisart", "DatumVon", "DatumBis", "FehlstundenGrenzwert", "Sonderpaedagoge_ID", "FachPraktAnteilAusr", "BilingualerZweig", "AOSF", "Autist", "ZieldifferentesLernen", "meldungBAN", "PrognoseAbschluss", "PrognoseLog"})
+@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "WechselNr", "Hochrechnung", "SemesterWertung", "PruefOrdnung", "Klassen_ID", "Tutor_ID", "Verspaetet", "NPV_Fach_ID", "NPV_NoteKrz", "NPV_Datum", "NPAA_Fach_ID", "NPAA_NoteKrz", "NPAA_Datum", "NPBQ_Fach_ID", "NPBQ_NoteKrz", "NPBQ_Datum", "VersetzungKrz", "AbschlussArt", "AbschlIstPrognose", "Konferenzdatum", "ZeugnisDatum", "Schulgliederung", "ASDJahrgang", "EPJahre", "Jahrgang_ID", "Fachklasse_ID", "Schwerpunkt_ID", "ZeugnisBem", "Schwerbehinderung", "Foerderschwerpunkt_ID", "OrgFormKrz", "RefPaed", "Klassenart", "SumFehlStd", "SumFehlStdU", "Wiederholung", "Gesamtnote_GS", "Gesamtnote_NW", "Folgeklasse_ID", "Foerderschwerpunkt2_ID", "Abschluss", "Abschluss_B", "DSNote", "AV_Leist", "AV_Zuv", "AV_Selbst", "SV_Verant", "SV_Konfl", "SV_Koop", "MoeglNPFaecher", "Zertifikate", "DatumFHR", "PruefAlgoErgebnis", "Zeugnisart", "DatumVon", "DatumBis", "FehlstundenGrenzwert", "Sonderpaedagoge_ID", "FachPraktAnteilAusr", "BilingualerZweig", "AOSF", "Autist", "ZieldifferentesLernen", "meldungBAN", "PrognoseAbschluss", "PrognoseLog", "idBetreuung"})
 public final class DTOSchuelerLernabschnittsdaten {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -464,6 +464,12 @@ public final class DTOSchuelerLernabschnittsdaten {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PrognoseLog */
 	public static final String QUERY_LIST_BY_PROGNOSELOG = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PrognoseLog IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idBetreuung */
+	public static final String QUERY_BY_IDBETREUUNG = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.idBetreuung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idBetreuung */
+	public static final String QUERY_LIST_BY_IDBETREUUNG = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.idBetreuung IN ?1";
+
 	/** Eine eindeutige ID für den Lernabschnitt des Schülers */
 	@Id
 	@Column(name = "ID")
@@ -659,7 +665,7 @@ public final class DTOSchuelerLernabschnittsdaten {
 	@JsonProperty
 	public String OrgFormKrz;
 
-	/** TODO DEPRECATED: Reformpädagogik */
+	/** DEPRECATED: Reformpädagogik */
 	@Column(name = "RefPaed")
 	@JsonProperty
 	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
@@ -864,6 +870,11 @@ public final class DTOSchuelerLernabschnittsdaten {
 	@JsonProperty
 	public String PrognoseLog;
 
+	/** Die Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung */
+	@Column(name = "idBetreuung")
+	@JsonProperty
+	public long idBetreuung;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerLernabschnittsdaten ohne eine Initialisierung der Attribute.
 	 */
@@ -878,8 +889,9 @@ public final class DTOSchuelerLernabschnittsdaten {
 	 * @param Schuljahresabschnitts_ID   der Wert für das Attribut Schuljahresabschnitts_ID
 	 * @param FachPraktAnteilAusr   der Wert für das Attribut FachPraktAnteilAusr
 	 * @param meldungBAN   der Wert für das Attribut meldungBAN
+	 * @param idBetreuung   der Wert für das Attribut idBetreuung
 	 */
-	public DTOSchuelerLernabschnittsdaten(final long ID, final long Schueler_ID, final long Schuljahresabschnitts_ID, final Boolean FachPraktAnteilAusr, final Boolean meldungBAN) {
+	public DTOSchuelerLernabschnittsdaten(final long ID, final long Schueler_ID, final long Schuljahresabschnitts_ID, final Boolean FachPraktAnteilAusr, final Boolean meldungBAN, final long idBetreuung) {
 		this.ID = ID;
 		this.Schueler_ID = Schueler_ID;
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
@@ -888,6 +900,7 @@ public final class DTOSchuelerLernabschnittsdaten {
 		}
 		this.FachPraktAnteilAusr = FachPraktAnteilAusr;
 		this.meldungBAN = meldungBAN;
+		this.idBetreuung = idBetreuung;
 	}
 
 
@@ -922,7 +935,7 @@ public final class DTOSchuelerLernabschnittsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerLernabschnittsdaten(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", WechselNr=" + this.WechselNr + ", Hochrechnung=" + this.Hochrechnung + ", SemesterWertung=" + this.SemesterWertung + ", PruefOrdnung=" + this.PruefOrdnung + ", Klassen_ID=" + this.Klassen_ID + ", Tutor_ID=" + this.Tutor_ID + ", Verspaetet=" + this.Verspaetet + ", NPV_Fach_ID=" + this.NPV_Fach_ID + ", NPV_NoteKrz=" + this.NPV_NoteKrz + ", NPV_Datum=" + this.NPV_Datum + ", NPAA_Fach_ID=" + this.NPAA_Fach_ID + ", NPAA_NoteKrz=" + this.NPAA_NoteKrz + ", NPAA_Datum=" + this.NPAA_Datum + ", NPBQ_Fach_ID=" + this.NPBQ_Fach_ID + ", NPBQ_NoteKrz=" + this.NPBQ_NoteKrz + ", NPBQ_Datum=" + this.NPBQ_Datum + ", VersetzungKrz=" + this.VersetzungKrz + ", AbschlussArt=" + this.AbschlussArt + ", AbschlIstPrognose=" + this.AbschlIstPrognose + ", Konferenzdatum=" + this.Konferenzdatum + ", ZeugnisDatum=" + this.ZeugnisDatum + ", Schulgliederung=" + this.Schulgliederung + ", ASDJahrgang=" + this.ASDJahrgang + ", EPJahre=" + this.EPJahre + ", Jahrgang_ID=" + this.Jahrgang_ID + ", Fachklasse_ID=" + this.Fachklasse_ID + ", Schwerpunkt_ID=" + this.Schwerpunkt_ID + ", ZeugnisBem=" + this.ZeugnisBem + ", Schwerbehinderung=" + this.Schwerbehinderung + ", Foerderschwerpunkt_ID=" + this.Foerderschwerpunkt_ID + ", OrgFormKrz=" + this.OrgFormKrz + ", RefPaed=" + this.RefPaed + ", Klassenart=" + this.Klassenart + ", SumFehlStd=" + this.SumFehlStd + ", SumFehlStdU=" + this.SumFehlStdU + ", Wiederholung=" + this.Wiederholung + ", Gesamtnote_GS=" + this.Gesamtnote_GS + ", Gesamtnote_NW=" + this.Gesamtnote_NW + ", Folgeklasse_ID=" + this.Folgeklasse_ID + ", Foerderschwerpunkt2_ID=" + this.Foerderschwerpunkt2_ID + ", Abschluss=" + this.Abschluss + ", Abschluss_B=" + this.Abschluss_B + ", DSNote=" + this.DSNote + ", AV_Leist=" + this.AV_Leist + ", AV_Zuv=" + this.AV_Zuv + ", AV_Selbst=" + this.AV_Selbst + ", SV_Verant=" + this.SV_Verant + ", SV_Konfl=" + this.SV_Konfl + ", SV_Koop=" + this.SV_Koop + ", MoeglNPFaecher=" + this.MoeglNPFaecher + ", Zertifikate=" + this.Zertifikate + ", DatumFHR=" + this.DatumFHR + ", PruefAlgoErgebnis=" + this.PruefAlgoErgebnis + ", Zeugnisart=" + this.Zeugnisart + ", DatumVon=" + this.DatumVon + ", DatumBis=" + this.DatumBis + ", FehlstundenGrenzwert=" + this.FehlstundenGrenzwert + ", Sonderpaedagoge_ID=" + this.Sonderpaedagoge_ID + ", FachPraktAnteilAusr=" + this.FachPraktAnteilAusr + ", BilingualerZweig=" + this.BilingualerZweig + ", AOSF=" + this.AOSF + ", Autist=" + this.Autist + ", ZieldifferentesLernen=" + this.ZieldifferentesLernen + ", meldungBAN=" + this.meldungBAN + ", PrognoseAbschluss=" + this.PrognoseAbschluss + ", PrognoseLog=" + this.PrognoseLog + ")";
+		return "DTOSchuelerLernabschnittsdaten(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", WechselNr=" + this.WechselNr + ", Hochrechnung=" + this.Hochrechnung + ", SemesterWertung=" + this.SemesterWertung + ", PruefOrdnung=" + this.PruefOrdnung + ", Klassen_ID=" + this.Klassen_ID + ", Tutor_ID=" + this.Tutor_ID + ", Verspaetet=" + this.Verspaetet + ", NPV_Fach_ID=" + this.NPV_Fach_ID + ", NPV_NoteKrz=" + this.NPV_NoteKrz + ", NPV_Datum=" + this.NPV_Datum + ", NPAA_Fach_ID=" + this.NPAA_Fach_ID + ", NPAA_NoteKrz=" + this.NPAA_NoteKrz + ", NPAA_Datum=" + this.NPAA_Datum + ", NPBQ_Fach_ID=" + this.NPBQ_Fach_ID + ", NPBQ_NoteKrz=" + this.NPBQ_NoteKrz + ", NPBQ_Datum=" + this.NPBQ_Datum + ", VersetzungKrz=" + this.VersetzungKrz + ", AbschlussArt=" + this.AbschlussArt + ", AbschlIstPrognose=" + this.AbschlIstPrognose + ", Konferenzdatum=" + this.Konferenzdatum + ", ZeugnisDatum=" + this.ZeugnisDatum + ", Schulgliederung=" + this.Schulgliederung + ", ASDJahrgang=" + this.ASDJahrgang + ", EPJahre=" + this.EPJahre + ", Jahrgang_ID=" + this.Jahrgang_ID + ", Fachklasse_ID=" + this.Fachklasse_ID + ", Schwerpunkt_ID=" + this.Schwerpunkt_ID + ", ZeugnisBem=" + this.ZeugnisBem + ", Schwerbehinderung=" + this.Schwerbehinderung + ", Foerderschwerpunkt_ID=" + this.Foerderschwerpunkt_ID + ", OrgFormKrz=" + this.OrgFormKrz + ", RefPaed=" + this.RefPaed + ", Klassenart=" + this.Klassenart + ", SumFehlStd=" + this.SumFehlStd + ", SumFehlStdU=" + this.SumFehlStdU + ", Wiederholung=" + this.Wiederholung + ", Gesamtnote_GS=" + this.Gesamtnote_GS + ", Gesamtnote_NW=" + this.Gesamtnote_NW + ", Folgeklasse_ID=" + this.Folgeklasse_ID + ", Foerderschwerpunkt2_ID=" + this.Foerderschwerpunkt2_ID + ", Abschluss=" + this.Abschluss + ", Abschluss_B=" + this.Abschluss_B + ", DSNote=" + this.DSNote + ", AV_Leist=" + this.AV_Leist + ", AV_Zuv=" + this.AV_Zuv + ", AV_Selbst=" + this.AV_Selbst + ", SV_Verant=" + this.SV_Verant + ", SV_Konfl=" + this.SV_Konfl + ", SV_Koop=" + this.SV_Koop + ", MoeglNPFaecher=" + this.MoeglNPFaecher + ", Zertifikate=" + this.Zertifikate + ", DatumFHR=" + this.DatumFHR + ", PruefAlgoErgebnis=" + this.PruefAlgoErgebnis + ", Zeugnisart=" + this.Zeugnisart + ", DatumVon=" + this.DatumVon + ", DatumBis=" + this.DatumBis + ", FehlstundenGrenzwert=" + this.FehlstundenGrenzwert + ", Sonderpaedagoge_ID=" + this.Sonderpaedagoge_ID + ", FachPraktAnteilAusr=" + this.FachPraktAnteilAusr + ", BilingualerZweig=" + this.BilingualerZweig + ", AOSF=" + this.AOSF + ", Autist=" + this.Autist + ", ZieldifferentesLernen=" + this.ZieldifferentesLernen + ", meldungBAN=" + this.meldungBAN + ", PrognoseAbschluss=" + this.PrognoseAbschluss + ", PrognoseLog=" + this.PrognoseLog + ", idBetreuung=" + this.idBetreuung + ")";
 	}
 
 }

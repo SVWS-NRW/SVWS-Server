@@ -339,6 +339,8 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			case "verwendungAnkreuzkompetenzen" -> dto.Ankreuzzeugnisse = JSONMapper.convertToBoolean(value, false);
 			case "idFachklasse" -> mapIdFachklasse(dto, value);
 			case "beginnSommersemester" -> dto.SommerSem = JSONMapper.convertToBoolean(value, false);
+			case "istJva" -> dto.istJva = JSONMapper.convertToBoolean(value, false);
+			case "istReformpaedagogik" -> dto.istReformpaedagogik = JSONMapper.convertToBoolean(value, false);
 			case "klassenLeitungen" -> mapKlassenleitungen(dto, value);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
@@ -971,6 +973,8 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		klassenDaten.kuerzelFolgeklasse = dto.FKlasse;
 		klassenDaten.idFachklasse = dto.Fachklasse_ID;
 		klassenDaten.beginnSommersemester = Boolean.TRUE.equals(dto.SommerSem);
+		klassenDaten.istJva = Boolean.TRUE.equals(dto.istJva);
+		klassenDaten.istReformpaedagogik = Boolean.TRUE.equals(dto.istReformpaedagogik);
 
 		// Bestimme die IDs der Vorgänger- und der Nachfolge-Klassen dieser Klasse, sofern möglich und berücksichtige dabei den Semesterbetrieb i, Weiterbildungskolleg
 		if (klassenDaten.kuerzelVorgaengerklasse != null) {

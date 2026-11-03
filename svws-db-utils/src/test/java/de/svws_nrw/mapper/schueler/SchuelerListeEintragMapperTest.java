@@ -49,7 +49,7 @@ class SchuelerListeEintragMapperTest {
 	}
 
 	private static DTOSchuelerLernabschnittsdaten createLernabschnitt() {
-		final var abschnitt = new DTOSchuelerLernabschnittsdaten(1L, ID_SCHUELER, ID_ABSCHNITT_LERNABSCHNITT, false, false);
+		final var abschnitt = new DTOSchuelerLernabschnittsdaten(1L, ID_SCHUELER, ID_ABSCHNITT_LERNABSCHNITT, false, false, 1L);
 		abschnitt.Klassen_ID = ID_KLASSE;
 		abschnitt.Jahrgang_ID = ID_JAHRGANG;
 		abschnitt.EPJahre = 2;

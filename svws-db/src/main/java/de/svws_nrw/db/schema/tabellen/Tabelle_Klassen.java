@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.schema.Schema;
@@ -114,6 +115,22 @@ public class Tabelle_Klassen extends SchemaTabelle {
 			.setDefault("-")
 			.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 			.setJavaComment("Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden");
+
+	/** Die Definition der Tabellenspalte istJva */
+	public final SchemaTabelleSpalte col_istJva = add("istJva", SchemaDatentypen.INT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob die Klasse an einer JVA unterrichtet wird oder nicht")
+			.setRevision(SchemaRevisionen.REV_81);
+
+	/** Die Definition der Tabellenspalte istReformpaedagogik */
+	public final SchemaTabelleSpalte col_istReformpaedagogik = add("istReformpaedagogik", SchemaDatentypen.INT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob in der Klasse reformpädagogisch unterrichtet wird oder nicht")
+			.setRevision(SchemaRevisionen.REV_81);
 
 	/** Die Definition des Fremdschlüssels Klassen_Schuljahresabschnitt_FK */
 	public final SchemaTabelleFremdschluessel fk_Klassen_Schuljahresabschnitt_FK = addForeignKey(

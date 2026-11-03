@@ -38,7 +38,7 @@ class EigeneSchuleRepositoryImplTest {
 	@Test
 	@DisplayName("Test: Erstelle einen neuen Eintrag und prüfe die Zuweisung der neuen ID.")
 	void testCreateSchule() {
-		final DTOEigeneSchule neu = new DTOEigeneSchule(-1L);
+		final DTOEigeneSchule neu = new DTOEigeneSchule(-1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
 
 		final long neueId = 42L;
 
@@ -57,7 +57,7 @@ class EigeneSchuleRepositoryImplTest {
 	@DisplayName("Test: Bestimme einen Eintrag anhand der ID.")
 	void testGetById() {
 		final Long id = 42L;
-		final DTOEigeneSchule entity = new DTOEigeneSchule(id);
+		final DTOEigeneSchule entity = new DTOEigeneSchule(id, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
 
 		when(conn.queryByKey(DTOEigeneSchule.class, id)).thenReturn(entity);
 
@@ -73,7 +73,7 @@ class EigeneSchuleRepositoryImplTest {
 	void testGetIdSchuljahresabschnitt() {
 		// Szenario: Die Schule befindet sich in dem Schuljahresabschnitt mit der ID 42
 		final long idSchuljahresabschnitt = 42L;
-		final DTOEigeneSchule schule = new DTOEigeneSchule(1L);
+		final DTOEigeneSchule schule = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
 		schule.Schuljahresabschnitts_ID = idSchuljahresabschnitt;
 
 		when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(schule);
@@ -117,7 +117,7 @@ class EigeneSchuleRepositoryImplTest {
 		}
 
 		private static DTOEigeneSchule dtoWithSchulnummer(final int schulNr) {
-			final var dto = new DTOEigeneSchule(1L);
+			final var dto = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
 			dto.SchulNr = schulNr;
 			dto.SchulformKuerzel = "GY";
 			dto.Schuljahresabschnitts_ID = 1L;
@@ -173,7 +173,7 @@ class EigeneSchuleRepositoryImplTest {
 		}
 
 		private static DTOEigeneSchule dtoWithSchulform(final String schulformKuerzel) {
-			final var dto = new DTOEigeneSchule(1L);
+			final var dto = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
 			dto.SchulNr = 123456;
 			dto.SchulformKuerzel = schulformKuerzel;
 			dto.Schuljahresabschnitts_ID = 1L;

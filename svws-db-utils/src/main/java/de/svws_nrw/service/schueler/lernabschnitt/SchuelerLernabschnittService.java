@@ -13,6 +13,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.types.fach.BilingualeSprache;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.klassen.Klassenart;
+import de.svws_nrw.asd.types.schueler.Betreuungsart;
 import de.svws_nrw.asd.types.schueler.Versetzungsvermerk;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
@@ -349,6 +350,7 @@ public final class SchuelerLernabschnittService {
 		dto.foerderschwerpunkt2ID.ifPresent(this::validateIdFoerderschwerpunkt);
 		dto.schwerpunktID.ifPresent(this::validateIdSchuelerschwerpunkt);
 		dto.idKlassenart.ifPresent(this::validateIdKlassenart);
+		dto.idBetreuung.ifPresent(this::validateIdBetreuung);
 		dto.idSchulgliederung.ifPresent(this::validateIdSchulgliederung);
 		dto.idOrganisationsform.ifPresent(id -> validateIdOrganisationsform(id, schulform));
 		dto.idEpJahre.ifPresent(this::validateIdEpJahre);
@@ -412,6 +414,13 @@ public final class SchuelerLernabschnittService {
 		if (Klassenart.data().getEintragByID(idKlassenart) == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Es existiert keine gültige Klassenart mit der ID %d.".formatted(idKlassenart));
+		}
+	}
+
+	private void validateIdBetreuung(final Long idBetreuung) {
+		if ((idBetreuung == null) || (Betreuungsart.data().getEintragByID(idBetreuung) == null)) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Es existiert keine gültige Betreuungsart mit der ID %s.".formatted(idBetreuung));
 		}
 	}
 

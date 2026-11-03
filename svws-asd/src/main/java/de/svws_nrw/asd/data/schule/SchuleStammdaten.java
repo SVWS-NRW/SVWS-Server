@@ -90,6 +90,46 @@ public class SchuleStammdaten {
 	@Schema(description = "Dauer einer Unterrichtseinheit", example = "45")
 	public long dauerUnterrichtseinheit;
 
+	/** Die ID der Form des gebundenen Ganztags */
+	@Schema(description = "Die ID der Form des gebundenen Ganztags", example = "1")
+	public long idGebundenerGanztag;
+
+	/** Gibt an, ob ein offener Ganztag angeboten wird */
+	@Schema(description = "Gibt an, ob ein offener Ganztag angeboten wird", example = "false")
+	public boolean istOffenerGanztag;
+
+	/** Die ID der Form des offenen Ganztags */
+	@Schema(description = "Die ID der Form des offenen Ganztags", example = "3")
+	public long idFormOffenerGanztag;
+
+	/** Gibt an, ob die Schule in einer Justizvollzugsanstalt unterrichtet */
+	@Schema(description = "Gibt an, ob die Schule in einer Justizvollzugsanstalt unterrichtet", example = "false")
+	public boolean istJva;
+
+	/** Die ID der Form des bilingualen Unterrichts */
+	@Schema(description = "Die ID der Form des bilingualen Unterrichts", example = "1")
+	public long idBilingualerUnterricht;
+
+	/** Gibt an, ob eine Realschule einen Hauptschulbildungsgang anbietet */
+	@Schema(description = "Gibt an, ob eine Realschule einen Hauptschulbildungsgang anbietet", example = "false")
+	public boolean hatRealschuleHauptschulbildungsgang;
+
+	/** Gibt an, ob die Schule internationale Kontakte pflegt */
+	@Schema(description = "Gibt an, ob die Schule internationale Kontakte pflegt", example = "false")
+	public boolean hatInternationaleKontakte;
+
+	/** Gibt an, ob an der Schule eine konfessionelle Kooperation vorhanden ist */
+	@Schema(description = "Gibt an, ob an der Schule eine konfessionelle Kooperation vorhanden ist", example = "false")
+	public boolean hatKonfessionelleKooperation;
+
+	/** Die ID der Form der Talentschule */
+	@Schema(description = "Die ID der Form der Talentschule", example = "1")
+	public long idTalentschule;
+
+	/** Die ID der Art der Reformpädagogik, nach der an der Schule unterrichtet wird */
+	@Schema(description = "Die ID der Art der Reformpädagogik, nach der an der Schule unterrichtet wird", example = "0")
+	public long idReformpaedagogik;
+
 	/** Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind. */
 	@ArraySchema(schema = @Schema(implementation = Schuljahresabschnitt.class))
 	public final @NotNull List<Schuljahresabschnitt> abschnitte = new ArrayList<>();

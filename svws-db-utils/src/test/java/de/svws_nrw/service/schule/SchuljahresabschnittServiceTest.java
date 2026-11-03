@@ -73,7 +73,7 @@ class SchuljahresabschnittServiceTest {
 	}
 
 	private void stubAktiverAbschnitt(final DTOSchuljahresabschnitte aktiv) {
-		final var schule = new DTOEigeneSchule(1L);
+		final var schule = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
 		schule.Schuljahresabschnitts_ID = aktiv.ID;
 		when(eigeneSchuleRepoMock.findFirst()).thenReturn(Optional.of(schule));
 		when(repoMock.findById(aktiv.ID)).thenReturn(Optional.of(aktiv));
@@ -387,7 +387,7 @@ class SchuljahresabschnittServiceTest {
 	@DisplayName("createNachLetztem | ohne gesetzten aktiven Abschnitt wird abgelehnt")
 	void createNachLetztem_keinAktiverAbschnitt() {
 		when(repoMock.getAll()).thenReturn(List.of(new DTOSchuljahresabschnitte(10L, 2025, 1)));
-		when(eigeneSchuleRepoMock.findFirst()).thenReturn(Optional.of(new DTOEigeneSchule(1L)));
+		when(eigeneSchuleRepoMock.findFirst()).thenReturn(Optional.of(new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L)));
 
 		assertApiError(service::createNachLetztem, Response.Status.BAD_REQUEST, "Für die Schule ist kein aktiver Schuljahresabschnitt gesetzt.");
 		verify(repoMock, never()).create(any(DTOSchuljahresabschnitte.class));
@@ -397,7 +397,7 @@ class SchuljahresabschnittServiceTest {
 	@DisplayName("createNachLetztem | nicht vorhandener aktiver Abschnitt wird abgelehnt")
 	void createNachLetztem_aktiverAbschnittNichtGefunden() {
 		when(repoMock.getAll()).thenReturn(List.of(new DTOSchuljahresabschnitte(10L, 2025, 1)));
-		final var schule = new DTOEigeneSchule(1L);
+		final var schule = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
 		schule.Schuljahresabschnitts_ID = 77L;
 		when(eigeneSchuleRepoMock.findFirst()).thenReturn(Optional.of(schule));
 		when(repoMock.findById(77L)).thenReturn(Optional.empty());

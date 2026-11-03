@@ -154,6 +154,7 @@ public final class SchuelerStatistikService {
 					.getIDByWertAndSchuljahr(AllgemeinbildendOrganisationsformen.data().getWertBySchluessel(dto.OrgFormKrz), schuljahr);
 		}
 		daten.idKlassenart = Klassenart.data().getIDByWertAndSchuljahr(Klassenart.data().getWertBySchluessel(dto.Klassenart), schuljahr);
+		daten.idBetreuung = dto.idBetreuung;
 		daten.hatSchwerbehinderungsNachweis = (dto.Schwerbehinderung != null) && dto.Schwerbehinderung;
 		daten.idFoerderschwerpunkt1 = dto.Foerderschwerpunkt_ID;
 		daten.idFoerderschwerpunkt2 = dto.Foerderschwerpunkt2_ID;

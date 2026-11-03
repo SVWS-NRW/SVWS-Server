@@ -52,6 +52,11 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 	public idKlassenart: number | null = 7000;
 
 	/**
+	 * Die ID der Art der Teilnahme an Ganztagsangeboten und/oder Übermittagsbetreuung (siehe Core-Type Betreuungsart)
+	 */
+	public idBetreuung: number = 1;
+
+	/**
 	 * Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht
 	 */
 	public hatSchwerbehinderungsNachweis: boolean = false;
@@ -110,6 +115,9 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result.idFachklasse = (obj.idFachklasse === undefined) ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
 		result.idOrganisationsform = (obj.idOrganisationsform === undefined) ? null : obj.idOrganisationsform === null ? null : obj.idOrganisationsform;
 		result.idKlassenart = (obj.idKlassenart === undefined) ? null : obj.idKlassenart === null ? null : obj.idKlassenart;
+		if (obj.idBetreuung === undefined)
+			throw new Error('invalid json format, missing attribute idBetreuung');
+		result.idBetreuung = obj.idBetreuung;
 		if (obj.hatSchwerbehinderungsNachweis === undefined)
 			throw new Error('invalid json format, missing attribute hatSchwerbehinderungsNachweis');
 		result.hatSchwerbehinderungsNachweis = obj.hatSchwerbehinderungsNachweis;
@@ -135,6 +143,7 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
 		result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : obj.idOrganisationsform.toString()) + ',';
 		result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
+		result += '"idBetreuung" : ' + obj.idBetreuung.toString() + ',';
 		result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis.toString() + ',';
 		result += '"idFoerderschwerpunkt1" : ' + ((obj.idFoerderschwerpunkt1 === null) ? 'null' : obj.idFoerderschwerpunkt1.toString()) + ',';
 		result += '"idFoerderschwerpunkt2" : ' + ((obj.idFoerderschwerpunkt2 === null) ? 'null' : obj.idFoerderschwerpunkt2.toString()) + ',';
@@ -180,6 +189,9 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		}
 		if (obj.idKlassenart !== undefined) {
 			result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
+		}
+		if (obj.idBetreuung !== undefined) {
+			result += '"idBetreuung" : ' + obj.idBetreuung.toString() + ',';
 		}
 		if (obj.hatSchwerbehinderungsNachweis !== undefined) {
 			result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis.toString() + ',';

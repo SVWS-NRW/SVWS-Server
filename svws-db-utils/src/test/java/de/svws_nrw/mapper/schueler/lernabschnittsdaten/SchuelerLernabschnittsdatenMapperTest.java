@@ -7,6 +7,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,7 @@ class SchuelerLernabschnittsdatenMapperTest {
 	private final SchuelerLernabschnittsdatenMapper mapper = SchuelerLernabschnittsdatenMapper.INSTANCE;
 
 	private DTOSchuelerLernabschnittsdaten createEntity() {
-		final var e = new DTOSchuelerLernabschnittsdaten(1L, 10L, 20L, true, false);
+		final var e = new DTOSchuelerLernabschnittsdaten(1L, 10L, 20L, true, false, 1L);
 		e.WechselNr = 0;
 		e.Klassen_ID = 30L;
 		e.PruefOrdnung = "APO-SI";
@@ -61,6 +62,25 @@ class SchuelerLernabschnittsdatenMapperTest {
 					.hasFieldOrPropertyWithValue("klassenID", 30L)
 					.hasFieldOrPropertyWithValue("pruefungsOrdnung", "APO-SI")
 					.hasFieldOrPropertyWithValue("istFachpraktischerAnteilAusreichend", true);
+		}
+
+		@Test
+		@DisplayName("Mappt idBetreuung aus der Entity")
+		void toApi_idBetreuung() {
+			final var entity = createEntity();
+			entity.idBetreuung = 4L;
+
+			final var result = mapper.toApi(entity, 2024, Schulform.GY, SchuelerLernabschnittsdatenMappingContext.empty());
+
+			assertThat(result.idBetreuung).isEqualTo(4L);
+		}
+
+		@Test
+		@DisplayName("idBetreuung hat den Standardwert 1, wenn die Entity den Datenbank-Default trägt")
+		void toApi_idBetreuungStandardwert() {
+			final var result = mapper.toApi(createEntity(), 2024, Schulform.GY, SchuelerLernabschnittsdatenMappingContext.empty());
+
+			assertThat(result.idBetreuung).isEqualTo(1L);
 		}
 
 		@Test
@@ -239,6 +259,41 @@ class SchuelerLernabschnittsdatenMapperTest {
 	}
 
 	// -------------------------------------------------------------------------
+	// toDomain (Anlegen)
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("toDomain")
+	class ToDomain {
+
+		@Test
+		void toDomain_setztIdBetreuungStandardwert() {
+			final var request = new SchuelerLernabschnittCreateRequest();
+			request.schuelerID = 10L;
+			request.schuljahresabschnitt = 20L;
+
+			final var result = mapper.toDomain(request);
+
+			assertThat(result.Schueler_ID).isEqualTo(10L);
+			assertThat(result.Schuljahresabschnitts_ID).isEqualTo(20L);
+			assertThat(result.idBetreuung).isEqualTo(1L);
+		}
+
+		@Test
+		void toDomain_uebernimmtIdBetreuungNichtAusRequest() {
+			final var request = new SchuelerLernabschnittCreateRequest();
+			request.schuelerID = 10L;
+			request.schuljahresabschnitt = 20L;
+			request.idBetreuung = JsonNullable.of(5L);
+
+			final var result = mapper.toDomain(request);
+
+			assertThat(result.idBetreuung).isEqualTo(1L);
+		}
+
+	}
+
+	// -------------------------------------------------------------------------
 	// patch
 	// -------------------------------------------------------------------------
 
@@ -312,6 +367,58 @@ class SchuelerLernabschnittsdatenMapperTest {
 			mapper.patch(dto, entity, 2024, Schulform.GY);
 
 			assertThat(entity.Klassenart).isEqualTo("PK");
+		}
+
+		@Test
+		@DisplayName("idBetreuung wird in die Entity übernommen")
+		void patch_idBetreuungWirdUebernommen() {
+			final var entity = createEntity();
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idBetreuung = JsonNullable.of(3L);
+
+			mapper.patch(dto, entity, 2024, Schulform.GY);
+
+			assertThat(entity.idBetreuung).isEqualTo(3L);
+		}
+
+		@Test
+		@DisplayName("idBetreuung fehlt im Request - Entity bleibt unverändert")
+		void patch_idBetreuungFehltBleibtUnveraendert() {
+			final var entity = createEntity();
+			entity.idBetreuung = 5L;
+
+			mapper.patch(new SchuelerLernabschnittsdatenPatchRequest(), entity, 2024, Schulform.GY);
+
+			assertThat(entity.idBetreuung).isEqualTo(5L);
+		}
+
+		@ParameterizedTest(name = "idBetreuung {0} wird übernommen")
+		@ValueSource(longs = { 1L, 2L, 6L })
+		@DisplayName("idBetreuung: Alle Werte des Katalogs werden unverändert in die Entity übernommen")
+		void patch_idBetreuungKatalogwerte(final long id) {
+			final var entity = createEntity();
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idBetreuung = JsonNullable.of(id);
+
+			mapper.patch(dto, entity, 2024, Schulform.GY);
+
+			assertThat(entity.idBetreuung).isEqualTo(id);
+		}
+
+		@Test
+		@DisplayName("idBetreuung zusammen mit anderen Feldern: Beide werden übernommen, nicht angegebene Felder bleiben unverändert")
+		void patch_idBetreuungMitAnderenFeldern() {
+			final var entity = createEntity();
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idBetreuung = JsonNullable.of(2L);
+			dto.istGewertet = JsonNullable.of(false);
+
+			mapper.patch(dto, entity, 2024, Schulform.GY);
+
+			assertThat(entity.idBetreuung).isEqualTo(2L);
+			assertThat(entity.SemesterWertung).isFalse();
+			assertThat(entity.PruefOrdnung).isEqualTo("APO-SI");
+			assertThat(entity.Klassen_ID).isEqualTo(30L);
 		}
 
 		@Test

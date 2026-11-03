@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
@@ -25,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
@@ -78,7 +80,7 @@ class DataKlassendatenTest {
 	void getSchulgliederungIdByKlasseAndSchulform_Found() {
 		final Schulform schulform = Schulform.GY;
 
-		final DTOKlassen dtoKlasse = new DTOKlassen(1L, 1L, "5a");
+		final DTOKlassen dtoKlasse = new DTOKlassen(1L, 1L, "5a", false, false);
 		dtoKlasse.ASDSchulformNr = "20";
 
 		final Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
@@ -104,7 +106,7 @@ class DataKlassendatenTest {
 	void getSchulgliederungIdByKlasseAndSchulform_NotFound() {
 		final Schulform schulform = Schulform.GY;
 
-		final DTOKlassen dtoKlasse = new DTOKlassen(1L, 1L, "5a");
+		final DTOKlassen dtoKlasse = new DTOKlassen(1L, 1L, "5a", false, false);
 		dtoKlasse.ASDSchulformNr = "20";
 
 		final Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
@@ -128,7 +130,7 @@ class DataKlassendatenTest {
 	@Test
 	@DisplayName("getSchulgliederungIdByKlasseAndSchulform | Es wird eine Klasse und 'null' als Schulform übergeben => Keine Schulgliederung daher -1")
 	void getSchulgliederungIdByKlasseAndSchulform_Fallback() {
-		final DTOKlassen dtoKlasse = new DTOKlassen(1L, 1L, "5a");
+		final DTOKlassen dtoKlasse = new DTOKlassen(1L, 1L, "5a", false, false);
 		dtoKlasse.ASDSchulformNr = "20";
 
 		final Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
@@ -161,7 +163,7 @@ class DataKlassendatenTest {
 	@Test
 	@DisplayName("getKlassenBySchuljahresabschnittId | Es wird eine ID übergeben, mit einer verknüpften Klasse => Map mit der verknüpften Klasse")
 	void getKlassenBySchuljahresabschnittId_Found() {
-		final DTOKlassen klasse = new DTOKlassen(10L, 1L, "5a");
+		final DTOKlassen klasse = new DTOKlassen(10L, 1L, "5a", false, false);
 		when(conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, 1L)).thenReturn(List.of(klasse));
 
 		final Map<String, DTOKlassen> result = cut.getKlassenBySchuljahresabschnittId(1L);
@@ -179,5 +181,88 @@ class DataKlassendatenTest {
 
 		assertThat(result).isEmpty();
 		verify(conn, times(1)).queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, 1L);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | istJva und istReformpaedagogik werden in das Datenbank-DTO übernommen")
+	void mapAttribute_IstJvaUndIstReformpaedagogik() {
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", false, false);
+
+		cut.mapAttribute(dto, "istJva", true, Map.of());
+		cut.mapAttribute(dto, "istReformpaedagogik", true, Map.of());
+
+		assertThat(dto.istJva).isTrue();
+		assertThat(dto.istReformpaedagogik).isTrue();
+
+		cut.mapAttribute(dto, "istJva", false, Map.of());
+		cut.mapAttribute(dto, "istReformpaedagogik", false, Map.of());
+
+		assertThat(dto.istJva).isFalse();
+		assertThat(dto.istReformpaedagogik).isFalse();
+	}
+
+	@Test
+	@DisplayName("mapAttribute | istJva mit einem Wert, der kein Boolean ist => ApiOperationException mit Status BAD_REQUEST")
+	void mapAttribute_IstJvaUngueltig() {
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", false, false);
+
+		final Throwable result = catchThrowable(() -> cut.mapAttribute(dto, "istJva", "kein Boolean", Map.of()));
+
+		assertThat(result).isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("map | istJva und istReformpaedagogik werden in die Klassendaten übernommen")
+	void map_IstJvaUndIstReformpaedagogik() {
+		final Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
+		abschnitt.id = 1L;
+		abschnitt.schuljahr = 2026;
+		abschnitt.abschnitt = 1;
+		final Benutzer userMock = mock(Benutzer.class);
+		lenient().when(userMock.schuleGetAbschnittById(1L)).thenReturn(abschnitt);
+		lenient().when(userMock.schuleGetSchuljahresabschnittByIdOrDefault(1L)).thenReturn(abschnitt);
+		lenient().when(userMock.schuleGetSchulform()).thenReturn(Schulform.GY);
+		lenient().when(conn.getUser()).thenReturn(userMock);
+
+		final DTOKlassen mitFlags = new DTOKlassen(1L, 1L, "5a", true, true);
+		final DTOKlassen ohneFlags = new DTOKlassen(2L, 1L, "5b", false, false);
+
+		final KlassenDaten ergebnisMit = cut.map(mitFlags);
+		final KlassenDaten ergebnisOhne = cut.map(ohneFlags);
+
+		assertThat(ergebnisMit.istJva).isTrue();
+		assertThat(ergebnisMit.istReformpaedagogik).isTrue();
+		assertThat(ergebnisOhne.istJva).isFalse();
+		assertThat(ergebnisOhne.istReformpaedagogik).isFalse();
+	}
+
+	@Test
+	@DisplayName("mapAttribute | istJva ändert nicht istReformpaedagogik und umgekehrt")
+	void mapAttribute_FlagsBeeinflussenSichNicht() {
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", false, false);
+
+		cut.mapAttribute(dto, "istJva", true, Map.of());
+
+		assertThat(dto.istJva).isTrue();
+		assertThat(dto.istReformpaedagogik).isFalse();
+
+		cut.mapAttribute(dto, "istReformpaedagogik", true, Map.of());
+		cut.mapAttribute(dto, "istJva", false, Map.of());
+
+		assertThat(dto.istJva).isFalse();
+		assertThat(dto.istReformpaedagogik).isTrue();
+	}
+
+	@Test
+	@DisplayName("mapAttribute | istReformpaedagogik mit dem Wert null => ApiOperationException mit Status BAD_REQUEST")
+	void mapAttribute_IstReformpaedagogikNull() {
+		final DTOKlassen dto = new DTOKlassen(1L, 1L, "5a", true, true);
+
+		final Throwable result = catchThrowable(() -> cut.mapAttribute(dto, "istReformpaedagogik", null, Map.of()));
+
+		assertThat(result).isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+		assertThat(dto.istReformpaedagogik).isTrue();
 	}
 }

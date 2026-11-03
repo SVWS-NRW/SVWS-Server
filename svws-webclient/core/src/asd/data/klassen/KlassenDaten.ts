@@ -126,6 +126,16 @@ export class KlassenDaten extends JavaObject {
 	 */
 	public beginnSommersemester: boolean = false;
 
+	/**
+	 * Gibt an, ob die Klasse an einer Justizvollzugsanstalt (JVA) unterrichtet wird
+	 */
+	public istJva: boolean = false;
+
+	/**
+	 * Gibt an, ob in der Klasse reformpädagogisch unterrichtet wird
+	 */
+	public istReformpaedagogik: boolean = false;
+
 
 	public constructor() {
 		super();
@@ -194,6 +204,12 @@ export class KlassenDaten extends JavaObject {
 		if (obj.beginnSommersemester === undefined)
 			throw new Error('invalid json format, missing attribute beginnSommersemester');
 		result.beginnSommersemester = obj.beginnSommersemester;
+		if (obj.istJva === undefined)
+			throw new Error('invalid json format, missing attribute istJva');
+		result.istJva = obj.istJva;
+		if (obj.istReformpaedagogik === undefined)
+			throw new Error('invalid json format, missing attribute istReformpaedagogik');
+		result.istReformpaedagogik = obj.istReformpaedagogik;
 		return result;
 	}
 
@@ -237,6 +253,8 @@ export class KlassenDaten extends JavaObject {
 		result += '"verwendungAnkreuzkompetenzen" : ' + obj.verwendungAnkreuzkompetenzen.toString() + ',';
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
 		result += '"beginnSommersemester" : ' + obj.beginnSommersemester.toString() + ',';
+		result += '"istJva" : ' + obj.istJva.toString() + ',';
+		result += '"istReformpaedagogik" : ' + obj.istReformpaedagogik.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -329,6 +347,12 @@ export class KlassenDaten extends JavaObject {
 		}
 		if (obj.beginnSommersemester !== undefined) {
 			result += '"beginnSommersemester" : ' + obj.beginnSommersemester.toString() + ',';
+		}
+		if (obj.istJva !== undefined) {
+			result += '"istJva" : ' + obj.istJva.toString() + ',';
+		}
+		if (obj.istReformpaedagogik !== undefined) {
+			result += '"istReformpaedagogik" : ' + obj.istReformpaedagogik.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

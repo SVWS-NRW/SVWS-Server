@@ -379,21 +379,24 @@ public enum SchemaRevisionen {
 	REV_79(79, "2026-09-23"),
 
 	/** Ergänzen einer Spalte istInitialkennwort bei der Tabelle Notenmodul_Credentials */
-	REV_80(80, "2026-10-06");
+	REV_80(80, "2026-10-06"),
+
+	/** Tabellen EigeneSchule, Klassen und SchuelerLernabschnittsdaten um Felder für Ganztag, Betreuung, JVA, Reformpädagogik u. a. ergänzt, neue Tabelle StatistikKommentar */
+	REV_81(81, "2026-11-02");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_80;
+	public static final SchemaRevisionen maxRevision = REV_81;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_80;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_81;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */

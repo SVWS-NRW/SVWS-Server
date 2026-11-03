@@ -370,7 +370,7 @@ public final class UvPlanungsabschnittSchuelerImportService {
 	/* Leitet die Daten einer anzulegenden UV-Folgeklasse aus ihrer Quellklasse ab. */
 	private DTOKlassen createVirtuelleFolgeklasse(final DTOKlassen quellklasse, final long idZielAbschnitt,
 			final Map<Long, Long> folgejahrgaengeById) {
-		final DTOKlassen virtuelleFolgeklasse = new DTOKlassen(quellklasse.ID, idZielAbschnitt, quellklasse.FKlasse);
+		final DTOKlassen virtuelleFolgeklasse = new DTOKlassen(quellklasse.ID, idZielAbschnitt, quellklasse.FKlasse, false, false);
 		virtuelleFolgeklasse.Bezeichnung = quellklasse.FKlasse;
 		virtuelleFolgeklasse.Jahrgang_ID = folgejahrgaengeById.get(quellklasse.Jahrgang_ID);
 		virtuelleFolgeklasse.OrgFormKrz = quellklasse.OrgFormKrz;

@@ -44,6 +44,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
@@ -157,7 +159,7 @@ class SchuelerLernabschnittServiceTest {
 	// -------------------------------------------------------------------------
 
 	private DTOSchuelerLernabschnittsdaten createEntity(final long id, final long schuljahresabschnittId) {
-		return new DTOSchuelerLernabschnittsdaten(id, ID_SCHUELER, schuljahresabschnittId, true, null);
+		return new DTOSchuelerLernabschnittsdaten(id, ID_SCHUELER, schuljahresabschnittId, true, null, 1L);
 	}
 
 	private DTOSchuljahresabschnitte createSchuljahresabschnitt(final long id) {
@@ -171,7 +173,7 @@ class SchuelerLernabschnittServiceTest {
 	}
 
 	private DTOKlassen createKlasse(final long id, final long schuljahresabschnittId, final Long jahrgangId) {
-		final var klasse = new DTOKlassen(id, schuljahresabschnittId, "5a");
+		final var klasse = new DTOKlassen(id, schuljahresabschnittId, "5a", false, false);
 		klasse.Jahrgang_ID = jahrgangId;
 		return klasse;
 	}
@@ -690,6 +692,79 @@ class SchuelerLernabschnittServiceTest {
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
 					.hasMessage("Es existiert keine gültige Klassenart mit der ID 999999.");
 			verifyNoInteractions(mapper);
+		}
+
+		@Test
+		@DisplayName("Betreuungsart mit der ID existiert nicht - BAD_REQUEST")
+		void patch_betreuungsartUngueltig() {
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idBetreuung = JsonNullable.of(999999L);
+
+			assertThatThrownBy(() -> service.patch(ID_LERNABSCHNITT, dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
+					.hasMessage("Es existiert keine gültige Betreuungsart mit der ID 999999.");
+			verifyNoInteractions(mapper);
+		}
+
+		@Test
+		@DisplayName("Betreuungsart null ist nicht erlaubt - BAD_REQUEST")
+		void patch_betreuungsartNull() {
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idBetreuung = JsonNullable.of(null);
+
+			assertThatThrownBy(() -> service.patch(ID_LERNABSCHNITT, dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			verifyNoInteractions(mapper);
+		}
+
+		@Test
+		@DisplayName("Betreuungsart mit der ID existiert - Patch wird an den Mapper weitergegeben")
+		void patch_betreuungsartGueltig() {
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idBetreuung = JsonNullable.of(2L);
+
+			service.patch(ID_LERNABSCHNITT, dto);
+
+			verify(mapper).patch(any(), any(), anyInt(), any());
+		}
+
+		@ParameterizedTest(name = "Betreuungsart mit der ID {0} existiert - Patch wird an den Mapper weitergegeben")
+		@ValueSource(longs = { 1L, 2L, 3L, 4L, 5L, 6L })
+		@DisplayName("Alle Betreuungsarten des Katalogs werden akzeptiert")
+		void patch_betreuungsartAlleGueltigenIds(final long id) {
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idBetreuung = JsonNullable.of(id);
+
+			service.patch(ID_LERNABSCHNITT, dto);
+
+			verify(mapper).patch(any(), any(), anyInt(), any());
+		}
+
+		@ParameterizedTest(name = "Betreuungsart mit der ID {0} existiert nicht - BAD_REQUEST")
+		@ValueSource(longs = { -1L, 0L, 7L })
+		@DisplayName("IDs außerhalb des Katalogs der Betreuungsarten werden abgelehnt")
+		void patch_betreuungsartIdsAusserhalbDesKatalogs(final long id) {
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idBetreuung = JsonNullable.of(id);
+
+			assertThatThrownBy(() -> service.patch(ID_LERNABSCHNITT, dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
+					.hasMessage("Es existiert keine gültige Betreuungsart mit der ID %d.".formatted(id));
+			verifyNoInteractions(mapper);
+		}
+
+		@Test
+		@DisplayName("Fehlt idBetreuung im Request, wird die Betreuungsart nicht geprüft")
+		void patch_betreuungsartFehltKeinePruefung() {
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.istGewertet = JsonNullable.of(false);
+
+			service.patch(ID_LERNABSCHNITT, dto);
+
+			verify(mapper).patch(any(), any(), anyInt(), any());
 		}
 
 		@Test
