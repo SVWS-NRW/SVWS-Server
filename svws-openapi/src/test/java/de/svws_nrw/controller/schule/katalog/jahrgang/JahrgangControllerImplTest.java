@@ -71,7 +71,7 @@ class JahrgangControllerImplTest {
 		final var request = new JahrgangCreateRequest();
 		request.kuerzel = "05";
 		request.bezeichnung = "Jahrgang 5";
-		request.idJahrgang = 5000000L;
+		request.idJahrgangStatistik = 5000000L;
 
 		final var daten = new JahrgangsDaten();
 		daten.id = 7L;

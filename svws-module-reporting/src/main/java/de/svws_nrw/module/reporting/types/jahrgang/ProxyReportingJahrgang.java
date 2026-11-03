@@ -45,13 +45,13 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				null,
 				ersetzeNullBlankTrim(jahrgangsDaten.kuerzel),
 				jahrgangsDaten.idSchulgliederung,
-				jahrgangsDaten.idJahrgang,
+				jahrgangsDaten.idJahrgangStatistik,
 				jahrgangsDaten.istSichtbar,
 				null,
 				schuljahresabschnitt,
 				jahrgangsDaten.sortierung);
 
-		this.jahrgang = (jahrgangsDaten.idJahrgang == null) ? null : Jahrgaenge.data().getWertByID(jahrgangsDaten.idJahrgang);
+		this.jahrgang = (jahrgangsDaten.idJahrgangStatistik == null) ? null : Jahrgaenge.data().getWertByID(jahrgangsDaten.idJahrgangStatistik);
 		this.reportingContext = reportingContext;
 	}
 

@@ -26,7 +26,7 @@ public class JahrgangPatchRequest {
 
 	/** Die ID des ASD-Jahrgangs (CoreType) */
 	@Schema(description = "Die ID des ASD-Jahrgangs (CoreType)", example = "5000001")
-	public JsonNullable<@NotNull Long> idJahrgang = JsonNullable.undefined();
+	public JsonNullable<@NotNull Long> idJahrgangStatistik = JsonNullable.undefined();
 
 	/** Die Sortierreihenfolge des Jahrgangs */
 	@Schema(description = "Die Sortierreihenfolge des Jahrgangs", example = "1")

@@ -789,7 +789,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		const stundenplanJahrgang = new StundenplanJahrgang();
 		for (const j of this.listJahrgaenge) {
 			if (j.id === id) {
-				const jahrgang = Jahrgaenge.data().getEintragByID(j.idJahrgang ?? -1);
+				const jahrgang = Jahrgaenge.data().getEintragByID(j.idJahrgangStatistik ?? -1);
 				stundenplanJahrgang.kuerzel = j.kuerzel ?? jahrgang?.kuerzel ?? '';
 				stundenplanJahrgang.id = j.id;
 			}

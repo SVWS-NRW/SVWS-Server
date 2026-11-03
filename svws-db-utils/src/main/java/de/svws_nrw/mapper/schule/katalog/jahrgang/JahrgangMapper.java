@@ -40,7 +40,7 @@ public interface JahrgangMapper {
 	@Mapping(target = "id", source = "ID")
 	@Mapping(target = "kuerzel", source = "InternKrz")
 	@Mapping(target = "kurzbezeichnung", source = "Kurzbezeichnung")
-	@Mapping(target = "idJahrgang", source = "ASDJahrgang", qualifiedByName = "mapJahrgang")
+	@Mapping(target = "idJahrgangStatistik", source = "ASDJahrgang", qualifiedByName = "mapJahrgang")
 	@Mapping(target = "bezeichnung", source = "ASDBezeichnung", defaultValue = "")
 	@Mapping(target = "sortierung", source = "Sortierung")
 	@Mapping(target = "idSchulgliederung", source = "GliederungKuerzel", qualifiedByName = "mapGliederung")
@@ -119,7 +119,7 @@ public interface JahrgangMapper {
 	@Mapping(target = "Sichtbar", source = "istSichtbar")
 	@Mapping(target = "GueltigVon", source = "gueltigVon")
 	@Mapping(target = "GueltigBis", source = "gueltigBis")
-	@Mapping(target = "ASDJahrgang", source = "idJahrgang", qualifiedByName = "updateIdJahrgang")
+	@Mapping(target = "ASDJahrgang", source = "idJahrgangStatistik", qualifiedByName = "updateIdJahrgang")
 	@Mapping(target = "GliederungKuerzel", source = "idSchulgliederung", qualifiedByName = "updateIdSchulgliederung")
 	@Mapping(target = "Sekundarstufe", source = "idBildungsstufe", qualifiedByName = "updateIdBildungsstufe")
 	@Mapping(target = "ID", ignore = true)
@@ -142,7 +142,7 @@ public interface JahrgangMapper {
 	@Mapping(target = "Sichtbar", source = "istSichtbar")
 	@Mapping(target = "GueltigVon", source = "gueltigVon")
 	@Mapping(target = "GueltigBis", source = "gueltigBis")
-	@Mapping(target = "ASDJahrgang", source = "idJahrgang", qualifiedByName = "updateIdJahrgang")
+	@Mapping(target = "ASDJahrgang", source = "idJahrgangStatistik", qualifiedByName = "updateIdJahrgang")
 	@Mapping(target = "GliederungKuerzel", source = "idSchulgliederung", qualifiedByName = "updateIdSchulgliederung")
 	@Mapping(target = "Sekundarstufe", source = "idBildungsstufe", qualifiedByName = "updateIdBildungsstufe")
 	@Mapping(target = "ID", ignore = true)
@@ -153,12 +153,12 @@ public interface JahrgangMapper {
 	/**
 	 * Löst die ID des CoreType-Eintrags auf das ASD-Kürzel des Jahrgangs auf.
 	 *
-	 * @param idJahrgang die ID des Jahrgangs-Eintrags
+	 * @param idJahrgangStatistik die ID des Jahrgangs-Eintrags
 	 * @return das ASD-Kürzel des Jahrgangs oder {@code null}
 	 */
 	@Named("updateIdJahrgang")
-	default String updateIdJahrgang(final Long idJahrgang) {
-		return Optional.ofNullable(Jahrgaenge.data().getEintragByID(idJahrgang))
+	default String updateIdJahrgang(final Long idJahrgangStatistik) {
+		return Optional.ofNullable(Jahrgaenge.data().getEintragByID(idJahrgangStatistik))
 				.map(j -> j.kuerzel)
 				.orElse(null);
 	}

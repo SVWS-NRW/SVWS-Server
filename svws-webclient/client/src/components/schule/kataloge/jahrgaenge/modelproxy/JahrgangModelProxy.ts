@@ -39,7 +39,7 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 		patch?: (data: Partial<JahrgangsDaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof JahrgangsDaten> =
-			["idFolgejahrgang", "idSchulgliederung", "idJahrgang", "idBildungsstufe", "istSichtbar"];
+			["idFolgejahrgang", "idSchulgliederung", "idJahrgangStatistik", "idBildungsstufe", "istSichtbar"];
 		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = schuljahr;
 		this.jahrgaengeById = this.mapJahrgaenge(jahrgaenge());
@@ -60,7 +60,7 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 		this.addBlockingValidator(new ValidatorJahrgangBezeichnung(() => this.proxy, jahrgaenge), "bezeichnung");
 		this.addBlockingValidator(new ValidatorJahrgangKurzbezeichnung(() => this.proxy, jahrgaenge), "kurzbezeichnung");
 		// ASD-Jahrgang
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idJahrgang), "idJahrgang");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idJahrgangStatistik), "idJahrgangStatistik");
 		// anzahlRestabschnitte
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.anzahlRestabschnitte, 0, 40), "anzahlRestabschnitte");
 		// sortierung
@@ -74,8 +74,8 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 	});
 
 	asdJahrgang = computed<JahrgaengeKatalogEintrag | null>({
-		get: () => Jahrgaenge.data().getEintragByID(this.proxy.idJahrgang ?? -1),
-		set: (value: JahrgaengeKatalogEintrag | null) => this.proxy.idJahrgang = value?.id ?? null,
+		get: () => Jahrgaenge.data().getEintragByID(this.proxy.idJahrgangStatistik ?? -1),
+		set: (value: JahrgaengeKatalogEintrag | null) => this.proxy.idJahrgangStatistik = value?.id ?? null,
 	});
 
 	bildungsstufe = computed<BildungsstufeKatalogEintrag | null>({

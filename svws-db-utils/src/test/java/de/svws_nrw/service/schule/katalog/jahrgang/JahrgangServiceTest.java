@@ -278,7 +278,7 @@ class JahrgangServiceTest {
 			final var request = new JahrgangCreateRequest();
 			request.kuerzel = "05";
 			request.bezeichnung = "Jahrgang 5";
-			request.idJahrgang = 5000000L;
+			request.idJahrgangStatistik = 5000000L;
 			return request;
 		}
 
@@ -338,10 +338,10 @@ class JahrgangServiceTest {
 		}
 
 		@Test
-		@DisplayName("Wirft 400, wenn die idJahrgang im Katalog nicht existiert")
+		@DisplayName("Wirft 400, wenn die idJahrgangStatistik im Katalog nicht existiert")
 		void create_idJahrgangUnbekannt() {
 			final var request = minimalRequest();
-			request.idJahrgang = 999999L;
+			request.idJahrgangStatistik = 999999L;
 
 			when(repository.kuerzelIsAlreadyUsedCreate("05")).thenReturn(false);
 			when(repository.bezeichnungIsAlreadyUsedCreate("Jahrgang 5")).thenReturn(false);
@@ -559,10 +559,10 @@ class JahrgangServiceTest {
 		}
 
 		@Test
-		@DisplayName("Wirft 400, wenn die idJahrgang unbekannt ist")
+		@DisplayName("Wirft 400, wenn die idJahrgangStatistik unbekannt ist")
 		void patch_idJahrgangUnbekannt() {
 			final var request = new JahrgangPatchRequest();
-			request.idJahrgang = JsonNullable.of(999999L);
+			request.idJahrgangStatistik = JsonNullable.of(999999L);
 
 			when(repository.findById(ID)).thenReturn(Optional.of(createEntity(ID)));
 

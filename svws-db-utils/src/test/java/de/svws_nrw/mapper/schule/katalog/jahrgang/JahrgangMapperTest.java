@@ -107,8 +107,8 @@ class JahrgangMapperTest {
 			assertThat(result.istSichtbar).isFalse();
 		}
 
-		@ParameterizedTest(name = "Schuljahr {0} -> idJahrgang {1}")
-		@DisplayName("Mappt idJahrgang abhängig vom Schuljahr")
+		@ParameterizedTest(name = "Schuljahr {0} -> idJahrgangStatistik {1}")
+		@DisplayName("Mappt idJahrgangStatistik abhängig vom Schuljahr")
 		@CsvSource({ "2022, 5000000", "2023, 5000001" })
 		void toApi_mapptIdJahrgangAbhaengigVomSchuljahr(final int schuljahr, final long expectedId) {
 			final var entity = createEntity(1L);
@@ -116,11 +116,11 @@ class JahrgangMapperTest {
 
 			final var result = mapper.toApi(entity, schuljahr, SCHULFORM);
 
-			assertThat(result.idJahrgang).isEqualTo(expectedId);
+			assertThat(result.idJahrgangStatistik).isEqualTo(expectedId);
 		}
 
 		@ParameterizedTest
-		@DisplayName("Mappt idJahrgang als null bei unbekanntem oder null Kürzel")
+		@DisplayName("Mappt idJahrgangStatistik als null bei unbekanntem oder null Kürzel")
 		@NullSource
 		@ValueSource(strings = { "UNBEKANNT" })
 		void toApi_mapptIdJahrgangNullBeiUnbekanntemKuerzel(final String kuerzel) {
@@ -129,7 +129,7 @@ class JahrgangMapperTest {
 
 			final var result = mapper.toApi(entity, SCHULJAHR, SCHULFORM);
 
-			assertThat(result.idJahrgang).isNull();
+			assertThat(result.idJahrgangStatistik).isNull();
 		}
 
 		@Test
@@ -228,7 +228,7 @@ class JahrgangMapperTest {
 		request.kuerzel = "05a";
 		request.bezeichnung = "Jahrgang 5";
 		request.kurzbezeichnung = "5a";
-		request.idJahrgang = 5000001L;
+		request.idJahrgangStatistik = 5000001L;
 		request.sortierung = 10;
 		request.idFolgejahrgang = 8L;
 		request.anzahlRestabschnitte = 3;
@@ -273,11 +273,11 @@ class JahrgangMapperTest {
 		}
 
 		@ParameterizedTest
-		@DisplayName("Mappt idJahrgang unabhängig vom Schuljahr auf dasselbe Kürzel")
+		@DisplayName("Mappt idJahrgangStatistik unabhängig vom Schuljahr auf dasselbe Kürzel")
 		@ValueSource(longs = {5000000L, 5000001L})
-		void toDomain_mapptIdJahrgangSchuljahrunabhaengig(final long idJahrgang) {
+		void toDomain_mapptIdJahrgangSchuljahrunabhaengig(final long idJahrgangStatistik) {
 			final var request = createRequest();
-			request.idJahrgang = idJahrgang;
+			request.idJahrgangStatistik = idJahrgangStatistik;
 
 			final var result = mapper.toDomain(request);
 
@@ -307,12 +307,12 @@ class JahrgangMapperTest {
 		}
 
 		@ParameterizedTest
-		@DisplayName("Mappt ASDJahrgang als null bei unbekannter oder null idJahrgang")
+		@DisplayName("Mappt ASDJahrgang als null bei unbekannter oder null idJahrgangStatistik")
 		@NullSource
 		@ValueSource(longs = {-1L})
-		void toDomain_mapptASDJahrgangNullBeiUnbekannterId(final Long idJahrgang) {
+		void toDomain_mapptASDJahrgangNullBeiUnbekannterId(final Long idJahrgangStatistik) {
 			final var request = createRequest();
-			request.idJahrgang = idJahrgang;
+			request.idJahrgangStatistik = idJahrgangStatistik;
 
 			final var result = mapper.toDomain(request);
 
@@ -416,11 +416,11 @@ class JahrgangMapperTest {
 		}
 
 		@Test
-		@DisplayName("Mappt idJahrgang auf das ASD-Kürzel des Jahrgangs")
+		@DisplayName("Mappt idJahrgangStatistik auf das ASD-Kürzel des Jahrgangs")
 		void patch_mapptIdJahrgangAufKuerzel() {
 			final var entity = createEntity(1L);
 			final var request = new JahrgangPatchRequest();
-			request.idJahrgang = JsonNullable.of(5000001L);
+			request.idJahrgangStatistik = JsonNullable.of(5000001L);
 
 			mapper.patch(request, entity);
 

@@ -139,7 +139,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		if (jg === null) {
 			return result;
 		}
-		const tmpJg = (jg.idJahrgang === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jg.idJahrgang);
+		const tmpJg = (jg.idJahrgangStatistik === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jg.idJahrgangStatistik);
 		if (tmpJg === null) {
 			return result;
 		}
@@ -154,7 +154,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
 			} else {
 				const jgKl = this.manager().jahrgaenge.get(kl.idJahrgang);
-				const tmpJgKl = (jgKl === null) || (jgKl.idJahrgang === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jgKl.idJahrgang);
+				const tmpJgKl = (jgKl === null) || (jgKl.idJahrgangStatistik === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jgKl.idJahrgangStatistik);
 				if (tmpJgKl === null) {
 					continue;
 				}
@@ -179,7 +179,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		if (jg === null) {
 			return result;
 		}
-		const tmpJg = (jg.idJahrgang === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jg.idJahrgang);
+		const tmpJg = (jg.idJahrgangStatistik === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jg.idJahrgangStatistik);
 		if (tmpJg === null) {
 			return result;
 		}
@@ -194,7 +194,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
 			} else {
 				const jgKl = this.manager().jahrgaenge.get(kl.idJahrgang);
-				const tmpJgKl = (jgKl === null) || (jgKl.idJahrgang === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jgKl.idJahrgang);
+				const tmpJgKl = (jgKl === null) || (jgKl.idJahrgangStatistik === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jgKl.idJahrgangStatistik);
 				if (tmpJgKl === null) {
 					continue;
 				}

@@ -33,7 +33,7 @@ public class JahrgangCreateRequest {
 	/** Die ID des ASD-Jahrgangs (CoreType) */
 	@Schema(description = "Die ID des ASD-Jahrgangs (CoreType)", example = "5000001")
 	@NotNull
-	public Long idJahrgang;
+	public Long idJahrgangStatistik;
 
 	/** Die Sortierreihenfolge des Jahrgangs */
 	@Schema(description = "Die Sortierreihenfolge des Jahrgangs", example = "1")

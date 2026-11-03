@@ -21,7 +21,7 @@ export class JahrgangsDaten extends JavaObject {
 	/**
 	 * Die Id des ASD-Jahrgangs
 	 */
-	public idJahrgang: number | null = null;
+	public idJahrgangStatistik: number | null = null;
 
 	/**
 	 * Die dem Jahrgang zugeordnete schulinterne Bezeichnung.
@@ -99,7 +99,7 @@ export class JahrgangsDaten extends JavaObject {
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.kurzbezeichnung = (obj.kurzbezeichnung === undefined) ? null : obj.kurzbezeichnung === null ? null : obj.kurzbezeichnung;
-		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
+		result.idJahrgangStatistik = (obj.idJahrgangStatistik === undefined) ? null : obj.idJahrgangStatistik === null ? null : obj.idJahrgangStatistik;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
@@ -122,7 +122,7 @@ export class JahrgangsDaten extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
-		result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
+		result += '"idJahrgangStatistik" : ' + ((obj.idJahrgangStatistik === null) ? 'null' : obj.idJahrgangStatistik.toString()) + ',';
 		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
@@ -149,8 +149,8 @@ export class JahrgangsDaten extends JavaObject {
 		if (obj.kurzbezeichnung !== undefined) {
 			result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		}
-		if (obj.idJahrgang !== undefined) {
-			result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
+		if (obj.idJahrgangStatistik !== undefined) {
+			result += '"idJahrgangStatistik" : ' + ((obj.idJahrgangStatistik === null) ? 'null' : obj.idJahrgangStatistik.toString()) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';

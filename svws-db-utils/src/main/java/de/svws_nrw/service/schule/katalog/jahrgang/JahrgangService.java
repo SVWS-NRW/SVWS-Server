@@ -163,7 +163,7 @@ public class JahrgangService {
 	private void validateCreate(final JahrgangCreateRequest request) {
 		validateUniqueKuerzel(request.kuerzel, null);
 		validateUniqueBezeichnung(request.bezeichnung, null);
-		validateIdJahrgang(request.idJahrgang);
+		validateIdJahrgangStatistik(request.idJahrgangStatistik);
 		validateIdSchulgliederung(request.idSchulgliederung);
 		validateIdBildungsstufe(request.idBildungsstufe);
 		validateIdFolgejahrgang(request.idFolgejahrgang);
@@ -172,7 +172,7 @@ public class JahrgangService {
 	private void validatePatch(final JahrgangPatchRequest request, final long id) {
 		request.kuerzel.ifPresent(kuerzel -> validateUniqueKuerzel(kuerzel, id));
 		request.bezeichnung.ifPresent(bezeichnung -> validateUniqueBezeichnung(bezeichnung, id));
-		request.idJahrgang.ifPresent(this::validateIdJahrgang);
+		request.idJahrgangStatistik.ifPresent(this::validateIdJahrgangStatistik);
 		request.idSchulgliederung.ifPresent(this::validateIdSchulgliederung);
 		request.idBildungsstufe.ifPresent(this::validateIdBildungsstufe);
 		request.idFolgejahrgang.ifPresent(this::validateIdFolgejahrgang);
@@ -198,13 +198,13 @@ public class JahrgangService {
 		}
 	}
 
-	private void validateIdJahrgang(final Long idJahrgang) {
-		if (idJahrgang == null) {
+	private void validateIdJahrgangStatistik(final Long idJahrgangStatistik) {
+		if (idJahrgangStatistik == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, ID_JAHRGANG_FEHLT);
 		}
 
-		if (Jahrgaenge.data().getEintragByID(idJahrgang) == null) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, KEIN_JAHRGANG_GEFUNDEN.formatted(idJahrgang));
+		if (Jahrgaenge.data().getEintragByID(idJahrgangStatistik) == null) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, KEIN_JAHRGANG_GEFUNDEN.formatted(idJahrgangStatistik));
 		}
 	}
 

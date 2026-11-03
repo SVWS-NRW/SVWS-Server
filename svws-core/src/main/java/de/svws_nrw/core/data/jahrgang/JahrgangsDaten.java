@@ -27,7 +27,7 @@ public class JahrgangsDaten {
 
 	/** Die Id des ASD-Jahrgangs */
 	@Schema(description = "Die Id des ASD-Jahrgangs", example = "90000")
-	public Long idJahrgang;
+	public Long idJahrgangStatistik;
 
 	/** Die dem Jahrgang zugeordnete schulinterne Bezeichnung. */
 	@Schema(description = "Die dem Jahrgang zugeordnete schulinterne Bezeichnung.", example = "Einführungsphase")
@@ -70,13 +70,5 @@ public class JahrgangsDaten {
 	/** Gibt an, ob der Jahrgang in anderen Datenbanktabellen referenziert ist oder nicht. */
 	@Schema(description = "Gibt an, ob der Jahrgang in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
 	public Boolean referenziertInAnderenTabellen = null;
-
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public JahrgangsDaten() {
-		// leer
-	}
 
 }

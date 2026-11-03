@@ -281,10 +281,10 @@ export class SchuelerLernabschnittManager {
 			return null;
 		}
 		const eintrag: JahrgangsDaten | null = this._mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
-		if ((eintrag === null) || (eintrag.idJahrgang === null)) {
+		if ((eintrag === null) || (eintrag.idJahrgangStatistik === null)) {
 			return null;
 		}
-		return Jahrgaenge.data().getWertByIDOrNull(eintrag.idJahrgang);
+		return Jahrgaenge.data().getWertByIDOrNull(eintrag.idJahrgangStatistik);
 	}
 
 	/**

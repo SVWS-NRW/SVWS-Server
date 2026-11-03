@@ -33,12 +33,12 @@
 					<ui-select label="Jahrgang ASD-Kürzel"
 						:manager="jahrgangKuerzelSelectManager"
 						v-model="model.asdJahrgang.value"
-						:validation="() => model.getFehler('idJahrgang')"
+						:validation="() => model.getFehler('idJahrgangStatistik')"
 						searchable statistics :readonly required :removable="false" />
 					<ui-select label="Jahrgang ASD-Text"
 						:manager="jahrgangTextSelectManager"
 						v-model="model.asdJahrgang.value"
-						:validation="() => model.getFehler('idJahrgang')"
+						:validation="() => model.getFehler('idJahrgangStatistik')"
 						searchable statistics :readonly required :removable="false" />
 					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
 						v-model="model.proxy.anzahlRestabschnitte"
