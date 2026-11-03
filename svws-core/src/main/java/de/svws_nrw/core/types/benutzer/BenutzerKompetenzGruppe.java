@@ -75,12 +75,15 @@ public enum BenutzerKompetenzGruppe {
 	SCHULPFLICHTVERLETZUNG(new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3)),
 
 	/** Gruppe für Rechte bezüglich des Zugriffs von Drittsystemen über die External API. */
-	EXTERNAL_API(new BenutzerKompetenzGruppenKatalogEintrag(6000, "External API", 4, 4));
+	EXTERNAL_API(new BenutzerKompetenzGruppenKatalogEintrag(6000, "External API", 4, 4)),
+
+	/** Gruppe für Rechte bezüglich der IT.NRW OAuth Domäne. */
+	IT_NRW(new BenutzerKompetenzGruppenKatalogEintrag(7000, "IT.NRW", 5, 4));
 
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 3;
+	public static final long VERSION = 4;
 
 	/** Die Daten der Benutzerkompetenz-Gruppe */
 	public final @NotNull BenutzerKompetenzGruppenKatalogEintrag daten;

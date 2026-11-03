@@ -195,11 +195,6 @@ public enum BenutzerKompetenz {
 			"Bietet die Möglichkeit, Personengruppen aus Lehrkräften, Schülern, Erziehungsberechtigten oder außerschulischen Kontaktpersonen zu erstellen."
 	)),
 
-	/** Es werden Rechte für das Ausstellen von digitalen Signaturen benötigt, z.B. für Schulbescheinigungen. */
-	EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN(new BenutzerKompetenzKatalogEintrag(
-			76, BenutzerKompetenzGruppe.EXTRAS, "Digitale Signaturen ausstellen", null,
-			"Erlaubt das Ausstellen von Digitalen Signaturen. (z.B. für Schulbescheinigungen)"
-	)),
 
 	/** Es werden Rechte zum Ansehen von Katalogen benötigt. */
 	KATALOG_EINTRAEGE_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
@@ -595,10 +590,22 @@ public enum BenutzerKompetenz {
 	EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN(new BenutzerKompetenzKatalogEintrag(
 			509, BenutzerKompetenzGruppe.EXTERNAL_API, "Lernplattform-Daten exportieren", null,
 			"Ermöglicht Lernplattformen den lesenden Abruf von Stammdaten über die External API."
+	)),
+
+	/** Es werden Rechte zum Administrieren der IT.NRW Schnittstellen benötigt. */
+	IT_NRW_ADMINISTRIEREN(new BenutzerKompetenzKatalogEintrag(
+			510, BenutzerKompetenzGruppe.IT_NRW, "Administration", null,
+			"Ermöglicht die Administration von Zugangsdaten für IT.NRW."
+	)),
+
+	/** Es werden Rechte zum Signieren von Dokumenten über die IT.NRW Schnittstellen benötigt. */
+	IT_NRW_DIGITALER_SCHULSTEMPEL(new BenutzerKompetenzKatalogEintrag(
+			76, BenutzerKompetenzGruppe.IT_NRW, "Digitale Schulstempel nutzen", null,
+			"Ermöglicht das Signieren von Dokumenten über IT.NRW."
 	));
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 4;
+	public static final long VERSION = 5;
 
 	/** Die Daten der Benutzerkompetenz */
 	public final @NotNull BenutzerKompetenzKatalogEintrag daten;

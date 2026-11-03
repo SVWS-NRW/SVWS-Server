@@ -122,9 +122,14 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	public static readonly EXTERNAL_API: BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("EXTERNAL_API", 21, new BenutzerKompetenzGruppenKatalogEintrag(6000, "External API", 4, 4));
 
 	/**
+	 * Gruppe für Rechte bezüglich der IT.NRW OAuth Domäne.
+	 */
+	public static readonly IT_NRW: BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("IT_NRW", 22, new BenutzerKompetenzGruppenKatalogEintrag(7000, "IT.NRW", 5, 4));
+
+	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION: number = 3;
+	public static readonly VERSION: number = 4;
 
 	/**
 	 * Die Daten der Benutzerkompetenz-Gruppe

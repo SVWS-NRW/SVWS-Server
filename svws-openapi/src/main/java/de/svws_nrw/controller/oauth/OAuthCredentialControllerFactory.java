@@ -34,13 +34,12 @@ public final class OAuthCredentialControllerFactory {
 	 * aufgebaut und geprüft, ob der Benutzer die übergebene Kompetenz besitzt.
 	 *
 	 * @param request             der Http Request, aus dem der Benutzerkontext und das Schema ermittelt werden
-	 * @param benutzerKompetenz   die benötigte {@link BenutzerKompetenz}
 	 *
 	 * @return die neue {@link OAuthCredentialControllerFactory}
 	 *
 	 */
-	public static OAuthCredentialControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
-		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, benutzerKompetenz);
+	public static OAuthCredentialControllerFactory getNewInstance(final HttpServletRequest request) {
+		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.IT_NRW_ADMINISTRIEREN);
 		final var repositoryFactory = OAuthCredentialRepositoryFactory.getNewInstance();
 		final var cipherFactory = SecretCipherFactory.getNewInstance();
 		final var serviceFactory = OAuthCredentialServiceFactory.getNewInstance(repositoryFactory, cipherFactory);

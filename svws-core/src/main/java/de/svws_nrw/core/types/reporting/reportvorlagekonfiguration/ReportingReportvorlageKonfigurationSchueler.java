@@ -223,7 +223,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitDigitaleSignatur", "mit digitaler Signatur",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1,
-										ServerMode.DEV, List.of(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)),
+										ServerMode.DEV, List.of(BenutzerKompetenz.IT_NRW_DIGITALER_SCHULSTEMPEL)),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("qrCodeBreite", "QR-Code-Breite (mm)",
 										ReportingReportvorlageParameterTyp.INTEGER,
 										"" + 40, false, ReportingUIKomponentenTyp.INPUT, 1),

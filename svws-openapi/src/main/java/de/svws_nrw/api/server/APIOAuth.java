@@ -3,7 +3,6 @@ package de.svws_nrw.api.server;
 import de.svws_nrw.controller.oauth.OAuthCredentialControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.oauth2.OAuthCredentials;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.service.oauth.credential.OAuthCreateCredential;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -66,7 +65,7 @@ public class APIOAuth {
 			@RequestBody(description = "Die Daten des zu erstellenden Eintrags.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = OAuthCredentials.class))) final OAuthCreateCredential input,
 			@Context final HttpServletRequest request) {
-		return OAuthCredentialControllerFactory.getNewInstance(request, BenutzerKompetenz.ADMIN)
+		return OAuthCredentialControllerFactory.getNewInstance(request)
 				.getCredentialController()
 				.create(input);
 	}
@@ -92,7 +91,7 @@ public class APIOAuth {
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteOAuthCredential(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return OAuthCredentialControllerFactory.getNewInstance(request, BenutzerKompetenz.ADMIN)
+		return OAuthCredentialControllerFactory.getNewInstance(request)
 				.getCredentialController()
 				.delete(id);
 	}
@@ -115,7 +114,7 @@ public class APIOAuth {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OAuthCredentials.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der OAuth2-Credentials.")
 	public Response getOAuthClientCredentials(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return OAuthCredentialControllerFactory.getNewInstance(request, BenutzerKompetenz.ADMIN)
+		return OAuthCredentialControllerFactory.getNewInstance(request)
 				.getCredentialController()
 				.getAll();
 	}
@@ -139,7 +138,7 @@ public class APIOAuth {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der OAuth2-Credentials.")
 	public Response getOAuthCredentialsForDomain(@PathParam("schema") final String schema, @PathParam("domain") final String domain,
 												 @Context final HttpServletRequest request) {
-		return OAuthCredentialControllerFactory.getNewInstance(request, BenutzerKompetenz.ADMIN)
+		return OAuthCredentialControllerFactory.getNewInstance(request)
 				.getCredentialController()
 				.getAll(domain);
 	}
@@ -165,7 +164,7 @@ public class APIOAuth {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Credentials anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine OAuth2-Credentials mit der ID bei der Schule gefunden")
 	public Response getOAuthCredential(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return OAuthCredentialControllerFactory.getNewInstance(request, BenutzerKompetenz.ADMIN)
+		return OAuthCredentialControllerFactory.getNewInstance(request)
 				.getCredentialController()
 				.get(id);
 	}

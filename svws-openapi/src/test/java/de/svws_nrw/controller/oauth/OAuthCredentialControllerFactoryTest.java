@@ -29,9 +29,10 @@ class OAuthCredentialControllerFactoryTest {
 				MockedStatic<DbConnectionProvider> connectionProviderMock = mockStatic(DbConnectionProvider.class)) {
 			connectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(mock(DBEntityManager.class));
 
-			final var factory = OAuthCredentialControllerFactory.getNewInstance(request, BenutzerKompetenz.ADMIN);
+			final var factory = OAuthCredentialControllerFactory.getNewInstance(request);
 
-			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.ADMIN)), times(1));
+			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.IT_NRW_ADMINISTRIEREN)),
+					times(1));
 			assertNotNull(factory);
 
 			final var controller = factory.getCredentialController();
