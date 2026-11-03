@@ -420,6 +420,44 @@ publish:npm:external:release:
     rules:
         - *rule_release
 
+publish:docker:internal:snapshot:
+    stage: publish
+    needs:
+        - build
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    before_script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+    script:
+        - ./gradlew :deployment:docker:publishSvwsServerInternalSnapshot
+            -x :svws-webclient:client:assembleClient
+            -x :svws-webclient:admin:assembleAdminClient
+    rules:
+        - *rule_dev
+
+publish:docker:internal:release:
+    stage: publish
+    needs:
+        - build
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    before_script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+    script:
+        - ./gradlew :deployment:docker:publishSvwsServerInternalRelease :deployment:docker:publishSvwsServerInternalLatest
+            -x :svws-webclient:client:assembleClient
+            -x :svws-webclient:admin:assembleAdminClient
+    rules:
+        - *rule_release
+
 publish:docker:external:release:
     stage: publish
     needs:
@@ -432,10 +470,10 @@ publish:docker:external:release:
 
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         - cat gradle_secure.properties >> gradle.properties
-
-        - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
     script:
-        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+        - ./gradlew :deployment:docker:publishSvwsServerDockerhubRelease :deployment:docker:publishSvwsServerDockerhubLatest
+            -x :svws-webclient:client:assembleClient
+            -x :svws-webclient:admin:assembleAdminClient
     rules:
         - *rule_release
 

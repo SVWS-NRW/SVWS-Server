@@ -1,35 +1,92 @@
+import java.nio.charset.StandardCharsets
+
 dependencies {
 	implementation project(':svws-server-app')
 }
 
 
-/* Dieser Task wird von der Pipeline aufgerufen, um alle svws-Docker-Images auf Dockerhub beim Release zu veröffentlichen. */
-task dockerPushAllDockerhub() {
-	dependsOn('dockerPushLatestDockerhub')
-	group = "Publishing"
+def registryInternalHost = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_HOST')
+def registryInternalUsername = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_USERNAME')
+def registryInternalToken = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_TOKEN')
+
+def registryDockerhubHost = providers.provider { 'docker.io' }
+def registryDockerhubUsername = providers.environmentVariable('DOCKER_REGISTRY_DOCKERHUB_USERNAME')
+def registryDockerhubToken = providers.environmentVariable('DOCKER_REGISTRY_DOCKERHUB_TOKEN')
+
+def svwsServerImage = "svwsnrw/svws-server"
+def svwsServerLatestTag = "${svwsServerImage}:latest"
+def svwsServerVersionTag = "${svwsServerImage}:${project.ext.svwsArtifactVersion}"
+
+def dockerRunnerImage = "svwsnrw/dockerrunner"
+def dockerRunner17Tag = "${dockerRunnerImage}:17"
+def dockerRunner21Tag = "${dockerRunnerImage}:21"
+
+def isWindows = System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')
+
+def dockerBuild = { Exec exec, String imageTag ->
+	if (isWindows) {
+		exec.commandLine "cmd", "/c", "docker build . -t ${imageTag}"
+	} else {
+		exec.commandLine "sh", "-c", "docker build . -t ${imageTag}"
+	}
+}
+
+// Login, optionales Tagging (wenn remoteTag vom lokalen imageTag abweicht) und Push laufen in einem Kommando,
+// da ein zweiter commandLine-Aufruf den ersten überschreiben würde. Das Token wird über stdin an docker login übergeben.
+// remoteTag ist ein String oder ein Provider<String> (erst zur Ausführung aufgelöst, z. B. wenn der Registry-Host im Tag steht).
+def dockerLoginAndPush = { Exec exec, String imageTag, Object remoteTagOrProvider, Provider<String> registry, Provider<String> registryUsername, Provider<String> registryToken ->
+	exec.doFirst {
+		if (!registry.isPresent()) {
+			throw new GradleException('Es existiert kein Host für die Registry.')
+		}
+
+		if (!registryUsername.isPresent()) {
+			throw new GradleException('Es existiert kein Username für die Registry.')
+		}
+
+		if (!registryToken.isPresent()) {
+			throw new GradleException('Es existiert kein Token für die Registry.')
+		}
+
+		def remoteTag = (remoteTagOrProvider instanceof Provider ? remoteTagOrProvider.get() : remoteTagOrProvider) as String
+
+		println "Veröffentlichung des Images ${remoteTag} in die Registry ${registry.get()}"
+
+		def loginCmd = "docker login ${registry.get()} --username ${registryUsername.get()} --password-stdin"
+		def tagCmd = (imageTag == remoteTag) ? "" : " && docker tag ${imageTag} ${remoteTag}"
+		def command = "${loginCmd}${tagCmd} && docker push ${remoteTag}"
+
+		if (isWindows) {
+			exec.commandLine "cmd", "/c", command
+		} else {
+			exec.commandLine "sh", "-c", command
+		}
+
+		exec.standardInput = new ByteArrayInputStream((registryToken.get() + System.lineSeparator()).getBytes(StandardCharsets.UTF_8) as byte[])
+	}
 }
 
 
 /* Vorbereitung der Dateien im build-Ordner, um das SVWS-Docker-Image zu bauen. */
 // Sync statt Copy: im Docker-Kontext dürfen nur die aktuellen Artefakte liegen (der Server startet mit Wildcards auf dem Classpath)
-task copyDockerClientArtifacts(type: Sync) {
-	description = 'Kopieren der aktuellen Artefakte'
+tasks.register('syncSvwsServerArtifacts', Sync) {
 	group = "docker"
-	def classpathJars = configurations.runtimeClasspath
-	def dockerAppDir = "$projectDir/build/svws/app"
-	doFirst {
-		mkdir "$projectDir/build/svws/app/lib"
-	}
+	description = 'Kopieren der aktuellen Server Artefakte'
+
 	dependsOn(':svws-server-app:collectJars')
 	dependsOn(':svws-webclient:client:doZip')
 	dependsOn(':svws-webclient:admin:doZip')
-	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
-	mustRunAfter(':svws-webclient:client:doZip')
-	mustRunAfter(':svws-webclient:admin:doZip')
 
-	into "$projectDir/build/svws"
+	def classpathJars = configurations.runtimeClasspath
+	def dockerAppDir = "$projectDir/build/svws/app"
+
+	doFirst {
+		mkdir "${projectDir}/build/svws/app/lib"
+	}
+
+	into "${projectDir}/build/svws"
 	into("app/lib/") {
-		from(configurations.runtimeClasspath) {
+		from(classpathJars) {
 			exclude "svws-*.jar"
 		}
 	}
@@ -41,7 +98,7 @@ task copyDockerClientArtifacts(type: Sync) {
 		from "../../svws-webclient/client/build/SVWS-Client.zip", "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
 	}
 	into("/") {
-		from "$projectDir/svws/Dockerfile", "$projectDir/svws/startup.sh", "$projectDir/svws/svwsconfig-template.json", "$projectDir/svws/svwsconfig-template-nodb.json"
+		from "${projectDir}/svws/Dockerfile", "${projectDir}/svws/startup.sh", "${projectDir}/svws/svwsconfig-template.json", "${projectDir}/svws/svwsconfig-template-nodb.json"
 	}
 	// Alle Jars des Classpaths (svws-*.jar in app/, übrige in app/lib/) müssen enthalten sein, sonst startet der Server im Container nicht.
 	doLast {
@@ -54,138 +111,102 @@ task copyDockerClientArtifacts(type: Sync) {
 	}
 }
 
-
 /* Baut das svws-Docker-Image lokal mit der entsprechenden Version als Tag. */
-task dockerBuildTag(type: Exec) {
+tasks.register('buildSvwsServerVersion', Exec) {
 	group = "docker"
-	dependsOn copyDockerClientArtifacts
-	workingDir "$projectDir/build/svws"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:' + project.ext.svwsArtifactVersion
-	} else {
-		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:' + project.ext.svwsArtifactVersion
-	}
+	dependsOn syncSvwsServerArtifacts
+	workingDir "${projectDir}/build/svws"
+
+	dockerBuild(it, svwsServerVersionTag)
 }
 
 /* Baut das svws-Docker-Image lokal mit dem latest Tag. */
-task dockerBuildLatestTag(type: Exec) {
+tasks.register('buildSvwsServerLatest', Exec) {
 	group = "docker"
-	dependsOn dockerBuildTag
-	workingDir "$projectDir/build/svws"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:latest'
-	} else {
-		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:latest'
-	}
+	dependsOn syncSvwsServerArtifacts
+	workingDir "${projectDir}/build/svws"
+
+	dockerBuild(it, svwsServerLatestTag)
 }
-
-
-/* Führt ein Docker-Push mit dem SVWS-Server-Image mit dem versionierten Tag zu dockerhub durch. */
-task dockerPushDockerhub(type: Exec) {
-	group = "docker"
-	dependsOn dockerBuildLatestTag
-	workingDir "$projectDir/build/svws"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker login'
-		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-server:' + project.ext.svwsArtifactVersion
-	} else {
-		commandLine 'sh', '-c', 'docker login'
-		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:' + project.ext.svwsArtifactVersion
-	}
-}
-
-/* Führt ein Docker-Push mit dem SVWS-Server-Image mit dem latest Tag zu dockerhub durch. */
-task dockerPushLatestDockerhub(type: Exec) {
-	group = "docker"
-	dependsOn dockerPushDockerhub
-	workingDir "$projectDir/build/svws"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker login'
-		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-server:latest'
-	} else {
-		commandLine 'sh', '-c', 'docker login'
-		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:latest'
-	}
-}
-
 
 /* Task führt ein Docker-Runner-17-Build per docker durch. */
-task dockerRunner17BuildTag(type: Exec) {
+tasks.register('buildDockerRunner17', Exec) {
 	group = "docker"
-	workingDir "$projectDir/dockerrunner/17"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/dockerrunner:17'
-	} else {
-		commandLine 'sh', '-c', 'docker build . -t svwsnrw/dockerrunner:17'
-	}
+	workingDir "${projectDir}/dockerrunner/17"
+
+	dockerBuild(it, dockerRunner17Tag)
 }
 
-/* Task führt ein Docker-Runner-17 push auf dockerhub durch */
-task dockerRunner17Push(type: Exec) {
+/* Task führt ein Docker-Runner-17 push auf Dockerhub durch */
+tasks.register('publishDockerRunner17Dockerhub', Exec) {
 	group = "docker"
-	dependsOn dockerRunner17BuildTag
-	workingDir "$projectDir/dockerrunner/17"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker login'
-		commandLine 'cmd', '/c', 'docker push svwsnrw/dockerrunner:17'
-	} else {
-		commandLine 'sh', '-c', 'docker login'
-		commandLine 'sh', '-c', 'docker push svwsnrw/dockerrunner:17'
-	}
-}
+	dependsOn buildDockerRunner17
+	workingDir "${projectDir}/dockerrunner/17"
 
+	dockerLoginAndPush(it, dockerRunner17Tag, dockerRunner17Tag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
+}
 
 /* Task führt ein Docker-Runner-21-Build per docker durch. */
-task dockerRunner21BuildTag(type: Exec) {
+tasks.register('buildDockerRunner21', Exec) {
 	group = "docker"
-	workingDir "$projectDir/dockerrunner/21"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/dockerrunner:21'
-	} else {
-		commandLine 'sh', '-c', 'docker build . -t svwsnrw/dockerrunner:21'
-	}
+	workingDir "${projectDir}/dockerrunner/21"
+
+	dockerBuild(it, dockerRunner21Tag)
 }
 
-/* Task führt ein Docker-Runner-21 push auf dockerhub durch */
-task dockerRunner21Push(type: Exec) {
+/* Task führt ein Docker-Runner-21 push auf Dockerhub durch */
+tasks.register('publishDockerRunner21Dockerhub', Exec) {
 	group = "docker"
-	dependsOn dockerRunner21BuildTag
-	workingDir "$projectDir/dockerrunner/21"
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker login'
-		commandLine 'cmd', '/c', 'docker push svwsnrw/dockerrunner:21'
-	} else {
-		commandLine 'sh', '-c', 'docker login'
-		commandLine 'sh', '-c', 'docker push svwsnrw/dockerrunner:21'
-	}
+	dependsOn buildDockerRunner21
+	workingDir "${projectDir}/dockerrunner/21"
+
+	dockerLoginAndPush(it, dockerRunner21Tag, dockerRunner21Tag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
 }
 
+/* Veröffentlicht das SVWS-Server-Image des aktuellen dev-Stands als Snapshot-Tag in der internen Registry (Harbor: <Host>/svwsnrw/svws-server:snapshot). */
+tasks.register('publishSvwsServerInternalSnapshot', Exec) {
+	group = "docker"
+	dependsOn buildSvwsServerLatest
+	workingDir "${projectDir}/build/svws"
 
-/* Deprecated: Ein publish auf dem Nexus wurde durch den auf Harbor ersetzt.
- Diese Task muss noch angepasst werden.
-
- Task führt einen Image-Build des SVWS durch, setzt ein Tag
- und veröffentlicht das Image im Image-Repository (Nexus)
-
-task dockerBuildTagAndPublish(type: Exec) {
-	dependsOn dockerBuildSvws
-	workingDir "$projectDir"
-	def dockerRegistryUsername = getNexusActor()
-	def dockerRegistryToken = getNexusToken()
-
-	def dockerRegistryHost = 'artifactory.svws-nrw.de'
-	def dockerRegistry = "${dockerRegistryHost}/repository/svws-docker"
-	def tagNamePub = "${dockerRegistry}/svws:${svwsArtifactVersion}"
-	def dockerTagCmd = "docker tag svws:${svwsArtifactVersion} ${tagNamePub}"
-	def dockerPushCmd = "docker push ${tagNamePub}"
-
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		def dockerLoginCmdWin = "docker login --username ${dockerRegistryUsername} --password-stdin ${dockerRegistryHost}<pw.txt"
-		commandLine 'cmd', '/c', "@echo ${dockerRegistryToken}>pw.txt&&${dockerLoginCmdWin} && ${dockerTagCmd} && ${dockerPushCmd} && del pw.txt"
-	} else {
-		def dockerLoginCmdLin = "set -x; echo \"${dockerRegistryToken}\" | docker login --username ${dockerRegistryUsername} --password-stdin ${dockerRegistryHost}"
-		commandLine 'sh', '-c', "${dockerLoginCmdLin} && ${dockerTagCmd} && ${dockerPushCmd}"
-	}
+	def internalSnapshotTag = registryInternalHost.map { host -> "${host}/${svwsServerImage}:snapshot".toString() }
+	dockerLoginAndPush(it, svwsServerLatestTag, internalSnapshotTag, registryInternalHost, registryInternalUsername, registryInternalToken)
 }
 
-*/
+/* Veröffentlicht das SVWS-Server-Image mit dem latest Tag in der internen Registry (Harbor: <Host>/svwsnrw/svws-server:latest). Wird nur beim Release verwendet. */
+tasks.register('publishSvwsServerInternalLatest', Exec) {
+	group = "docker"
+	dependsOn buildSvwsServerLatest
+	workingDir "${projectDir}/build/svws"
+
+	def internalLatestTag = registryInternalHost.map { host -> "${host}/${svwsServerLatestTag}".toString() }
+	dockerLoginAndPush(it, svwsServerLatestTag, internalLatestTag, registryInternalHost, registryInternalUsername, registryInternalToken)
+}
+
+/* Veröffentlicht das SVWS-Server-Image mit dem versionierten Tag in der internen Registry (Harbor: <Host>/svwsnrw/svws-server:<Version>). */
+tasks.register('publishSvwsServerInternalRelease', Exec) {
+	group = "docker"
+	dependsOn buildSvwsServerVersion
+	workingDir "${projectDir}/build/svws"
+
+	def internalVersionTag = registryInternalHost.map { host -> "${host}/${svwsServerVersionTag}".toString() }
+	dockerLoginAndPush(it, svwsServerVersionTag, internalVersionTag, registryInternalHost, registryInternalUsername, registryInternalToken)
+}
+
+/* Führt ein Docker-Push mit dem SVWS-Server-Image mit dem latest Tag zu Dockerhub durch. */
+tasks.register('publishSvwsServerDockerhubLatest', Exec) {
+	group = "docker"
+	dependsOn buildSvwsServerLatest
+	workingDir "${projectDir}/build/svws"
+
+	dockerLoginAndPush(it, svwsServerLatestTag, svwsServerLatestTag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
+}
+
+/* Führt ein Docker-Push mit dem SVWS-Server-Image mit dem versionierten Tag zu Dockerhub durch. */
+tasks.register('publishSvwsServerDockerhubRelease', Exec) {
+	group = "docker"
+	dependsOn buildSvwsServerVersion
+	workingDir "${projectDir}/build/svws"
+
+	dockerLoginAndPush(it, svwsServerVersionTag, svwsServerVersionTag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
+}
