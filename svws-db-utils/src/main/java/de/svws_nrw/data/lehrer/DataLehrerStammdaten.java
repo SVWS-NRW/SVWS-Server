@@ -15,7 +15,6 @@ import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
@@ -24,8 +23,10 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
 import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
+import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import de.svws_nrw.service.lehrer.foto.LehrerFoto;
 import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import jakarta.ws.rs.core.MediaType;
@@ -41,6 +42,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 
 	private final LernplattformRepository lernplattformRepository;
 	private final EinwilligungsartRepository einwilligungsartRepository;
+	private final SchulleitungRepository schulleitungRepository;
 	private final LehrerFotoService lehrerFotoService;
 
 	/**
@@ -49,17 +51,20 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param lernplattformRepository {@link LernplattformRepository} Repository für den Lernplattformen-Katalog
 	 * @param einwilligungsartRepository {@link EinwilligungsartRepository} Repository für den Einwilligungsarten-Katalog
+	 * @param schulleitungRepository {@link SchulleitungRepository} Repository für die Schulleitungseinträge
 	 * @param lehrerFotoService {@link LehrerFotoService} LehrerFotoService
 	 */
 	public DataLehrerStammdaten(
 			final DBEntityManager conn,
 			final LernplattformRepository lernplattformRepository,
 			final EinwilligungsartRepository einwilligungsartRepository,
+			final SchulleitungRepository schulleitungRepository,
 			final LehrerFotoService lehrerFotoService
 	) {
 		super(conn);
 		this.lernplattformRepository = lernplattformRepository;
 		this.einwilligungsartRepository = einwilligungsartRepository;
+		this.schulleitungRepository = schulleitungRepository;
 		this.lehrerFotoService = lehrerFotoService;
 		setAttributesNotPatchable("id");
 		setAttributesRequiredOnCreation("kuerzel", "vorname", "nachname", "geschlecht", "personalTyp");
@@ -240,7 +245,9 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		daten.emailPrivat = dtoLehrer.eMailPrivat;
 		daten.istSichtbar = (dtoLehrer.Sichtbar == null) || dtoLehrer.Sichtbar;
 		daten.istRelevantFuerStatistik = (dtoLehrer.statistikRelevant == null) || dtoLehrer.statistikRelevant;
-		daten.leitungsfunktionen.addAll(DataSchulleitung.getSchulleitungsfunktionen(conn, dtoLehrer.ID));
+		daten.leitungsfunktionen.addAll(schulleitungRepository.getAllByIdLehrer(dtoLehrer.ID).stream()
+				.map(SchulleitungMapper.INSTANCE::toApi)
+				.toList());
 		return daten;
 	}
 

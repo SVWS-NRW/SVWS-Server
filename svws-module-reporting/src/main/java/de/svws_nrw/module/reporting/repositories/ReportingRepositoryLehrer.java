@@ -21,6 +21,7 @@ import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.foto.LehrerFoto;
@@ -189,6 +190,7 @@ public class ReportingRepositoryLehrer {
 						this.reportingContext.conn(),
 						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
+						EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).getListByIDsOhneFotos(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
@@ -233,6 +235,7 @@ public class ReportingRepositoryLehrer {
 					this.reportingContext.conn(),
 					KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 					KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
+					EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
 					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 			).getAllOhneFotos();
 			for (final LehrerStammdaten ls : alle) {

@@ -11,6 +11,10 @@ import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * Der Controller für die Schulleitungseinträge. Er enthält keine Fachlogik, sondern validiert die Requests
+ * und delegiert an den {@link SchulleitungService}.
+ */
 public final class SchulleitungController {
 
 	private final SchulleitungService service;

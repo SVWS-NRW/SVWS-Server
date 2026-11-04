@@ -1,6 +1,8 @@
 package de.svws_nrw.service.schule.schulleitung;
 
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
+import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -22,12 +24,15 @@ class SchulleitungServiceFactoryTest {
 	private EigeneSchuleRepositoryFactory schuleRepoFactory;
 
 	@Mock
+	private LehrerRepositoryFactory lehrerRepoFactory;
+
+	@Mock
 	private SchulleitungMapper mapper;
 
 	@Test
 	@DisplayName("getNewInstance | Erfolg")
 	void getNewInstance_success() {
-		final var factory = SchulleitungServiceFactory.getNewInstance(schuleRepoFactory, mapper);
+		final var factory = SchulleitungServiceFactory.getNewInstance(schuleRepoFactory, lehrerRepoFactory, mapper);
 
 		assertThat(factory)
 				.isNotNull()
@@ -38,9 +43,11 @@ class SchulleitungServiceFactoryTest {
 	@DisplayName("getSchulleitungService | Erfolg")
 	void getSchulleitungService_success() {
 		final var schulleitungRepository = mock(SchulleitungRepository.class);
-		final var factory = SchulleitungServiceFactory.getNewInstance(schuleRepoFactory, mapper);
+		final var lehrerRepository = mock(LehrerRepository.class);
+		final var factory = SchulleitungServiceFactory.getNewInstance(schuleRepoFactory, lehrerRepoFactory, mapper);
 
 		when(schuleRepoFactory.getSchulleitungRepository()).thenReturn(schulleitungRepository);
+		when(lehrerRepoFactory.getLehrerRepository()).thenReturn(lehrerRepository);
 
 		final var service = factory.getSchulleitungService();
 
@@ -49,15 +56,18 @@ class SchulleitungServiceFactoryTest {
 				.isInstanceOf(SchulleitungService.class);
 
 		verify(schuleRepoFactory, times(1)).getSchulleitungRepository();
+		verify(lehrerRepoFactory, times(1)).getLehrerRepository();
 	}
 
 	@Test
 	@DisplayName("getSchulleitungService | Mehrfache Aufrufe erstellen neue Instanzen")
 	void getSchulleitungService_multipleCallsCreateNewInstances() {
 		final var schulleitungRepository = mock(SchulleitungRepository.class);
-		final var factory = SchulleitungServiceFactory.getNewInstance(schuleRepoFactory, mapper);
+		final var lehrerRepository = mock(LehrerRepository.class);
+		final var factory = SchulleitungServiceFactory.getNewInstance(schuleRepoFactory, lehrerRepoFactory, mapper);
 
 		when(schuleRepoFactory.getSchulleitungRepository()).thenReturn(schulleitungRepository);
+		when(lehrerRepoFactory.getLehrerRepository()).thenReturn(lehrerRepository);
 
 		final var service1 = factory.getSchulleitungService();
 		final var service2 = factory.getSchulleitungService();
@@ -69,5 +79,6 @@ class SchulleitungServiceFactoryTest {
 		assertThat(service2).isNotNull();
 
 		verify(schuleRepoFactory, times(2)).getSchulleitungRepository();
+		verify(lehrerRepoFactory, times(2)).getLehrerRepository();
 	}
 }

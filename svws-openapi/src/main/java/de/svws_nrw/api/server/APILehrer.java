@@ -55,6 +55,7 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
@@ -234,6 +235,7 @@ public class APILehrer {
 						conn,
 						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
+						EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
@@ -271,6 +273,7 @@ public class APILehrer {
 					conn,
 					KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 					KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
+					EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
 					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 			).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
 			request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
@@ -304,6 +307,7 @@ public class APILehrer {
 						conn,
 						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
+						EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).addAsResponse(is), request,
 				ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
@@ -340,6 +344,7 @@ public class APILehrer {
 						conn,
 						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
 						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
+						EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
 						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
 				).patchAsResponse(id, is),
 				request, ServerMode.STABLE,

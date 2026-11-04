@@ -9,6 +9,7 @@ import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
+import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -25,6 +26,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -37,9 +39,14 @@ class SchulleitungServiceTest {
 	private static final long ID_LEITUNGSFUNKTION_GUELTIG = LehrerLeitungsfunktion.SL.historie().getLast().id;
 	private static final long ID_LEITUNGSFUNKTION_GUELTIG_2 = LehrerLeitungsfunktion.SL_STV.historie().getLast().id;
 	private static final long ID_LEITUNGSFUNKTION_UNGUELTIG = 999L;
+	private static final long ID_LEHRER_VORHANDEN = 42L;
+	private static final long ID_LEHRER_UNBEKANNT = 4711L;
 
 	@Mock
 	private SchulleitungRepository repository;
+
+	@Mock
+	private LehrerRepository lehrerRepository;
 
 	@Mock
 	private SchulleitungMapper mapper;
@@ -51,7 +58,8 @@ class SchulleitungServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new SchulleitungService(repository, mapper);
+		service = new SchulleitungService(repository, lehrerRepository, mapper);
+		lenient().when(lehrerRepository.existsById(ID_LEHRER_VORHANDEN)).thenReturn(true);
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 	}
@@ -177,6 +185,23 @@ class SchulleitungServiceTest {
 		when(mapper.toApi(entity)).thenReturn(apiModel);
 
 		assertThat(service.create(dto)).isEqualTo(apiModel);
+	}
+
+	@Test
+	@DisplayName("create | Lehrer nicht gefunden")
+	void create_lehrerNotFound_throwsNotFound() {
+		final var dto = new SchulleitungCreateRequest();
+		dto.idLeitungsfunktion = ID_LEITUNGSFUNKTION_GUELTIG;
+		dto.idLehrer = ID_LEHRER_UNBEKANNT;
+		dto.bezeichnung = "Schulleitung";
+
+		assertThatThrownBy(() -> service.create(dto))
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessageContaining("4711")
+				.extracting("status")
+				.isEqualTo(Response.Status.NOT_FOUND);
+
+		verify(repository, never()).create(any(DTOSchulleitung.class));
 	}
 
 	@Test

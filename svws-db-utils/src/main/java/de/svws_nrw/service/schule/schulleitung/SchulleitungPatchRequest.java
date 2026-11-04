@@ -18,7 +18,7 @@ public class SchulleitungPatchRequest {
 	public JsonNullable<Long> idLeitungsfunktion = JsonNullable.undefined();
 
 	/** Der Funktionstext der Leitungsfunktion. */
-	@Schema(description = "Der optionale Funktionstext der Leitungsfunktion.", example = "Schulleitung")
+	@Schema(description = "Der Funktionstext der Leitungsfunktion (darf, falls angegeben, nicht leer sein).", example = "Schulleitung")
 	@NotBlank
 	@Size(max = 255)
 	@NoLeadingOrTrailingWhitespaces

@@ -23,6 +23,7 @@ import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.controller.schule.logoverwaltung.LogoverwaltungControllerFactory;
 import de.svws_nrw.controller.schule.schuljahresabschnitt.SchuljahresabschnittControllerFactory;
+import de.svws_nrw.controller.schule.schulleitung.SchulleitungControllerFactory;
 import de.svws_nrw.controller.schule.teilstandort.TeilstandortControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
@@ -91,7 +92,6 @@ import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataSchulinterneFunktionen;
-import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataVermerkarten;
 import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartCreateRequest;
@@ -102,6 +102,8 @@ import de.svws_nrw.service.schule.katalog.religion.ReligionCreateRequest;
 import de.svws_nrw.service.schule.katalog.religion.ReligionPatchRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoCreateRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoPatchRequest;
+import de.svws_nrw.service.schule.schulleitung.SchulleitungCreateRequest;
+import de.svws_nrw.service.schule.schulleitung.SchulleitungPatchRequest;
 import de.svws_nrw.service.schule.teilstandort.TeilstandortCreateRequest;
 import de.svws_nrw.service.schule.teilstandort.TeilstandortPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -2265,34 +2267,10 @@ public class APISchule {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schulleitung.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leitungsfunktionen der Schule anzusehen.")
 	public Response getSchulleitungsfunktionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).getList(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Leitungsfunktion der Schule.
-	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id         die ID der Leitungsfunktion
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Leitungsfunktion der Schule
-	 */
-	@GET
-	@Path("/leitungsfunktion/{id : \\d+}")
-	@Operation(summary = "Gibt die Leitungsfunktion der Schule zurück.",
-			description = "Gibt die Leitungsfunktion der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Leitungsfunktion",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Schulleitung.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leitungsfunktion der Schule anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Leitungsfunktion der Schule gefunden")
-	public Response getSchulleitungsfunktion(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).get(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+		return SchulleitungControllerFactory
+				.withReadAccess(request)
+				.getSchulleitungController()
+				.getAll();
 	}
 
 
@@ -2301,7 +2279,7 @@ public class APISchule {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der Leitungsfunktion der Schule
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     das partielle Update als {@link SchulleitungPatchRequest}
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -2311,137 +2289,87 @@ public class APISchule {
 	@Operation(summary = "Passt die Leitungsfunktion der Schule mit der angebenen ID an.",
 			description = "Passt die Leitungsfunktion der Schule mit der angebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Schulleitung.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
+			+ " (z.B. Enddatum liegt vor Startdatum)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchSchulleitungsfunktion(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Leitungsfunktion der Schule", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Schulleitung.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Schulleitung.class)))
+			final SchulleitungPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).patch(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+		return SchulleitungControllerFactory
+				.withWriteAccess(request)
+				.getSchulleitungController()
+				.patch(id, patch);
 	}
 
 
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen einer Leitungsfunktion zu der Schule.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der Leitungsfunktion der Schule
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema, auf welches die Operation ausgeführt werden soll
+	 * @param input     die Daten der neuen Leitungsfunktion als {@link SchulleitungCreateRequest}
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit der neuen Leitungsfunktion der Schule
+	 * @return die HTTP-Antwort mit der neu erstellten Leitungsfunktion
 	 */
 	@POST
 	@Path("/leitungsfunktion/create")
 	@Operation(summary = "Erstellt einen neue Leitungsfunktion der Schule und gibt das zugehörige Objekt zurück.",
 			description = "Erstellt einen neue Leitungsfunktion der Schule und gibt das zugehörige Objekt zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.")
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Leitungsfunktion der Schule wurde erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Schulleitung.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Leitungsfunktion für die Schule anzulegen.")
-	@ApiResponse(responseCode = "404", description = "Der Lehrer wurde nichtgefunden.")
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft (z.B. ungültiges Datumsformat oder unbekannte Leitungsfunktion).")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Es wurde kein Lehrer mit der angegebenen ID gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addSchulleitungsfunktion(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Daten der zu erstellenden Leitungsfunktion der Schule ohne ID, welche automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Schulleitung.class))) final InputStream is,
+			@RequestBody(description = "Die Daten der zu erstellenden Leitungsfunktion ohne ID, welche automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Schulleitung.class)))
+			final SchulleitungCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).add(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Hinzufügen mehrerer Leitungsfunktionen zu der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der Leitungsfunktionen
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit der Liste der neuen Leitungsfunktionen
-	 */
-	@POST
-	@Path("/leitungsfunktion/create/multiple")
-	@Operation(summary = "Erstellt mehrere neue Leitungsfunktion für die Schule und gibt das zugehörige Objekt zurück.",
-			description = "Erstellt mehrere neue Leitungsfunktion für die Schule und gibt das zugehörige Objekt zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.")
-	@ApiResponse(responseCode = "201", description = "Die Leitungsfunktionen wurden erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Schulleitung.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Leitungsfunktion für die Schule anzulegen.")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addSchulleitungsfunktionen(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Daten der zu erstellenden Leitungsfunktionen ohne IDs, welche automatisch generiert werden", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Schulleitung.class)))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).addMultiple(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen einer Leitungsfunktion der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID der Leitungsfunktion der Schule
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Leitungsfunktion der Schule
-	 */
-	@DELETE
-	@Path("/leitungsfunktion/{id : \\d+}")
-	@Operation(summary = "Entfernt eine Leitungsfunktion der Schule.",
-			description = "Entfernt eine Leitungsfunktion der Schule."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen hat.")
-	@ApiResponse(responseCode = "200", description = "Die Leitungsfunktion der Schule wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Schulleitung.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Leitungsfunktion der Schule zu löschen.")
-	@ApiResponse(responseCode = "404", description = "Die Leitungsfunktion der Schule ist nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteSchulleitungsfunktion(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).delete(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+		return SchulleitungControllerFactory
+				.withWriteAccess(request)
+				.getSchulleitungController()
+				.create(input);
 	}
 
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Leitungsfunktionen der Schule.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           die IDs der Leitungsfunktionen
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema, auf welches die Operation ausgeführt werden soll
+	 * @param ids       die IDs der zu löschenden Leitungsfunktionen
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Leitungsfunktionen der Schule
+	 * @return die HTTP-Antwort mit den Ergebnissen der Löschoperationen
 	 */
 	@DELETE
 	@Path("/leitungsfunktion/delete/multiple")
 	@Operation(summary = "Entfernt mehrere Leitungsfunktionen der Schule.",
-			description = "Entfernt mehrere Leitungsfunktionen der Schule."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen hat.")
-	@ApiResponse(responseCode = "200", description = "Die Leitungsfunktionen der Schule wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schulleitung.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Leitungsfunktion der Schule zu löschen.")
+			description = "Entfernt mehrere Leitungsfunktionen der Schule. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Ergebnisse der Löschoperationen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Mindestens eine Leitungsfunktion der Schule ist nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchulleitungsfunktionen(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Leitungsfunktionen der Schule", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulleitung(conn, null).deleteMultiple(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+		return SchulleitungControllerFactory
+				.withDeleteAccess(request)
+				.getSchulleitungController()
+				.delete(ids);
 	}
 
 

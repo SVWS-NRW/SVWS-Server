@@ -10,29 +10,34 @@ import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
+import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Service-Klasse für die Verwaltung von Merkmalen.
+ * Service-Klasse für die Verwaltung von Schulleitungseinträgen.
  * Stellt CRUD-Operationen für Schulleitung bereit und führt Validierungen durch.
  */
 public final class SchulleitungService {
 
 	private final SchulleitungRepository repository;
+	private final LehrerRepository lehrerRepository;
 	private final SchulleitungMapper mapper;
 
 	/**
 	 * Erstellt einen neuen SchulleitungService.
 	 *
-	 * @param repository                  das Repository für den Datenbankzugriff auf Merkmale
+	 * @param repository                  das Repository für den Datenbankzugriff auf Schulleitungseinträge
+	 * @param lehrerRepository            das Repository für den Datenbankzugriff auf Lehrer
 	 * @param mapper                      der Mapper zur Konvertierung zwischen Domain- und API-Modellen
 	 */
 	public SchulleitungService(
 			final SchulleitungRepository repository,
+			final LehrerRepository lehrerRepository,
 			final SchulleitungMapper mapper) {
 		this.repository = repository;
+		this.lehrerRepository = lehrerRepository;
 		this.mapper = mapper;
 	}
 
@@ -66,7 +71,7 @@ public final class SchulleitungService {
 	 * Validiert die Eingabedaten und erstellt den Eintrag in einer Transaktion.
 	 * @param  dto die Daten für den neuen Eintrag
 	 * @return der erstellte Eintrag als API-Modell
-	 * @throws ApiOperationException wenn das Enddatum vor dem Startdatum liegt oder die Leitungsfunktion nicht existiert
+	 * @throws ApiOperationException wenn der Lehrer oder die Leitungsfunktion nicht existiert oder das Enddatum vor dem Startdatum liegt
 	 */
 	public Schulleitung create(final SchulleitungCreateRequest dto) {
 		return TransactionSupport.transactional(() -> {
@@ -114,6 +119,7 @@ public final class SchulleitungService {
 	}
 
 	private void validateCreate(final SchulleitungCreateRequest dto) {
+		this.validateLehrerExists(dto.idLehrer);
 		this.validateLehrerLeitungsfunktion(dto.idLeitungsfunktion);
 		this.validateDatumBis(dto.datumEndeLeitungsfunktion, dto.datumBeginnLeitungsfunktion);
 	}
@@ -125,6 +131,15 @@ public final class SchulleitungService {
 		final var effectiveDatumVon = dto.datumBeginnLeitungsfunktion.orElse(entity.Von);
 		final var effectiveDatumBis = dto.datumEndeLeitungsfunktion.orElse(entity.Bis);
 		this.validateDatumBis(effectiveDatumBis, effectiveDatumVon);
+	}
+
+	private void validateLehrerExists(final long idLehrer) {
+		if (!this.lehrerRepository.existsById(idLehrer)) {
+			throw new ApiOperationException(
+					Response.Status.NOT_FOUND,
+					"Es konnte kein Lehrer mit der ID %d gefunden werden.".formatted(idLehrer)
+			);
+		}
 	}
 
 	private void validateLehrerLeitungsfunktion(final long idLeitungsfunktion) {

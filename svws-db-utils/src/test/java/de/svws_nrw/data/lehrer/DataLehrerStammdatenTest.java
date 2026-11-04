@@ -53,6 +53,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
+import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import jakarta.ws.rs.core.Response;
 
 @DisplayName("Diese Klasse testet die Klasse DataLehrerStammdaten")
@@ -69,6 +70,9 @@ class DataLehrerStammdatenTest {
 	private LernplattformRepository lernplattformRepository;
 
 	@Mock
+	private SchulleitungRepository schulleitungRepository;
+
+	@Mock
 	private LehrerFotoService lehrerFotoService;
 
 	private DataLehrerStammdaten dataLehrerStammdaten;
@@ -80,7 +84,12 @@ class DataLehrerStammdatenTest {
 
 	@BeforeEach
 	void setUp() {
-		dataLehrerStammdaten = new DataLehrerStammdaten(conn, lernplattformRepository, einwilligungsartRepository, lehrerFotoService);
+		dataLehrerStammdaten = new DataLehrerStammdaten(
+				conn,
+				lernplattformRepository,
+				einwilligungsartRepository,
+				schulleitungRepository,
+				lehrerFotoService);
 	}
 
 	@Test
@@ -362,8 +371,7 @@ class DataLehrerStammdatenTest {
 		final var dtoSchulleitung = new DTOSchulleitung(1L, 1L, "abc", 1L);
 		dtoSchulleitung.Von = "abc";
 		dtoSchulleitung.Bis = "abc";
-		when(this.conn.queryList(DTOSchulleitung.QUERY_BY_LEHRERID, DTOSchulleitung.class, 1L))
-				.thenReturn(List.of(dtoSchulleitung));
+		when(this.schulleitungRepository.getAllByIdLehrer(1L)).thenReturn(List.of(dtoSchulleitung));
 
 		final var lehrerStammdaten = this.dataLehrerStammdaten.map(dtoLehrer);
 
