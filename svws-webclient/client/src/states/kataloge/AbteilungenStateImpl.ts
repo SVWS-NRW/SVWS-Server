@@ -32,34 +32,24 @@ export class AbteilungenStateImpl extends StateManager<AbteilungenReactiveState>
 			abteilungenById: new Map(),
 			abteilungsleitungen: new Set(),
 		});
-		const katalogState = createKatalogState({
-			katalogLabel: KATALOG_LABEL,
-			getList: () => this.state.abteilungen,
-			getById: () => this.state.abteilungenById,
-			updateState: (list, byId) => this.setPatchedState({ abteilungen: list, abteilungenById: byId, abteilungsleitungen: this.berechneAbteilungsleitungen(list) }),
-			updateDefaultState: (list, byId) => this.setPatchedDefaultState({ abteilungen: list, abteilungenById: byId, abteilungsleitungen: this.berechneAbteilungsleitungen(list) }),
-			apiGet: () => api.server.getAbteilungenByIdJahresAbschnitt(api.schema, useAbschnittState().auswahl.id),
-			apiAdd: (data: Partial<Abteilung>) => api.server.addAbteilung(data, api.schema, data.idSchuljahresabschnitt ?? -1),
-			apiPatch: (id, data) => api.server.patchAbteilung(data, api.schema, id),
-			apiDelete: async (id) => {
-				const ids = new ArrayList<number>();
-				ids.add(id);
-				await api.server.deleteAbteilungen(ids, api.schema);
-			},
-		});
-
-		// Ein Getter per defineProperty statt `obj.x = ...`, da eine Zuweisung nur den aktuellen Wert festschreiben
-		// würde, sich aber die Referenz ändern kann (die Set wird bei jedem Laden neu erzeugt).
-		Object.defineProperty(
-			katalogState,
-			"abteilungsleitungen",
-			{
-				enumerable: true,
-				configurable: true,
-				get: () => this.state.abteilungsleitungen,
-			}
-		);
-		this._abteilungen = katalogState as AbteilungenKatalogState;
+		this._abteilungen = {
+			...createKatalogState({
+				katalogLabel: KATALOG_LABEL,
+				getList: () => this.state.abteilungen,
+				getById: () => this.state.abteilungenById,
+				updateState: (list, byId) => this.setPatchedState({ abteilungen: list, abteilungenById: byId }),
+				updateDefaultState: (list, byId) => this.setPatchedDefaultState({ abteilungen: list, abteilungenById: byId }),
+				apiGet: () => api.server.getAbteilungenByIdJahresAbschnitt(api.schema, useAbschnittState().auswahl.id),
+				apiAdd: (data: Partial<Abteilung>) => api.server.addAbteilung(data, api.schema, data.idSchuljahresabschnitt ?? -1),
+				apiPatch: (id, data) => api.server.patchAbteilung(data, api.schema, id),
+				apiDelete: async (id) => {
+					const ids = new ArrayList<number>();
+					ids.add(id);
+					await api.server.deleteAbteilungen(ids, api.schema);
+				},
+			}),
+			abteilungsleitungen: this.state.abteilungsleitungen,
+		};
 	}
 
 	override reset() {
@@ -72,6 +62,7 @@ export class AbteilungenStateImpl extends StateManager<AbteilungenReactiveState>
 		try {
 			await this.abteilungen.update(true);
 			this._abschnittWatcher ??= watch(() => useAbschnittState().auswahl.id, () => this.abteilungen.update(false));
+			this.initAbteilungsleitungen();
 		} catch {
 			this.reset();
 			throw new DeveloperNotificationException(
@@ -84,22 +75,15 @@ export class AbteilungenStateImpl extends StateManager<AbteilungenReactiveState>
 		return this._abteilungen;
 	}
 
-	/**
-	 * Bestimmt die IDs aller Abteilungsleitungen der übergebenen Abteilungen. Es wird jeweils eine neue Set erzeugt,
-	 * damit der State per Patch (neue Referenz) aktualisiert wird und die Abteilungsleitungen zur Liste passen.
-	 *
-	 * @param abteilungen   die Abteilungen
-	 *
-	 * @returns die IDs der Abteilungsleitungen
-	 */
-	private berechneAbteilungsleitungen(abteilungen: List<Abteilung>): Set<number> {
-		const abteilungsleitungen = new Set<number>();
+	private initAbteilungsleitungen() {
+		const abteilungen = this.state.abteilungen;
+		const abteilungsleitungen = this.state.abteilungsleitungen;
+		abteilungsleitungen.clear();
 		for (const eintrag of abteilungen) {
 			if (eintrag.idAbteilungsleiter !== null) {
 				abteilungsleitungen.add(eintrag.idAbteilungsleiter);
 			}
 		}
-		return abteilungsleitungen;
 	}
 
 }
