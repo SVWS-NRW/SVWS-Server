@@ -125,7 +125,7 @@ public final class EnmV2GetService {
 			throw new NullPointerException("Kein Jahrgang zu der Jahrgangs-ID gefunden.");
 		}
 		kontext.manager.addJahrgang(dtoJahrgang.ID, dtoJahrgang.ASDJahrgang, dtoJahrgang.InternKrz,
-				dtoJahrgang.ASDBezeichnung, dtoJahrgang.Sekundarstufe, dtoJahrgang.Sortierung);
+				dtoJahrgang.ASDBezeichnung, dtoJahrgang.Sekundarstufe, (dtoJahrgang.Sortierung == null) ? 32000 : dtoJahrgang.Sortierung);
 	}
 
 
@@ -135,13 +135,14 @@ public final class EnmV2GetService {
 	 *
 	 * @param lernabschnitt   der zu integrierende Lernabschnitt
 	 *
-	 * @return die Daten der ENM-Klasse
+	 * @return die Daten der ENM-Klasse oder null, wenn die Klasse nicht zum Schuljahresabschnitt der ENM-Daten gehört
 	 */
 	private ENMv2Klasse addKlasseIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt) {
-		// Lese die Klasse aus dem Kontext aus. Dort muss sie vorliegen...
+		// Lese die Klasse aus dem Kontext aus. Dort sind nur die Klassen des Schuljahresabschnitts enthalten. Verweist der Lernabschnitt
+		// (aufgrund inkonsistenter Daten) auf eine Klasse eines anderen Abschnittes, so wird er nicht in die ENM-Daten übernommen.
 		final DTOKlassen dtoKlasse = kontext.getKlasse(lernabschnitt.Klassen_ID);
 		if (dtoKlasse == null) {
-			throw new NullPointerException();
+			return null;
 		}
 
 		// Prüfe, ob die Klasse bereits zu den ENM-Daten hinzugefügt wurde
@@ -153,7 +154,8 @@ public final class EnmV2GetService {
 		// Sie existiert noch nicht in den ENM-Daten. Füge sie hinzu...
 		addJahrgangIfNotExists(dtoKlasse.Jahrgang_ID);
 
-		kontext.manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse, dtoKlasse.Jahrgang_ID, dtoKlasse.Sortierung);
+		kontext.manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse, dtoKlasse.Jahrgang_ID,
+				(dtoKlasse.Sortierung == null) ? 32000 : dtoKlasse.Sortierung);
 		enmKlasse = kontext.manager.getKlasse(dtoKlasse.ID);
 		final List<Long> idsKlassenleitungen = kontext.getKlassenleitungen(dtoKlasse.ID);
 		if (idsKlassenleitungen != null) {
@@ -233,7 +235,7 @@ public final class EnmV2GetService {
 	 * @param kursartAllg     die allgemeine Kursart
 	 * @param enmKlasse       die Klassendaten aus den ENM-Daten
 	 *
-	 * @return die Daten der ENM-Lerngruppe
+	 * @return die Daten der ENM-Lerngruppe oder null, wenn der Kurs nicht zum Schuljahresabschnitt der ENM-Daten gehört
 	 */
 	private ENMv2Lerngruppe addLerngruppeIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt, final DTOSchuelerLeistungsdaten leistung,
 			final ZulaessigeKursart kursart, final String kursartAllg, final ENMv2Klasse enmKlasse) {
@@ -249,6 +251,13 @@ public final class EnmV2GetService {
 			return lerngruppe;
 		}
 
+		// Bei einem Kurs: Der Kontext enthält nur die Kurse des Schuljahresabschnitts. Verweisen die Leistungsdaten (aufgrund inkonsistenter Daten)
+		// auf einen Kurs eines anderen Abschnittes, so werden sie nicht übernommen (und auch das Fach nicht unnötig hinzugefügt).
+		final DTOKurs kurs = (leistung.Kurs_ID == null) ? null : kontext.getKurs(leistung.Kurs_ID);
+		if ((leistung.Kurs_ID != null) && (kurs == null)) {
+			return null;
+		}
+
 		// Ermittle das Fach und füge es ggf. zu den ENM-Daten hinzu
 		final DTOFach fach = kontext.getFach(leistung.Fach_ID);
 		kontext.manager.addFach(fach);
@@ -258,11 +267,10 @@ public final class EnmV2GetService {
 			kontext.manager.addLerngruppe(strLerngruppenID, enmKlasse.id, leistung.Fach_ID, null, fach.Kuerzel, kursartAllg,
 					fach.Unterrichtssprache, (leistung.Wochenstunden == null) ? 0 : leistung.Wochenstunden);
 		} else {  // es ist ein Kurs
-			final DTOKurs kurs = kontext.getKurs(leistung.Kurs_ID);
 			final var tmpKursartEintrag = (kursart == null) ? null : kursart.daten(kontext.getSchuljahr());
 			kontext.manager.addLerngruppe(strLerngruppenID, leistung.Kurs_ID, leistung.Fach_ID,
 					(tmpKursartEintrag == null) ? -1 : Integer.parseInt(tmpKursartEintrag.nummer), kurs.KurzBez, kursartAllg,
-					fach.Unterrichtssprache, kurs.WochenStd);
+					fach.Unterrichtssprache, (kurs.WochenStd == null) ? 0 : kurs.WochenStd);
 		}
 		lerngruppe = kontext.manager.getLerngruppe(strLerngruppenID);
 		lerngruppe.idsLehrer.add(leistung.Fachlehrer_ID);
@@ -416,8 +424,13 @@ public final class EnmV2GetService {
 
 			final ZulaessigeKursart kursart = (leistung.Kurs_ID == null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.Kursart);
 			final var tmpKursart = ZulaessigeKursart.getByAllgemeinerKursart(kontext.getSchuljahr(), leistung.KursartAllg);
-			final String kursartAllg = (tmpKursart == null) ? "PUK" : leistung.KursartAllg;
+			// Fehlt die allgemeine Kursart oder ist sie im Schuljahr nicht zulässig, so wird PUK (Klassenverband) bzw. PUT (Teile von Klassen) verwendet
+			final String kursartAllgFallback = (leistung.Kurs_ID == null) ? "PUK" : "PUT";
+			final String kursartAllg = ((leistung.KursartAllg == null) || tmpKursart.isEmpty()) ? kursartAllgFallback : leistung.KursartAllg;
 			final ENMv2Lerngruppe lerngruppe = addLerngruppeIfNotExists(lernabschnitt, leistung, kursart, kursartAllg, enmKlasse);
+			if (lerngruppe == null) {
+				continue;
+			}
 
 			if (kontext.istLehrerSpezifisch() && (leistung.Fachlehrer_ID == kontext.getLehrerSpezfisch().ID)) {
 				leistungenFachIDs.add(lerngruppe.fachID);
@@ -488,7 +501,7 @@ public final class EnmV2GetService {
 			final ENMv2Ankreuzkompetenz enmAnkreuzkompetenz = kontext.manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
 			if (enmAnkreuzkompetenz == null) {
 				kontext.manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.id, (dtoAnkreuzkompetenz.istASV == 0), dtoAnkreuzkompetenz.idFach,
-						jahrgaenge, dtoAnkreuzkompetenz.floskelText, dtoAnkreuzkompetenz.sortierung);
+						jahrgaenge, dtoAnkreuzkompetenz.floskelText, (dtoAnkreuzkompetenz.sortierung == null) ? 32000 : dtoAnkreuzkompetenz.sortierung);
 			}
 			// Füge die Schueler-Ankreuzkompetenz hinzu
 			final var ankreuzkompetenzTimestamps = kontext.getSchuelerAnkreuzkompetenzenTimestamps(ankreuzkompetenz.ID);
@@ -548,6 +561,9 @@ public final class EnmV2GetService {
 		}
 
 		final ENMv2Klasse enmKlasse = addKlasseIfNotExists(lernabschnitt);
+		if (enmKlasse == null) {
+			return;
+		}
 		final ENMv2Schueler enmSchueler = addSchuelerIfNotExists(lernabschnitt, enmKlasse);
 		final Set<Long> idsFaecher = processSchuelerLeistungen(lernabschnitt, enmKlasse, enmSchueler);
 		processSchuelerAnkreuzkompetenzenOfLernabschnitt(lernabschnitt, enmKlasse, enmSchueler, idsFaecher);
@@ -593,7 +609,8 @@ public final class EnmV2GetService {
 		// Setze die grundlegenden Schuldaten
 		final var schule = kontext.getSchuldaten();
 
-		kontext.manager.setSchuldaten(schule.SchulNr, kontext.getSchuljahr(), schule.AnzahlAbschnitte, kontext.getHalbjahr(), schule.SchulformKuerzel,
+		kontext.manager.setSchuldaten(schule.SchulNr, kontext.getSchuljahr(), kontext.getAnzahlAbschnitte(), kontext.getHalbjahr(),
+				schule.SchulformKuerzel,
 				kontext.getSchulleitung(), kontext.getSchulleitungStv());
 
 		// Sorge dafür, dass die Schulleitungen immer im Lehrer-Katalog vorhanden sind
@@ -623,7 +640,7 @@ public final class EnmV2GetService {
 		// Kopiere den Noten-Katalog aus dem Core-type in die ENM-Daten
 		kontext.manager.addNoten(kontext.getSchuljahr());
 		// Kopiere den Förderschwerpunkt-Katalog aus dem Core-type in die ENM-Daten
-		kontext.manager.addFoerderschwerpunkte(kontext.getSchuljahr(), Schulform.data().getWertByKuerzel(schule.SchulformKuerzel));
+		kontext.manager.addFoerderschwerpunkte(kontext.getSchuljahr(), kontext.getSchulform());
 	}
 
 

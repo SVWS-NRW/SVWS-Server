@@ -243,8 +243,11 @@ final class HttpENMServerConnection {
 			try (HttpClient client = builder.build()) {
 				return client.send(request, handler);
 			}
-		} catch (IOException | InterruptedException e) {
+		} catch (final InterruptedException e) {
+			// Das Interrupt-Flag darf nur bei einer InterruptedException wiederhergestellt werden
 			Thread.currentThread().interrupt();
+			throw new ApiOperationException(Status.BAD_GATEWAY, e, "Fehler beim Senden der Informationen: " + e.getLocalizedMessage());
+		} catch (final IOException e) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, e, "Fehler beim Senden der Informationen: " + e.getLocalizedMessage());
 		}
 	}

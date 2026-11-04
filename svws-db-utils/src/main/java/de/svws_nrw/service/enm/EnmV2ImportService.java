@@ -471,6 +471,10 @@ public class EnmV2ImportService {
 
 	private static void pruefeAnkreuzkompetenzen(final ENMv2Schueler enmSchueler, final EnmKontextdaten kontext) {
 		for (final ENMv2SchuelerAnkreuzkompetenz enmAnkreuzkompetenz : enmSchueler.ankreuzkompetenzen) {
+			// Einträge ohne genau 5 Kompetenzstufen sind ungültig und werden übersprungen, damit ein einzelner fehlerhafter Eintrag nicht den Import abbricht
+			if ((enmAnkreuzkompetenz.stufen == null) || (enmAnkreuzkompetenz.stufen.length != 5)) {
+				continue;
+			}
 			final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz = kontext.mapAnkreuzkompetenzen.get(enmAnkreuzkompetenz.id);
 			final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTS = kontext.mapAnkreuzkompetenzenTimestamps.get(enmAnkreuzkompetenz.id);
 
@@ -673,6 +677,50 @@ public class EnmV2ImportService {
 
 
 	/**
+	 * Prüft die Struktur der importierten ENM-Daten. Die Pflichtfelder dürfen nicht null sein, da ein JSON-null
+	 * die Standardwerte der Datenklassen überschreibt und es sonst später zu einer NullPointerException kommt.
+	 *
+	 * @param daten   die importierten Daten
+	 *
+	 * @throws ApiOperationException   mit dem Status BAD_REQUEST, wenn die Struktur fehlerhaft ist
+	 */
+	private static void pruefeStruktur(final ENMv2Daten daten) throws ApiOperationException {
+		if (daten.lehrer == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten enthalten keine Liste der Lehrer.");
+		}
+		if (daten.schueler == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten enthalten keine Liste der Schüler.");
+		}
+		for (final ENMv2Schueler schueler : daten.schueler) {
+			if (schueler == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die Liste der Schüler in den ENM-Daten enthält einen leeren Eintrag.");
+			}
+			if (schueler.lernabschnitt == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Beim Schüler mit der ID %d fehlt der Lernabschnitt.".formatted(schueler.id));
+			}
+			if (schueler.bemerkungen == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Beim Schüler mit der ID %d fehlen die Bemerkungen.".formatted(schueler.id));
+			}
+			if ((schueler.ankreuzkompetenzen == null) || schueler.ankreuzkompetenzen.contains(null)) {
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Beim Schüler mit der ID %d fehlt die Liste der Ankreuzkompetenzen oder sie enthält einen leeren Eintrag.".formatted(schueler.id));
+			}
+			if ((schueler.leistungsdaten == null) || schueler.leistungsdaten.contains(null)) {
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Beim Schüler mit der ID %d fehlt die Liste der Leistungsdaten oder sie enthält einen leeren Eintrag.".formatted(schueler.id));
+			}
+			for (final ENMv2Leistung leistung : schueler.leistungsdaten) {
+				if ((leistung.teilleistungen == null) || leistung.teilleistungen.contains(null)) {
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Bei den Leistungsdaten mit der ID %d fehlt die Liste der Teilleistungen oder sie enthält einen leeren Eintrag."
+									.formatted(leistung.id));
+				}
+			}
+		}
+	}
+
+
+	/**
 	 * Integriert die Veränderungen bei den importierten ENM-Daten gegenüber dem Stand
 	 * der SVWS-DB in die SVWS-DB.
 	 *
@@ -681,6 +729,7 @@ public class EnmV2ImportService {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public void applyLatest(final ENMv2Daten daten) throws ApiOperationException {
+		pruefeStruktur(daten);
 		transactional(() -> {
 			final EnmKontextdaten kontext = new EnmKontextdaten(daten);
 			applyLehrerCredentials(daten, kontext);

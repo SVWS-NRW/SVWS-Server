@@ -209,6 +209,18 @@ export function registerEndpunkteTests() {
 			// Die Klassenleitung darf ohne Freigabe der Noteneingabe keine Kompetenz eines Fachs ändern, das sie nicht unterrichtet (Fach 14)
 			const patchFremdesFach: Partial<ENMv2SchuelerAnkreuzkompetenz> = { id: 18153, stufen: [true, false, false, false, false] };
 			await ApiEnmServerTest.testErrorStatus(() => apiServiceAuth.patchENMSchuelerAnkreuzkompetenzen(patchFremdesFach), 403);
+
+			// Ein Patch mit einer falschen Anzahl an Stufen muss abgelehnt werden und darf die Daten nicht verändern
+			const patchFalscheAnzahl: Partial<ENMv2SchuelerAnkreuzkompetenz> = { id: idKompetenz, stufen: [true, false, true] };
+			await ApiEnmServerTest.testErrorStatus(() => apiServiceAuth.patchENMSchuelerAnkreuzkompetenzen(patchFalscheAnzahl), 400);
+			const schuelerNachFehler = await apiServiceAuth.testLadeSchueler(idSchueler);
+			let datumNachFehler: ENMv2SchuelerAnkreuzkompetenz | null = null;
+			for (const k of schuelerNachFehler.ankreuzkompetenzen) {
+				if (k.id === idKompetenz) {
+					datumNachFehler = k;
+				}
+			}
+			expect(datumNachFehler?.stufen).toStrictEqual(patch.stufen);
 		});
 
 	});
