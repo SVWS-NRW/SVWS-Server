@@ -278,5 +278,4 @@ public final class KatalogServiceFactory {
 				AnkreuzkompetenzKonfigurationMapper.INSTANCE
 		);
 	}
-
 }

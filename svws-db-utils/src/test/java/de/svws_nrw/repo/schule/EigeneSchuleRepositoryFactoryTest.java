@@ -46,6 +46,7 @@ class EigeneSchuleRepositoryFactoryTest {
 		assertNotNull(factory.getSchuleRepository());
 		assertNotNull(factory.getSchuljahresabschnitteRepository());
 		assertNotNull(factory.getSchulinterneFunktionRepository());
+		assertNotNull(factory.getTeilstandortRepository());
 	}
 
 }

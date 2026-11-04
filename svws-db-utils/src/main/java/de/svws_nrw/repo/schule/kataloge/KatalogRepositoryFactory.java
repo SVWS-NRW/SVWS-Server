@@ -279,5 +279,4 @@ public final class KatalogRepositoryFactory extends RepositoryFactory {
 	public HaltestelleRepository getHaltestelleRepository() {
 		return this.getOrCreate(HaltestelleRepository.class, () -> new HaltestelleRepositoryImpl(this.conn));
 	}
-
 }

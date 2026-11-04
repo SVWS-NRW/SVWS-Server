@@ -19534,23 +19534,28 @@ export class ApiServer extends BaseApi {
 	 * Patched den Teilstandort mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Teilstandort
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<Teilstandort>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {string} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert.
 	 */
-	public async patchTeilstandort(data: Partial<Teilstandort>, schema: string, id: string): Promise<void> {
+	public async patchTeilstandort(data: Partial<Teilstandort>, schema: string, id: string): Promise<Teilstandort> {
 		const path = "/db/{schema}/schule/teilstandort/{id}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id);
 		const body: string = Teilstandort.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return Teilstandort.transpilerFromJSON(text);
 	}
 
 

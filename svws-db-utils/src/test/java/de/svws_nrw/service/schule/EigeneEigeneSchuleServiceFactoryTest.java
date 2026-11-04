@@ -14,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
+import de.svws_nrw.repo.schule.teilstandort.TeilstandortRepository;
+import de.svws_nrw.service.schule.teilstandort.TeilstandortService;
 
 /**
  * Tests für die Factory von Schul-Services
@@ -27,6 +29,9 @@ class EigeneEigeneSchuleServiceFactoryTest {
 	@Mock
 	private SchuljahresabschnitteRepository abschnitteRepoMock;
 
+	@Mock
+	private TeilstandortRepository teilstandortRepoMock;
+
 	@InjectMocks
 	private EigeneSchuleServiceFactory serviceFactory;
 
@@ -37,6 +42,15 @@ class EigeneEigeneSchuleServiceFactoryTest {
 		final SchuljahresabschnittService service = serviceFactory.getSchuljahresabschnittService();
 		assertNotNull(service, "Der Service sollte nicht null sein.");
 		verify(repoFactoryMock, times(1)).getSchuljahresabschnitteRepository();
+	}
+
+	@Test
+	@DisplayName("Test: getTeilstandortService liefert eine Instanz des Services")
+	void testGetTeilstandortService() {
+		when(repoFactoryMock.getTeilstandortRepository()).thenReturn(teilstandortRepoMock);
+		final TeilstandortService service = serviceFactory.getTeilstandortService();
+		assertNotNull(service, "Der Service sollte nicht null sein.");
+		verify(repoFactoryMock, times(1)).getTeilstandortRepository();
 	}
 
 }

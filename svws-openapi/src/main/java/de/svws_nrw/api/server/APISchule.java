@@ -23,6 +23,7 @@ import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.controller.schule.logoverwaltung.LogoverwaltungControllerFactory;
 import de.svws_nrw.controller.schule.schuljahresabschnitt.SchuljahresabschnittControllerFactory;
+import de.svws_nrw.controller.schule.teilstandort.TeilstandortControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
@@ -37,13 +38,13 @@ import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.core.data.schule.Floskel;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
-import de.svws_nrw.core.data.schule.SchulinterneFunktion;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.data.schule.Logo;
 import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
+import de.svws_nrw.core.data.schule.SchulinterneFunktion;
 import de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag;
 import de.svws_nrw.core.data.schule.Teilstandort;
 import de.svws_nrw.core.data.schule.Telefonart;
@@ -91,7 +92,6 @@ import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataSchulinterneFunktionen;
 import de.svws_nrw.data.schule.DataSchulleitung;
-import de.svws_nrw.data.schule.DataTeilstandorte;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataVermerkarten;
 import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartCreateRequest;
@@ -102,6 +102,8 @@ import de.svws_nrw.service.schule.katalog.religion.ReligionCreateRequest;
 import de.svws_nrw.service.schule.katalog.religion.ReligionPatchRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoCreateRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoPatchRequest;
+import de.svws_nrw.service.schule.teilstandort.TeilstandortCreateRequest;
+import de.svws_nrw.service.schule.teilstandort.TeilstandortPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -3367,7 +3369,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchSchulinterneFunktion(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch einer schulinternen Funktion", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchulinterneFunktion.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchulinterneFunktion.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataSchulinterneFunktionen(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
@@ -3393,7 +3396,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addSchulinterneFunktion(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden schulinternen Funktion", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchulinterneFunktion.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchulinterneFunktion.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataSchulinterneFunktionen(conn).addAsResponse(is), request, ServerMode.STABLE,
@@ -3446,15 +3450,17 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Teilstandorte-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Teilstandorte-Einträge gefunden")
 	public Response getTeilstandorte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataTeilstandorte(conn).getAllAsResponse(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return TeilstandortControllerFactory
+				.withReadAccess(request)
+				.getController()
+				.getAll();
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen eines Teilstandorts.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten des Teilstandorts
+	 * @param create       der Request mit den Daten des Teilstandorts
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem erstellten Teilstandort
@@ -3469,11 +3475,13 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addTeilstandort(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Teilstandorts", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilstandort.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Teilstandort.class))) final TeilstandortCreateRequest create,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataTeilstandorte(conn).addAsResponse(is), request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return TeilstandortControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.create(create);
 	}
 
 	/**
@@ -3481,7 +3489,7 @@ public class APISchule {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die ID zur Identifikation des Teilstandortes
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     das Patchobjekt
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -3490,27 +3498,28 @@ public class APISchule {
 	@Path("/teilstandort/{id}")
 	@Operation(summary = "Patched den Teilstandort mit der angegebenen ID.",
 			description = "Patched den Teilstandort mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
-	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilstandort.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchTeilstandort(@PathParam("schema") final String schema, @PathParam("id") final String id,
 			@RequestBody(description = "Der Patch eines Teilstandortes", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilstandort.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Teilstandort.class))) final TeilstandortPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataTeilstandorte(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return TeilstandortControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.patch(id, patch);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Teilstandorte.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste der zu löschenden ids
+	 * @param ids       die Liste der zu löschenden Adressmerkmale
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -3527,12 +3536,12 @@ public class APISchule {
 	public Response deleteTeilstandorte(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Teilstandorte",
 					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = String.class)))) final InputStream is,
+					array = @ArraySchema(schema = @Schema(implementation = String.class)))) final List<String> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataTeilstandorte(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfString(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return TeilstandortControllerFactory
+				.withDeleteAccess(request)
+				.getController()
+				.delete(ids);
 	}
 
 	/**

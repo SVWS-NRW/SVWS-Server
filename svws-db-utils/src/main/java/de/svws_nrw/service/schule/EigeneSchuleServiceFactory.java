@@ -1,7 +1,9 @@
 package de.svws_nrw.service.schule;
 
 import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
+import de.svws_nrw.mapper.schule.teilstandort.TeilstandortMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.service.schule.teilstandort.TeilstandortService;
 
 /**
  * Eine Factory zum Erstellen der Statistik-spezifischen Services
@@ -56,5 +58,12 @@ public final class EigeneSchuleServiceFactory {
 				SchuljahresabschnittMapper.INSTANCE);
 	}
 
-
+	/**
+	 * Erstellt einen neuen Teilstandort-Service für den Zugriff auf Teilstandorte
+	 *
+	 * @return der Service für die Teilstandorte
+	 */
+	public TeilstandortService getTeilstandortService() {
+		return new TeilstandortService(eigeneSchuleRepositoryFactory.getTeilstandortRepository(), TeilstandortMapper.INSTANCE);
+	}
 }

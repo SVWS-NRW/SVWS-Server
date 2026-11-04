@@ -6,6 +6,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.repo.RepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungKlasseRepository;
 import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungKlasseRepositoryImpl;
@@ -15,6 +16,8 @@ import de.svws_nrw.repo.schule.schulinternefunktion.SchulinterneFunktionReposito
 import de.svws_nrw.repo.schule.schulinternefunktion.SchulinterneFunktionRepositoryImpl;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepositoryImpl;
+import de.svws_nrw.repo.schule.teilstandort.TeilstandortRepository;
+import de.svws_nrw.repo.schule.teilstandort.TeilstandortRepositoryImpl;
 
 /**
  * Eine Factory zum Erstellen von Repositories für Datenbank-Entitäten und ggf. auch komplexere Abfragen.
@@ -90,4 +93,12 @@ public final class EigeneSchuleRepositoryFactory extends RepositoryFactory {
 		return getOrCreate(AbteilungKlasseRepository.class, () -> new AbteilungKlasseRepositoryImpl(conn));
 	}
 
+	/**
+	 * Erstellt ein neues Repository für {@link DTOTeilstandorte}
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public TeilstandortRepository getTeilstandortRepository() {
+		return getOrCreate(TeilstandortRepository.class, () -> new TeilstandortRepositoryImpl(conn));
+	}
 }
