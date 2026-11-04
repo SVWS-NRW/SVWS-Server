@@ -53,6 +53,9 @@ class AuthStateImpl implements AuthState {
 	// Der aktuell gültige Token
 	private readonly _token = ref<string | null>(null);
 
+	// Der Zeitpunkt des Empfangs des aktuellen Tokens auf der monotonen Uhr des Browsers (performance.now) in Millisekunden
+	private _tokenReceivedAt = 0;
+
 	// Bei einer Erstanmeldung die Informationen für den QR-Code für TOTP und ansonsten null
 	private readonly _totpSetup = shallowRef<{ secret: string, issuer: string, account: string } | null>(null);
 
@@ -186,6 +189,10 @@ class AuthStateImpl implements AuthState {
 	 * Gibt die verbleibende Zeit in Sekunden für die Gültigkeit des Tokens zurück.
 	 * Existiert kein Token so wird 0 zurückgegeben.
 	 *
+	 * Die Berechnung nutzt nicht die Uhr des Clients im Vergleich zu "exp" (Serverzeit), sondern die
+	 * Gültigkeitsdauer des Tokens ("exp" - "iat", beides Serverzeit) abzüglich der seit dem Empfang
+	 * des Tokens vergangenen Zeit. Damit ist sie unabhängig von einer abweichenden Uhr des Clients.
+	 *
 	 * @returns die verbleibenden Sekunden der Token-Gültigkeit
 	 */
 	public get expirationSeconds(): number {
@@ -193,18 +200,18 @@ class AuthStateImpl implements AuthState {
 		if (!payload) {
 			return 0;
 		}
-		const now = Math.floor(Date.now() / 1000);
-		return Math.max(0, payload.exp - now);
+		const elapsed = (performance.now() - this._tokenReceivedAt) / 1000;
+		return Math.max(0, Math.floor((payload.exp - payload.iat) - elapsed));
 	}
 
 	/**
 	 * Gibt den Ablaufzeitpunkt als Date-Objekt zurück. Liegt kein Token vor, so wird null zurückgegeben.
+	 * Der Zeitpunkt bezieht sich auf die Uhr des Clients.
 	 *
 	 * @returns der Ablaufzeitpunkt als Date oder null
 	 */
 	public get expiresAt(): Date | null {
-		const payload = this.getTokenPayload();
-		return payload ? new Date(payload.exp * 1000) : null;
+		return (this.getTokenPayload() === null) ? null : new Date(Date.now() + (this.expirationSeconds * 1000));
 	}
 
 	/**
@@ -400,13 +407,23 @@ class AuthStateImpl implements AuthState {
 	}
 
 	private async receivedAccessToken(token: string) {
+		this._tokenReceivedAt = performance.now();
 		this._token.value = token;
 	}
 
 	private async doRefreshToken(): Promise<void> {
-		const result = await this.api.refreshToken();
-		await this.receivedAccessToken(result.token);
-		await this.updateRefreshTokenTimer();
+		try {
+			const result = await this.api.refreshToken();
+			await this.receivedAccessToken(result.token);
+			await this.updateRefreshTokenTimer();
+		} catch {
+			// Wurde der Benutzer bereits abgemeldet (z.B. durch ein 401), so ist nichts weiter zu tun
+			if (!this._authenticated.value) {
+				return;
+			}
+			await this.logout(true);
+			this._message.value = "Die Sitzung konnte nicht verlängert werden. Sie wurden automatisch abgemeldet.";
+		}
 	}
 
 	private startTimer(seconds: number): void {
