@@ -95,13 +95,14 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 
 	private stepAbiturLK(fach: GostFach, wahl: GostSchuelerFachwahl): boolean {
 		const aktuell = wahl.abiturFach;
-		if ((aktuell !== null) && (aktuell !== 1) && (aktuell !== 2)) {
+		// Auch ohne gesetztes Abiturfach (null) wird zuerst LK1 bzw. LK2 gesetzt
+		if ((aktuell !== 1) && (aktuell !== 2)) {
 			wahl.abiturFach = (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager.hatAbiFach(GostAbiturFach.LK1)) ? 1 : 2;
 			return true;
 		} else if (aktuell === 1) {
 			wahl.abiturFach = 2;
 			return true;
-		} else if ((aktuell === 2) && GostFachUtils.istWaehlbarLeistungskurs1(fach)) {
+		} else if (GostFachUtils.istWaehlbarLeistungskurs1(fach)) {
 			wahl.abiturFach = 1;
 			return true;
 		}
@@ -403,35 +404,6 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 		}
 	}
 
-	private schreibeHochLeerSport(fach: GostFach, wahl: GostSchuelerFachwahl, halbjahr: GostHalbjahr): void {
-		if (wahl.abiturFach !== null) {
-			wahl.halbjahre[halbjahr.id] = 'S';
-		} else if ((halbjahr === GostHalbjahr.EF1) && (this.istWahl(fach, wahl, [null, null, null, null, null, null]))) {
-			if (!fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK) {
-				wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
-			} else if (!fach.istMoeglichAbiGK && fach.istMoeglichAbiLK) {
-				wahl.halbjahre = ['S', 'S', 'LK', 'LK', 'LK', 'LK'];
-			} else {
-				wahl.halbjahre = this.getWahlSchriftlich(fach);
-			}
-		} else if ((halbjahr === GostHalbjahr.EF2) && this.istWahlInQPhase(fach, wahl, [null, null, null, null])) {
-			if (!fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK) {
-				wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
-			} else if (!fach.istMoeglichAbiGK && fach.istMoeglichAbiLK) {
-				wahl.halbjahre = [wahl.halbjahre[0], 'S', 'LK', 'LK', 'LK', 'LK'];
-			} else {
-				const wahlEF1 = wahl.halbjahre[GostHalbjahr.EF1.id];
-				wahl.halbjahre = this.getWahlSchriftlich(fach);
-				wahl.halbjahre[GostHalbjahr.EF1.id] = wahlEF1;
-			}
-		} else if (fach.istMoeglichAbiGK || fach.istMoeglichAbiLK) {
-			wahl.halbjahre[halbjahr.id] = "S";
-		} else {
-			wahl.halbjahre[halbjahr.id] = "M";
-		}
-	}
-
-
 	private schreibeHochSchriftlichZuMuendlich(fach: GostFach, wahl: GostSchuelerFachwahl, halbjahr: GostHalbjahr): void {
 		if (wahl.abiturFach !== null) {
 			wahl.halbjahre[halbjahr.id] = 'M';
@@ -467,22 +439,6 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 			wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
 		} else {
 			wahl.halbjahre[halbjahr.id] = null;
-		}
-	}
-
-	private schreibeHochSchriftlichSport(fach: GostFach, wahl: GostSchuelerFachwahl, halbjahr: GostHalbjahr): void {
-		if (wahl.abiturFach !== null) {
-			wahl.halbjahre[halbjahr.id] = 'M';
-		} else if ((halbjahr === GostHalbjahr.EF1) && (this.istWahl(fach, wahl, ['S', 'S', 'S', 'S', 'S', 'M'])
-			|| (this.istWahl(fach, wahl, ['S', 'S', 'LK', 'LK', 'LK', 'LK']) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK))) {
-			wahl.halbjahre = this.getWahlMuendlich(fach);
-		} else if ((halbjahr !== GostHalbjahr.EF1) && (this.istWahlInQPhase(fach, wahl, [null, null, null, null]) || this.istWahlInQPhase(fach, wahl, ['S', 'S', 'S', 'M'])
-			|| (this.istWahlInQPhase(fach, wahl, ['LK', 'LK', 'LK', 'LK']) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK))) {
-			const wahlEF1 = wahl.halbjahre[GostHalbjahr.EF1.id];
-			wahl.halbjahre = this.getWahlMuendlich(fach);
-			wahl.halbjahre[GostHalbjahr.EF1.id] = wahlEF1;
-		} else {
-			wahl.halbjahre[halbjahr.id] = "M";
 		}
 	}
 
@@ -626,69 +582,6 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 			this.setzeWahlQLK(fach, wahl);
 		} else if ((aktuell === "LK")) {
 			this.setzeWahlQSchriftlich(fach, wahl);
-			wahl.abiturFach = null;
-		}
-	}
-
-
-	private stepSport(fach: GostFach, wahl: GostSchuelerFachwahl, halbjahr: GostHalbjahr, mode: LaufbahnplanungUiStepperMode): void {
-		if (!GostFachbereich.SPORT.hat(fach)) {
-			throw new DeveloperNotificationException("Die Methode stepSport darf nur bei Sport verwendet werden.");
-		}
-
-		// Hochschreibe-Modus
-		const aktuell = wahl.halbjahre[halbjahr.id];
-		if ((mode === 'hochschreiben') && (halbjahr.istEinfuehrungsphase())) {
-			if (aktuell === null) {
-				this.schreibeHochLeerSport(fach, wahl, halbjahr);
-			} else if (aktuell === "S") {
-				this.schreibeHochSchriftlichSport(fach, wahl, halbjahr);
-			} else if (aktuell === "M") {
-				this.schreibeHochMuendlicheZuLeer(fach, wahl, halbjahr);
-			}
-			return;
-		}
-
-		// Einführungsphase
-		if (halbjahr.istEinfuehrungsphase()) {
-			if (aktuell === null) {
-				wahl.halbjahre[halbjahr.id] = (fach.istMoeglichAbiGK || fach.istMoeglichAbiLK) ? "S" : "M";
-			} else if (aktuell === "S") {
-				wahl.halbjahre[halbjahr.id] = "M";
-			} else if (aktuell === "M") {
-				wahl.halbjahre[halbjahr.id] = null;
-			}
-			return;
-		}
-
-		// Qualifikationsphase - 1. Halbjahr mit hochschreiben
-		if (halbjahr === GostHalbjahr.Q11) {
-			if (aktuell === null) {
-				this.setzeWahlQMuendliche(fach, wahl);
-			} else if (fach.istMoeglichAbiLK && ((aktuell === "S") || ((aktuell === "M") && !fach.istMoeglichAbiGK))) {
-				this.setzeWahlQLK(fach, wahl);
-			} else if ((aktuell === "M") && (fach.istMoeglichAbiGK)) {
-				this.setzeWahlQSchriftlich(fach, wahl);
-			} else if ((aktuell === "S") || (aktuell === "LK") || ((aktuell === "M") && (!fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK))) {
-				this.leereWahlAb(wahl, halbjahr);
-			}
-		}
-
-		// Qualifikationsphase - Sonstige Halbjahre
-		if (aktuell === null) {
-			wahl.halbjahre[halbjahr.id] = "M";
-			wahl.abiturFach = (halbjahr === GostHalbjahr.Q22) && (wahl.abiturFach === 3) && !this.manager.pruefeExistiertAbiFach(this.manager.getFachbelegungen(), GostAbiturFach.AB4)
-				? 4 : null;
-		} else if ((aktuell === "M") && (fach.istMoeglichAbiGK)) {
-			wahl.halbjahre[halbjahr.id] = "S";
-			wahl.abiturFach = (halbjahr === GostHalbjahr.Q22) && (wahl.abiturFach === 4) && !this.manager.pruefeExistiertAbiFach(this.manager.getFachbelegungen(), GostAbiturFach.AB3)
-				? 3 : null;
-		} else if (fach.istMoeglichAbiLK && (wahl.halbjahre[halbjahr.previousOrException().id] === "LK") && ((aktuell === "S") || ((aktuell === "M") && !fach.istMoeglichAbiGK))) {
-			wahl.halbjahre[halbjahr.id] = "LK";
-		} else if ((aktuell === "S") || (aktuell === "LK") || (aktuell === "M")) {
-			for (let hj: GostHalbjahr | null = halbjahr; hj !== null; hj = hj.next()) {
-				wahl.halbjahre[hj.id] = null;
-			}
 			wahl.abiturFach = null;
 		}
 	}
@@ -938,12 +831,6 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 		// Kunst, Musik und Religion
 		if (GostFachbereich.KUNST_MUSIK.hat(fach) || GostFachbereich.RELIGION.hat(fach)) {
 			this.stepKunstMusikReligion(fach, wahl, halbjahr, mode);
-			return;
-		}
-
-		// Sport
-		if (GostFachbereich.SPORT.hat(fach)) {
-			this.stepSport(fach, wahl, halbjahr, mode);
 			return;
 		}
 
