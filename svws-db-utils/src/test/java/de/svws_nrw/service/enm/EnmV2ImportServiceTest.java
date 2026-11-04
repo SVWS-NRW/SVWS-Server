@@ -256,6 +256,21 @@ class EnmV2ImportServiceTest {
 	}
 
 	@Test
+	@DisplayName("Eine Liste der Lehrer mit einem leeren Eintrag (null) wird abgelehnt")
+	void strukturLehrerEintragNull() {
+		final ENMv2Daten daten = enmDaten(new boolean[5]);
+		daten.lehrer.add(null);
+
+		pruefeAbgelehnt(daten, "Lehrer");
+	}
+
+	@Test
+	@DisplayName("Ohne ENM-Daten (null) wird der Import abgelehnt")
+	void strukturDatenNull() {
+		pruefeAbgelehnt(null, "ENM-Daten");
+	}
+
+	@Test
 	@DisplayName("Ohne Liste der Schüler (null) werden die ENM-Daten abgelehnt")
 	void strukturSchuelerNull() {
 		final ENMv2Daten daten = enmDaten(new boolean[5]);
