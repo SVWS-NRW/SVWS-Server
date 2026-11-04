@@ -371,6 +371,10 @@ class PatchManager {
         if ($patch->id === null) {
             Http::exit400BadRequest("Es muss eine ID angegeben werden, damit die Ankreuzkompetenz angepasst werden kann.");
         }
+        // Prüfe, ob die Stufen - sofern sie im Patch vorhanden sind - genau 5 Werte enthalten
+        if (property_exists($patch, 'stufen') && (!is_array($patch->stufen) || (count($patch->stufen) !== 5))) {
+            Http::exit400BadRequest("Die Stufen der Ankreuzkompetenz müssen genau 5 Werte enthalten.");
+        }
         // Prüfe, ob eine Ankreuzkompetenz für die ID vorhanden sind
         $mapsSchueler = $this->enmManager->getMapsSchueler();
         if (!array_key_exists($patch->id, $mapsSchueler->ankreuzkompetenzen) || !array_key_exists($patch->id, $mapsSchueler->ankreuzkompetenzSchueler)) {

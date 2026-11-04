@@ -574,6 +574,12 @@ public class NotenmodulLocalService {
 			final DTOSchuelerTeilleistung teilleistung = schuelerTeilleistungRepository.findById(patch.id)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Die ID %d ist für Teilleistungsdaten ungültig.".formatted(patch.id)));
 
+			// Teilleistungen ohne Teilleistungsart werden den Clients nicht bereitgestellt (siehe ENM-Daten) und können daher nicht geändert werden
+			if (teilleistung.Art_ID == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Die Teilleistung mit der ID %d hat keine Teilleistungsart und kann nicht geändert werden.".formatted(teilleistung.ID));
+			}
+
 			// Bestimme die zugehörigen Leistungsdaten anhand der ID aus den Daten der Teilleistung
 			final DTOSchuelerLeistungsdaten leistung = schuelerLeistungsdatenRepository.findById(teilleistung.Leistung_ID)
 					.orElseThrow(
@@ -758,6 +764,10 @@ public class NotenmodulLocalService {
 	 * @param authenticatedUser   der angemeldete Benutzer
 	 */
 	public void patchAnkreuzkompetenz(final NotenmodulLocalAnkreuzkompetenzPatchRequest patch, final Benutzer authenticatedUser) {
+		// Prüfe zunächst die Eingabe: Es müssen genau die 5 Kompetenzstufen übergeben werden
+		if ((patch.stufen == null) || (patch.stufen.length != 5)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Stufen der Ankreuzkompetenz müssen genau 5 Werte enthalten.");
+		}
 		transactional(() -> {
 			// Bestimme die Ankreuzkompetenz des Schülers im aktuellen Schuljahresabschnitt der Schule.
 			final DTOSchuelerAnkreuzfloskeln schuelerankreuzkompetenz = schuelerAnkreuzkompetenzRepository.findById(patch.id)

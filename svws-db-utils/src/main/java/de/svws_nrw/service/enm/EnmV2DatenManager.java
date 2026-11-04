@@ -278,7 +278,7 @@ public class EnmV2DatenManager {
 		enmFach.kuerzel = fach.StatistikKuerzel;
 		enmFach.kuerzelAnzeige = fach.Kuerzel;
 		enmFach.bezeichnung = fach.Bezeichnung;
-		enmFach.sortierung = fach.SortierungAllg;
+		enmFach.sortierung = (fach.SortierungAllg == null) ? 32000 : fach.SortierungAllg;
 		enmFach.istFremdsprache = fach.IstFremdsprache;
 		daten.faecher.add(enmFach);
 		mapFaecher.put(fach.ID, enmFach);

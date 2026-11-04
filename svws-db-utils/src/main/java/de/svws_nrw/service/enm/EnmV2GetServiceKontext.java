@@ -205,6 +205,9 @@ public final class EnmV2GetServiceKontext {
 	/** Die Schulform der Schule */
 	private Schulform schulform;
 
+	/** Die Anzahl der Abschnitte pro Schuljahr (z.B. 2 bei Halbjahren, 4 bei Quartalen) */
+	private int anzahlAbschnitte;
+
 	/** Die ID der Schulleitung in der Lehrer-Tabelle */
 	private Long idSchulleitung;
 
@@ -607,9 +610,20 @@ public final class EnmV2GetServiceKontext {
 		// Erzeuge den Manager für das Hinzufügen von ENM-Daten
 		this.manager = new EnmV2DatenManager(tmpIdLehrer);
 
-		// Bestimme zunächst die Schulspezifischen Informationen, insbesondere zum Schuljahresabschnitt
-		final DTOEigeneSchule schuleDto = eigeneSchuleRepository.getFirst();
-		final long idSchuljahresabschnitt = schuleDto.Schuljahresabschnitts_ID;
+		// Bestimme zunächst die Schulspezifischen Informationen (mit nur einem Datenbank-Zugriff) und prüfe diese auf Vollständigkeit
+		this.schule = eigeneSchuleRepository.getFirst();
+		if (this.schule.Schuljahresabschnitts_ID == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Schule hat keinen aktuellen Schuljahresabschnitt hinterlegt.");
+		}
+		if (this.schule.SchulNr == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Schule hat keine Schulnummer hinterlegt.");
+		}
+		this.schulform = Schulform.data().getWertByKuerzel(this.schule.SchulformKuerzel);
+		if (this.schulform == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Schule hat keine gültige Schulform hinterlegt.");
+		}
+		this.anzahlAbschnitte = (this.schule.AnzahlAbschnitte == null) ? 2 : this.schule.AnzahlAbschnitte;
+		final long idSchuljahresabschnitt = this.schule.Schuljahresabschnitts_ID;
 		this.schuljahresabschnitt = schuljahresabschnitteRepository.getById(idSchuljahresabschnitt);
 		final DateManager abschnittVon = getAbschnittVon(this.schuljahresabschnitt);
 		final DateManager abschnittBis = getAbschnittBis(this.schuljahresabschnitt);
@@ -713,8 +727,6 @@ public final class EnmV2GetServiceKontext {
 		this.mapZP10Timestamps = schuelerZP10TimestampsRepository.findMapByIds(listZP10.stream().map(e -> e.ID).toList());
 
 		// Lese nun die restlichen nicht schülerspezifischen ENM-Daten ein
-		this.schule = eigeneSchuleRepository.getFirst();
-		this.schulform = Schulform.data().getWertByKuerzel(this.schule.SchulformKuerzel);
 		this.mapLehrerPWHash = notenmodulCredentialGeneratorService.generateMissingCredentials();
 		this.mapLehrerPWHashTimestamps = notenmodulCredentialsTimestampsRepository.getMap();
 		this.ankreuzkompetenzenKonfiguration = ankreuzkompetenzKonfigurationRepository.findFirst();
@@ -759,6 +771,17 @@ public final class EnmV2GetServiceKontext {
 	 */
 	public DTOEigeneSchule getSchuldaten() {
 		return this.schule;
+	}
+
+
+	/**
+	 * Gibt die Anzahl der Abschnitte pro Schuljahr zurück. Ist diese bei der Schule nicht gesetzt, so wird der
+	 * Datenbank-Default 2 verwendet.
+	 *
+	 * @return die Anzahl der Abschnitte
+	 */
+	public int getAnzahlAbschnitte() {
+		return this.anzahlAbschnitte;
 	}
 
 
