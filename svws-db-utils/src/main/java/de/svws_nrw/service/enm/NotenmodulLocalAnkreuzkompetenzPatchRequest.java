@@ -17,6 +17,6 @@ public class NotenmodulLocalAnkreuzkompetenzPatchRequest {
 	/** Gibt für die einzelnen Stufen 1-5 der Ankreuzkompetenzen an, ob diese zugewiesen ist oder nicht (hier mit einer Verschiebung von 1 zum Array-Index). */
 	@ArraySchema(schema = @Schema(implementation = Boolean.class,
 			description = "gibt für die einzelnen Stufen 1-5 der Ankreuzkompetenzen an, ob diese zugewiesen ist oder nicht (hier mit einer Verschiebung von 1 zum Array-Index)."))
-	public @NotNull boolean[] stufen = new boolean[5];
+	public @NotNull boolean[] stufen;
 
 }

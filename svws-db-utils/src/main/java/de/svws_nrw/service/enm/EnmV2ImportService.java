@@ -685,8 +685,11 @@ public class EnmV2ImportService {
 	 * @throws ApiOperationException   mit dem Status BAD_REQUEST, wenn die Struktur fehlerhaft ist
 	 */
 	private static void pruefeStruktur(final ENMv2Daten daten) throws ApiOperationException {
-		if (daten.lehrer == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten enthalten keine Liste der Lehrer.");
+		if (daten == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurden keine ENM-Daten übergeben.");
+		}
+		if ((daten.lehrer == null) || daten.lehrer.contains(null)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten enthalten keine Liste der Lehrer oder sie enthält einen leeren Eintrag.");
 		}
 		if (daten.schueler == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten enthalten keine Liste der Schüler.");
