@@ -9,7 +9,6 @@ import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/Stunde
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ArrayList } from "@core/java/util/ArrayList";
-import { Arrays } from "@core/java/util/Arrays";
 import type { List } from "@core/java/util/List";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
@@ -165,12 +164,11 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 		if (auswahlList.isEmpty()) {
 			return null;
 		}
-		const promises = [];
+		const ids: List<number> = new ArrayList();
 		for (const auswahl of auswahlList) {
-			promises.push(api.server.getKlasse(api.schema, auswahl.id));
+			ids.add(auswahl.id);
 		}
-		const res = await Promise.all(promises);
-		return Arrays.asList(res);
+		return await api.server.getKlassenMultiple(ids, api.schema);
 	}
 
 	/**

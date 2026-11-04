@@ -1,6 +1,7 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
 import de.svws_nrw.asd.data.klassen.KlassenDatenMinimal;
 import de.svws_nrw.asd.data.klassen.KlassenListeEintrag;
@@ -9,6 +10,7 @@ import de.svws_nrw.data.klassen.DataKlassenliste;
 import org.jboss.resteasy.annotations.GZIP;
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
+import de.svws_nrw.controller.klassen.KlassenControllerFactory;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -74,8 +76,10 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
 	public Response getListKlassenDatenBySchuljahresabschnitt(@PathParam("schema") final String schema,
 			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getListBySchuljahresabschnittIDAsResponse(idSchuljahresabschnitt),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return KlassenControllerFactory
+				.withNoAccess(request)
+				.getKlassenController()
+				.getListBySchuljahresabschnitt(idSchuljahresabschnitt);
 	}
 
 
@@ -153,9 +157,40 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "404", description = "Kein Klassen-Eintrag mit der angegebenen ID gefunden")
 	public Response getKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
+		return KlassenControllerFactory
+				.withReadAccess(request)
+				.getKlassenController()
+				.get(id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Daten mehrerer Klassen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param ids       die Datenbank-IDs zur Identifikation der Klassen
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Daten der Klassen in der Reihenfolge der IDs
+	 */
+	@POST
+	@GZIP
+	@Path("/multiple")
+	@Operation(summary = "Liefert zu den IDs der Klassen die zugehörigen Daten.",
+			description = "Liest die Daten der Klassen zu den angegebenen IDs inklusive der Schüler aus der Datenbank und liefert diese in der Reihenfolge der IDs "
+					+ "zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten der Klassen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenDaten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Zu mindestens einer der angegebenen IDs wurde keine Klasse gefunden")
+	public Response getKlassenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Klassen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
+			@Context final HttpServletRequest request) {
+		return KlassenControllerFactory
+				.withReadAccess(request)
+				.getKlassenController()
+				.getList(ids);
 	}
 
 

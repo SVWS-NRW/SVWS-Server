@@ -42,7 +42,8 @@ public final class KlassenRepositoryImpl extends RepositoryImpl<DTOKlassen> impl
 
 	@Override
 	public Map<Long, DTOKlassen> getMapBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
-		return this.getListBySchuljahresabschnitt(idSchuljahresabschnitt).stream().collect(Collectors.toMap(e -> e.ID, e -> e));
+		return this.getListBySchuljahresabschnitt(idSchuljahresabschnitt).stream()
+				.collect(Collectors.toMap(e -> e.ID, e -> e));
 	}
 
 	@Override
@@ -55,7 +56,8 @@ public final class KlassenRepositoryImpl extends RepositoryImpl<DTOKlassen> impl
 		if (kuerzel == null) {
 			return Optional.empty();
 		}
-		return conn.queryList(QUERY_BY_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, kuerzel, idSchuljahresabschnitt).stream().findFirst();
+		return conn.queryList(QUERY_BY_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, kuerzel, idSchuljahresabschnitt).stream()
+				.findFirst();
 	}
 
 	@Override
@@ -65,7 +67,8 @@ public final class KlassenRepositoryImpl extends RepositoryImpl<DTOKlassen> impl
 		if (klasse.isPresent() || (asdKuerzel == null)) {
 			return klasse;
 		}
-		return conn.queryList(QUERY_BY_ASD_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, asdKuerzel, idSchuljahresabschnitt).stream().findFirst();
+		return conn.queryList(QUERY_BY_ASD_KUERZEL_AND_SCHULJAHRESABSCHNITT, DTOKlassen.class, asdKuerzel, idSchuljahresabschnitt).stream()
+				.findFirst();
 	}
 
 	@Override

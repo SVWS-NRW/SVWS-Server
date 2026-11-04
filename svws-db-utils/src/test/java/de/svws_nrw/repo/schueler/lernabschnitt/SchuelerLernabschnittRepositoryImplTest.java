@@ -77,6 +77,31 @@ class SchuelerLernabschnittRepositoryImplTest {
 	}
 
 	@Test
+	@DisplayName("Test: Prüfe, ob getMapKlassenSchuelerAktuell nur Lernabschnitte mit WechselNr = 0 abfragt und die Schüler-IDs nach Klassen-IDs gruppiert.")
+	void testGetMapKlassenSchuelerAktuell() {
+		final List<Long> idsKlassen = Arrays.asList(1L, 2L);
+		final String query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN ?1 AND e.WechselNr = 0";
+
+		when(conn.queryList(query, DTOSchuelerLernabschnittsdaten.class, idsKlassen))
+				.thenReturn(Arrays.asList(testSchuelerLernabschnitt1, testSchuelerLernabschnitt2, testSchuelerLernabschnitt1, testSchuelerLernabschnitt3));
+
+		final Map<Long, List<Long>> result = repository.getMapKlassenSchuelerAktuell(idsKlassen);
+
+		assertEquals(2, result.size());
+		assertEquals(List.of(testSchuelerLernabschnitt1.Schueler_ID, testSchuelerLernabschnitt2.Schueler_ID), result.get(1L));
+		assertEquals(List.of(testSchuelerLernabschnitt3.Schueler_ID), result.get(2L));
+		verify(conn).queryList(query, DTOSchuelerLernabschnittsdaten.class, idsKlassen);
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getMapKlassenSchuelerAktuell bei null oder einer leeren Liste eine leere Map ohne DB-Interaktion zurückgibt.")
+	void testGetMapKlassenSchuelerAktuellEmptyInputs() {
+		assertTrue(repository.getMapKlassenSchuelerAktuell(null).isEmpty());
+		assertTrue(repository.getMapKlassenSchuelerAktuell(Collections.emptyList()).isEmpty());
+		verifyNoInteractions(conn);
+	}
+
+	@Test
 	@DisplayName("Test: getMapBySchuelerIDsAndSchuljahreabschnitt nutzt korrekte JPQL-Parameter.")
 	void testGetMapBySchuelerIDsAndSchuljahreabschnitt() {
 		final List<Long> idsSchueler = Arrays.asList(100L);

@@ -239,7 +239,9 @@ class KlassenMapperTest {
 		@DisplayName("mapIdKlassenart: Eine zur Schulform passende Klassenart wird verwendet")
 		void passendeKlassenart() {
 			final Klassenart passend = Klassenart.getBySchuljahrAndSchulform(SCHULJAHR, Schulform.GY).stream()
-					.filter(k -> k != Klassenart.RK).findFirst().orElseThrow();
+					.filter(k -> k != Klassenart.RK)
+					.findFirst()
+					.orElseThrow();
 
 			final Long result = mapper.mapIdKlassenart(passend.daten(SCHULJAHR).kuerzel, createContext(Schulform.GY, 1));
 
@@ -279,7 +281,8 @@ class KlassenMapperTest {
 			final Schulgliederung gliederung = Schulgliederung.data().getEintraegeBySchuljahr(SCHULJAHR).stream()
 					.map(e -> Schulgliederung.data().getWertBySchluessel(e.schluessel))
 					.filter(g -> (g != null) && g.hatSchulform(SCHULJAHR, Schulform.BK))
-					.findFirst().orElseThrow();
+					.findFirst()
+					.orElseThrow();
 			final String schluessel = gliederung.daten(SCHULJAHR).schluessel;
 
 			final long result = mapper.mapIdSchulgliederung(schluessel, createContext(Schulform.BK, 1));

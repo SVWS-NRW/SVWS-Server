@@ -52,6 +52,17 @@ public interface SchuelerLernabschnittRepository extends Repository<DTOSchuelerL
 	 */
 	Map<Long, List<Long>> getMapKlassenSchueler(Collection<Long> idsKlassen);
 
+	/**
+	 * Bestimmt die Zuordnung der Schüler-IDs zu den Klassen mit den übergebenen IDs. Berücksichtigt werden nur die
+	 * aktuellen Lernabschnitte der Schüler (WechselNr = 0), nicht die Lernabschnitte vor einem Klassenwechsel innerhalb
+	 * des Schuljahresabschnitts.
+	 *
+	 * @param idsKlassen   die IDs der Klassen
+	 *
+	 * @return die Zuordnung, bzw. eine leere Map, wenn keine IDs übergeben wurden
+	 */
+	Map<Long, List<Long>> getMapKlassenSchuelerAktuell(Collection<Long> idsKlassen);
+
 
 	/**
 	 * Gibt eine Map der Lernabschnittsdaten für den Lernabschnitt mit der Wechsel-Nummer 0 aus dem Schuljahresabschnitt zugeordnet

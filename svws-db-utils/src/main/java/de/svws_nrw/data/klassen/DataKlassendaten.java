@@ -121,20 +121,6 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 * Methode liefert eine Liste von {@link KlassenDaten} zur angegebenen SchuljahresabschnittID.
 	 *
 	 * @param schuljahresabschnittId ID des Schuljahresabschnittes
-	 *
-	 * @return Liste von KlassenDaten Objekten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response getListBySchuljahresabschnittIDAsResponse(final Long schuljahresabschnittId) throws ApiOperationException {
-		final List<KlassenDaten> klassenDatenList = getListBySchuljahresabschnittID(schuljahresabschnittId, true);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(klassenDatenList).build();
-	}
-
-	/**
-	 * Methode liefert eine Liste von {@link KlassenDaten} zur angegebenen SchuljahresabschnittID.
-	 *
-	 * @param schuljahresabschnittId ID des Schuljahresabschnittes
 	 * @param attachSchueler gibt an, ob die Schüler zu den Klassen mit geladen werden sollen
 	 *
 	 * @return Liste von KlassenDaten Objekten
@@ -160,21 +146,6 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		final List<DTOKlassen> klassenDTOs = getDTOsByIds(ids);
 		return mapList(klassenDTOs, schuljahresabschnittId, false);
 	}
-
-	/**
-	 * Gibt die Daten einer Klasse zu deren ID ohne Schülerliste zurück.
-	 *
-	 * @param id   Die ID der Klasse.
-	 *
-	 * @return die Daten der KLasse zur ID ohne Schülerliste.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public KlassenDaten getByIdOhneSchueler(final Long id) throws ApiOperationException {
-		final DTOKlassen klasseDto = getDTO(id);
-		return map(klasseDto, false);
-	}
-
 
 	@Override
 	protected long getLongId(final DTOKlassen klasse) throws ApiOperationException {

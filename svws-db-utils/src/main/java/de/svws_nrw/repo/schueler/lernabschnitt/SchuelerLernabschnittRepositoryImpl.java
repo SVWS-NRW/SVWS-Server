@@ -8,7 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.db.DBEntityManager;
@@ -19,6 +18,47 @@ import de.svws_nrw.repo.RepositoryImpl;
  * Diese Repository-Klasse dient dem Datenbank-Zugriff auf die Lernabschnittsdaten von Schülern.
  */
 public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DTOSchuelerLernabschnittsdaten> implements SchuelerLernabschnittRepository {
+
+	/** Die Query für die aktuellen Lernabschnitte (WechselNr = 0) zu den Klassen-IDs */
+	private static final String QUERY_LIST_AKTUELL_BY_KLASSEN_IDS =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN ?1 AND e.WechselNr = 0";
+
+	private static final String QUERY_LIST_BY_KLASSE_AND_SCHULJAHRESABSCHNITT =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2";
+
+	private static final String QUERY_LIST_BY_SCHUELER_AND_SCHULJAHRESABSCHNITT =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 ORDER BY e.ID";
+
+	private static final String QUERY_LIST_BY_SCHUELER_IDS =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1";
+
+	private static final String QUERY_LIST_BY_SCHUELER_IDS_SORTIERT =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 "
+					+ "ORDER BY e.Schueler_ID, e.Schuljahresabschnitts_ID, e.WechselNr";
+
+	private static final String QUERY_LIST_BY_SCHUELER_IDS_AND_WECHSELNR_AND_SCHULJAHRESABSCHNITT =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2 AND e.Schuljahresabschnitts_ID = ?3";
+
+	private static final String QUERY_LIST_BY_SCHUELER_IDS_AND_WECHSELNR =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2";
+
+	/** Die Query für den Lernabschnitt eines Schülers mit einer Wechsel-Nummer im aktuellen Schuljahresabschnitt des Schülers */
+	private static final String QUERY_LIST_AKTUELLER_ABSCHNITT_BY_SCHUELER_ID =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s WHERE s.ID = e.Schueler_ID AND s.Schuljahresabschnitts_ID = e.Schuljahresabschnitts_ID "
+					+ "AND e.Schueler_ID = ?1 AND e.WechselNr = ?2";
+
+	/** Die Query für die Lernabschnitte zu den Schüler-IDs mit einer Wechsel-Nummer im aktuellen Schuljahresabschnitt der Schüler */
+	private static final String QUERY_LIST_AKTUELLER_ABSCHNITT_BY_SCHUELER_IDS = """
+			SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s WHERE s.ID = e.Schueler_ID
+			  AND s.Schuljahresabschnitts_ID = e.Schuljahresabschnitts_ID AND e.Schueler_ID IN ?1 AND e.WechselNr = ?2
+			""";
+
+	private static final String QUERY_LIST_GOST_BY_SCHUELER_IDS =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2 AND e.ASDJahrgang IN ?3 AND e.SemesterWertung = ?4";
+
+	/** Die Query für die gewerteten aktuellen Lernabschnitte (WechselNr = 0) eines Schülers in einem ASD-Jahrgang */
+	private static final String QUERY_LIST_GEWERTET_AKTUELL_BY_SCHUELER_AND_ASDJAHRGANG =
+			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.ASDJahrgang = ?2 AND e.SemesterWertung = true AND e.WechselNr = 0";
 
 	/**
 	 * Erstellt ein neues Repository.
@@ -32,15 +72,14 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 	@Override
 	public List<DTOSchuelerLernabschnittsdaten> findListByKlasseAndSchuljahresabschnitt(final long idKlasse,
 			final long idSchuljahresabschnitt) {
-		return conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2",
+		return conn.queryList(QUERY_LIST_BY_KLASSE_AND_SCHULJAHRESABSCHNITT,
 				DTOSchuelerLernabschnittsdaten.class, idKlasse, idSchuljahresabschnitt);
 	}
 
 	@Override
 	public List<DTOSchuelerLernabschnittsdaten> findListBySchuelerAndSchuljahresabschnitt(final long idSchueler,
 			final long idSchuljahresabschnitt) {
-		return conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 ORDER BY e.ID",
+		return conn.queryList(QUERY_LIST_BY_SCHUELER_AND_SCHULJAHRESABSCHNITT,
 				DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt);
 	}
 
@@ -49,9 +88,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		if ((idsSchueler == null) || idsSchueler.isEmpty()) {
 			return Collections.emptyList();
 		}
-		return conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 "
-						+ "ORDER BY e.Schueler_ID, e.Schuljahresabschnitts_ID, e.WechselNr",
+		return conn.queryList(QUERY_LIST_BY_SCHUELER_IDS_SORTIERT,
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler);
 	}
 
@@ -61,15 +98,33 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 			return Collections.emptyMap();
 		}
 		final var listAbschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_KLASSEN_ID, DTOSchuelerLernabschnittsdaten.class, idsKlassen);
-		final Map<Long, Set<Long>> mapSets = HashMap.newHashMap(idsKlassen.size());
-		for (final var la : listAbschnitte) {
-			mapSets.computeIfAbsent(la.Klassen_ID, k -> new LinkedHashSet<>()).add(la.Schueler_ID);
+		return groupSchuelerByKlasse(listAbschnitte);
+	}
+
+	@Override
+	public Map<Long, List<Long>> getMapKlassenSchuelerAktuell(final Collection<Long> idsKlassen) {
+		if ((idsKlassen == null) || (idsKlassen.isEmpty())) {
+			return Collections.emptyMap();
 		}
-		final Map<Long, List<Long>> result = HashMap.newHashMap(mapSets.size());
-		for (final var entry : mapSets.entrySet()) {
-			result.put(entry.getKey(), new ArrayList<>(entry.getValue()));
-		}
-		return result;
+		final var listAbschnitte = conn.queryList(QUERY_LIST_AKTUELL_BY_KLASSEN_IDS, DTOSchuelerLernabschnittsdaten.class, idsKlassen);
+		return groupSchuelerByKlasse(listAbschnitte);
+	}
+
+	/**
+	 * Gruppiert die Schüler-IDs der übergebenen Lernabschnitte nach den Klassen-IDs der Lernabschnitte.
+	 * Jeder Schüler wird je Klasse nur einmal aufgeführt.
+	 *
+	 * @param listAbschnitte   die Lernabschnitte
+	 *
+	 * @return die Zuordnung der Schüler-IDs zu den Klassen-IDs
+	 */
+	private static Map<Long, List<Long>> groupSchuelerByKlasse(final List<DTOSchuelerLernabschnittsdaten> listAbschnitte) {
+		return listAbschnitte.stream()
+				.collect(Collectors.groupingBy(
+						la -> la.Klassen_ID,
+						Collectors.mapping(
+								la -> la.Schueler_ID,
+								Collectors.collectingAndThen(Collectors.toCollection(LinkedHashSet::new), ArrayList::new))));
 	}
 
 	@Override
@@ -78,8 +133,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyMap();
 		}
-		final var listAbschnitte = conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2 AND e.Schuljahresabschnitts_ID = ?3",
+		final var listAbschnitte = conn.queryList(QUERY_LIST_BY_SCHUELER_IDS_AND_WECHSELNR_AND_SCHULJAHRESABSCHNITT,
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0, idSchuljahresabschnitt);
 		return listAbschnitte.stream().collect(Collectors.toMap(a -> a.Schueler_ID, a -> a));
 	}
@@ -91,8 +145,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyMap();
 		}
-		final var listAbschnitte = conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2 AND e.Schuljahresabschnitts_ID = ?3",
+		final var listAbschnitte = conn.queryList(QUERY_LIST_BY_SCHUELER_IDS_AND_WECHSELNR_AND_SCHULJAHRESABSCHNITT,
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0, idSchuljahresabschnitt);
 		return listAbschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 	}
@@ -103,8 +156,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyMap();
 		}
-		final var listAbschnitte = conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2",
+		final var listAbschnitte = conn.queryList(QUERY_LIST_BY_SCHUELER_IDS_AND_WECHSELNR,
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0);
 		return listAbschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 	}
@@ -115,8 +167,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyMap();
 		}
-		final var listAbschnitte = conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1",
+		final var listAbschnitte = conn.queryList(QUERY_LIST_BY_SCHUELER_IDS,
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler);
 		final Map<Long, List<Long>> result = HashMap.newHashMap(idsSchueler.size());
 		for (final var la : listAbschnitte) {
@@ -131,8 +182,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		if (idSchueler == null) {
 			return Optional.empty();
 		}
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s WHERE s.ID = e.Schueler_ID AND s.Schuljahresabschnitts_ID = e.Schuljahresabschnitts_ID AND e.Schueler_ID = ?1 AND e.WechselNr = ?2",
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(QUERY_LIST_AKTUELLER_ABSCHNITT_BY_SCHUELER_ID,
 				DTOSchuelerLernabschnittsdaten.class, idSchueler, 0);
 		return lernabschnitte.size() == 1 ? Optional.of(lernabschnitte.getFirst()) : Optional.empty();
 	}
@@ -142,11 +192,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyMap();
 		}
-		return conn.queryList(
-				"""
-				SELECT e FROM DTOSchuelerLernabschnittsdaten e JOIN DTOSchueler s WHERE s.ID = e.Schueler_ID
-				  AND s.Schuljahresabschnitts_ID = e.Schuljahresabschnitts_ID AND e.Schueler_ID IN ?1 AND e.WechselNr = ?2
-				""",
+		return conn.queryList(QUERY_LIST_AKTUELLER_ABSCHNITT_BY_SCHUELER_IDS,
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0)
 				.stream().collect(Collectors.toMap(la -> la.Schueler_ID, la -> la));
 	}
@@ -158,8 +204,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 			return Collections.emptyMap();
 		}
 		final List<String> asdJahrgaenge = List.of("EF", "Q1", "Q2");
-		final var listAbschnitte = conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2 AND e.ASDJahrgang IN ?3 AND e.SemesterWertung = ?4",
+		final var listAbschnitte = conn.queryList(QUERY_LIST_GOST_BY_SCHUELER_IDS,
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0, asdJahrgaenge, true);
 		final Map<Long, List<DTOSchuelerLernabschnittsdaten>> result = listAbschnitte.stream().collect(Collectors.groupingBy(a -> a.Schueler_ID));
 		for (final Long idSchueler : idsSchueler) {
@@ -177,8 +222,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		if (asdJahrgang == null) {
 			return Collections.emptyList();
 		}
-		return conn.queryList(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.ASDJahrgang = ?2 AND e.SemesterWertung = true AND e.WechselNr = 0",
+		return conn.queryList(QUERY_LIST_GEWERTET_AKTUELL_BY_SCHUELER_AND_ASDJAHRGANG,
 				DTOSchuelerLernabschnittsdaten.class,
 				idSchueler, asdJahrgang);
 	}

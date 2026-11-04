@@ -9582,6 +9582,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode getKlassenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/multiple
+	 *
+	 * Liest die Daten der Klassen zu den angegebenen IDs inklusive der Schüler aus der Datenbank und liefert diese in der Reihenfolge der IDs zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten der Klassen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KlassenDaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.
+	 *   Code 404: Zu mindestens einer der angegebenen IDs wurde keine Klasse gefunden
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Daten der Klassen
+	 */
+	public async getKlassenMultiple(data: List<number>, schema: string): Promise<List<KlassenDaten>> {
+		const path = "/db/{schema}/klassen/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<KlassenDaten>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KlassenDaten.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKurse für den Zugriff auf die URL https://{hostname}/db/{schema}/kurse/
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Kurse unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
