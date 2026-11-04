@@ -17,6 +17,7 @@ import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
@@ -38,6 +39,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DBUtilsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerWiederholungFachwahlen;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurslehrer;
@@ -54,6 +56,9 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.gost.GostSchuelerPlanungFachbelegungenRepositoryImpl;
+import de.svws_nrw.service.gost.GostSchuelerService;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -413,7 +418,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		}
 		// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerAbijahrgang =
-				GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(blockung.Abi_Jahrgang);
+				GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByBlockung(blockung);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty())) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
@@ -522,7 +527,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d wurde nicht gefunden.".formatted(ergebnis.Blockung_ID));
 		}
 		// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
-		final List<DTOSchueler> schuelerAbijahrgang = GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(blockung.Abi_Jahrgang);
+		final List<DTOSchueler> schuelerAbijahrgang = GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByBlockung(blockung);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty())) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Schüler in dem Abiturjahrgang gefunden.");
 		}
@@ -845,6 +850,36 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	/**
+	 * Bestimmt die Fachwahlen der Schüler einer Blockung. Ab dem Einstiegshalbjahr einer Wiederholung gelten die für den neuen Jahrgang
+	 * geplanten Fachwahlen, davor die der aktuellen Planung. Die Planung vollzogener Wiederholungen wird zuvor übernommen.
+	 *
+	 * @param datenManager   der Manager mit den Blockungsdaten
+	 * @param halbjahr       das Halbjahr der Blockung
+	 *
+	 * @return die Fachwahlen zu Schüler-ID und Fach-ID
+	 */
+	private static HashMap2D<Long, Long, DTOGostSchuelerFachbelegungen> getMapFachwahlen(final GostBlockungsdatenManager datenManager,
+			final GostHalbjahr halbjahr) {
+		final List<Long> idsSchueler = datenManager.daten().schueler.stream().map(s -> s.id).toList();
+		final GostSchuelerService gostSchuelerService = GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService();
+		gostSchuelerService.uebernehmeWiederholungen(idsSchueler);
+		final Set<Long> idsWiederholung = gostSchuelerService.getMapWiederholungen(idsSchueler).values().stream()
+				.filter(v -> GostSchuelerService.istWiederholungMassgeblich(v, datenManager.daten().abijahrgang, halbjahr))
+				.map(v -> v.idSchueler).collect(Collectors.toSet());
+		final GostRepositoryFactory repositoryFactory = GostRepositoryFactory.getNewInstance();
+		final HashMap2D<Long, Long, DTOGostSchuelerFachbelegungen> result = repositoryFactory.getGostSchuelerFachbelegungenRepository()
+				.getMap2DBySchuelerIDAndFachID(idsSchueler.stream().filter(id -> !idsWiederholung.contains(id)).toList());
+		for (final List<DTOGostSchuelerWiederholungFachwahlen> fachwahlen : repositoryFactory.getGostSchuelerWiederholungFachwahlenRepository()
+				.getMapBySchuelerID(idsWiederholung).values()) {
+			for (final DTOGostSchuelerWiederholungFachwahlen fw : fachwahlen) {
+				result.put(fw.Schueler_ID, fw.Fach_ID, GostSchuelerPlanungFachbelegungenRepositoryImpl.toFachbelegung(fw));
+			}
+		}
+		return result;
+	}
+
+
+	/**
 	 * Aktiviert das Blockungsergebnis in dem angegebenen Manager in dem angegebenen Schuljahresabschnitt.
 	 *
 	 * Hierfür muss bereits geprüft sein, ob nicht bereits eine Blockung in diesem Abschnitt aktiv ist!
@@ -892,6 +927,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final DTOSchemaAutoInkremente dbLeistungenID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_SchuelerLeistungsdaten.name());
 		long idLeistungen = (dbLeistungenID == null) ? 1 : (dbLeistungenID.MaxID + 1);
 		// Durchwandere alle Schüler des Abitur-Jahrgangs und lege die Leistungsdaten an
+		final HashMap2D<Long, Long, DTOGostSchuelerFachbelegungen> mapFachwahlen = getMapFachwahlen(datenManager, halbjahr);
 		for (final Schueler schueler : datenManager.daten().schueler) {
 			// Ignoriere Schüler, die nicht zu dem Abiturjahrgang der Blockung gehören
 			if (schueler.abschlussjahrgang != datenManager.daten().abijahrgang) {
@@ -903,7 +939,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				final GostBlockungKurs kurs = datenManager.kursGet(kurszuordnung.id);
 				final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);
 				final DTOKurs kursDTO = mapKursDTOs.get(kurs.id);
-				final DTOGostSchuelerFachbelegungen fachwahl = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.id, fach.id);
+				final DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.getOrNull(schueler.id, fach.id);
 				if (fachwahl == null) { // ignoriere Kurse, wo keine Fachwahl vorliegt
 					continue;
 				}
@@ -1155,6 +1191,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			mapLernabschnitte.put(schueler.id, lernabschnitt.ID);
 		}
 		// Durchwandere alle Schüler des Abitur-Jahrgangs und passe die Leistungsdaten an
+		final HashMap2D<Long, Long, DTOGostSchuelerFachbelegungen> mapFachwahlen = getMapFachwahlen(datenManager, halbjahr);
 		for (final Schueler schueler : datenManager.daten().schueler) {
 			// Bestimme den Lernabschnitt - TODO dies könnte entfallen, falls Lernabschnitt abgelegt werden (s.o.)
 			final Long idLernabschnitt = mapLernabschnitte.get(schueler.id);
@@ -1168,7 +1205,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				final GostKursart kursart = GostKursart.fromID(kurs.kursart);
 				final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);
 				final DTOKurs kursDTO = mapKursDTOs.get(kurs.id);
-				final DTOGostSchuelerFachbelegungen fachwahl = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.id, fach.id);
+				final DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.getOrNull(schueler.id, fach.id);
 				if (fachwahl == null) {
 					continue; // Der Schüler ist in einem Kurs, für den er keine Fachwahl hat, hier wird nicht angepasst
 				}

@@ -29,6 +29,7 @@ import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
+import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
@@ -72,6 +73,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.service.gost.GostSchuelerService;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
@@ -294,7 +296,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		}
 
 		// Schüler des Abiturjahrgangs hinzufügen...
-		List<DTOSchueler> schuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs();
+		List<DTOSchueler> schuelerDTOs = GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByBlockung(blockung);
 		final Set<Long> schuelerIDsJahrgang = schuelerDTOs.stream().map(s -> s.ID).collect(Collectors.toSet());
 		final List<Schueler> schuelerListe = new ArrayList<>();
 		for (final DTOSchueler dto : schuelerDTOs) {
@@ -322,6 +324,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 						DTOSchuelerLernabschnittsdaten.class,
 						schuelerIDs);
 				final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = listAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+				final Map<Long, GostSchuelerWiederholung> mapWiederholungen =
+						GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getMapWiederholungen(schuelerIDs);
 				final List<SchuelerListeEintrag> tmpSchuelerListe = new ArrayList<>();
 				for (final DTOSchueler s : schuelerDTOs) {
 					final DTOSchuelerLernabschnittsdaten abschnitt = mapAbschnitte.get(s.ID);
@@ -342,8 +346,12 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					if (schuljahresabschnitt == null) {
 						continue;
 					}
-					final Integer abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByIDOrNull(s.idSchulgliederung),
-							schuljahresabschnitt.schuljahr, s.jahrgang);
+					// Ab dem Einstiegshalbjahr einer Wiederholung gehört der Schüler zum Jahrgang der Wiederholung
+					final GostSchuelerWiederholung wiederholung = mapWiederholungen.get(s.id);
+					final Integer abiturjahrgang = ((wiederholung != null) && GostSchuelerService.istWiederholungMassgeblich(wiederholung, blockung.Abi_Jahrgang, blockung.Halbjahr))
+							? wiederholung.abiturjahr
+							: GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByIDOrNull(s.idSchulgliederung),
+									schuljahresabschnitt.schuljahr, s.jahrgang);
 					// Es wird nicht geprüft, ob es sich um Abgänger oder ähnliches handelt, da die Daten der Kurs-Schüler-Zuordnung sonst nicht mehr zugreifbar sind
 					schuelerListe.add(SchuelerMapper.INSTANCE.toSchueler(dto, abiturjahrgang));
 				}

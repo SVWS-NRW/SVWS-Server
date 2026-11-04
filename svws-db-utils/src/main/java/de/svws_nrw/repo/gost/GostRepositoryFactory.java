@@ -96,6 +96,35 @@ public final class GostRepositoryFactory extends RepositoryFactory {
 	}
 
 	/**
+	 * Gibt das Repository für die Wiederholungen von Schülern im folgenden Abiturjahrgang zurück.
+	 *
+	 * @return das Repository
+	 */
+	public GostSchuelerWiederholungRepository getGostSchuelerWiederholungRepository() {
+		return getOrCreate(GostSchuelerWiederholungRepository.class, () -> new GostSchuelerWiederholungRepositoryImpl(conn));
+	}
+
+	/**
+	 * Gibt das Repository für die Fachwahlen zurück, die Schüler für den Abiturjahrgang ihrer Wiederholung planen.
+	 *
+	 * @return das Repository
+	 */
+	public GostSchuelerWiederholungFachwahlenRepository getGostSchuelerWiederholungFachwahlenRepository() {
+		return getOrCreate(GostSchuelerWiederholungFachwahlenRepository.class, () -> new GostSchuelerWiederholungFachwahlenRepositoryImpl(conn));
+	}
+
+	/**
+	 * Gibt das Repository für die Fachwahlen der Laufbahnplanung zurück. Bei Schülern mit Wiederholung greift es auf die
+	 * Fachwahlen der Wiederholung zu, sonst auf die Fachwahlen der aktuellen Planung.
+	 *
+	 * @return das Repository
+	 */
+	public GostSchuelerFachbelegungenRepository getGostSchuelerPlanungFachbelegungenRepository() {
+		return new GostSchuelerPlanungFachbelegungenRepositoryImpl(getGostSchuelerFachbelegungenRepository(),
+				getGostSchuelerWiederholungFachwahlenRepository(), getGostSchuelerWiederholungRepository());
+	}
+
+	/**
 	 * Erstellt ein neues Repository für den Import aus Gost-Kursblockungen.
 	 *
 	 * @return das Repository-Objekt

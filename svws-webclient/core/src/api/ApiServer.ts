@@ -101,6 +101,7 @@ import { GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
 import { GostSchuelerGKLWahl } from '../core/data/gost/GostSchuelerGKLWahl';
 import { GostSchuelerklausur } from '../core/data/gost/klausuren/GostSchuelerklausur';
 import { GostSchuelerklausurtermin } from '../core/data/gost/klausuren/GostSchuelerklausurtermin';
+import { GostSchuelerWiederholung } from '../core/data/gost/GostSchuelerWiederholung';
 import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
 import { Haltestelle } from '../core/data/schule/Haltestelle';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
@@ -7929,6 +7930,120 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanungsdatenAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/aktuelleplanung/laufbahnplanung/v2/daten
+	 *
+	 * Liest die Daten der aktuellen Laufbahnplanung für den angegebenen Schüler aus der Datenbank und liefert diese zurück. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten der aktuellen Laufbahnplanung
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostLaufbahnplanungExportV2
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten der aktuellen Laufbahnplanung
+	 */
+	public async exportGostSchuelerLaufbahnplanungsdatenAktuellePlanung(schema: string, id: number): Promise<GostLaufbahnplanungExportV2> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/aktuelleplanung/laufbahnplanung/v2/daten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return GostLaufbahnplanungExportV2.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungsdatenV2AktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/aktuelleplanung/laufbahnplanung/v2/daten
+	 *
+	 * Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten in die aktuelle Planung. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Laufbahndaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {GostLaufbahnplanungExportV2} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Log vom Import der Laufbahndaten
+	 */
+	public async importGostSchuelerLaufbahnplanungsdatenV2AktuellePlanung(data: GostLaufbahnplanungExportV2, schema: string, id: number): Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/aktuelleplanung/laufbahnplanung/v2/daten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = GostLaufbahnplanungExportV2.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanungAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/aktuelleplanung/laufbahnplanung/v2/export
+	 *
+	 * Liest die Daten der aktuellen Laufbahnplanung für den angegebenen Schüler aus der Datenbank und liefert diese GZip-komprimiert zurück. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GZip-komprimierten Daten der aktuellen Laufbahnplanung
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die GZip-komprimierten Daten der aktuellen Laufbahnplanung
+	 */
+	public async exportGostSchuelerLaufbahnplanungAktuellePlanung(schema: string, id: number): Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/aktuelleplanung/laufbahnplanung/v2/export"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const data: ApiFile = await super.getOctetStream(path);
+		return data;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/aktuelleplanung/laufbahnplanung/v2/import
+	 *
+	 * Importiert die Laufbahndaten aus der übergebenen Laufbahnplanungsdatei in die aktuelle Planung. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Laufbahndaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Log vom Import der Laufbahndaten
+	 */
+	public async importGostSchuelerLaufbahnplanungAktuellePlanung(data: FormData, schema: string, id: number): Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/aktuelleplanung/laufbahnplanung/v2/import"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result: string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostSchuelerLaufbahnplanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung
 	 *
 	 * Liest die Laufbahnplanungsdaten für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID aus der Datenbank aus und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Laufbahnplanungsdaten besitzt.
@@ -8155,6 +8270,136 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchGostSchuelerFachwahlAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/aktuelleplanung/fachwahl/{fachid : \d+}
+	 *
+	 * Passt die Fachwahl der aktuellen Planung in Bezug auf ein Fach der Gymnasiale Oberstufe an. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachwahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Fachwahlen integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachwahlen zu ändern.
+	 *   Code 404: Kein Schüler- oder Fach-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft oder der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostSchuelerFachwahl>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 * @param {number} fachid - der Pfad-Parameter fachid
+	 */
+	public async patchGostSchuelerFachwahlAktuellePlanung(data: Partial<GostSchuelerFachwahl>, schema: string, schuelerid: number, fachid: number): Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/aktuelleplanung/fachwahl/{fachid : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
+			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
+		const body: string = GostSchuelerFachwahl.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode deleteGostSchuelerFachwahlenAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/aktuelleplanung/fachwahl/delete
+	 *
+	 * Löscht die Fachwahlen der aktuellen Planung für den Schüler mit der angegebenen ID. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Fachwahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 203: Die Fachwahlen wurden erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.
+	 *   Code 404: Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.
+	 *   Code 409: Es liegen bereits bewertete Abschnitte vor oder der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 */
+	public async deleteGostSchuelerFachwahlenAktuellePlanung(schema: string, schuelerid: number): Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/aktuelleplanung/fachwahl/delete"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode resetGostSchuelerFachwahlenAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/aktuelleplanung/fachwahl/reset
+	 *
+	 * Setzt die Fachwahlen der aktuellen Planung für den Schüler mit der angegebenen ID zurück. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 203: Die Fachwahlen wurden erfolgreich zurückgesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zurückzusetzen.
+	 *   Code 404: Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.
+	 *   Code 409: Der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 */
+	public async resetGostSchuelerFachwahlenAktuellePlanung(schema: string, schuelerid: number): Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/aktuelleplanung/fachwahl/reset"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostSchuelerGKLWahlAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/aktuelleplanung/gklwahl
+	 *
+	 * Liest die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung für den angegebenen Schüler aus. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Wahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerGKLWahl
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlen auszulesen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung
+	 */
+	public async getGostSchuelerGKLWahlAktuellePlanung(schema: string, schuelerid: number): Promise<GostSchuelerGKLWahl> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/aktuelleplanung/gklwahl"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return GostSchuelerGKLWahl.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostSchuelerLaufbahnplanungAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/aktuelleplanung/laufbahnplanung
+	 *
+	 * Liest die Daten der aktuellen Laufbahnplanung für den Schüler mit der angegebenen ID aus. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Laufbahnplanungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten der aktuellen Laufbahnplanung
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Abiturdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahnplanungsdaten auszulesen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Die Daten der aktuellen Laufbahnplanung
+	 */
+	public async getGostSchuelerLaufbahnplanungAktuellePlanung(schema: string, schuelerid: number): Promise<Abiturdaten> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/aktuelleplanung/laufbahnplanung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return Abiturdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostSchuelerFachwahl für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/fachwahl/{fachid : \d+}
 	 *
 	 * Liest für die gymnasiale Oberstufe die Fachwahlen zu einem Fach von dem angegebenen Schüler aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Fachwahlen besitzt.
@@ -8312,6 +8557,141 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostSchuelerWiederholung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/wiederholung
+	 *
+	 * Liest die Wiederholung des Schülers mit der angegebenen ID im folgenden Abiturjahrgang aus. Vor dem Einstiegshalbjahr gehört der Schüler beiden Jahrgängen an, ab dem Einstieg dem neuen Jahrgang. Besteht keine Wiederholung, so sind Abiturjahr und Halbjahr null. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Wiederholung des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerWiederholung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wiederholung auszulesen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Die Wiederholung des Schülers
+	 */
+	public async getGostSchuelerWiederholung(schema: string, schuelerid: number): Promise<GostSchuelerWiederholung> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/wiederholung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return GostSchuelerWiederholung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createGostSchuelerWiederholung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/wiederholung
+	 *
+	 * Legt eine Wiederholung des Schülers mit der angegebenen ID im folgenden Abiturjahrgang an. Der Schüler steigt dort mit dem Halbjahr ein, das auf den aktuellen Schuljahresabschnitt der Schule folgt. Seine bisherigen Fachwahlen dienen als Grundlage für die neue Planung. Dabei wird geprüft, ob der SVWS-Benutzer die Berechtigung für die Laufbahnplanung in einem der beiden Jahrgänge besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die angelegte Wiederholung des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerWiederholung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wiederholung anzulegen.
+	 *   Code 404: Der Schüler oder der folgende Abiturjahrgang wurde nicht gefunden.
+	 *   Code 409: Für den Schüler besteht bereits eine Wiederholung, er ist nicht im aktuellen Schuljahresabschnitt der Schule oder der folgende Abiturjahrgang ist im nächsten Halbjahr nicht in der gymnasialen Oberstufe.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Die angelegte Wiederholung des Schülers
+	 */
+	public async createGostSchuelerWiederholung(schema: string, schuelerid: number): Promise<GostSchuelerWiederholung> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/wiederholung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result: string = await super.postJSON(path, null);
+		const text = result;
+		return GostSchuelerWiederholung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostSchuelerWiederholung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/wiederholung
+	 *
+	 * Entfernt die Wiederholung des Schülers mit der angegebenen ID samt der für sie geplanten Fachwahlen. Dabei wird geprüft, ob der SVWS-Benutzer die Berechtigung für die Laufbahnplanung in einem der beiden Jahrgänge besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Stand nach dem Entfernen, also ohne Abiturjahr und Halbjahr
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerWiederholung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wiederholung zu entfernen.
+	 *   Code 404: Der Schüler oder die Wiederholung wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Der Stand nach dem Entfernen, also ohne Abiturjahr und Halbjahr
+	 */
+	public async deleteGostSchuelerWiederholung(schema: string, schuelerid: number): Promise<GostSchuelerWiederholung> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/wiederholung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result: string = await super.deleteJSON(path, null);
+		const text = result;
+		return GostSchuelerWiederholung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode uebernehmeGostSchuelerWiederholung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/wiederholung/uebernehmen
+	 *
+	 * Übernimmt die Planung der Wiederholung des Schülers mit der angegebenen ID. Die für den neuen Jahrgang geplanten Fachwahlen und GKL-Wahlen ersetzen dabei die der aktuellen Planung, danach wird die Wiederholung entfernt. Das ist nur möglich, wenn die Schule das Einstiegshalbjahr erreicht hat und der aktuelle Lernabschnitt des Schülers zum neuen Jahrgang passt. Dabei wird geprüft, ob der SVWS-Benutzer die Berechtigung für die Laufbahnplanung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Stand der Wiederholung nach der Übernahme
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerWiederholung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Planung der Wiederholung zu übernehmen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *   Code 409: Der Wechsel in den neuen Jahrgang ist noch nicht vollzogen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Der Stand der Wiederholung nach der Übernahme
+	 */
+	public async uebernehmeGostSchuelerWiederholung(schema: string, schuelerid: number): Promise<GostSchuelerWiederholung> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/wiederholung/uebernehmen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result: string = await super.postJSON(path, null);
+		const text = result;
+		return GostSchuelerWiederholung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PUT-Methode putGostSchuelerGKLWahlAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/aktuelleplanung/gklwahl
+	 *
+	 * Passt die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung an. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Wahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Wahlen wurden erfolgreich übernommen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu ändern.
+	 *   Code 404: Kein Schüler mit der ID gefunden
+	 *   Code 409: Der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {GostSchuelerGKLWahl} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async putGostSchuelerGKLWahlAktuellePlanung(data: GostSchuelerGKLWahl, schema: string): Promise<void> {
+		const path = "/db/{schema}/gost/schueler/aktuelleplanung/gklwahl"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = GostSchuelerGKLWahl.transpilerToJSON(data);
+		return super.putJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der PUT-Methode putGostSchuelerGKLWahl für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/fachwahl
 	 *
 	 * Passt die Wahl eines Schüler in Bezug die gleichwertigen komplexen Leistungsnachweise der Gymnasiale Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Wahlen besitzt.
@@ -8353,6 +8733,35 @@ export class ApiServer extends BaseApi {
 		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostSchuelerWiederholungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/wiederholungen
+	 *
+	 * Liest alle Wiederholungen von Schülern im folgenden Abiturjahrgang aus. Laufbahnen-Liste und Kursplanung kennzeichnen damit die betroffenen Schüler. Bei funktionsbezogenen Kompetenzen fehlen die Wiederholungen, bei denen der SVWS-Benutzer auf keinen der beiden Abiturjahrgänge zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Wiederholungen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostSchuelerWiederholung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wiederholungen auszulesen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste der Wiederholungen
+	 */
+	public async getGostSchuelerWiederholungen(schema: string): Promise<List<GostSchuelerWiederholung>> {
+		const path = "/db/{schema}/gost/schueler/wiederholungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostSchuelerWiederholung>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostSchuelerWiederholung.transpilerFromJSON(text));
+		});
+		return ret;
 	}
 
 

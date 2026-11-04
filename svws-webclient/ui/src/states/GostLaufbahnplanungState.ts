@@ -8,6 +8,7 @@ import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten
 import type { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
 import type { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
+import type { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -164,6 +165,35 @@ export interface GostLaufbahnplanungState {
 	 * @param data   die Daten für den Patch
 	 */
 	patchBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>): Promise<void>;
+
+	/**
+	 * Gibt die geltende Wiederholung des Schülers im folgenden Abiturjahrgang zurück.
+	 * Abiturjahr und Halbjahr sind null, wenn keine Wiederholung gilt.
+	 */
+	get wiederholung(): GostSchuelerWiederholung;
+
+	/**
+	 * Gibt zurück, ob die aktuelle Laufbahnplanung statt der Planung der Wiederholung angezeigt und bearbeitet wird.
+	 */
+	get aktuellePlanung(): boolean;
+
+	/**
+	 * Wechselt zwischen der aktuellen Laufbahnplanung und der Planung der Wiederholung und lädt die Daten neu.
+	 *
+	 * @param aktuellePlanung      true für die aktuelle Planung, false für die Planung der Wiederholung
+	 */
+	setAktuellePlanung(aktuellePlanung: boolean): Promise<void>;
+
+	/**
+	 * Legt für den Schüler eine Wiederholung im folgenden Abiturjahrgang an und lädt danach die
+	 * Laufbahnplanung neu, da sie sich ab dann auf den neuen Jahrgang bezieht.
+	 */
+	erstelleWiederholung(): Promise<void>;
+
+	/**
+	 * Entfernt die Wiederholung des Schülers und lädt danach die Laufbahnplanung neu.
+	 */
+	entferneWiederholung(): Promise<void>;
 
 	/**
 	 * Gibt zurück, ob ein Zwischenspeicher zum Merken der Laufbahnplanung vorliegt oder nicht.

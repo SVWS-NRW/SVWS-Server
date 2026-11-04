@@ -1,5 +1,6 @@
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
+import type { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
 import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
 import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
@@ -20,4 +21,5 @@ export interface KursplanungSchuelerAuswahlProps {
 	setIsSchuelerFilterOpen: (value: boolean) => Promise<void>;
 	showGeschlecht: () => boolean;
 	setShowGeschlecht: (value: boolean) => Promise<void>;
+	mapWiederholungen: () => Map<number, GostSchuelerWiederholung>;
 }

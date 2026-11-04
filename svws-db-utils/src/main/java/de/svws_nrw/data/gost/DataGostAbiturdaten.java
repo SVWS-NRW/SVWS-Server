@@ -156,8 +156,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Abiturjahrgang angegeben oder dieser wurde nicht in der Datenbank gefunden.");
 		}
-		final List<DTOSchueler> schuelerListe =
-				GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(schuljahresabschnitt.schuljahr + 1);
+		// Das Abitur liegt in der Q2.2. Wer nach nicht bestandener Prüfung von Q2.2 nach Q2.1 wiederholt, gehört bis zum neuen Lernabschnitt noch hierher.
+		final List<DTOSchueler> schuelerListe = GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService()
+				.getByAbiturjahrgang(schuljahresabschnitt.schuljahr + 1, GostHalbjahr.Q22);
 		if (schuelerListe.isEmpty()) {
 			return new ArrayList<>();
 		}

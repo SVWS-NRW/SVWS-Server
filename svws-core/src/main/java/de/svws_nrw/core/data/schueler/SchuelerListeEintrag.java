@@ -59,6 +59,10 @@ public class SchuelerListeEintrag {
 	@Schema(description = "der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt", example = "2030")
 	public Integer abiturjahrgang = null;
 
+	/** Der Abiturjahrgang einer geltenden Wiederholung, zu dem der Schüler bis zum Wechsel zusätzlich gehört, oder null. */
+	@Schema(description = "der Abiturjahrgang einer geltenden Wiederholung, zu dem der Schüler bis zum Wechsel zusätzlich gehört, oder null", example = "2031")
+	public Integer abiturjahrgangWiederholung = null;
+
 	/** Das Kürzel der aktuellen Schulgliederung des Schülers */
 	@Schema(description = "das Kürzel der aktuellen Schulgliederung des Schülers", example = "GY9")
 	public @NotNull Long idSchulgliederung = -1L;

@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlen;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
+import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.types.gost.GostFachbereich;
@@ -38,6 +39,7 @@ public class GostJahrgangFachwahlService {
 	private final SchuelerRepository schuelerRepository;
 	private final FachRepository fachRepository;
 	private final GostAbiturdatenService gostAbiturdatenService;
+	private final GostSchuelerService gostSchuelerService;
 
 	/**
 	 * Erstellt einen neuen Service.
@@ -46,31 +48,35 @@ public class GostJahrgangFachwahlService {
 	 * @param schuelerRepository                     das Repository für den Zugriff auf Schülerdaten
 	 * @param fachRepository                         das Repository für den Zugriff auf Fächerdaten
 	 * @param gostAbiturdatenService                 der Service für den Zugriff auf die Abiturdaten der gymnasialen Oberstufe
+	 * @param gostSchuelerService                    der Service für den Zugriff auf die Schüler der gymnasialen Oberstufe und ihre Wiederholungen
 	 */
 	public GostJahrgangFachwahlService(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
 			final FachRepository fachRepository,
-			final GostAbiturdatenService gostAbiturdatenService) {
+			final GostAbiturdatenService gostAbiturdatenService,
+			final GostSchuelerService gostSchuelerService) {
 		this.benutzerRepository = benutzerRepository;
 		this.schuelerRepository = schuelerRepository;
 		this.fachRepository = fachRepository;
 		this.gostAbiturdatenService = gostAbiturdatenService;
+		this.gostSchuelerService = gostSchuelerService;
 	}
 
 
 	/**
 	 * Bestimmt alle Fachwahlen des angebebenen Abiturjahrgangs als Map von der ID des Schülers auf die jeweiligen Fachwahlen.
 	 *
-	 * @param abijahrgang   der Abiturjahrgang
+	 * @param abijahrgang     der Abiturjahrgang
+	 * @param bezugHalbjahr   das Halbjahr, für welches die Zugehörigkeit zum Abiturjahrgang bestimmt wird, oder null für die Planung
 	 *
 	 * @return die Fachwahlen des Abiturjahrgangs als Map
 	 */
-	private Map<Long, GostJahrgangFachwahlen> getFachwahlenByAbiJahrgang(final int abijahrgang) {
+	private Map<Long, GostJahrgangFachwahlen> getFachwahlenByAbiJahrgang(final int abijahrgang, final GostHalbjahr bezugHalbjahr) {
 		if (!benutzerRepository.getAktuellerBenutzer().schuleHatGymOb()) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schule hat eine Schulform ohne gymnasiale Oberstufe.");
 		}
 
-		final Map<Long, Abiturdaten> mapAbiturdaten = gostAbiturdatenService.getMapByAbiturjahrgang(abijahrgang);
+		final Map<Long, Abiturdaten> mapAbiturdaten = gostAbiturdatenService.getMapByAbiturjahrgang(abijahrgang, bezugHalbjahr);
 
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = fachRepository.getMap();
@@ -130,23 +136,41 @@ public class GostJahrgangFachwahlService {
 	 * @return die Fachwahlen des Abiturjahrgangs dieses Objektes
 	 */
 	public GostJahrgangFachwahlen getSchuelerFachwahlen(final int abijahr) {
+		return getSchuelerFachwahlen(abijahr, null);
+	}
+
+
+	/**
+	 * Ermittelt die Fachwahlen zu dem angegebenen Abiturjahrgang. Das Halbjahr legt fest, für welches Halbjahr die
+	 * Zugehörigkeit der Schüler zum Abiturjahrgang bestimmt wird. Davon hängt ab, ob eine Wiederholung schon zählt.
+	 *
+	 * @param abijahr         der Abiturjahrgang
+	 * @param bezugHalbjahr   das Halbjahr für die Zugehörigkeit zum Abiturjahrgang oder null für die Planung
+	 *
+	 * @return die Fachwahlen des Abiturjahrgangs
+	 */
+	private GostJahrgangFachwahlen getSchuelerFachwahlen(final int abijahr, final GostHalbjahr bezugHalbjahr) {
 		return transactional(() -> {
 			final Benutzer benutzer = benutzerRepository.getAktuellerBenutzer();
-			final Map<Long, GostJahrgangFachwahlen> mapFachwahlen = getFachwahlenByAbiJahrgang(abijahr);
+			final Map<Long, GostJahrgangFachwahlen> mapFachwahlen = getFachwahlenByAbiJahrgang(abijahr, bezugHalbjahr);
 			final Map<Long, DTOSchueler> mapSchueler = schuelerRepository.findMapByIds(mapFachwahlen.keySet());
+			final Map<Long, GostSchuelerWiederholung> mapWiederholungen = gostSchuelerService.getMapWiederholungen(mapFachwahlen.keySet());
 			final GostJahrgangFachwahlen result = new GostJahrgangFachwahlen();
 			for (final Map.Entry<Long, GostJahrgangFachwahlen> entry : mapFachwahlen.entrySet()) {
 				final DTOSchueler schueler = mapSchueler.get(entry.getKey());
 				final GostJahrgangFachwahlen fachwahlen = entry.getValue();
+				final GostSchuelerWiederholung wiederholung = mapWiederholungen.get(entry.getKey());
 				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-					if (DBUtilsGost.pruefeIstAnSchule(schueler, halbjahr, abijahr, benutzer) && (fachwahlen.halbjahr[halbjahr.id] != null)) {
+					if (DBUtilsGost.pruefeIstAnSchule(schueler, halbjahr, abijahr, benutzer) && (fachwahlen.halbjahr[halbjahr.id] != null)
+							&& gehoertImHalbjahrZumJahrgang(wiederholung, abijahr, halbjahr)) {
 						if (result.halbjahr[halbjahr.id] == null) {
 							result.halbjahr[halbjahr.id] = new GostJahrgangFachwahlenHalbjahr();
 						}
 						result.halbjahr[halbjahr.id].fachwahlen.addAll(fachwahlen.halbjahr[halbjahr.id].fachwahlen);
 					}
 				}
-				if (DBUtilsGost.pruefeIstAnSchule(schueler, GostHalbjahr.Q22, abijahr, benutzer)) {
+				if (DBUtilsGost.pruefeIstAnSchule(schueler, GostHalbjahr.Q22, abijahr, benutzer)
+						&& gehoertImHalbjahrZumJahrgang(wiederholung, abijahr, GostHalbjahr.Q22)) {
 					result.abitur.fachwahlen.addAll(fachwahlen.abitur.fachwahlen);
 				}
 			}
@@ -157,6 +181,21 @@ public class GostJahrgangFachwahlService {
 			}
 			return result;
 		});
+	}
+
+
+	/**
+	 * Prüft, ob ein Schüler in dem Halbjahr zu dem Abiturjahrgang zählt. Ein Schüler mit Wiederholung zählt im neuen Jahrgang
+	 * ab dem Einstiegshalbjahr und im bisherigen Jahrgang davor. So passen die Wahlen zu den Schülern der Blockungen.
+	 *
+	 * @param wiederholung   die Wiederholung des Schülers oder null
+	 * @param abijahr        der Abiturjahrgang
+	 * @param halbjahr       das Halbjahr
+	 *
+	 * @return true, wenn der Schüler in dem Halbjahr zählt
+	 */
+	private static boolean gehoertImHalbjahrZumJahrgang(final GostSchuelerWiederholung wiederholung, final int abijahr, final GostHalbjahr halbjahr) {
+		return (wiederholung == null) || GostSchuelerService.gehoertImHalbjahrZumJahrgang(wiederholung, abijahr, halbjahr);
 	}
 
 
@@ -172,7 +211,7 @@ public class GostJahrgangFachwahlService {
 		if (halbjahr == null) {
 			return new GostJahrgangFachwahlenHalbjahr();
 		}
-		final GostJahrgangFachwahlenHalbjahr result = this.getSchuelerFachwahlen(abijahr).halbjahr[halbjahr.id];
+		final GostJahrgangFachwahlenHalbjahr result = this.getSchuelerFachwahlen(abijahr, halbjahr).halbjahr[halbjahr.id];
 		return (result == null) ? new GostJahrgangFachwahlenHalbjahr() : result;
 	}
 

@@ -39,6 +39,12 @@ class TestArchitekturAbbruchUndLadezustand {
 	private static final Pattern BEZEICHNER = Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*");
 
 	/**
+	 * Der Zugriff {@code feld.computeIfAbsent(...)} auf ein Feld, das die Fehler je weiterem Schlüssel hält, etwa je Abiturjahrgang. Die Argumente dürfen eine
+	 * Klammerebene enthalten, damit ein Lambda wie {@code k -> new HashMap<>()} passt. Ein angehängter weiterer Aufruf fällt durch.
+	 */
+	private static final Pattern RUECKKANAL_JE_SCHLUESSEL = Pattern.compile("([A-Za-z_$][A-Za-z0-9_$]*)\\s*\\.\\s*computeIfAbsent\\s*\\(([^()]|\\([^()]*\\))*\\)");
+
+	/**
 	 * Ein Ausstieg, der den Block ohne Wurf verlässt. Nach einem protokollierten {@code ERROR} ist er unzulässig: Der Pfad kehrte trotz des Eintrags
 	 * erfolgreich zurück. Ein tolerierter Ausstieg gehört deshalb vor die Protokollierung - erst entscheiden, dann abbrechen. {@code yield} verlässt einen
 	 * Switch-Ausdruck mit einem Wert; als kontextuelles Schlüsselwort zählt damit auch ein gleichnamiger Aufruf wie {@code Thread.yield()} - gewollte
@@ -163,7 +169,8 @@ class TestArchitekturAbbruchUndLadezustand {
 
 	/**
 	 * Gibt an, ob das Argument einen dauerhaften Rückkanal benennt: einen Bezeichner - wahlweise mit {@code this.} -, den dieselbe Datei als
-	 * {@code private final Map<Long, Exception>}-Feld deklariert. {@code null}, ein {@code new}-Ausdruck und eine methodenlokale Map fallen durch: Sie
+	 * {@code private final Map<Long, Exception>}-Feld deklariert, oder den {@code computeIfAbsent}-Zugriff auf ein Feld
+	 * {@code private final Map<K, Map<Long, Exception>>}. {@code null}, ein {@code new}-Ausdruck und eine methodenlokale Map fallen durch: Sie
 	 * überleben den Aufruf nicht beziehungsweise nicht die Lebensdauer der Repository-Map.
 	 *
 	 * @param datei    Die Quelldatei des Aufrufs.
@@ -173,10 +180,24 @@ class TestArchitekturAbbruchUndLadezustand {
 	 */
 	private static boolean istRueckkanalFeld(final Quelldatei datei, final String argument) {
 		final String name = argument.strip().replaceFirst("^this\\s*\\.\\s*", "");
-		if (!BEZEICHNER.matcher(name).matches()) {
-			return false;
+		if (BEZEICHNER.matcher(name).matches()) {
+			return istFeldDeklariert(datei, name, "Map<Long,\\s*Exception>");
 		}
-		final Pattern deklaration = Pattern.compile("private\\s+final\\s+Map<Long,\\s*Exception>\\s+" + Pattern.quote(name) + "\\b");
+		final Matcher jeSchluessel = RUECKKANAL_JE_SCHLUESSEL.matcher(name);
+		return jeSchluessel.matches() && istFeldDeklariert(datei, jeSchluessel.group(1), "Map<\\w+,\\s*Map<Long,\\s*Exception>>");
+	}
+
+	/**
+	 * Gibt an, ob die Datei ein {@code private final}-Feld mit dem Namen und dem Typ deklariert.
+	 *
+	 * @param datei Die Quelldatei.
+	 * @param name  Der Name des Feldes.
+	 * @param typ   Der Typ des Feldes als regulärer Ausdruck.
+	 *
+	 * @return true, wenn die Deklaration in der Datei steht, sonst false.
+	 */
+	private static boolean istFeldDeklariert(final Quelldatei datei, final String name, final String typ) {
+		final Pattern deklaration = Pattern.compile("private\\s+final\\s+" + typ + "\\s+" + Pattern.quote(name) + "\\b");
 		return deklaration.matcher(datei.inhalt()).find();
 	}
 

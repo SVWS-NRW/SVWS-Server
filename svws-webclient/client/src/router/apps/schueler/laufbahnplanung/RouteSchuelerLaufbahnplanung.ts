@@ -45,10 +45,13 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 				return false;
 			}
 			const abiturjahr = schuelerAuswahlState.manager.auswahl().abiturjahrgang;
+			// Bis zum Wechsel gehört ein Schüler mit Wiederholung zu beiden Jahrgängen, daher genügt die Kompetenz für einen davon
+			const abiturjahrWiederholung = schuelerAuswahlState.manager.auswahl().abiturjahrgangWiederholung;
 			if (((abiturjahr !== null) && schuelerAuswahlState.manager.abiturjahrgaenge.get(abiturjahr))
 				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
-						&& benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
+						&& (benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr)
+							|| ((abiturjahrWiederholung !== null) && benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahrWiederholung)))))) {
 				return false;
 			}
 			return routeSchueler.getRouteDefaultChild({ id });

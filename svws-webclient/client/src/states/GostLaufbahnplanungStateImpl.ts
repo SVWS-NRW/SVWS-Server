@@ -12,10 +12,12 @@ import { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
 import { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
 import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
+import { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
 import type { GostLaufbahnplanungExportV2 } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
 import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
@@ -33,6 +35,7 @@ import { RouteNode } from "~/router/RouteNode";
 
 import { benutzerStateImpl } from "./BenutzerStateImpl";
 import { configStateImpl } from "./ConfigStateImpl";
+import { serverStateImpl } from "./ServerStateImpl";
 
 
 interface GostLaufbahnplanungReactiveState {
@@ -49,6 +52,8 @@ interface GostLaufbahnplanungReactiveState {
 	mapKlausurvorgaben: JavaMap<number, GostLaufbahnplanungGKLKlausurvorgabe>;
 	gklMoeglich: HashMap2D<number, GostHalbjahr, List<GostLaufbahnplanungGKLKlausurvorgabe>>,
 	gklWahlen: GostSchuelerGKLWahl,
+	wiederholung: GostSchuelerWiederholung;
+	aktuellePlanung: boolean;
 	listeLehrer: List<LehrerListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	zwischenspeicher: GostLaufbahnplanungExportV2 | undefined;
@@ -74,6 +79,8 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			mapKlausurvorgaben: new HashMap<number, GostLaufbahnplanungGKLKlausurvorgabe>(),
 			gklMoeglich: new HashMap2D<number, GostHalbjahr, List<GostLaufbahnplanungGKLKlausurvorgabe>>(),
 			gklWahlen: new GostSchuelerGKLWahl(),
+			wiederholung: new GostSchuelerWiederholung(),
+			aktuellePlanung: false,
 			listeLehrer: new ArrayList<LehrerListeEintrag>(),
 			mapLehrer: new Map<number, LehrerListeEintrag>(),
 			zwischenspeicher: undefined,
@@ -170,6 +177,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		if (this.mode !== 'schueler') {
 			throw new DeveloperNotificationException("Der Export von Schüler-Laufbahnplanungen steht nur in der Schüleransicht zur Verfügung.");
 		}
+		if (this.aktuellePlanung) {
+			return await api.server.exportGostSchuelerLaufbahnplanungAktuellePlanung(api.schema, this.schueler.id);
+		}
 		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
 	}
 
@@ -179,9 +189,13 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			if (this.mode !== 'schueler') {
 				throw new DeveloperNotificationException("Der Import von Schüler-Laufbahnplanungen steht nur in der Schüleransicht zur Verfügung.");
 			}
-			await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.schueler.id);
-			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
-			const gklWahlen = await api.server.getGostSchuelerGKLWahl(api.schema, this.schueler.id);
+			if (this.aktuellePlanung) {
+				await api.server.importGostSchuelerLaufbahnplanungAktuellePlanung(data, api.schema, this.schueler.id);
+			} else {
+				await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.schueler.id);
+			}
+			const abiturdaten = await this.getAbiturdatenSchueler(this.schueler.id, this.aktuellePlanung);
+			const gklWahlen = await this.getGKLWahlenSchueler(this.schueler.id, this.aktuellePlanung);
 			const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 			if (abiturdatenManager === undefined) {
 				return;
@@ -198,8 +212,12 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 	public async setWahl(idFach: number, wahl: GostSchuelerFachwahl) {
 		let abiturdaten;
 		if (this.mode === 'schueler') {
-			await api.server.patchGostSchuelerFachwahl(wahl, api.schema, this.schueler.id, idFach);
-			abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
+			if (this.aktuellePlanung) {
+				await api.server.patchGostSchuelerFachwahlAktuellePlanung(wahl, api.schema, this.schueler.id, idFach);
+			} else {
+				await api.server.patchGostSchuelerFachwahl(wahl, api.schema, this.schueler.id, idFach);
+			}
+			abiturdaten = await this.getAbiturdatenSchueler(this.schueler.id, this.aktuellePlanung);
 		} else if (this.mode === 'abiturjahrgang') {
 			await api.server.patchGostAbiturjahrgangFachwahl(wahl, api.schema, this.auswahlAbiturjahrgang, idFach);
 			abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahlAbiturjahrgang);
@@ -254,7 +272,11 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 
 	public async patchGKLWahlen(patch: Partial<GostSchuelerGKLWahl>) {
 		const gklWahlen = Object.assign(new GostSchuelerGKLWahl(), this._state.value.gklWahlen, patch);
-		await api.server.putGostSchuelerGKLWahl(gklWahlen, api.schema);
+		if (this.aktuellePlanung) {
+			await api.server.putGostSchuelerGKLWahlAktuellePlanung(gklWahlen, api.schema);
+		} else {
+			await api.server.putGostSchuelerGKLWahl(gklWahlen, api.schema);
+		}
 		this._state.value.gklWahlen = gklWahlen;
 		await this.setGostBelegpruefungErgebnis();
 	}
@@ -270,6 +292,104 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 	}
 
 
+	public get wiederholung(): GostSchuelerWiederholung {
+		return this._state.value.wiederholung;
+	}
+
+
+	public get aktuellePlanung(): boolean {
+		return this._state.value.aktuellePlanung;
+	}
+
+
+	public async setAktuellePlanung(aktuellePlanung: boolean) {
+		await api.call(async (): Promise<void> => {
+			if (this.mode !== 'schueler') {
+				throw new DeveloperNotificationException("Die aktuelle Planung kann nur in der Schüleransicht gewählt werden.");
+			}
+			if (aktuellePlanung === this.aktuellePlanung) {
+				return;
+			}
+			await this.ladeSchuelerDatenIntern(this.schueler, aktuellePlanung);
+		})();
+	}
+
+
+	private async getAbiturdatenSchueler(idSchueler: number, aktuellePlanung: boolean): Promise<Abiturdaten> {
+		if (aktuellePlanung) {
+			return await api.server.getGostSchuelerLaufbahnplanungAktuellePlanung(api.schema, idSchueler);
+		}
+		return await api.server.getGostSchuelerLaufbahnplanung(api.schema, idSchueler);
+	}
+
+
+	private async getGKLWahlenSchueler(idSchueler: number, aktuellePlanung: boolean): Promise<GostSchuelerGKLWahl> {
+		if (aktuellePlanung) {
+			return await api.server.getGostSchuelerGKLWahlAktuellePlanung(api.schema, idSchueler);
+		}
+		return await api.server.getGostSchuelerGKLWahl(api.schema, idSchueler);
+	}
+
+
+	public async erstelleWiederholung() {
+		await api.call(async (): Promise<void> => {
+			if (this.mode !== 'schueler') {
+				throw new DeveloperNotificationException("Eine Wiederholung im folgenden Abiturjahrgang kann nur in der Schüleransicht angelegt werden.");
+			}
+			const schueler = this.schueler;
+			await api.server.createGostSchuelerWiederholung(api.schema, schueler.id);
+			await this.ladeSchuelerDatenIntern(schueler, false);
+		})();
+	}
+
+
+	public async entferneWiederholung() {
+		await api.call(async (): Promise<void> => {
+			if (this.mode !== 'schueler') {
+				throw new DeveloperNotificationException("Eine Wiederholung im folgenden Abiturjahrgang kann nur in der Schüleransicht entfernt werden.");
+			}
+			const schueler = this.schueler;
+			const wiederholung = await api.server.deleteGostSchuelerWiederholung(api.schema, schueler.id);
+			await this.ladeNachWechsel(schueler, wiederholung);
+		})();
+	}
+
+
+	/**
+	 * Prüft, ob der Benutzer die Laufbahnplanung des angegebenen Abiturjahrgangs bearbeiten darf.
+	 *
+	 * @param abiturjahr   der Abiturjahrgang oder null, wenn er nicht bestimmt werden kann
+	 *
+	 * @return true, wenn die Kompetenz vorliegt
+	 */
+	private hatKompetenzLaufbahnplanung(abiturjahr: number | null): boolean {
+		return benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+			|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+				&& (abiturjahr !== null) && benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr));
+	}
+
+
+	/**
+	 * Lädt die Laufbahnplanung nach dem Entfernen einer Wiederholung neu. Der Schüler gehört danach nur noch zum Jahrgang
+	 * seines Lernabschnitts. Fehlt dafür die Kompetenz, wird die Laufbahnplanung verlassen, da der Server das Neuladen abweisen würde.
+	 *
+	 * @param schueler       der Schüler
+	 * @param wiederholung   der Stand der Wiederholung nach dem Entfernen
+	 */
+	private async ladeNachWechsel(schueler: SchuelerListeEintrag, wiederholung: GostSchuelerWiederholung) {
+		schueler.abiturjahrgangWiederholung = wiederholung.abiturjahr;
+		if (this.hatKompetenzLaufbahnplanung(wiederholung.abiturjahrLernabschnitt)) {
+			await this.ladeSchuelerDatenIntern(schueler, false);
+			return;
+		}
+		this.setPatchedState({ wiederholung, aktuellePlanung: false });
+		const route = RouteNode.getNodeByName("schueler")?.getRouteDefaultChild({ id: schueler.id });
+		if (route !== undefined) {
+			await RouteManager.doRoute(route);
+		}
+	}
+
+
 	public get hatZwischenspeicher(): boolean {
 		return (this.zwischenspeicher !== undefined);
 	}
@@ -279,7 +399,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		if (this.mode !== 'schueler') {
 			throw new DeveloperNotificationException("Das Zwischenspeichern der aktuellen Planungsdaten ist nur in der Schüleransicht möglich.");
 		}
-		const zwischenspeicher = await api.server.exportGostSchuelerLaufbahnplanungsdaten(api.schema, this.schueler.id);
+		const zwischenspeicher = this.aktuellePlanung
+			? await api.server.exportGostSchuelerLaufbahnplanungsdatenAktuellePlanung(api.schema, this.schueler.id)
+			: await api.server.exportGostSchuelerLaufbahnplanungsdaten(api.schema, this.schueler.id);
 		this.setPatchedState({ zwischenspeicher });
 	}
 
@@ -291,8 +413,12 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			if (this._state.value.zwischenspeicher === undefined) {
 				return;
 			}
-			await api.server.importGostSchuelerLaufbahnplanungsdatenV2(this._state.value.zwischenspeicher, api.schema, this.schueler.id);
-			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
+			if (this.aktuellePlanung) {
+				await api.server.importGostSchuelerLaufbahnplanungsdatenV2AktuellePlanung(this._state.value.zwischenspeicher, api.schema, this.schueler.id);
+			} else {
+				await api.server.importGostSchuelerLaufbahnplanungsdatenV2(this._state.value.zwischenspeicher, api.schema, this.schueler.id);
+			}
+			const abiturdaten = await this.getAbiturdatenSchueler(this.schueler.id, this.aktuellePlanung);
 			const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 			if (abiturdatenManager === undefined) {
 				return;
@@ -308,14 +434,18 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 	public async resetFachwahlen(forceDelete: boolean) {
 		await api.call(async (forceDelete: boolean) => {
 			if (this.mode === 'schueler') {
-				if (forceDelete) {
+				if (forceDelete && this.aktuellePlanung) {
+					await api.server.deleteGostSchuelerFachwahlenAktuellePlanung(api.schema, this.schueler.id);
+				} else if (forceDelete) {
 					await api.server.deleteGostSchuelerFachwahlen(api.schema, this.schueler.id);
+				} else if (this.aktuellePlanung) {
+					await api.server.resetGostSchuelerFachwahlenAktuellePlanung(api.schema, this.schueler.id);
 				} else {
 					await api.server.resetGostSchuelerFachwahlen(api.schema, this.schueler.id);
 				}
-				const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
+				const abiturdaten = await this.getAbiturdatenSchueler(this.schueler.id, this.aktuellePlanung);
 				this._state.value.abiturdaten = abiturdaten;
-				const gklWahlen = await api.server.getGostSchuelerGKLWahl(api.schema, this.schueler.id);
+				const gklWahlen = await this.getGKLWahlenSchueler(this.schueler.id, this.aktuellePlanung);
 				this._state.value.gklWahlen = gklWahlen;
 				await this.setGostBelegpruefungErgebnis();
 			} else if (this.mode === 'abiturjahrgang') {
@@ -498,33 +628,54 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		if (auswahlSchueler === null) {
 			this.setPatchedDefaultState({});
 		} else {
-			const gostJahrgang = new GostJahrgang();
-			if (auswahlSchueler.abiturjahrgang !== null) {
-				gostJahrgang.abiturjahr = auswahlSchueler.abiturjahrgang;
+			await this.ladeSchuelerDatenIntern(auswahlSchueler, false);
+		}
+	}
+
+	/**
+	 * Lädt die Laufbahnplanung des Schülers. Die aktuelle Planung ist nur wählbar, solange eine Wiederholung besteht und der
+	 * Wechsel nicht vollzogen ist, da der Server dessen Daten danach nicht mehr ändert.
+	 *
+	 * @param auswahlSchueler      der Schüler
+	 * @param aktuellePlanung      true, wenn die aktuelle Laufbahnplanung statt der Planung der Wiederholung geladen wird
+	 */
+	private async ladeSchuelerDatenIntern(auswahlSchueler: SchuelerListeEintrag, aktuellePlanung: boolean) {
+		const gostJahrgang = new GostJahrgang();
+		gostJahrgang.jahrgang = auswahlSchueler.jahrgang;
+		try {
+			// Wiederholungen gibt es zunächst nur im Servermode DEV, sonst lehnt der Server die Abfrage ab
+			let wiederholung = serverStateImpl.hasDev ? await api.server.getGostSchuelerWiederholung(api.schema, auswahlSchueler.id)
+				: new GostSchuelerWiederholung();
+			// Ist der Wechsel vollzogen, wird die Planung beim Öffnen übernommen. Der Benutzer braucht dafür die Kompetenz für den
+			// neuen Jahrgang, da der Schüler danach nur noch zu diesem gehört.
+			if (wiederholung.wechselVollzogen && this.hatKompetenzLaufbahnplanung(wiederholung.abiturjahr)) {
+				wiederholung = await api.server.uebernehmeGostSchuelerWiederholung(api.schema, auswahlSchueler.id);
+				auswahlSchueler.abiturjahrgangWiederholung = wiederholung.abiturjahr;
 			}
-			gostJahrgang.jahrgang = auswahlSchueler.jahrgang;
-			try {
-				const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, auswahlSchueler.id);
-				const gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, gostJahrgang.abiturjahr);
-				const gostLaufbahnBeratungsdaten = await api.server.getGostSchuelerLaufbahnplanungBeratungsdaten(api.schema, auswahlSchueler.id);
-				const listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, gostJahrgang.abiturjahr);
-				const faecherManager = new GostFaecherManager(abiturdaten.schuljahrAbitur, listGostFaecher);
-				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
-				faecherManager.addFachkombinationenAll(listFachkombinationen);
-				const { gklMoeglich, mapKlausurvorgaben } = await this.ladeGKL(gostJahrgang.abiturjahr, faecherManager);
-				const gklWahlen = await api.server.getGostSchuelerGKLWahl(api.schema, auswahlSchueler.id);
-				const listeLehrer = await api.server.getLehrer(api.schema);
-				const mapLehrer = new Map<number, LehrerListeEintrag>();
-				for (const l of listeLehrer) {
-					mapLehrer.set(l.id, l);
-				}
-				const mode = 'schueler';
-				this.setPatchedState({ mode, auswahlSchueler, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager,
-					mapKlausurvorgaben, gklMoeglich, gklWahlen, listeLehrer, mapLehrer, zwischenspeicher: undefined });
-				await this.setGostBelegpruefungErgebnis();
-			} catch {
-				throw new DeveloperNotificationException("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?");
+			const aktuell = aktuellePlanung && (wiederholung.abiturjahr !== null) && !wiederholung.wechselVollzogen;
+			// Der Server liefert das Abiturjahr der Planung. Bei einer Wiederholung ist das außerhalb der aktuellen Planung der Jahrgang
+			// der Wiederholung, nicht der aus der Schülerliste.
+			const abiturdaten = await this.getAbiturdatenSchueler(auswahlSchueler.id, aktuell);
+			gostJahrgang.abiturjahr = abiturdaten.abiturjahr;
+			const gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, gostJahrgang.abiturjahr);
+			const gostLaufbahnBeratungsdaten = await api.server.getGostSchuelerLaufbahnplanungBeratungsdaten(api.schema, auswahlSchueler.id);
+			const listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, gostJahrgang.abiturjahr);
+			const faecherManager = new GostFaecherManager(abiturdaten.schuljahrAbitur, listGostFaecher);
+			const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
+			faecherManager.addFachkombinationenAll(listFachkombinationen);
+			const { gklMoeglich, mapKlausurvorgaben } = await this.ladeGKL(gostJahrgang.abiturjahr, faecherManager);
+			const gklWahlen = await this.getGKLWahlenSchueler(auswahlSchueler.id, aktuell);
+			const listeLehrer = await api.server.getLehrer(api.schema);
+			const mapLehrer = new Map<number, LehrerListeEintrag>();
+			for (const l of listeLehrer) {
+				mapLehrer.set(l.id, l);
 			}
+			const mode = 'schueler';
+			this.setPatchedState({ mode, auswahlSchueler, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager,
+				mapKlausurvorgaben, gklMoeglich, gklWahlen, wiederholung, aktuellePlanung: aktuell, listeLehrer, mapLehrer, zwischenspeicher: undefined });
+			await this.setGostBelegpruefungErgebnis();
+		} catch {
+			throw new DeveloperNotificationException("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?");
 		}
 	}
 

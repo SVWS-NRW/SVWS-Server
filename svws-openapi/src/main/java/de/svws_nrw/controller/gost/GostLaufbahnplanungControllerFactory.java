@@ -89,8 +89,24 @@ public final class GostLaufbahnplanungControllerFactory {
 	 */
 	public static GostLaufbahnplanungControllerFactory withAccessForKursplanungOrLaufbahnplanung(final HttpServletRequest request)
 			throws ApiOperationException {
+		return withAccessForKursplanungOrLaufbahnplanung(request, ServerMode.STABLE);
+	}
+
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht, wenn der Zugriff einen bestimmten Servermode erfordert.
+	 *
+	 * @param request   der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 * @param mode      der Servermode, ab dem der Zugriff erlaubt ist
+	 *
+	 * @return der spezielle Servlet-Controller
+	 *
+	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 */
+	public static GostLaufbahnplanungControllerFactory withAccessForKursplanungOrLaufbahnplanung(final HttpServletRequest request, final ServerMode mode)
+			throws ApiOperationException {
 		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+		DBBenutzerUtils.getDBConnection(request, mode,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
@@ -109,8 +125,24 @@ public final class GostLaufbahnplanungControllerFactory {
 	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
 	 */
 	public static GostLaufbahnplanungControllerFactory withAccessForLaufbahnplanung(final HttpServletRequest request) throws ApiOperationException {
+		return withAccessForLaufbahnplanung(request, ServerMode.STABLE);
+	}
+
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht, wenn der Zugriff einen bestimmten Servermode erfordert.
+	 *
+	 * @param request   der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 * @param mode      der Servermode, ab dem der Zugriff erlaubt ist
+	 *
+	 * @return der spezielle Servlet-Controller
+	 *
+	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 */
+	public static GostLaufbahnplanungControllerFactory withAccessForLaufbahnplanung(final HttpServletRequest request, final ServerMode mode)
+			throws ApiOperationException {
 		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+		DBBenutzerUtils.getDBConnection(request, mode,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 		return new GostLaufbahnplanungControllerFactory();
@@ -127,8 +159,24 @@ public final class GostLaufbahnplanungControllerFactory {
 	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
 	 */
 	public static GostLaufbahnplanungControllerFactory withAccessForLaufbahnplanungAllgemein(final HttpServletRequest request) throws ApiOperationException {
+		return withAccessForLaufbahnplanungAllgemein(request, ServerMode.STABLE);
+	}
+
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht, wenn der Zugriff einen bestimmten Servermode erfordert.
+	 *
+	 * @param request   der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 * @param mode      der Servermode, ab dem der Zugriff erlaubt ist
+	 *
+	 * @return der spezielle Servlet-Controller
+	 *
+	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 */
+	public static GostLaufbahnplanungControllerFactory withAccessForLaufbahnplanungAllgemein(final HttpServletRequest request, final ServerMode mode)
+			throws ApiOperationException {
 		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+		DBBenutzerUtils.getDBConnection(request, mode,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
 		return new GostLaufbahnplanungControllerFactory();
 	}
@@ -142,15 +190,34 @@ public final class GostLaufbahnplanungControllerFactory {
 	 * @throws ApiOperationException wenn ein Fehler bei der Überprüfung der Berechtigung auftritt
 	 */
 	public GostLaufbahnplanungController getGostLaufbahnplanungController() throws ApiOperationException {
+		return erstelleController(gostServiceFactory);
+	}
+
+
+	/**
+	 * Erstellt einen Controller für die aktuelle Laufbahnplanung. Bei einem Schüler mit Wiederholung
+	 * arbeitet er mit den Fachwahlen und GKL-Wahlen des bisherigen Jahrgangs statt mit der Planung für den neuen Jahrgang.
+	 *
+	 * @return der Controller
+	 *
+	 * @throws ApiOperationException wenn ein Fehler bei der Überprüfung der Berechtigung auftritt
+	 */
+	public GostLaufbahnplanungController getGostLaufbahnplanungControllerAktuellePlanung() throws ApiOperationException {
+		return erstelleController(gostServiceFactory.fuerAktuellePlanung());
+	}
+
+
+	private GostLaufbahnplanungController erstelleController(final GostServiceFactory factory) {
 		return new GostLaufbahnplanungControllerImpl(
 				benutzerServiceFactory.getBenutzerKompetenzService(),
-				gostServiceFactory.getGostAbiturdatenService(),
-				gostServiceFactory.getGostFachwahlService(),
-				gostServiceFactory.getGostSchuelerGKLWahlService(),
-				gostServiceFactory.getGostJahrgangFachwahlService(),
-				gostServiceFactory.getGostLaufbahnplanungImportV1Service(),
-				gostServiceFactory.getGostLaufbahnplanungExportV2Service(),
-				gostServiceFactory.getGostLaufbahnplanungImportV2Service());
+				factory.getGostAbiturdatenService(),
+				factory.getGostFachwahlService(),
+				factory.getGostSchuelerService(),
+				factory.getGostSchuelerGKLWahlService(),
+				factory.getGostJahrgangFachwahlService(),
+				factory.getGostLaufbahnplanungImportV1Service(),
+				factory.getGostLaufbahnplanungExportV2Service(),
+				factory.getGostLaufbahnplanungImportV2Service());
 	}
 
 }

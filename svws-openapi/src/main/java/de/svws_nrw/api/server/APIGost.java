@@ -24,6 +24,7 @@ import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
+import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
@@ -911,6 +912,428 @@ public class APIGost {
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Wiederholung eines Schülers im folgenden Abiturjahrgang.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Wiederholung des Schülers
+	 */
+	@GET
+	@Path("/schueler/{schuelerid : \\d+}/wiederholung")
+	@Operation(summary = "Liest die Wiederholung des Schülers im folgenden Abiturjahrgang aus.",
+			description = "Liest die Wiederholung des Schülers mit der angegebenen ID im folgenden Abiturjahrgang aus. "
+					+ "Vor dem Einstiegshalbjahr gehört der Schüler beiden Jahrgängen an, ab dem Einstieg dem neuen Jahrgang. "
+					+ "Besteht keine Wiederholung, so sind Abiturjahr und Halbjahr null. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Wiederholung des Schülers",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerWiederholung.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wiederholung auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response getGostSchuelerWiederholung(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungController().getWiederholung(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage aller Wiederholungen von Schülern im folgenden Abiturjahrgang.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Wiederholungen
+	 */
+	@GET
+	@Path("/schueler/wiederholungen")
+	@Operation(summary = "Liest alle Wiederholungen von Schülern im folgenden Abiturjahrgang aus.",
+			description = "Liest alle Wiederholungen von Schülern im folgenden Abiturjahrgang aus. Laufbahnen-Liste und Kursplanung kennzeichnen damit die "
+					+ "betroffenen Schüler. Bei funktionsbezogenen Kompetenzen fehlen die Wiederholungen, bei denen der SVWS-Benutzer auf keinen der beiden "
+					+ "Abiturjahrgänge zugreifen darf.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Wiederholungen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostSchuelerWiederholung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wiederholungen auszulesen.")
+	public Response getGostSchuelerWiederholungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungController().getWiederholungen();
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Anlegen einer Wiederholung eines Schülers im folgenden Abiturjahrgang.
+	 *
+	 * @param schema        das Datenbankschema, in welchem die Wiederholung angelegt wird
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die angelegte Wiederholung des Schülers
+	 */
+	@POST
+	@Path("/schueler/{schuelerid : \\d+}/wiederholung")
+	@Operation(summary = "Legt eine Wiederholung des Schülers im folgenden Abiturjahrgang an.",
+			description = "Legt eine Wiederholung des Schülers mit der angegebenen ID im folgenden Abiturjahrgang an. Der Schüler steigt dort mit "
+					+ "dem Halbjahr ein, das auf den aktuellen Schuljahresabschnitt der Schule folgt. Seine bisherigen Fachwahlen dienen als "
+					+ "Grundlage für die neue Planung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die Berechtigung für die Laufbahnplanung in einem der beiden Jahrgänge besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die angelegte Wiederholung des Schülers",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerWiederholung.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wiederholung anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Der Schüler oder der folgende Abiturjahrgang wurde nicht gefunden.")
+	@ApiResponse(responseCode = "409", description = "Für den Schüler besteht bereits eine Wiederholung, er ist nicht im aktuellen Schuljahresabschnitt "
+			+ "der Schule oder der folgende Abiturjahrgang ist im nächsten Halbjahr nicht in der gymnasialen Oberstufe.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createGostSchuelerWiederholung(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungController().createWiederholung(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen der Wiederholung eines Schülers im folgenden Abiturjahrgang.
+	 *
+	 * @param schema        das Datenbankschema, in welchem die Wiederholung entfernt wird
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return der Stand nach dem Entfernen, also ohne Abiturjahr und Halbjahr
+	 */
+	@DELETE
+	@Path("/schueler/{schuelerid : \\d+}/wiederholung")
+	@Operation(summary = "Entfernt die Wiederholung des Schülers im folgenden Abiturjahrgang.",
+			description = "Entfernt die Wiederholung des Schülers mit der angegebenen ID samt der für sie geplanten Fachwahlen. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die Berechtigung für die Laufbahnplanung in einem der beiden Jahrgänge besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Stand nach dem Entfernen, also ohne Abiturjahr und Halbjahr",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerWiederholung.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wiederholung zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Der Schüler oder die Wiederholung wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostSchuelerWiederholung(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungController().deleteWiederholung(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Übernahme der Planung einer Wiederholung, deren Wechsel in den neuen Jahrgang vollzogen ist.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return der Stand der Wiederholung nach der Übernahme
+	 */
+	@POST
+	@Path("/schueler/{schuelerid : \\d+}/wiederholung/uebernehmen")
+	@Operation(summary = "Übernimmt die Planung der Wiederholung des Schülers, sobald der Wechsel in den neuen Jahrgang vollzogen ist.",
+			description = "Übernimmt die Planung der Wiederholung des Schülers mit der angegebenen ID. Die für den neuen Jahrgang geplanten Fachwahlen und GKL-Wahlen "
+					+ "ersetzen dabei die der aktuellen Planung, danach wird die Wiederholung entfernt. Das ist nur möglich, wenn die Schule das Einstiegshalbjahr erreicht hat "
+					+ "und der aktuelle Lernabschnitt des Schülers zum neuen Jahrgang passt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die Berechtigung für die Laufbahnplanung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Stand der Wiederholung nach der Übernahme",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerWiederholung.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Planung der Wiederholung zu übernehmen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Wechsel in den neuen Jahrgang ist noch nicht vollzogen.")
+	public Response uebernehmeGostSchuelerWiederholung(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungController().uebernehmeWiederholung(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Daten der aktuellen Laufbahnplanung. Bei einem Schüler mit Wiederholung
+	 * sind das die Daten des bisherigen Jahrgangs statt der Planung für den neuen Jahrgang.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Daten der aktuellen Laufbahnplanung
+	 */
+	@GET
+	@GZIP
+	@Path("/schueler/{schuelerid : \\d+}/aktuelleplanung/laufbahnplanung")
+	@Operation(summary = "Liest die Daten der aktuellen Laufbahnplanung für den Schüler mit der angegebenen ID aus.",
+			description = "Liest die Daten der aktuellen Laufbahnplanung für den Schüler mit der angegebenen ID aus. Eine Wiederholung "
+					+ "im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Laufbahnplanungsdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten der aktuellen Laufbahnplanung",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abiturdaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahnplanungsdaten auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response getGostSchuelerLaufbahnplanungAktuellePlanung(@PathParam("schema") final String schema,
+			@PathParam("schuelerid") final long schueler_id, @Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().getBySchuelerID(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Anpassen der Fachwahlen der aktuellen Planung zu einem Fach.
+	 *
+	 * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param fach_id       die ID des Faches
+	 * @param is            der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PATCH
+	@Path("/schueler/{schuelerid : \\d+}/aktuelleplanung/fachwahl/{fachid : \\d+}")
+	@Operation(summary = "Passt die Fachwahl der aktuellen Planung in Bezug auf ein Fach der Gymnasiale Oberstufe an.",
+			description = "Passt die Fachwahl der aktuellen Planung in Bezug auf ein Fach der Gymnasiale Oberstufe an. Eine Wiederholung "
+					+ "im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachwahlen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Fachwahlen integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachwahlen zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler- oder Fach-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft oder der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchGostSchuelerFachwahlAktuellePlanung(
+			@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id, @PathParam("fachid") final long fach_id,
+			@RequestBody(description = "Der Patch für die Fachdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = GostSchuelerFachwahl.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().patchFachwahl(schueler_id, fach_id, is);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Zurücksetzen der Fachwahlen der aktuellen Planung.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param schuelerid   die ID des Schülers, dessen Fachwahlen zurückgesetzt werden
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schueler/{schuelerid : \\d+}/aktuelleplanung/fachwahl/reset")
+	@Operation(summary = "Setzt die Fachwahlen der aktuellen Planung für den Schüler mit der angegebenen ID zurück.",
+			description = "Setzt die Fachwahlen der aktuellen Planung für den Schüler mit der angegebenen ID zurück. Eine Wiederholung "
+					+ "im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.")
+	@ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich zurückgesetzt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zurückzusetzen.")
+	@ApiResponse(responseCode = "404", description = "Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
+	@ApiResponse(responseCode = "409", description = "Der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response resetGostSchuelerFachwahlenAktuellePlanung(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().reset(schuelerid);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen der Fachwahlen der aktuellen Planung.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param schuelerid   die ID des Schülers, dessen Fachwahlen gelöscht werden sollen
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schueler/{schuelerid : \\d+}/aktuelleplanung/fachwahl/delete")
+	@Operation(summary = "Löscht die Fachwahlen der aktuellen Planung für den Schüler mit der angegebenen ID.",
+			description = "Löscht die Fachwahlen der aktuellen Planung für den Schüler mit der angegebenen ID. Eine Wiederholung "
+					+ "im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen der Fachwahlen besitzt.")
+	@ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich gelöscht.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zu löschen.")
+	@ApiResponse(responseCode = "404", description = "Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
+	@ApiResponse(responseCode = "409",
+			description = "Es liegen bereits bewertete Abschnitte vor oder der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteGostSchuelerFachwahlenAktuellePlanung(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().deleteFachwahlen(List.of(schuelerid));
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der GKL-Wahlen der aktuellen Planung.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die GKL-Wahlen der aktuellen Planung
+	 */
+	@GET
+	@Path("/schueler/{schuelerid : \\d+}/aktuelleplanung/gklwahl")
+	@Operation(summary = "Liest die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung aus.",
+			description = "Liest die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung für den angegebenen Schüler aus. "
+					+ "Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Wahlen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerGKLWahl.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlen auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response getGostSchuelerGKLWahlAktuellePlanung(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().getGKLWahl(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Setzen der GKL-Wahlen der aktuellen Planung.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param wahl      die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PUT
+	@Path("/schueler/aktuelleplanung/gklwahl")
+	@Operation(summary = "Passt die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung an.",
+			description = "Passt die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der aktuellen Planung an. Eine Wiederholung "
+					+ "im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Wahlen besitzt.")
+	@ApiResponse(responseCode = "204", description = "Die Wahlen wurden erfolgreich übernommen.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response putGostSchuelerGKLWahlAktuellePlanung(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die zu setzenden Wahlen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = GostSchuelerGKLWahl.class))) final GostSchuelerGKLWahl wahl,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().putGKLWahl(wahl);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für den Export der Daten der aktuellen Laufbahnplanung als GZIP-Json.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die ID des Schülers
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Laufbahnplanungsdaten
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Path("/schueler/{id : \\d+}/aktuelleplanung/laufbahnplanung/v2/export")
+	@Operation(summary = "Liefert die Daten der aktuellen Laufbahnplanung für den angegebenen Schüler (GZip-komprimiert).",
+			description = "Liest die Daten der aktuellen Laufbahnplanung für den angegebenen Schüler aus der Datenbank "
+					+ "und liefert diese GZip-komprimiert zurück. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die GZip-komprimierten Daten der aktuellen Laufbahnplanung",
+			content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+					schema = @Schema(type = "string", format = "binary", description = "Die GZip-komprimierten Daten der aktuellen Laufbahnplanung")))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
+	public Response exportGostSchuelerLaufbahnplanungAktuellePlanung(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().exportGZip(id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für den Import einer Laufbahnplanungsdatei in die aktuelle Planung.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id            die ID des Schülers
+	 * @param multipart     Die Laufbahnplanungsdatei als GZIP-komprimiertes JSON
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+	 */
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Path("/schueler/{id : \\d+}/aktuelleplanung/laufbahnplanung/v2/import")
+	@Operation(summary = "Importiert die Laufbahndaten aus der übergebenen Laufbahnplanungsdatei in die aktuelle Planung.",
+			description = "Importiert die Laufbahndaten aus der übergebenen Laufbahnplanungsdatei in die aktuelle Planung. Eine Wiederholung "
+					+ "im folgenden Abiturjahrgang bleibt dabei unberücksichtigt.")
+	@ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
+	public Response importGostSchuelerLaufbahnplanungAktuellePlanung(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@RequestBody(description = "Die Laufbahnplanungsdatei - der Dateiname ist US-ASCII und darf daher u.a. keine Umlaute enthalten", required = true,
+					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().importGostLaufbahnplanungGZip(multipart.data);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Daten der aktuellen Laufbahnplanung im Export-Format.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die ID des Schülers
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Laufbahnplanungsdaten
+	 */
+	@GET
+	@Path("/schueler/{id : \\d+}/aktuelleplanung/laufbahnplanung/v2/daten")
+	@Operation(summary = "Liefert die Daten der aktuellen Laufbahnplanung für den angegebenen Schüler.",
+			description = "Liest die Daten der aktuellen Laufbahnplanung für den angegebenen Schüler aus der Datenbank "
+					+ "und liefert diese zurück. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Daten der aktuellen Laufbahnplanung",
+			content = @Content(mediaType = "application/json",
+					schema = @Schema(implementation = GostLaufbahnplanungExportV2.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
+	public Response exportGostSchuelerLaufbahnplanungsdatenAktuellePlanung(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().exportJSON(id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für den Import von Laufbahnplanungsdaten in die aktuelle Planung.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id            die ID des Schülers
+	 * @param daten         die Laufbahnplanungsdaten
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+	 */
+	@POST
+	@Path("/schueler/{id : \\d+}/aktuelleplanung/laufbahnplanung/v2/daten")
+	@Operation(summary = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten in die aktuelle Planung.",
+			description = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten in die aktuelle Planung. Eine Wiederholung "
+					+ "im folgenden Abiturjahrgang bleibt dabei unberücksichtigt.")
+	@ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
+	public Response importGostSchuelerLaufbahnplanungsdatenV2AktuellePlanung(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = GostLaufbahnplanungExportV2.class))) final GostLaufbahnplanungExportV2 daten,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().importGostLaufbahnplanungV2(daten);
 	}
 
 

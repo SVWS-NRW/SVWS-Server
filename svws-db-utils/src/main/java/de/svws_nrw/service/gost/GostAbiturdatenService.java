@@ -3,10 +3,12 @@ package de.svws_nrw.service.gost;
 import static de.svws_nrw.data.TransactionSupport.transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.Sprachendaten;
@@ -24,9 +26,11 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
+import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostFachUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
@@ -62,6 +66,7 @@ public class GostAbiturdatenService {
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
 	private final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository;
+	private final GostSchuelerFachbelegungenRepository gostSchuelerPlanungFachbelegungenRepository;
 
 	private final BenutzerKompetenzService benutzerKompetenzService;
 	private final SchuelerSprachdatenService schuelerSprachdatenService;
@@ -76,7 +81,9 @@ public class GostAbiturdatenService {
 	 * @param schuelerRepository                     das Repository für den Zugriff auf die Schülerdaten
 	 * @param schuelerLernabschnittRepository        das Repository für den Zugriff auf die Schüler-Lernabschnittsdaten
 	 * @param schuelerLeistungsdatenRepository       das Repository für den Zugriff auf die Schüler-Leistungsdaten
-	 * @param gostSchuelerFachbelegungenRepository   das Repository für den Zugriff auf die Schüler-Fachbelegungen
+	 * @param gostSchuelerFachbelegungenRepository   das Repository für den Zugriff auf die Schüler-Fachbelegungen der aktuellen Planung
+	 * @param gostSchuelerPlanungFachbelegungenRepository   das Repository für den Zugriff auf die Schüler-Fachbelegungen der Planung,
+	 *                                               bei einer Wiederholung also auf die Fachwahlen für den neuen Jahrgang
 	 *
 	 * @param benutzerKompetenzService               der Service für den Zugriff auf die Benutzerkompetenzen des angemeldeten Benutzers
 	 * @param schuelerSprachdatenService             der Service für den Zugriff auf die Sprachdaten von Schülern
@@ -87,6 +94,7 @@ public class GostAbiturdatenService {
 			final SchuelerRepository schuelerRepository, final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository,
+			final GostSchuelerFachbelegungenRepository gostSchuelerPlanungFachbelegungenRepository,
 			final BenutzerKompetenzService benutzerKompetenzService,
 			final SchuelerSprachdatenService schuelerSprachdatenService,
 			final GostFaecherService gostFaecherService,
@@ -97,6 +105,7 @@ public class GostAbiturdatenService {
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.gostSchuelerFachbelegungenRepository = gostSchuelerFachbelegungenRepository;
+		this.gostSchuelerPlanungFachbelegungenRepository = gostSchuelerPlanungFachbelegungenRepository;
 		this.benutzerKompetenzService = benutzerKompetenzService;
 		this.schuelerSprachdatenService = schuelerSprachdatenService;
 		this.gostFaecherService = gostFaecherService;
@@ -180,8 +189,7 @@ public class GostAbiturdatenService {
 	 */
 	public List<Abiturdaten> getListByAbiturjahrgang(final int abijahrgang) {
 		return transactional(() -> {
-			final List<Long> idsSchueler = gostSchuelerService.getByAbiturjahrgang(abijahrgang).stream().map(s -> s.ID).toList();
-			return this.getList(idsSchueler);
+			return new ArrayList<>(getMapByAbiturjahrgang(abijahrgang, null).values());
 		});
 	}
 
@@ -196,10 +204,46 @@ public class GostAbiturdatenService {
 	 * @return die Map mit den Abiturdaten, jeweiles zugeordnet zu den Schüler-IDs
 	 */
 	public Map<Long, Abiturdaten> getMapByAbiturjahrgang(final int abijahrgang) {
+		return getMapByAbiturjahrgang(abijahrgang, null);
+	}
+
+
+	/**
+	 * Ermittelt die für das Abitur relevanten Daten der gymnasialen Oberstufe für die Schüler, die in dem angegebenen Halbjahr
+	 * zu dem Abiturjahrgang gehören, und gibt eine Map zurück, welche der Schüler-ID die zugehrörigen Daten zuordnet.
+	 * Liegt das Halbjahr vor dem Einstieg einer Wiederholung oder gehört der Abiturjahrgang nicht zur Wiederholung, so zählen
+	 * für diesen Schüler die Daten der aktuellen Planung.
+	 *
+	 * @param abijahrgang   der Abiturjahrgang
+	 * @param halbjahr      das Halbjahr des Abiturjahrgangs oder null für die Planung künftiger Halbjahre
+	 *
+	 * @return die Map mit den Abiturdaten, jeweiles zugeordnet zu den Schüler-IDs
+	 */
+	public Map<Long, Abiturdaten> getMapByAbiturjahrgang(final int abijahrgang, final GostHalbjahr halbjahr) {
 		return transactional(() -> {
-			final List<Long> idsSchueler = gostSchuelerService.getByAbiturjahrgang(abijahrgang).stream().map(s -> s.ID).toList();
-			return this.getList(idsSchueler).stream().collect(Collectors.toMap(a -> a.schuelerID, a -> a));
+			final List<Long> idsSchueler = gostSchuelerService.getByAbiturjahrgang(abijahrgang, halbjahr).stream().map(s -> s.ID).toList();
+			final Set<Long> idsOhneWiederholung = gostSchuelerService.getMapWiederholungen(idsSchueler).values().stream()
+					.filter(v -> (v.abiturjahr != abijahrgang) || !GostSchuelerService.istWiederholungMassgeblich(v, abijahrgang, halbjahr))
+					.map(v -> v.idSchueler).collect(Collectors.toSet());
+			return this.getList(idsSchueler, idsOhneWiederholung).stream().collect(Collectors.toMap(a -> a.schuelerID, a -> a));
 		});
+	}
+
+
+	/**
+	 * Ermittelt die für das Abitur relevanten Daten der gymnasialen Oberstufe für die Schüler mit den angegebenen IDs für einen
+	 * Abiturjahrgang. Bei einer Wiederholung in einen anderen Jahrgang gelten die Daten der aktuellen Planung, sonst wie bei
+	 * {@link #getList(Collection)}.
+	 *
+	 * @param idsSchueler      die IDs der Schüler
+	 * @param abiturjahrgang   der Abiturjahrgang, dessen Laufbahnplanung angezeigt oder gedruckt wird, z. B. der Jahrgang einer
+	 *                         Laufbahnen-Liste, oder null, wenn bei jeder Wiederholung die zukünftige Planung gelten soll
+	 *
+	 * @return die Map mit den Abiturdaten zu den Schüler-IDs
+	 */
+	public Map<Long, Abiturdaten> getMapFuerAbiturjahrgang(final Collection<Long> idsSchueler, final Integer abiturjahrgang) {
+		return transactional(() -> this.getList(idsSchueler, gostSchuelerService.getIdsWiederholungAndererJahrgang(idsSchueler, abiturjahrgang))
+				.stream().collect(Collectors.toMap(a -> a.schuelerID, a -> a)));
 	}
 
 
@@ -212,6 +256,21 @@ public class GostAbiturdatenService {
 	 * @return die für das Abitur relevanten Daten für die Schüler mit den angegebenen IDs
 	 */
 	public List<Abiturdaten> getList(final Collection<Long> idsSchueler) {
+		return getList(idsSchueler, Set.of());
+	}
+
+
+	/**
+	 * Ermittelt die für das Abitur relevanten Daten der gymnasialen Oberstufe für die Schüler mit den angegebenen IDs.
+	 * Bei einer Wiederholung gelten der neue Jahrgang und die für ihn geplanten Fachwahlen, außer für die Schüler, bei denen
+	 * die aktuelle Planung gefragt ist.
+	 *
+	 * @param idsSchueler           die IDs der Schüler
+	 * @param idsOhneWiederholung   die IDs der Schüler, bei denen eine Wiederholung nicht berücksichtigt wird
+	 *
+	 * @return die für das Abitur relevanten Daten für die Schüler mit den angegebenen IDs
+	 */
+	private List<Abiturdaten> getList(final Collection<Long> idsSchueler, final Set<Long> idsOhneWiederholung) {
 		return transactional(() -> {
 			if (idsSchueler.isEmpty()) {
 				return new ArrayList<>();
@@ -244,10 +303,22 @@ public class GostAbiturdatenService {
 			// Bestimme die Abiturjahrgänge für die Schüler und die zugehörigen Fächer-Manager
 			final Map<Long, DTOJahrgang> mapJahrgaenge = this.jahrgangRepository.getMap();
 			final Map<Long, Integer> mapAbiturjahrgaenge = this.getSchuelerAbiturjahrgaenge(mapSchuelerAktuellerLernabschnitt.values(), mapJahrgaenge);
-			final List<Integer> abiturjahrgaenge = mapAbiturjahrgaenge.values().stream().distinct().toList();
-			for (final int abiturjahrgang : abiturjahrgaenge) {
-				benutzerKompetenzService.pruefeKompetenzGost(abiturjahrgang);
+			// Bis zum Wechsel gehört ein Schüler mit Wiederholung zu beiden Jahrgängen, die Kompetenz für einen davon genügt
+			final Map<Long, GostSchuelerWiederholung> mapWiederholungen = new HashMap<>(gostSchuelerService.getMapWiederholungen(idsSchueler));
+			for (final Map.Entry<Long, Integer> eintrag : mapAbiturjahrgaenge.entrySet()) {
+				final GostSchuelerWiederholung wiederholung = mapWiederholungen.get(eintrag.getKey());
+				benutzerKompetenzService.pruefeKompetenzGost(Arrays.asList(eintrag.getValue(), (wiederholung == null) ? null : wiederholung.abiturjahr));
 			}
+			// Für die aktuelle Planung gelten die Daten des bisherigen Jahrgangs, auch wenn eine Wiederholung besteht
+			if (gostSchuelerService.istAktuellePlanung()) {
+				mapWiederholungen.clear();
+			} else {
+				mapWiederholungen.keySet().removeAll(idsOhneWiederholung);
+			}
+			for (final GostSchuelerWiederholung wiederholung : mapWiederholungen.values()) {
+				mapAbiturjahrgaenge.put(wiederholung.idSchueler, wiederholung.abiturjahr);
+			}
+			final List<Integer> abiturjahrgaenge = mapAbiturjahrgaenge.values().stream().distinct().toList();
 			final Map<Integer, GostFaecherManager> mapGostFaecherManager = gostFaecherService.getMapGostFaecherManager(abiturjahrgaenge, false);
 
 			// Bestimme die Sprachendaten der Schüler
@@ -255,11 +326,23 @@ public class GostAbiturdatenService {
 
 			// Bestimme die bereits vorhandenen Leistungsdaten der Schülerlaufbahn
 			final Map<Long, GostLeistungen> mapLeistungen = getMapLeistungsdaten(mapDtoSchueler.values(), mapSchuelerAktuellerLernabschnitt,
-					mapSchuelerLernabschnitte, mapAbschnittsLeistungen, mapJahrgaenge, mapAbiturjahrgaenge, mapSchuelerSpachendaten, mapGostFaecherManager);
+					mapSchuelerLernabschnitte, mapAbschnittsLeistungen, mapJahrgaenge, mapAbiturjahrgaenge, mapWiederholungen, mapSchuelerSpachendaten,
+					mapGostFaecherManager);
 
-			// Bestimme die bisherigen Fachwahlen des Schülers
+			// Bestimme die bisherigen Fachwahlen des Schülers, bei einer Wiederholung die Fachwahlen für den neuen Jahrgang
 			final HashMap2D<Long, Long, DTOGostSchuelerFachbelegungen> mapFachwahlenBySchueler =
-					gostSchuelerFachbelegungenRepository.getMap2DBySchuelerIDAndFachID(idsSchueler);
+					gostSchuelerFachbelegungenRepository.getMap2DBySchuelerIDAndFachID(
+							idsSchueler.stream().filter(id -> !mapWiederholungen.containsKey(id)).toList());
+			final HashMap2D<Long, Long, DTOGostSchuelerFachbelegungen> mapFachwahlenWiederholung =
+					gostSchuelerPlanungFachbelegungenRepository.getMap2DBySchuelerIDAndFachID(mapWiederholungen.keySet());
+			for (final long idSchueler : mapWiederholungen.keySet()) {
+				final Map<Long, DTOGostSchuelerFachbelegungen> fachwahlen = mapFachwahlenWiederholung.getSubMapOrNull(idSchueler);
+				if (fachwahlen != null) {
+					for (final DTOGostSchuelerFachbelegungen fw : fachwahlen.values()) {
+						mapFachwahlenBySchueler.put(idSchueler, fw.Fach_ID, fw);
+					}
+				}
+			}
 
 			// Die Liste für die zurückzugebenden Abiturdaten.
 			final List<Abiturdaten> listAbiturdaten = new ArrayList<>();
@@ -486,6 +569,7 @@ public class GostAbiturdatenService {
 			final Map<Long, List<DTOSchuelerLeistungsdaten>> mapAbschnittsLeistungen,
 			final Map<Long, DTOJahrgang> mapJahrgaenge,
 			final Map<Long, Integer> mapAbiturjahrgaenge,
+			final Map<Long, GostSchuelerWiederholung> mapWiederholungen,
 			final Map<Long, Sprachendaten> mapSchuelerSpachendaten,
 			final Map<Integer, GostFaecherManager> mapGostFaecherManager) {
 
@@ -498,7 +582,7 @@ public class GostAbiturdatenService {
 			final GostFaecherManager gostFaecher = mapGostFaecherManager.get(abiturjahr);
 			final GostLeistungen leistungen =
 					this.getLeistungsdaten(schueler, mapJahrgaenge, aktLernabschnitt, lernabschnitte, mapAbschnittsLeistungen, abiturjahr, sprachendaten,
-							gostFaecher);
+							gostFaecher, mapWiederholungen.get(schueler.ID));
 			result.put(schueler.ID, leistungen);
 		}
 		return result;
@@ -508,7 +592,8 @@ public class GostAbiturdatenService {
 	private GostLeistungen getLeistungsdaten(final DTOSchueler schueler, final Map<Long, DTOJahrgang> mapJahrgaenge,
 			final DTOSchuelerLernabschnittsdaten aktLernabschnitt, final List<DTOSchuelerLernabschnittsdaten> lernabschnitte,
 			final Map<Long, List<DTOSchuelerLeistungsdaten>> mapAbschnittsLeistungen,
-			final int abiturjahr, final Sprachendaten sprachendaten, final GostFaecherManager gostFaecher) {
+			final int abiturjahr, final Sprachendaten sprachendaten, final GostFaecherManager gostFaecher, final GostSchuelerWiederholung wiederholung) {
+		final GostHalbjahr halbjahrWiederholung = (wiederholung == null) ? null : GostHalbjahr.fromIDorException(wiederholung.gostHalbjahr);
 		final Schuljahresabschnitt abschnittSchueler =
 				benutzerRepository.getAktuellerBenutzer().schuleGetAbschnittById(schueler.Schuljahresabschnitts_ID);
 
@@ -541,6 +626,11 @@ public class GostAbiturdatenService {
 			final GostHalbjahr halbjahr =
 					GostHalbjahr.fromJahrgangUndHalbjahr(jahrgang.daten(abschnittSchueler.schuljahr).kuerzel, abschnittLeistungsdaten.abschnitt);
 			if (halbjahr == null) {
+				continue;
+			}
+			// Ab dem Einstiegshalbjahr einer Wiederholung wird neu geplant, Leistungsdaten aus dem ersten Durchgang zählen dort nicht
+			if ((halbjahrWiederholung != null) && (halbjahr.compareTo(halbjahrWiederholung) >= 0)
+					&& GostAbiturjahrUtils.liegtVorWiederholung(abiturjahr, halbjahrWiederholung, abschnittLeistungsdaten.schuljahr, abschnittLeistungsdaten.abschnitt)) {
 				continue;
 			}
 			if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung)) {

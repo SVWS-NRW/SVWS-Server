@@ -6,6 +6,10 @@
 					<span class="icon i-ri-link" />
 				</svws-ui-button>
 				<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }} ({{ fachbelegungen.size() }} {{ fachbelegungen.size() === 1 ? 'Fachwahl' : 'Fachwahlen' }})</span>
+				<template v-if="mapWiederholungen().get(schueler.id)?.wechselVollzogen === false">
+					<span class="icon-sm i-ri-arrow-go-back-fill icon-ui-danger ml-2 inline-block shrink-0 mt-1.5" title="Geplante Wiederholung zweier GOSt-Halbjahre" />
+					<span class="text-ui-danger text-headline-md ml-1" :title="`Geplante Wiederholung im Abiturjahrgang ${mapWiederholungen().get(schueler.id)?.abiturjahr}`">{{ abiturjahrgaengeWiederholung(schueler.id) }}</span>
+				</template>
 			</div>
 		</div>
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
@@ -190,6 +194,16 @@
 		const diff = props.getErgebnismanager().getOfSchieneMaxKursanzahl() - props.getErgebnismanager().getOfSchieneKursmengeSortiert(id).size();
 		return diff < 0 ? 0 : diff;
 	});
+
+	// Die Abiturjahrgänge erscheinen zweistellig, damit der Hinweis neben dem Namen wenig Platz braucht
+	function abiturjahrgaengeWiederholung(idSchueler: number): string {
+		const wiederholung = props.mapWiederholungen().get(idSchueler);
+		if (wiederholung === undefined) {
+			return "";
+		}
+		const kurz = (abiturjahr: number | null) => (abiturjahr === null) ? "—" : String(abiturjahr % 100).padStart(2, "0");
+		return `${kurz(wiederholung.abiturjahrLernabschnitt)} → ${kurz(wiederholung.abiturjahr)}`;
+	}
 
 	async function auto_verteilen() {
 		await props.autoKursSchuelerZuordnung(idSchueler.value);

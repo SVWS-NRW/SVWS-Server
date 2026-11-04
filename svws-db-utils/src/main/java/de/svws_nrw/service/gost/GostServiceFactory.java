@@ -3,6 +3,7 @@ package de.svws_nrw.service.gost;
 import de.svws_nrw.mapper.gost.GostJahrgangMapper;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.gost.GostSchuelerFachbelegungenRepository;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
@@ -48,6 +49,9 @@ public final class GostServiceFactory {
 	/** die Factory für die Repositories für die Klausurplanung für die gymnasiale Oberstufe */
 	private final GostKlausurenRepositoryFactory gostKlausurenRepositoryFactory;
 
+	/** gibt an, ob die Services die Planung einer Wiederholung unberücksichtigt lassen und mit den Daten der aktuellen Planung arbeiten */
+	private final boolean aktuellePlanung;
+
 
 	/**
 	 * Erstellt eine neue Service-Factory
@@ -62,6 +66,7 @@ public final class GostServiceFactory {
 	 * @param cryptoServiceFactory             die Factory für die kryptographischen Services
 	 * @param schuelerServiceFactory           die Factory für die Schüler-Services
 	 * @param gostKlausurenRepositoryFactory   die Factory für die Klausuren in der gymnasialen Oberstufe
+	 * @param aktuellePlanung                  true, wenn die Services mit den Daten der aktuellen Planung arbeiten
 	 */
 	private GostServiceFactory(final GostRepositoryFactory gostRepositoryFactory,
 			final SchuelerRepositoryFactory schuelerRepositoryFactory,
@@ -72,7 +77,8 @@ public final class GostServiceFactory {
 			final BenutzerServiceFactory benutzerServiceFactory,
 			final CryptoServiceFactory cryptoServiceFactory,
 			final SchuelerServiceFactory schuelerServiceFactory,
-			final GostKlausurenRepositoryFactory gostKlausurenRepositoryFactory) {
+			final GostKlausurenRepositoryFactory gostKlausurenRepositoryFactory,
+			final boolean aktuellePlanung) {
 		this.gostRepositoryFactory = gostRepositoryFactory;
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
 		this.lehrerRepositoryFactory = lehrerRepositoryFactory;
@@ -83,6 +89,7 @@ public final class GostServiceFactory {
 		this.cryptoServiceFactory = cryptoServiceFactory;
 		this.schuelerServiceFactory = schuelerServiceFactory;
 		this.gostKlausurenRepositoryFactory = gostKlausurenRepositoryFactory;
+		this.aktuellePlanung = aktuellePlanung;
 	}
 
 
@@ -114,7 +121,32 @@ public final class GostServiceFactory {
 			final GostKlausurenRepositoryFactory gostKlausurenRepositoryFactory) {
 		return new GostServiceFactory(gostRepositoryFactory, schuelerRepositoryFactory, lehrerRepositoryFactory, benutzerRepositoryFactory,
 				katalogRepositoryFactory, eigeneSchuleRepositoryFactory, benutzerServiceFactory, cryptoServiceFactory, schuelerServiceFactory,
-				gostKlausurenRepositoryFactory);
+				gostKlausurenRepositoryFactory, false);
+	}
+
+
+	/**
+	 * Erzeugt eine Service-Factory für die aktuelle Planung. Ihre Services lesen und schreiben bei einem Schüler mit Wiederholung
+	 * die Fachwahlen und GKL-Wahlen des bisherigen Jahrgangs statt der Planung für den neuen Jahrgang.
+	 *
+	 * @return die Factory
+	 */
+	public GostServiceFactory fuerAktuellePlanung() {
+		return new GostServiceFactory(gostRepositoryFactory, schuelerRepositoryFactory, lehrerRepositoryFactory, benutzerRepositoryFactory,
+				katalogRepositoryFactory, eigeneSchuleRepositoryFactory, benutzerServiceFactory, cryptoServiceFactory, schuelerServiceFactory,
+				gostKlausurenRepositoryFactory, true);
+	}
+
+
+	/**
+	 * Gibt das Repository für die Fachwahlen der Laufbahnplanung zurück. Für die aktuelle Planung sind das die Fachwahlen des
+	 * bisherigen Jahrgangs, sonst bei einem Schüler mit Wiederholung die Fachwahlen für den neuen Jahrgang.
+	 *
+	 * @return das Repository
+	 */
+	private GostSchuelerFachbelegungenRepository getPlanungFachbelegungenRepository() {
+		return aktuellePlanung ? gostRepositoryFactory.getGostSchuelerFachbelegungenRepository()
+				: gostRepositoryFactory.getGostSchuelerPlanungFachbelegungenRepository();
 	}
 
 
@@ -150,7 +182,14 @@ public final class GostServiceFactory {
 		return new GostSchuelerService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				katalogRepositoryFactory.getJahrgangRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
-				schuelerRepositoryFactory.getSchuelerLernabschnittRepository());
+				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
+				gostRepositoryFactory.getGostSchuelerRepository(),
+				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
+				gostRepositoryFactory.getGostSchuelerWiederholungRepository(),
+				gostRepositoryFactory.getGostSchuelerWiederholungFachwahlenRepository(),
+				gostRepositoryFactory.getGostJahrgangsdatenRepository(),
+				benutzerServiceFactory.getBenutzerKompetenzService(),
+				aktuellePlanung);
 	}
 
 
@@ -195,6 +234,7 @@ public final class GostServiceFactory {
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
+				this.getPlanungFachbelegungenRepository(),
 				benutzerServiceFactory.getBenutzerKompetenzService(),
 				schuelerServiceFactory.getSchuelerSprachdatenService(),
 				this.getGostFaecherService(),
@@ -215,7 +255,7 @@ public final class GostServiceFactory {
 				katalogRepositoryFactory.getJahrgangRepository(),
 				katalogRepositoryFactory.getFachRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
-				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
+				this.getPlanungFachbelegungenRepository(),
 				gostRepositoryFactory.getGostJahrgangsdatenRepository(),
 				gostRepositoryFactory.getGostJahrgangFachbelegungenRepository(),
 				gostKlausurenRepositoryFactory.getGostKlausurenVorgabeRepository(),
@@ -233,7 +273,8 @@ public final class GostServiceFactory {
 		return new GostJahrgangFachwahlService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				katalogRepositoryFactory.getFachRepository(),
-				this.getGostAbiturdatenService());
+				this.getGostAbiturdatenService(),
+				this.getGostSchuelerService());
 	}
 
 
@@ -245,7 +286,7 @@ public final class GostServiceFactory {
 	public GostSchuelerGKLWahlService getGostSchuelerGKLWahlService() {
 		return new GostSchuelerGKLWahlService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
-				gostRepositoryFactory.getGostSchuelerRepository(),
+				this.getGostSchuelerService(),
 				gostKlausurenRepositoryFactory.getGostKlausurenVorgabeRepository());
 	}
 
@@ -276,7 +317,7 @@ public final class GostServiceFactory {
 		return new GostLaufbahnplanungImportV1Service(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
-				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
+				this.getPlanungFachbelegungenRepository(),
 				cryptoServiceFactory.getSchuelerCredentialsService(),
 				this.getGostAbiturdatenService(),
 				this.getGostFaecherService());
@@ -297,7 +338,8 @@ public final class GostServiceFactory {
 				cryptoServiceFactory.getSchuelerCredentialsService(),
 				this.getGostAbiturdatenService(),
 				this.getGostFaecherService(),
-				this.getGostBeratungslehrerService());
+				this.getGostBeratungslehrerService(),
+				this.getGostSchuelerService());
 	}
 
 
@@ -310,10 +352,11 @@ public final class GostServiceFactory {
 		return new GostLaufbahnplanungImportV2Service(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
-				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
+				this.getPlanungFachbelegungenRepository(),
 				cryptoServiceFactory.getSchuelerCredentialsService(),
 				this.getGostAbiturdatenService(),
-				this.getGostFaecherService());
+				this.getGostFaecherService(),
+				this.getGostSchuelerService());
 	}
 
 }

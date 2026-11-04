@@ -12,6 +12,7 @@ import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten
 import { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
 import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
+import { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
 import { GostLaufbahnplanungExportV1 } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1";
 import { GostLaufbahnplanungExportV2 } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
@@ -279,6 +280,24 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 
 	patchBeratungsdaten = async (data: Partial<GostLaufbahnplanungBeratungsdaten>) => {
 		throw new DeveloperNotificationException("Informationen zu Beratungsdaten sind in der Web-Laufbahnplanung nicht änderbar.");
+	};
+
+	public get wiederholung(): GostSchuelerWiederholung {
+		return new GostSchuelerWiederholung();
+	}
+
+	public readonly aktuellePlanung = false;
+
+	setAktuellePlanung = async () => {
+		throw new DeveloperNotificationException("Eine Wiederholung im folgenden Abiturjahrgang ist in der Web-Laufbahnplanung nicht möglich.");
+	};
+
+	erstelleWiederholung = async () => {
+		throw new DeveloperNotificationException("Eine Wiederholung im folgenden Abiturjahrgang ist in der Web-Laufbahnplanung nicht möglich.");
+	};
+
+	entferneWiederholung = async () => {
+		throw new DeveloperNotificationException("Eine Wiederholung im folgenden Abiturjahrgang ist in der Web-Laufbahnplanung nicht möglich.");
 	};
 
 	saveLaufbahnplanung = async (): Promise<void> => {

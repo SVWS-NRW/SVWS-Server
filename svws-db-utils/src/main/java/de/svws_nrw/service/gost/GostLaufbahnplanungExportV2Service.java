@@ -16,6 +16,7 @@ import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
+import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -64,6 +65,9 @@ public class GostLaufbahnplanungExportV2Service {
 	private final GostFaecherService gostFaecherService;
 	private final GostBeratungslehrerService gostBeratungslehrerService;
 
+	/** Der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe */
+	private final GostSchuelerService gostSchuelerService;
+
 	/**
 	 * Erstellt einen neuen Service.
 	 *
@@ -77,6 +81,7 @@ public class GostLaufbahnplanungExportV2Service {
 	 * @param gostAbiturdatenService                    der Service für den Zugriff auf die Abiturdaten der gymnasialen Oberstufe
 	 * @param gostFaecherService                        der Service für den Zugruff auf die Fächerdaten eines Abiturjahrganges der gymnasialen Oberstufe
 	 * @param gostBeratungslehrerService                der Service für den Zugruff auf die Beratungslehrer eines Abiturjahrganges der gymnasialen Oberstufe
+	 * @param gostSchuelerService                       der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe, u.a. die GKL-Wahlen
 	 */
 	public GostLaufbahnplanungExportV2Service(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
@@ -87,7 +92,8 @@ public class GostLaufbahnplanungExportV2Service {
 			final SchuelerCredentialsService schuelerCredentialsService,
 			final GostAbiturdatenService gostAbiturdatenService,
 			final GostFaecherService gostFaecherService,
-			final GostBeratungslehrerService gostBeratungslehrerService) {
+			final GostBeratungslehrerService gostBeratungslehrerService,
+			final GostSchuelerService gostSchuelerService) {
 		this.benutzerRepository = benutzerRepository;
 		this.schuelerCredentialsService = schuelerCredentialsService;
 		this.schuelerRepository = schuelerRepository;
@@ -98,6 +104,7 @@ public class GostLaufbahnplanungExportV2Service {
 		this.gostAbiturdatenService = gostAbiturdatenService;
 		this.gostFaecherService = gostFaecherService;
 		this.gostBeratungslehrerService = gostBeratungslehrerService;
+		this.gostSchuelerService = gostSchuelerService;
 	}
 
 
@@ -138,6 +145,7 @@ public class GostLaufbahnplanungExportV2Service {
 			final Map<Integer, List<GostBeratungslehrer>> mapBeratungslehrer = gostBeratungslehrerService.getMap(abiturjahrgaenge);
 			final Map<Long, DTOSchueler> mapSchueler = schuelerRepository.findMapByIds(idsSchueler);
 			final Map<Long, DTOGostSchueler> mapGostSchueler = gostSchuelerRepository.findMapByIds(idsSchueler);
+			final Map<Long, GostSchuelerGKLWahl> mapGKLWahlen = gostSchuelerService.getMapGKLWahlen(idsSchueler);
 			final Map<Long, AES> mapAES = schuelerCredentialsService.getOrCreateMap(idsSchueler);
 
 			// Schreibe die Daten in die Export-DTOs
@@ -158,7 +166,8 @@ public class GostLaufbahnplanungExportV2Service {
 					gostSchuelerRepository.update(gostSchueler);
 				}
 				final AES aes = mapAES.get(abidaten.schuelerID);
-				result.add(getExportInternal(abidaten, schule, jahrgangsdaten, listBeratungslehrer, gostFaecher, kombis, klausurvorgaben, schueler, gostSchueler, aes));
+				result.add(getExportInternal(abidaten, schule, jahrgangsdaten, listBeratungslehrer, gostFaecher, kombis, klausurvorgaben, schueler, gostSchueler,
+						mapGKLWahlen.get(abidaten.schuelerID), aes));
 			}
 			return result;
 		});
@@ -167,7 +176,8 @@ public class GostLaufbahnplanungExportV2Service {
 
 	private static GostLaufbahnplanungExportV2 getExportInternal(final Abiturdaten abidaten, final SchuleStammdaten schule, final DTOGostJahrgangsdaten jahrgangsdaten,
 			final List<GostBeratungslehrer> listBeratungslehrer, final GostFaecherManager gostFaecher, final List<DTOGostJahrgangFachkombinationen> kombis,
-			final List<DTOGostKlausurenVorgaben> klausurvorgaben, final DTOSchueler schueler, final DTOGostSchueler gostSchueler, final AES aes) {
+			final List<DTOGostKlausurenVorgaben> klausurvorgaben, final DTOSchueler schueler, final DTOGostSchueler gostSchueler,
+			final GostSchuelerGKLWahl gklWahl, final AES aes) {
 		final GostLaufbahnplanungExportV2 daten = new GostLaufbahnplanungExportV2();
 		daten.schulNr = schule.schulNr;
 		daten.schulBezeichnung1 = (schule.bezeichnung1 == null) ? "" : schule.bezeichnung1;
@@ -243,12 +253,12 @@ public class GostLaufbahnplanungExportV2Service {
 		schuelerDaten.geschlecht = schueler.Geschlecht.kuerzel;
 		schuelerDaten.bilingualeSprache = abidaten.bilingualeSprache;
 		// TODO schuelerDaten.istG8 bei Bedarf ggf. über den aktuellen SchuelerLernabschnitt bestimmen
-		schuelerDaten.gkl[0] = gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID;
-		schuelerDaten.gkl[1] = gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID;
-		schuelerDaten.gkl[2] = gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID;
-		schuelerDaten.gkl[3] = gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID;
-		schuelerDaten.gkl[4] = gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID;
-		schuelerDaten.gkl[5] = gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID;
+		schuelerDaten.gkl[0] = gklWahl.idKlausurvorgabeEF_Sprachen;
+		schuelerDaten.gkl[1] = gklWahl.idKlausurvorgabeEF_GW;
+		schuelerDaten.gkl[2] = gklWahl.idKlausurvorgabeEF_NW;
+		schuelerDaten.gkl[3] = gklWahl.idKlausurvorgabeQ_Sprachen;
+		schuelerDaten.gkl[4] = gklWahl.idKlausurvorgabeQ_GW;
+		schuelerDaten.gkl[5] = gklWahl.idKlausurvorgabeQ_NW;
 		for (int i = 0; i < GostHalbjahr.maxHalbjahre; i++) {
 			System.arraycopy(abidaten.bewertetesHalbjahr, 0, schuelerDaten.bewertetesHalbjahr, 0, GostHalbjahr.maxHalbjahre);
 		}

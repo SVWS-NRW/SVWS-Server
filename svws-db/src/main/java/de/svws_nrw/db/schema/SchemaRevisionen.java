@@ -382,21 +382,24 @@ public enum SchemaRevisionen {
 	REV_80(80, "2026-10-06"),
 
 	/** Tabellen EigeneSchule, Klassen und SchuelerLernabschnittsdaten um Felder für Ganztag, Betreuung, JVA, Reformpädagogik u. a. ergänzt, neue Tabelle StatistikKommentar */
-	REV_81(81, "2026-11-02");
+	REV_81(81, "2026-11-02"),
+
+	/** Tabellen Gost_Schueler_Wiederholung und Gost_Schueler_Wiederholung_Fachwahlen für die Wiederholung im folgenden Abiturjahrgang ergänzt */
+	REV_82(82, "2026-11-03");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_81;
+	public static final SchemaRevisionen maxRevision = REV_82;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_81;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_82;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */

@@ -16,6 +16,7 @@ import de.svws_nrw.core.data.gost.GostJahrgangFachwahlen;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
+import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v2.GostLaufbahnplanungExportV2;
@@ -34,6 +35,7 @@ import de.svws_nrw.service.gost.GostLaufbahnplanungExportV2Service;
 import de.svws_nrw.service.gost.GostLaufbahnplanungImportV1Service;
 import de.svws_nrw.service.gost.GostLaufbahnplanungImportV2Service;
 import de.svws_nrw.service.gost.GostSchuelerGKLWahlService;
+import de.svws_nrw.service.gost.GostSchuelerService;
 import de.svws_nrw.base.compression.Zip;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -54,6 +56,9 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 
 	/** Der Service für den Zugriff auf die Fachwahlen der Laufbahnplanung. */
 	private final GostFachwahlService gostFachwahlService;
+
+	/** Der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe, u.a. auf die Wiederholung im folgenden Abiturjahrgang. */
+	private final GostSchuelerService gostSchuelerService;
 
 	/** Der Service für den Zugriff auf die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen */
 	private final GostSchuelerGKLWahlService gostSchuelerGKLWahlService;
@@ -77,6 +82,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	 * @param benutzerKompetenzService             der Service für den Zugriff auf die Benutzer-Kompetenzen des aktuellen Benutzers
 	 * @param gostAbiturdatenService               der Service für den Zugriff auf die Abiturdaten aus der aktuellen Schülerlaufbahn und der Laufbahnplanung heraus
 	 * @param gostFachwahlService                  der Service für den Zugriff auf die Fachwahlen der Laufbahnplanung
+	 * @param gostSchuelerService                  der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe
 	 * @param gostSchuelerGKLWahlService           der Service für den Zugriff auf die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen
 	 * @param gostJahrgangFachwahlService          der Service für den Zugriff auf die aggregierten Fachwahlen aus den Laufbahnplanungen eines Abiturjahrgangs
 	 * @param gostLaufbahnplanungImportV1Service   der Service für den Import mit dem Export-Format in Version 1 für die Laufbahnplanung
@@ -86,6 +92,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	public GostLaufbahnplanungControllerImpl(final BenutzerKompetenzService benutzerKompetenzService,
 			final GostAbiturdatenService gostAbiturdatenService,
 			final GostFachwahlService gostFachwahlService,
+			final GostSchuelerService gostSchuelerService,
 			final GostSchuelerGKLWahlService gostSchuelerGKLWahlService,
 			final GostJahrgangFachwahlService gostJahrgangFachwahlService,
 			final GostLaufbahnplanungImportV1Service gostLaufbahnplanungImportV1Service,
@@ -94,6 +101,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 		this.benutzerKompetenzService = benutzerKompetenzService;
 		this.gostAbiturdatenService = gostAbiturdatenService;
 		this.gostFachwahlService = gostFachwahlService;
+		this.gostSchuelerService = gostSchuelerService;
 		this.gostSchuelerGKLWahlService = gostSchuelerGKLWahlService;
 		this.gostJahrgangFachwahlService = gostJahrgangFachwahlService;
 		this.gostLaufbahnplanungImportV1Service = gostLaufbahnplanungImportV1Service;
@@ -112,7 +120,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	@Override
 	public Response getBySchuelerID(final long idSchueler) {
 		final Abiturdaten daten = gostAbiturdatenService.get(idSchueler);
-		benutzerKompetenzService.pruefeKompetenzLaufbahnplanung(daten.abiturjahr);
+		benutzerKompetenzService.pruefeKompetenzLaufbahnplanung(gostSchuelerService.getAbiturjahrgaenge(idSchueler));
 		return Responses.ok(daten);
 	}
 
@@ -153,6 +161,42 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	public Response patchFachwahl(final Long idSchueler, final Long idFach, final InputStream is) {
 		gostFachwahlService.patch(idSchueler, idFach, is);
 		return Responses.ok(null);
+	}
+
+
+	@Override
+	public Response getWiederholung(final long idSchueler) {
+		final GostSchuelerWiederholung daten = gostSchuelerService.getWiederholung(idSchueler);
+		return Responses.ok(daten);
+	}
+
+
+	@Override
+	public Response getWiederholungen() {
+		final List<GostSchuelerWiederholung> daten = gostSchuelerService.getListWiederholungen();
+		return Responses.ok(daten);
+	}
+
+
+	@Override
+	public Response createWiederholung(final long idSchueler) {
+		final GostSchuelerWiederholung daten = gostSchuelerService.erstelleWiederholung(idSchueler);
+		return Responses.ok(daten);
+	}
+
+
+	@Override
+	public Response deleteWiederholung(final long idSchueler) {
+		final GostSchuelerWiederholung daten = gostSchuelerService.loescheWiederholung(idSchueler);
+		return Responses.ok(daten);
+	}
+
+
+	@Override
+	public Response uebernehmeWiederholung(final long idSchueler) {
+		benutzerKompetenzService.pruefeKompetenzLaufbahnplanung(gostSchuelerService.getAbiturjahrgaenge(idSchueler));
+		final GostSchuelerWiederholung daten = gostSchuelerService.uebernehmeWiederholung(idSchueler);
+		return Responses.ok(daten);
 	}
 
 

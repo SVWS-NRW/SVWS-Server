@@ -72,7 +72,7 @@ public final class DataGostSchuelerLaufbahnplanung {
 		final Map<Long, DTOGostSchueler> mapGostSchuelerDTOs = conn.queryByKeyList(DTOGostSchueler.class, listSchuelerIDs)
 				.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 
-		final Map<Long, Abiturdaten> mapAbiturdaten = GostServiceFactoryBuilder.getGostServiceFactory().getGostAbiturdatenService().getMap(listSchuelerIDs);
+		final Map<Long, Abiturdaten> mapAbiturdaten = GostServiceFactoryBuilder.getGostServiceFactory().getGostAbiturdatenService().getMapByAbiturjahrgang(abiturjahr);
 
 		// Erstelle das DTO für die Eregbnisrückmeldung
 		final List<GostBelegpruefungsErgebnisse> daten = new ArrayList<>();

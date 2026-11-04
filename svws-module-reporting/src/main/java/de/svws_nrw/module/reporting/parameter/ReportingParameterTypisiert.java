@@ -134,6 +134,22 @@ public class ReportingParameterTypisiert {
 	}
 
 	/**
+	 * Gibt den Wert des ganzzahligen Vorlage-Parameters mit dem angegebenen Namen zurück. Die Umwandlung ist dieselbe wie für die Templates,
+	 * ein leerer Wert ergibt daher -1.
+	 *
+	 * @param name   der Name des Vorlage-Parameters
+	 *
+	 * @return der Wert oder null, wenn der Parameter fehlt oder nicht ganzzahlig ist
+	 */
+	public Integer vorlageParameterGanzzahl(final String name) {
+		final ReportingReportvorlageParameter parameter = mapReportVorlageParameter.get(name);
+		if (parameter == null) {
+			return null;
+		}
+		return (new ReportingVorlageParameterTypisiert<>(parameter).getWert() instanceof final Integer wert) ? wert : null;
+	}
+
+	/**
 	 * Gibt die Liste der Sortierdefinitionen zurück.
 	 *
 	 * @return die Liste der Sortierdefinitionen

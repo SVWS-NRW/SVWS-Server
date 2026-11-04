@@ -2,6 +2,7 @@ import type { ApiFile } from "@core/api/BaseApi";
 import type { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
 import type { GostBelegpruefungsErgebnisse } from "@core/core/data/gost/GostBelegpruefungsErgebnisse";
 import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
 import type { List } from "@core/java/util/List";
 
 import type { ApiStatus } from "~/components/ApiStatus";
@@ -9,6 +10,7 @@ import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface GostLaufbahnfehlerProps {
 	listBelegpruefungsErgebnisse: () => List<GostBelegpruefungsErgebnisse>;
+	mapWiederholungen: () => Map<number, GostSchuelerWiederholung>;
 	gostBelegpruefungsArt: () => GostBelegpruefungsArt;
 	setGostBelegpruefungsArt: (value: GostBelegpruefungsArt) => Promise<void>;
 	gotoLaufbahnplanung: (d: number) => Promise<RoutingStatus>;

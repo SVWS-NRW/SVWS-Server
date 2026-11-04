@@ -124,6 +124,68 @@ public class BenutzerKompetenzService {
 	}
 
 	/**
+	 * Prüft, ob der Benutzer als Beratungslehrer bei mindestens einem der angegebenen Abiturjahrgänge funktionsbezogene Rechte hat.
+	 * Das betrifft Schüler mit einer Wiederholung, die bis zum Wechsel zu zwei Abiturjahrgängen gehören.
+	 *
+	 * @param abijahrgaenge   die zu prüfenden Abiturjahrgänge, null-Einträge werden ignoriert
+	 *
+	 * @throws ApiOperationException   wenn der Benutzer bei keinem der Abiturjahrgänge die Kompetenz hat (403 - FORBIDDEN).
+	 */
+	private void pruefeBeratungslehrerKompetenzEinerVon(final @NotNull Collection<Integer> abijahrgaenge) throws ApiOperationException {
+		final Benutzer benutzer = benutzerRepository.getAktuellerBenutzer();
+		for (final Integer abijahrgang : abijahrgaenge) {
+			if ((abijahrgang != null) && benutzer.getAbiturjahrgaenge().contains(abijahrgang)) {
+				return;
+			}
+		}
+		throw new ApiOperationException(Status.FORBIDDEN,
+				"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff als Beratungslehrer auf die Abiturjahrgänge " + abijahrgaenge);
+	}
+
+
+	/**
+	 * Prüft, ob der Benutzer eine allgemeine Kompetenz für die Laufbahnplanung hat oder eine funktionsbezogene Kompetenz bei
+	 * mindestens einem der angegebenen Abiturjahrgänge. Ist dies nicht der Fall, so ist der Zugriff verboten.
+	 *
+	 * @param abiturjahrgaenge   die Abiturjahrgänge, von denen einer genügt
+	 *
+	 * @throws ApiOperationException wenn der Benutzer keine Kompetenz für den Zugriff auf die Laufbahnplanung besitzt.
+	 */
+	public void pruefeKompetenzLaufbahnplanung(final @NotNull Collection<Integer> abiturjahrgaenge) throws ApiOperationException {
+		final Set<BenutzerKompetenz> funktionsbezogeneKompetenzen = Set.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		final Set<BenutzerKompetenz> allgemeineKompetenzen = Set.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+		if (hatBenutzerNurFunktionsbezogeneKompetenz(funktionsbezogeneKompetenzen, allgemeineKompetenzen)) {
+			pruefeBeratungslehrerKompetenzEinerVon(abiturjahrgaenge);
+		}
+	}
+
+
+	/**
+	 * Prüft, ob der Benutzer eine allgemeine Kompetenz für die Gymnasiale Oberstufe hat oder eine funktionsbezogene Kompetenz bei
+	 * mindestens einem der angegebenen Abiturjahrgänge. Ist dies nicht der Fall, so ist der Zugriff verboten.
+	 *
+	 * @param abiturjahrgaenge   die Abiturjahrgänge, von denen einer genügt
+	 *
+	 * @throws ApiOperationException wenn der Benutzer keine Kompetenz für den Zugriff besitzt.
+	 */
+	public void pruefeKompetenzGost(final @NotNull Collection<Integer> abiturjahrgaenge) throws ApiOperationException {
+		final Set<BenutzerKompetenz> funktionsbezogeneKompetenzen = Set.of(
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION
+		);
+		final Set<BenutzerKompetenz> allgemeineKompetenzen = Set.of(
+				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
+		);
+		if (hatBenutzerNurFunktionsbezogeneKompetenz(funktionsbezogeneKompetenzen, allgemeineKompetenzen)) {
+			pruefeBeratungslehrerKompetenzEinerVon(abiturjahrgaenge);
+		}
+	}
+
+	/**
 	 * Prüft, ob der Benutzer die Leistungsdaten der übergebenen Klassen ändern darf. Besitzt der Benutzer nur die
 	 * funktionsbezogene Kompetenz, so muss er für jede der Klassen zuständig sein (z.B. als Klassenlehrer). Ist dies
 	 * nicht der Fall, so wird eine {@link ApiOperationException} mit dem Status FORBIDDEN erzeugt.

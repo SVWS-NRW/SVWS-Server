@@ -14,6 +14,8 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerWiederholung;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerWiederholungFachwahlen;
 import de.svws_nrw.db.dto.current.gost.klausuren.DTOGostKlausurenKalenderinformationen;
 import de.svws_nrw.db.dto.current.gost.klausuren.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausuren.DTOGostKlausurenNtaZeiten;
@@ -323,6 +325,8 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOGostJahrgangsdaten.class.getSimpleName(), DTOGostJahrgangsdaten.class);
              mapDTOName2DTOClass.put(DTOGostSchueler.class.getSimpleName(), DTOGostSchueler.class);
              mapDTOName2DTOClass.put(DTOGostSchuelerFachbelegungen.class.getSimpleName(), DTOGostSchuelerFachbelegungen.class);
+             mapDTOName2DTOClass.put(DTOGostSchuelerWiederholung.class.getSimpleName(), DTOGostSchuelerWiederholung.class);
+             mapDTOName2DTOClass.put(DTOGostSchuelerWiederholungFachwahlen.class.getSimpleName(), DTOGostSchuelerWiederholungFachwahlen.class);
              mapDTOName2DTOClass.put(DTOGostKlausurenKalenderinformationen.class.getSimpleName(), DTOGostKlausurenKalenderinformationen.class);
              mapDTOName2DTOClass.put(DTOGostKlausurenKursklausuren.class.getSimpleName(), DTOGostKlausurenKursklausuren.class);
              mapDTOName2DTOClass.put(DTOGostKlausurenNtaZeiten.class.getSimpleName(), DTOGostKlausurenNtaZeiten.class);
@@ -627,6 +631,8 @@ public final class DTOs {
              mapTablename2DTOClass.put("Gost_Jahrgangsdaten", DTOGostJahrgangsdaten.class);
              mapTablename2DTOClass.put("Gost_Schueler", DTOGostSchueler.class);
              mapTablename2DTOClass.put("Gost_Schueler_Fachwahlen", DTOGostSchuelerFachbelegungen.class);
+             mapTablename2DTOClass.put("Gost_Schueler_Wiederholung", DTOGostSchuelerWiederholung.class);
+             mapTablename2DTOClass.put("Gost_Schueler_Wiederholung_Fachwahlen", DTOGostSchuelerWiederholungFachwahlen.class);
              mapTablename2DTOClass.put("Gost_Klausuren_Kalenderinformationen", DTOGostKlausurenKalenderinformationen.class);
              mapTablename2DTOClass.put("Gost_Klausuren_Kursklausuren", DTOGostKlausurenKursklausuren.class);
              mapTablename2DTOClass.put("Gost_Klausuren_NtaZeiten", DTOGostKlausurenNtaZeiten.class);

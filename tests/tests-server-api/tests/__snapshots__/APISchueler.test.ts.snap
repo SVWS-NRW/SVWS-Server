@@ -45,6 +45,7 @@ ArrayList {
   "elementData": [
     SchuelerListeEintrag {
       "abiturjahrgang": null,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2023-10-13",
@@ -73,6 +74,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2023,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2005-01-01",
@@ -101,6 +103,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": null,
@@ -129,6 +132,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1950-06-03",
@@ -157,6 +161,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-18",
@@ -185,6 +190,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-02-23",
@@ -217,6 +223,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-06",
@@ -245,6 +252,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-11",
@@ -277,6 +285,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
@@ -309,6 +318,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-13",
@@ -337,6 +347,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-26",
@@ -369,6 +380,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-23",
@@ -397,6 +409,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-04",
@@ -425,6 +438,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-08",
@@ -457,6 +471,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
@@ -485,6 +500,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-08",
@@ -517,6 +533,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-18",
@@ -549,6 +566,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-14",
@@ -581,6 +599,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-09",
@@ -609,6 +628,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-11",
@@ -637,6 +657,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-06",
@@ -669,6 +690,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-27",
@@ -701,6 +723,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-14",
@@ -729,6 +752,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-03",
@@ -757,6 +781,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-17",
@@ -789,6 +814,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-12",
@@ -821,6 +847,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
@@ -849,6 +876,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-06",
@@ -877,6 +905,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
@@ -909,6 +938,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-12",
@@ -941,6 +971,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-26",
@@ -973,6 +1004,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-14",
@@ -1001,6 +1033,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
@@ -1033,6 +1066,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
@@ -1065,6 +1099,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-29",
@@ -1093,6 +1128,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-09",
@@ -1125,6 +1161,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-01",
@@ -1157,6 +1194,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
@@ -1189,6 +1227,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-15",
@@ -1217,6 +1256,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-30",
@@ -1245,6 +1285,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-09",
@@ -1277,6 +1318,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-10",
@@ -1309,6 +1351,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-30",
@@ -1341,6 +1384,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-26",
@@ -1373,6 +1417,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-06",
@@ -1405,6 +1450,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
@@ -1437,6 +1483,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-16",
@@ -1469,6 +1516,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
@@ -1501,6 +1549,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-11",
@@ -1533,6 +1582,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-07",
@@ -1565,6 +1615,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-03",
@@ -1597,6 +1648,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-14",
@@ -1629,6 +1681,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-17",
@@ -1661,6 +1714,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-03",
@@ -1693,6 +1747,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-01",
@@ -1725,6 +1780,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-03",
@@ -1757,6 +1813,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-24",
@@ -1789,6 +1846,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-06",
@@ -1821,6 +1879,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-16",
@@ -1853,6 +1912,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-16",
@@ -1885,6 +1945,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-02",
@@ -1917,6 +1978,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
@@ -1949,6 +2011,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-26",
@@ -1981,6 +2044,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-12",
@@ -2013,6 +2077,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-21",
@@ -2045,6 +2110,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
@@ -2077,6 +2143,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
@@ -2109,6 +2176,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-13",
@@ -2141,6 +2209,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-10",
@@ -2173,6 +2242,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-30",
@@ -2205,6 +2275,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
@@ -2237,6 +2308,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
@@ -2269,6 +2341,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-15",
@@ -2301,6 +2374,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-16",
@@ -2333,6 +2407,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-05",
@@ -2365,6 +2440,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-17",
@@ -2397,6 +2473,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-13",
@@ -2429,6 +2506,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-01",
@@ -2461,6 +2539,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-17",
@@ -2493,6 +2572,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-23",
@@ -2525,6 +2605,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-19",
@@ -2557,6 +2638,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-21",
@@ -2598,6 +2680,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
@@ -2639,6 +2722,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-06",
@@ -2680,6 +2764,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-03",
@@ -2720,6 +2805,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-10",
@@ -2761,6 +2847,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-18",
@@ -2802,6 +2889,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-02-23",
@@ -2843,6 +2931,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-04-23",
@@ -2883,6 +2972,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-06",
@@ -2924,6 +3014,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
@@ -2965,6 +3056,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-11",
@@ -3006,6 +3098,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-30",
@@ -3046,6 +3139,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
@@ -3087,6 +3181,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-13",
@@ -3128,6 +3223,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-26",
@@ -3168,6 +3264,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-13",
@@ -3208,6 +3305,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-26",
@@ -3249,6 +3347,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-23",
@@ -3289,6 +3388,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-04",
@@ -3330,6 +3430,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-08",
@@ -3371,6 +3472,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-10",
@@ -3412,6 +3514,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-02",
@@ -3453,6 +3556,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-30",
@@ -3494,6 +3598,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
@@ -3535,6 +3640,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-08",
@@ -3576,6 +3682,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-18",
@@ -3616,6 +3723,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-06",
@@ -3657,6 +3765,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-14",
@@ -3698,6 +3807,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-10",
@@ -3739,6 +3849,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-09",
@@ -3779,6 +3890,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-11",
@@ -3821,6 +3933,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-06",
@@ -3862,6 +3975,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
@@ -3902,6 +4016,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
@@ -3943,6 +4058,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-15",
@@ -3984,6 +4100,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-16",
@@ -4025,6 +4142,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-17",
@@ -4066,6 +4184,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-03-24",
@@ -4107,6 +4226,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-27",
@@ -4148,6 +4268,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
@@ -4189,6 +4310,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-14",
@@ -4230,6 +4352,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
@@ -4271,6 +4394,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-03",
@@ -4311,6 +4435,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-11",
@@ -4351,6 +4476,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-17",
@@ -4392,6 +4518,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-07",
@@ -4433,6 +4560,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-03",
@@ -4474,6 +4602,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-15",
@@ -4515,6 +4644,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-14",
@@ -4556,6 +4686,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
@@ -4596,6 +4727,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-12",
@@ -4637,6 +4769,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
@@ -4678,6 +4811,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-16",
@@ -4719,6 +4853,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-19",
@@ -4759,6 +4894,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
@@ -4800,6 +4936,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-02",
@@ -4841,6 +4978,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-17",
@@ -4881,6 +5019,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-03",
@@ -4921,6 +5060,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-05",
@@ -4962,6 +5102,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-06",
@@ -5002,6 +5143,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-01",
@@ -5042,6 +5184,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
@@ -5083,6 +5226,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-03",
@@ -5123,6 +5267,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-19",
@@ -5164,6 +5309,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-18",
@@ -5205,6 +5351,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-12",
@@ -5246,6 +5393,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-26",
@@ -5287,6 +5435,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-09",
@@ -5328,6 +5477,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-14",
@@ -5369,6 +5519,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
@@ -5410,6 +5561,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-24",
@@ -5450,6 +5602,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-06",
@@ -5491,6 +5644,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
@@ -5532,6 +5686,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
@@ -5560,6 +5715,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-17",
@@ -5601,6 +5757,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-29",
@@ -5642,6 +5799,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-16",
@@ -5682,6 +5840,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-16",
@@ -5723,6 +5882,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-05",
@@ -5764,6 +5924,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-13",
@@ -5805,6 +5966,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-01",
@@ -5846,6 +6008,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-22",
@@ -5886,6 +6049,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-09",
@@ -5927,6 +6091,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-01",
@@ -5967,6 +6132,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
@@ -6007,6 +6173,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-02",
@@ -6047,6 +6214,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-17",
@@ -6088,6 +6256,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
@@ -6128,6 +6297,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
@@ -6168,6 +6338,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
@@ -6208,6 +6379,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-06",
@@ -6249,6 +6421,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-07",
@@ -6290,6 +6463,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-15",
@@ -6331,6 +6505,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-30",
@@ -6372,6 +6547,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-23",
@@ -6412,6 +6588,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-09",
@@ -6453,6 +6630,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-26",
@@ -6493,6 +6671,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-19",
@@ -6534,6 +6713,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-12",
@@ -6574,6 +6754,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-09",
@@ -6615,6 +6796,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-26",
@@ -6655,6 +6837,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-17",
@@ -6695,6 +6878,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-26",
@@ -6734,6 +6918,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-07",
@@ -6773,6 +6958,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-12",
@@ -6812,6 +6998,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-31",
@@ -6851,6 +7038,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
@@ -6891,6 +7079,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-19",
@@ -6931,6 +7120,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-09",
@@ -6971,6 +7161,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-27",
@@ -7010,6 +7201,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-11-06",
@@ -7049,6 +7241,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-21",
@@ -7088,6 +7281,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-10",
@@ -7128,6 +7322,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-21",
@@ -7168,6 +7363,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-16",
@@ -7207,6 +7403,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-21",
@@ -7246,6 +7443,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-03",
@@ -7286,6 +7484,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-10",
@@ -7326,6 +7525,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
@@ -7366,6 +7566,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-09",
@@ -7406,6 +7607,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-24",
@@ -7446,6 +7648,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-18",
@@ -7486,6 +7689,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-12",
@@ -7526,6 +7730,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-19",
@@ -7566,6 +7771,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-27",
@@ -7606,6 +7812,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-25",
@@ -7646,6 +7853,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-29",
@@ -7685,6 +7893,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-03",
@@ -7725,6 +7934,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-10",
@@ -7764,6 +7974,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-04",
@@ -7804,6 +8015,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-18",
@@ -7844,6 +8056,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
@@ -7883,6 +8096,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-26",
@@ -7923,6 +8137,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-23",
@@ -7962,6 +8177,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-08",
@@ -8001,6 +8217,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
@@ -8040,6 +8257,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-08",
@@ -8079,6 +8297,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-11",
@@ -8119,6 +8338,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-08",
@@ -8159,6 +8379,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-02",
@@ -8198,6 +8419,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
@@ -8238,6 +8460,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-31",
@@ -8277,6 +8500,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-21",
@@ -8317,6 +8541,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-22",
@@ -8356,6 +8581,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-31",
@@ -8396,6 +8622,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-29",
@@ -8436,6 +8663,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-08",
@@ -8475,6 +8703,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
@@ -8515,6 +8744,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-22",
@@ -8554,6 +8784,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-16",
@@ -8593,6 +8824,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-24",
@@ -8632,6 +8864,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-10",
@@ -8671,6 +8904,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
@@ -8711,6 +8945,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-22",
@@ -8750,6 +8985,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-19",
@@ -8789,6 +9025,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-18",
@@ -8829,6 +9066,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-30",
@@ -8869,6 +9107,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-06",
@@ -8908,6 +9147,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-14",
@@ -8948,6 +9188,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-11",
@@ -8988,6 +9229,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-22",
@@ -9027,6 +9269,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-04",
@@ -9067,6 +9310,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-01",
@@ -9107,6 +9351,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-10",
@@ -9146,6 +9391,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-29",
@@ -9186,6 +9432,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-13",
@@ -9226,6 +9473,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-12",
@@ -9265,6 +9513,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-25",
@@ -9304,6 +9553,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-06",
@@ -9343,6 +9593,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-01",
@@ -9383,6 +9634,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-24",
@@ -9423,6 +9675,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-29",
@@ -9462,6 +9715,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-27",
@@ -9501,6 +9755,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-12",
@@ -9541,6 +9796,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-21",
@@ -9581,6 +9837,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-20",
@@ -9621,6 +9878,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-20",
@@ -9660,6 +9918,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-30",
@@ -9700,6 +9959,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-06",
@@ -9740,6 +10000,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-07",
@@ -9780,6 +10041,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
@@ -9820,6 +10082,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-16",
@@ -9860,6 +10123,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-26",
@@ -9900,6 +10164,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-10",
@@ -9939,6 +10204,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-18",
@@ -9978,6 +10244,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-15",
@@ -10018,6 +10285,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-16",
@@ -10058,6 +10326,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-23",
@@ -10097,6 +10366,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
@@ -10137,6 +10407,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-23",
@@ -10177,6 +10448,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-12-13",
@@ -10216,6 +10488,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-16",
@@ -10255,6 +10528,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-22",
@@ -10295,6 +10569,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-23",
@@ -10334,6 +10609,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-04",
@@ -10373,6 +10649,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-30",
@@ -10413,6 +10690,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
@@ -10452,6 +10730,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-29",
@@ -10492,6 +10771,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-07",
@@ -10532,6 +10812,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-27",
@@ -10571,6 +10852,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-07",
@@ -10611,6 +10893,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-10-23",
@@ -10650,6 +10933,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-17",
@@ -10690,6 +10974,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-07",
@@ -10730,6 +11015,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-26",
@@ -10770,6 +11056,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-11",
@@ -10809,6 +11096,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-30",
@@ -10848,6 +11136,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-28",
@@ -10888,6 +11177,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-12",
@@ -10927,6 +11217,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-12-30",
@@ -10966,6 +11257,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-30",
@@ -11005,6 +11297,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-28",
@@ -11044,6 +11337,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-18",
@@ -11083,6 +11377,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-13",
@@ -11122,6 +11417,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-17",
@@ -11161,6 +11457,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-30",
@@ -11200,6 +11497,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-31",
@@ -11239,6 +11537,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-24",
@@ -11278,6 +11577,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-15",
@@ -11317,6 +11617,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-25",
@@ -11356,6 +11657,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-02",
@@ -11395,6 +11697,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-08",
@@ -11434,6 +11737,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-15",
@@ -11473,6 +11777,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-09-16",
@@ -11512,6 +11817,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-01",
@@ -11551,6 +11857,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-14",
@@ -11590,6 +11897,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-05",
@@ -11629,6 +11937,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-21",
@@ -11668,6 +11977,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-19",
@@ -11707,6 +12017,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-03",
@@ -11746,6 +12057,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-11",
@@ -11785,6 +12097,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-05",
@@ -11824,6 +12137,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-04",
@@ -11863,6 +12177,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-07",
@@ -11902,6 +12217,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-08",
@@ -11941,6 +12257,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-06",
@@ -11980,6 +12297,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-16",
@@ -12019,6 +12337,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-04",
@@ -12058,6 +12377,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-03",
@@ -12097,6 +12417,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-25",
@@ -12136,6 +12457,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-07",
@@ -12175,6 +12497,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-12",
@@ -12214,6 +12537,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-13",
@@ -12253,6 +12577,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-04",
@@ -12292,6 +12617,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-16",
@@ -12331,6 +12657,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2008-01-14",
@@ -12371,6 +12698,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-26",
@@ -12410,6 +12738,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-02-15",
@@ -12449,6 +12778,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-28",
@@ -12489,6 +12819,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-12-18",
@@ -12528,6 +12859,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-22",
@@ -12567,6 +12899,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-28",
@@ -12606,6 +12939,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-18",
@@ -12645,6 +12979,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-08-14",
@@ -12684,6 +13019,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-05-30",
@@ -12723,6 +13059,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-19",
@@ -12762,6 +13099,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-15",
@@ -12801,6 +13139,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-09-13",
@@ -12840,6 +13179,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-03",
@@ -12879,6 +13219,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-03",
@@ -12918,6 +13259,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-28",
@@ -12957,6 +13299,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-02",
@@ -12996,6 +13339,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-23",
@@ -13035,6 +13379,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-11",
@@ -13074,6 +13419,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-12-07",
@@ -13113,6 +13459,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-22",
@@ -13152,6 +13499,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-26",
@@ -13191,6 +13539,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-11",
@@ -13230,6 +13579,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-29",
@@ -13269,6 +13619,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-17",
@@ -13308,6 +13659,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-04",
@@ -13347,6 +13699,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-16",
@@ -13386,6 +13739,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-21",
@@ -13425,6 +13779,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-19",
@@ -13464,6 +13819,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-01",
@@ -13503,6 +13859,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-05",
@@ -13542,6 +13899,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-29",
@@ -13581,6 +13939,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2008-01-14",
@@ -13620,6 +13979,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2008-01-14",
@@ -13660,6 +14020,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2008-01-14",
@@ -13699,6 +14060,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-08-15",
@@ -13738,6 +14100,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-27",
@@ -13777,6 +14140,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-05-05",
@@ -13816,6 +14180,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-30",
@@ -13855,6 +14220,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-09",
@@ -13894,6 +14260,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-04-07",
@@ -13933,6 +14300,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-01-08",
@@ -13972,6 +14340,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-07",
@@ -14011,6 +14380,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-17",
@@ -14050,6 +14420,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-14",
@@ -14089,6 +14460,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-12",
@@ -14128,6 +14500,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-25",
@@ -14167,6 +14540,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-18",
@@ -14206,6 +14580,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-02",
@@ -14245,6 +14620,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-30",
@@ -14284,6 +14660,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-10",
@@ -14323,6 +14700,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-05",
@@ -14361,6 +14739,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-21",
@@ -14400,6 +14779,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-02",
@@ -14439,6 +14819,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-17",
@@ -14478,6 +14859,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-14",
@@ -14517,6 +14899,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-13",
@@ -14556,6 +14939,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-26",
@@ -14595,6 +14979,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-14",
@@ -14634,6 +15019,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-20",
@@ -14673,6 +15059,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-27",
@@ -14712,6 +15099,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-05",
@@ -14751,6 +15139,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-07-30",
@@ -14790,6 +15179,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-25",
@@ -14829,6 +15219,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-23",
@@ -14868,6 +15259,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-09",
@@ -14907,6 +15299,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-30",
@@ -14946,6 +15339,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-30",
@@ -14985,6 +15379,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-04-23",
@@ -15017,6 +15412,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-02",
@@ -15049,6 +15445,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-10",
@@ -15081,6 +15478,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-15",
@@ -15113,6 +15511,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-17",
@@ -15145,6 +15544,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-03-24",
@@ -15177,6 +15577,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
@@ -15209,6 +15610,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-19",
@@ -15241,6 +15643,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
@@ -15273,6 +15676,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-02",
@@ -15305,6 +15709,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-19",
@@ -15337,6 +15742,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-18",
@@ -15369,6 +15775,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-09",
@@ -15401,6 +15808,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-05",
@@ -15433,6 +15841,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-22",
@@ -15465,6 +15874,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
@@ -15497,6 +15907,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
@@ -15529,6 +15940,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-06",
@@ -15561,6 +15973,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-07",
@@ -15593,6 +16006,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-09",
@@ -15625,6 +16039,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2005-02-01",
@@ -15771,6 +16186,7 @@ ArrayList {
   "elementData": [
     SchuelerListeEintrag {
       "abiturjahrgang": null,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2023-10-13",
@@ -15799,6 +16215,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2023,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2005-01-01",
@@ -15827,6 +16244,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": null,
@@ -15855,6 +16273,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1950-06-03",
@@ -15883,6 +16302,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-18",
@@ -15911,6 +16331,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-02-23",
@@ -15939,6 +16360,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-06",
@@ -15967,6 +16389,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-11",
@@ -15995,6 +16418,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
@@ -16023,6 +16447,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-13",
@@ -16051,6 +16476,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-26",
@@ -16079,6 +16505,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-23",
@@ -16107,6 +16534,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-04",
@@ -16135,6 +16563,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-08",
@@ -16163,6 +16592,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
@@ -16191,6 +16621,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-08",
@@ -16219,6 +16650,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-18",
@@ -16247,6 +16679,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-14",
@@ -16275,6 +16708,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-09",
@@ -16303,6 +16737,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-11",
@@ -16331,6 +16766,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-06",
@@ -16359,6 +16795,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-27",
@@ -16387,6 +16824,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-14",
@@ -16415,6 +16853,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-03",
@@ -16443,6 +16882,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-17",
@@ -16471,6 +16911,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-12",
@@ -16499,6 +16940,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
@@ -16527,6 +16969,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-06",
@@ -16555,6 +16998,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
@@ -16583,6 +17027,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-12",
@@ -16611,6 +17056,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-26",
@@ -16639,6 +17085,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-14",
@@ -16667,6 +17114,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
@@ -16695,6 +17143,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
@@ -16723,6 +17172,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-29",
@@ -16751,6 +17201,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-09",
@@ -16779,6 +17230,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-01",
@@ -16807,6 +17259,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
@@ -16835,6 +17288,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-15",
@@ -16863,6 +17317,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-30",
@@ -16891,6 +17346,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-09",
@@ -16919,6 +17375,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-10",
@@ -16947,6 +17404,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-30",
@@ -16975,6 +17433,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-26",
@@ -17003,6 +17462,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-06",
@@ -17031,6 +17491,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
@@ -17059,6 +17520,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-16",
@@ -17087,6 +17549,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
@@ -17115,6 +17578,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-11",
@@ -17143,6 +17607,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-07",
@@ -17171,6 +17636,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-03",
@@ -17199,6 +17665,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-14",
@@ -17227,6 +17694,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-17",
@@ -17255,6 +17723,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-03",
@@ -17283,6 +17752,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-01",
@@ -17311,6 +17781,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-03",
@@ -17339,6 +17810,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-24",
@@ -17367,6 +17839,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-06",
@@ -17395,6 +17868,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-16",
@@ -17423,6 +17897,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-16",
@@ -17451,6 +17926,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-02",
@@ -17479,6 +17955,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
@@ -17507,6 +17984,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-26",
@@ -17535,6 +18013,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-12",
@@ -17563,6 +18042,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-21",
@@ -17591,6 +18071,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
@@ -17619,6 +18100,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
@@ -17647,6 +18129,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-13",
@@ -17675,6 +18158,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-10",
@@ -17703,6 +18187,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-30",
@@ -17731,6 +18216,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
@@ -17759,6 +18245,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
@@ -17787,6 +18274,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-15",
@@ -17815,6 +18303,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-16",
@@ -17843,6 +18332,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-05",
@@ -17871,6 +18361,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-17",
@@ -17899,6 +18390,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-13",
@@ -17927,6 +18419,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-01",
@@ -17955,6 +18448,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-17",
@@ -17983,6 +18477,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-23",
@@ -18011,6 +18506,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-19",
@@ -18039,6 +18535,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-21",
@@ -18067,6 +18564,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
@@ -18095,6 +18593,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-03",
@@ -18123,6 +18622,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-10",
@@ -18151,6 +18651,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-18",
@@ -18179,6 +18680,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-02-23",
@@ -18207,6 +18709,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-04-23",
@@ -18235,6 +18738,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-06",
@@ -18263,6 +18767,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
@@ -18291,6 +18796,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-11",
@@ -18319,6 +18825,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-30",
@@ -18347,6 +18854,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
@@ -18375,6 +18883,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-26",
@@ -18403,6 +18912,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-13",
@@ -18431,6 +18941,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-26",
@@ -18459,6 +18970,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-23",
@@ -18487,6 +18999,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-04",
@@ -18515,6 +19028,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-08",
@@ -18543,6 +19057,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-10",
@@ -18571,6 +19086,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-02",
@@ -18599,6 +19115,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-30",
@@ -18627,6 +19144,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
@@ -18655,6 +19173,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-08",
@@ -18683,6 +19202,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-18",
@@ -18711,6 +19231,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-06",
@@ -18739,6 +19260,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-10",
@@ -18767,6 +19289,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-11",
@@ -18795,6 +19318,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
@@ -18823,6 +19347,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
@@ -18851,6 +19376,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-15",
@@ -18879,6 +19405,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-16",
@@ -18907,6 +19434,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-17",
@@ -18935,6 +19463,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-03-24",
@@ -18963,6 +19492,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-27",
@@ -18991,6 +19521,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-22",
@@ -19019,6 +19550,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-14",
@@ -19047,6 +19579,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-18",
@@ -19075,6 +19608,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-11",
@@ -19103,6 +19637,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-17",
@@ -19131,6 +19666,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-07",
@@ -19159,6 +19695,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-03",
@@ -19187,6 +19724,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-15",
@@ -19215,6 +19753,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-14",
@@ -19243,6 +19782,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
@@ -19271,6 +19811,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-12",
@@ -19299,6 +19840,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
@@ -19327,6 +19869,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-16",
@@ -19355,6 +19898,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-19",
@@ -19383,6 +19927,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
@@ -19411,6 +19956,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-02",
@@ -19439,6 +19985,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-17",
@@ -19467,6 +20014,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-03",
@@ -19495,6 +20043,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-06",
@@ -19523,6 +20072,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-01",
@@ -19551,6 +20101,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
@@ -19579,6 +20130,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-03",
@@ -19607,6 +20159,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-19",
@@ -19635,6 +20188,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-18",
@@ -19663,6 +20217,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-12",
@@ -19691,6 +20246,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-26",
@@ -19719,6 +20275,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-09",
@@ -19747,6 +20304,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
@@ -19775,6 +20333,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-24",
@@ -19803,6 +20362,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-06",
@@ -19831,6 +20391,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-27",
@@ -19859,6 +20420,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-01-01",
@@ -19887,6 +20449,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-17",
@@ -19915,6 +20478,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-29",
@@ -19943,6 +20507,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-16",
@@ -19971,6 +20536,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-16",
@@ -19999,6 +20565,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-05",
@@ -20027,6 +20594,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-13",
@@ -20055,6 +20623,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-01",
@@ -20083,6 +20652,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-22",
@@ -20111,6 +20681,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-09",
@@ -20139,6 +20710,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-11-01",
@@ -20167,6 +20739,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
@@ -20195,6 +20768,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-02",
@@ -20223,6 +20797,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-17",
@@ -20251,6 +20826,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-26",
@@ -20279,6 +20855,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
@@ -20307,6 +20884,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-06",
@@ -20335,6 +20913,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-07",
@@ -20363,6 +20942,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-15",
@@ -20391,6 +20971,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-30",
@@ -20419,6 +21000,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-23",
@@ -20447,6 +21029,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-09",
@@ -20475,6 +21058,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-26",
@@ -20503,6 +21087,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-19",
@@ -20531,6 +21116,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-09-12",
@@ -20559,6 +21145,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2021,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-06-09",
@@ -20587,6 +21174,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-07",
@@ -20615,6 +21203,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-27",
@@ -20643,6 +21232,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-11-06",
@@ -20671,6 +21261,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-18",
@@ -20699,6 +21290,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-27",
@@ -20727,6 +21319,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-23",
@@ -20755,6 +21348,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
@@ -20783,6 +21377,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-22",
@@ -20811,6 +21406,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-19",
@@ -20839,6 +21435,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-06",
@@ -20867,6 +21464,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-11",
@@ -20895,6 +21493,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-22",
@@ -20923,6 +21522,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-25",
@@ -20951,6 +21551,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-30",
@@ -20979,6 +21580,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-07",
@@ -21007,6 +21609,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-10",
@@ -21035,6 +21638,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-18",
@@ -21063,6 +21667,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-12-13",
@@ -21091,6 +21696,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-10-23",
@@ -21119,6 +21725,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-13",
@@ -21147,6 +21754,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-01",
@@ -21175,6 +21783,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-05",
@@ -21203,6 +21812,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2008-01-14",
@@ -21231,6 +21841,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-28",
@@ -21259,6 +21870,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-12-18",
@@ -21287,6 +21899,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-22",
@@ -21315,6 +21928,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-28",
@@ -21343,6 +21957,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-08-14",
@@ -21371,6 +21986,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-05-30",
@@ -21399,6 +22015,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-12-07",
@@ -21427,6 +22044,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-29",
@@ -21455,6 +22073,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-04",
@@ -21483,6 +22102,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2008-01-14",
@@ -21511,6 +22131,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2008-01-14",
@@ -21539,6 +22160,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2008-01-14",
@@ -21567,6 +22189,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-08-15",
@@ -21595,6 +22218,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-05-05",
@@ -21623,6 +22247,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1998-04-07",
@@ -21651,6 +22276,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-01-08",
@@ -21679,6 +22305,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-12",
@@ -21707,6 +22334,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-02",
@@ -21735,6 +22363,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-21",
@@ -21763,6 +22392,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-25",
@@ -21791,6 +22421,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-04-23",
@@ -21819,6 +22450,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-02",
@@ -21847,6 +22479,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-10",
@@ -21875,6 +22508,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-07-15",
@@ -21903,6 +22537,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-17",
@@ -21931,6 +22566,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2004-03-24",
@@ -21959,6 +22595,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
@@ -21987,6 +22624,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-08-19",
@@ -22015,6 +22653,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-26",
@@ -22043,6 +22682,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-02",
@@ -22071,6 +22711,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-19",
@@ -22099,6 +22740,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-18",
@@ -22127,6 +22769,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-12-09",
@@ -22155,6 +22798,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-02-05",
@@ -22183,6 +22827,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-05-22",
@@ -22211,6 +22856,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
@@ -22239,6 +22885,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-11",
@@ -22267,6 +22914,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-06",
@@ -22295,6 +22943,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-07",
@@ -22323,6 +22972,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-09",
@@ -22351,6 +23001,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-17",
@@ -22381,6 +23032,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-26",
@@ -22411,6 +23063,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-19",
@@ -22441,6 +23094,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-09",
@@ -22471,6 +23125,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-19",
@@ -22501,6 +23156,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-14",
@@ -22531,6 +23187,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-10",
@@ -22561,6 +23218,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-04-19",
@@ -22591,6 +23249,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-08",
@@ -22621,6 +23280,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-11",
@@ -22651,6 +23311,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-08",
@@ -22681,6 +23342,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-21",
@@ -22711,6 +23373,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-22",
@@ -22741,6 +23404,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-31",
@@ -22771,6 +23435,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-10",
@@ -22801,6 +23466,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
@@ -22831,6 +23497,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-18",
@@ -22861,6 +23528,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-14",
@@ -22891,6 +23559,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-01",
@@ -22921,6 +23590,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-29",
@@ -22951,6 +23621,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-16",
@@ -22981,6 +23652,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-16",
@@ -23011,6 +23683,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-04",
@@ -23041,6 +23714,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-30",
@@ -23071,6 +23745,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-31",
@@ -23101,6 +23776,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-21",
@@ -23131,6 +23807,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-16",
@@ -23161,6 +23838,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-22",
@@ -23191,6 +23869,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-09",
@@ -23221,6 +23900,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-24",
@@ -23251,6 +23931,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-03-09",
@@ -23281,6 +23962,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-26",
@@ -23311,6 +23993,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-02",
@@ -23341,6 +24024,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-31",
@@ -23371,6 +24055,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-22",
@@ -23401,6 +24086,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-13",
@@ -23431,6 +24117,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-01",
@@ -23461,6 +24148,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-27",
@@ -23491,6 +24179,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-12",
@@ -23521,6 +24210,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-06",
@@ -23551,6 +24241,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-16",
@@ -23581,6 +24272,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-23",
@@ -23611,6 +24303,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-22",
@@ -23641,6 +24334,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-30",
@@ -23671,6 +24365,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-26",
@@ -23701,6 +24396,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-11",
@@ -23731,6 +24427,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-26",
@@ -23761,6 +24458,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-12",
@@ -23791,6 +24489,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-10-21",
@@ -23821,6 +24520,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-21",
@@ -23851,6 +24551,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2003-01-03",
@@ -23881,6 +24582,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-10",
@@ -23911,6 +24613,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-29",
@@ -23941,6 +24644,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-03",
@@ -23971,6 +24675,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-03",
@@ -24001,6 +24706,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-08",
@@ -24031,6 +24737,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-29",
@@ -24061,6 +24768,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-24",
@@ -24091,6 +24799,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-10",
@@ -24121,6 +24830,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-24",
@@ -24151,6 +24861,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-14",
@@ -24181,6 +24892,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-21",
@@ -24211,6 +24923,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-26",
@@ -24241,6 +24954,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-15",
@@ -24271,6 +24985,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
@@ -24301,6 +25016,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-27",
@@ -24331,6 +25047,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-07",
@@ -24361,6 +25078,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-17",
@@ -24391,6 +25109,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-05-07",
@@ -24421,6 +25140,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-28",
@@ -24451,6 +25171,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-12",
@@ -24482,6 +25203,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-30",
@@ -24513,6 +25235,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-08",
@@ -24544,6 +25267,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-26",
@@ -24575,6 +25299,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-03",
@@ -24606,6 +25331,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-08",
@@ -24637,6 +25363,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-11",
@@ -24668,6 +25395,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-22",
@@ -24699,6 +25427,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-21",
@@ -24730,6 +25459,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-17",
@@ -24761,6 +25491,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-12",
@@ -24792,6 +25523,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-18",
@@ -24823,6 +25555,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-26",
@@ -24854,6 +25587,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-20",
@@ -24885,6 +25619,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-23",
@@ -24916,6 +25651,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-18",
@@ -24947,6 +25683,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-25",
@@ -24978,6 +25715,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-02",
@@ -25009,6 +25747,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-07",
@@ -25040,6 +25779,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-25",
@@ -25071,6 +25811,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-16",
@@ -25102,6 +25843,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-16",
@@ -25133,6 +25875,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-19",
@@ -25164,6 +25907,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-29",
@@ -25195,6 +25939,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-06",
@@ -25226,6 +25971,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-30",
@@ -25257,6 +26003,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-10",
@@ -25288,6 +26035,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-02",
@@ -25319,6 +26067,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-13",
@@ -25350,6 +26099,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-30",
@@ -25381,6 +26131,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-15",
@@ -25412,6 +26163,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-08",
@@ -25443,6 +26195,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-15",
@@ -25474,6 +26227,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-21",
@@ -25505,6 +26259,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-03",
@@ -25536,6 +26291,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-11",
@@ -25567,6 +26323,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-03",
@@ -25598,6 +26355,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-12",
@@ -25629,6 +26387,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-18",
@@ -25660,6 +26419,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-15",
@@ -25691,6 +26451,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-26",
@@ -25722,6 +26483,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-17",
@@ -25753,6 +26515,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-05",
@@ -25784,6 +26547,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-09-30",
@@ -25815,6 +26579,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-07-14",
@@ -25846,6 +26611,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-29",
@@ -25877,6 +26643,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-17",
@@ -25908,6 +26675,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-12-30",
@@ -25939,6 +26707,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-28",
@@ -25970,6 +26739,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-17",
@@ -26001,6 +26771,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-09-16",
@@ -26032,6 +26803,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-10-04",
@@ -26063,6 +26835,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-07",
@@ -26094,6 +26867,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-27",
@@ -26125,6 +26899,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-03-30",
@@ -26156,6 +26931,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-02-15",
@@ -26187,6 +26963,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-23",
@@ -26218,6 +26995,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-05-05",
@@ -26249,6 +27027,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-07-30",
@@ -26280,6 +27059,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-06",
@@ -26310,6 +27090,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
@@ -26340,6 +27121,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-13",
@@ -26370,6 +27152,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-10",
@@ -26400,6 +27183,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-12",
@@ -26430,6 +27214,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-25",
@@ -26460,6 +27245,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-10-04",
@@ -26490,6 +27276,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-18",
@@ -26520,6 +27307,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-06",
@@ -26550,6 +27338,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
@@ -26580,6 +27369,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-11-16",
@@ -26610,6 +27400,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-09-05",
@@ -26640,6 +27431,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-12-04",
@@ -26670,6 +27462,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-20",
@@ -26700,6 +27493,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-20",
@@ -26730,6 +27524,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-28",
@@ -26760,6 +27555,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-03-23",
@@ -26790,6 +27586,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-06-23",
@@ -26820,6 +27617,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-01-23",
@@ -26850,6 +27648,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-07-29",
@@ -26880,6 +27679,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-08-07",
@@ -26910,6 +27710,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2020,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-04-27",
@@ -26940,6 +27741,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-31",
@@ -26971,6 +27773,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-02-24",
@@ -27002,6 +27805,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-14",
@@ -27033,6 +27837,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-19",
@@ -27064,6 +27869,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-05",
@@ -27095,6 +27901,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-01-04",
@@ -27126,6 +27933,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-06",
@@ -27157,6 +27965,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-04",
@@ -27188,6 +27997,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-11-07",
@@ -27219,6 +28029,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-13",
@@ -27250,6 +28061,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-19",
@@ -27281,6 +28093,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-05-08",
@@ -27312,6 +28125,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-04-03",
@@ -27343,6 +28157,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-03-28",
@@ -27374,6 +28189,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-08-02",
@@ -27405,6 +28221,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-11",
@@ -27436,6 +28253,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-27",
@@ -27467,6 +28285,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-09-30",
@@ -27498,6 +28317,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2002-02-09",
@@ -27529,6 +28349,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-25",
@@ -27560,6 +28381,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-06-14",
@@ -27591,6 +28413,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2001-10-14",
@@ -27622,6 +28445,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-12-05",
@@ -27653,6 +28477,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2019,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-11-09",
@@ -27684,6 +28509,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-12-30",
@@ -27715,6 +28541,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-08-16",
@@ -27746,6 +28573,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "1999-09-13",
@@ -27777,6 +28605,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2018,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2000-04-01",
@@ -27808,6 +28637,7 @@ ArrayList {
     },
     SchuelerListeEintrag {
       "abiturjahrgang": 2022,
+      "abiturjahrgangWiederholung": null,
       "epJahre": null,
       "externeSchulNr": null,
       "geburtsdatum": "2005-02-01",

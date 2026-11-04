@@ -12,6 +12,7 @@ import { GostBlockungsergebnis } from "@core/core/data/gost/GostBlockungsergebni
 import type { GostBlockungsergebnisKurs } from "@core/core/data/gost/GostBlockungsergebnisKurs";
 import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate";
 import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
 import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -32,6 +33,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 type BlockungstabelleStates = 'nichts' | 'alles' | 'schienen';
 
@@ -42,6 +44,7 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	faecherManager: GostFaecherManager;
 	mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
 	// ... die mit dem Abiturjahrgang aktualisiert/mitgeladen werden
+	mapWiederholungen: Map<number, GostSchuelerWiederholung>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	// ... auch abhängig vom ausgewählten Halbjahr der gymnasialen Oberstufe
 	halbjahr: GostHalbjahr;
@@ -65,6 +68,7 @@ const defaultState: RouteStateGostKursplanung = {
 	jahrgangsdaten: undefined,
 	faecherManager: new GostFaecherManager(-1),
 	mapFachwahlStatistik: new Map(),
+	mapWiederholungen: new Map(),
 	mapLehrer: new Map(),
 	halbjahr: GostHalbjahr.EF1,
 	halbjahrInitialisiert: false,
@@ -126,6 +130,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		for (const fw of listFachwahlStatistik) {
 			mapFachwahlStatistik.set(fw.id, fw);
 		}
+		// Lade die Wiederholungen, damit Schüler mit einem Wechsel des Abiturjahrgangs gekennzeichnet werden können. Sie gibt es zunächst
+		// nur im Servermode DEV, sonst lehnt der Server die Abfrage ab.
+		const listWiederholungen = serverStateImpl.hasDev ? await api.server.getGostSchuelerWiederholungen(api.schema) : [];
+		const mapWiederholungen = new Map<number, GostSchuelerWiederholung>();
+		for (const v of listWiederholungen) {
+			mapWiederholungen.set(v.idSchueler, v);
+		}
 		api.status.stop();
 		// Setze den State neu
 		this.setPatchedDefaultState({
@@ -136,6 +147,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			halbjahr: this._state.value.halbjahr,
 			halbjahrInitialisiert: false,
 			mapFachwahlStatistik,
+			mapWiederholungen,
 		});
 		return abiturjahrwechsel;
 	};
@@ -153,6 +165,10 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get mapFachwahlStatistik(): Map<number, GostStatistikFachwahl> {
 		return this._state.value.mapFachwahlStatistik;
+	}
+
+	public get mapWiederholungen(): Map<number, GostSchuelerWiederholung> {
+		return this._state.value.mapWiederholungen;
 	}
 
 	public get mapLehrer(): Map<number, LehrerListeEintrag> {

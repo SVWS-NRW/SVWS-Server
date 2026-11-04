@@ -1,6 +1,7 @@
 import type { ApiFile } from "@core/api/BaseApi";
 import { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
 import type { GostBelegpruefungsErgebnisse } from "@core/core/data/gost/GostBelegpruefungsErgebnisse";
+import type { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
@@ -11,18 +12,21 @@ import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnpla
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 
 interface RouteStateDataGostLaufbahnfehler extends RouteStateInterface {
 	abiturjahr: number;
 	listBelegpruefungsErgebnisse: List<GostBelegpruefungsErgebnisse>;
 	gostBelegpruefungsArt: GostBelegpruefungsArt;
+	mapWiederholungen: Map<number, GostSchuelerWiederholung>;
 }
 
 const defaultState = <RouteStateDataGostLaufbahnfehler> {
 	abiturjahr: -1,
 	listBelegpruefungsErgebnisse: new ArrayList(),
 	gostBelegpruefungsArt: GostBelegpruefungsArt.GESAMT,
+	mapWiederholungen: new Map<number, GostSchuelerWiederholung>(),
 };
 
 export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLaufbahnfehler> {
@@ -41,6 +45,16 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 
 	get listBelegpruefungsErgebnisse(): List<GostBelegpruefungsErgebnisse> {
 		return this._state.value.listBelegpruefungsErgebnisse;
+	}
+
+	get mapWiederholungen(): Map<number, GostSchuelerWiederholung> {
+		return this._state.value.mapWiederholungen;
+	}
+
+	// Wer im folgenden Jahrgang wiederholt, wird dort geplant und gehört für diesen Jahrgang zu einem anderen
+	private istWiederholungAndererJahrgang(idSchueler: number): boolean {
+		const wiederholung = this._state.value.mapWiederholungen.get(idSchueler);
+		return (wiederholung !== undefined) && (wiederholung.abiturjahr !== null) && (wiederholung.abiturjahr !== this.abiturjahr);
 	}
 
 	get filterFehler(): boolean {
@@ -82,7 +96,13 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		const listBelegpruefungsErgebnisse = (gostBelegpruefungsArt === GostBelegpruefungsArt.GESAMT)
 			? await api.server.getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(api.schema, abiturjahr)
 			: await api.server.getGostAbiturjahrgangBelegpruefungsergebnisseEF1(api.schema, abiturjahr);
-		this.setPatchedState({ listBelegpruefungsErgebnisse, gostBelegpruefungsArt, abiturjahr });
+		// Wiederholungen gibt es zunächst nur im Servermode DEV, sonst lehnt der Server die Abfrage ab
+		const mapWiederholungen = new Map<number, GostSchuelerWiederholung>();
+		const listWiederholungen = serverStateImpl.hasDev ? await api.server.getGostSchuelerWiederholungen(api.schema) : [];
+		for (const wiederholung of listWiederholungen) {
+			mapWiederholungen.set(wiederholung.idSchueler, wiederholung);
+		}
+		this.setPatchedState({ listBelegpruefungsErgebnisse, gostBelegpruefungsArt, abiturjahr, mapWiederholungen });
 	}
 
 	public async setAbiturjahr(abiturjahr: number) {
@@ -122,7 +142,10 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 			await api.server.resetGostAbiturjahrgangSchuelerFachwahlen(api.schema, this.abiturjahr);
 		} else {
 			for (const ergebnis of ergebnisse) {
-				await api.server.resetGostSchuelerFachwahlen(api.schema, ergebnis.schueler.id);
+				// Wer im folgenden Jahrgang wiederholt, wird dort geplant. Diese Planung bleibt bei Aktionen im bisherigen Jahrgang unverändert.
+				if (!this.istWiederholungAndererJahrgang(ergebnis.schueler.id)) {
+					await api.server.resetGostSchuelerFachwahlen(api.schema, ergebnis.schueler.id);
+				}
 			}
 		}
 		await this.setAbiturjahr(this.abiturjahr);
@@ -131,9 +154,14 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	loeschenFachwahlenSelected = async (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => {
 		const idsSchueler = new ArrayList<number>();
 		for (const ergebnis of ergebnisse) {
-			idsSchueler.add(ergebnis.schueler.id);
+			// Wer im folgenden Jahrgang wiederholt, wird dort geplant. Diese Planung bleibt bei Aktionen im bisherigen Jahrgang unverändert.
+			if (!this.istWiederholungAndererJahrgang(ergebnis.schueler.id)) {
+				idsSchueler.add(ergebnis.schueler.id);
+			}
 		}
-		await api.server.deleteGostSchuelerFachwahlenMultiple(idsSchueler, api.schema);
+		if (!idsSchueler.isEmpty()) {
+			await api.server.deleteGostSchuelerFachwahlenMultiple(idsSchueler, api.schema);
+		}
 		await this.setAbiturjahr(this.abiturjahr);
 	};
 

@@ -229,6 +229,8 @@
         <class>de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten</class>
         <class>de.svws_nrw.db.dto.current.gost.DTOGostSchueler</class>
         <class>de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen</class>
+        <class>de.svws_nrw.db.dto.current.gost.DTOGostSchuelerWiederholung</class>
+        <class>de.svws_nrw.db.dto.current.gost.DTOGostSchuelerWiederholungFachwahlen</class>
         <class>de.svws_nrw.db.dto.current.gost.klausuren.DTOGostKlausurenKalenderinformationen</class>
         <class>de.svws_nrw.db.dto.current.gost.klausuren.DTOGostKlausurenKursklausuren</class>
         <class>de.svws_nrw.db.dto.current.gost.klausuren.DTOGostKlausurenNtaZeiten</class>

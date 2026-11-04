@@ -210,6 +210,7 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 		}
 		final String queryGostJahrgangFachwahlen = "SELECT DISTINCT a.Fach_ID FROM DTOGostJahrgangFachbelegungen a WHERE a.Fach_ID IN :idsFaecher";
 		final String queryGostSchuelerFachwahlen = "SELECT DISTINCT b.Fach_ID FROM DTOGostSchuelerFachbelegungen b WHERE b.Fach_ID IN :idsFaecher";
+		final String queryGostSchuelerWiederholungFachwahlen = "SELECT DISTINCT l.Fach_ID FROM DTOGostSchuelerWiederholungFachwahlen l WHERE l.Fach_ID IN :idsFaecher";
 		final String queryKurse = "SELECT DISTINCT c.Fach_ID FROM DTOKurs c WHERE c.Fach_ID IN :idsFaecher";
 		final String querySchuelerAbiFaecher = "SELECT DISTINCT d.Fach_ID FROM DTOSchuelerAbiturFach d WHERE d.Fach_ID IN :idsFaecher";
 		final String querySchuelerBKFaecher = "SELECT DISTINCT e.Fach_ID FROM DTOSchuelerBKFach e WHERE e.Fach_ID IN :idsFaecher";
@@ -220,8 +221,8 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 		final String querySchuelerZP10 = "SELECT DISTINCT j.Fach_ID FROM DTOSchuelerZP10 j WHERE j.Fach_ID IN :idsFaecher";
 		final String querySchuelerZuweisungen = "SELECT DISTINCT k.Fach_ID FROM DTOSchuelerZuweisung k WHERE k.Fach_ID IN :idsFaecher";
 
-		final String query = String.join("\nUNION ALL\n", queryGostJahrgangFachwahlen, queryGostSchuelerFachwahlen, queryKurse, querySchuelerAbiFaecher,
-				querySchuelerBKFaecher, querySchuelerFehlstunden, querySchuelerFHRFaecher, querySchuelerLeistungsdaten, querySchuelerLernabschnittsdaten,
+		final String query = String.join("\nUNION ALL\n", queryGostJahrgangFachwahlen, queryGostSchuelerFachwahlen, queryGostSchuelerWiederholungFachwahlen,
+				queryKurse, querySchuelerAbiFaecher, querySchuelerBKFaecher, querySchuelerFehlstunden, querySchuelerFHRFaecher, querySchuelerLeistungsdaten, querySchuelerLernabschnittsdaten,
 				querySchuelerZP10, querySchuelerZuweisungen);
 		final List<Long> results = conn.query(query, Long.class).setParameter("idsFaecher", idsFaecher).getResultList();
 		return new HashSet<>(results);

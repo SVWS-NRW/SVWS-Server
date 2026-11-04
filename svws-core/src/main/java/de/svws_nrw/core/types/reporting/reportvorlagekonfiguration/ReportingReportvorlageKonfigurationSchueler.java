@@ -162,7 +162,11 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitHinweisen", "mit Hinweisen", ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false,
-										true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+										true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								// Die Laufbahnplanung und die Laufbahnen-Liste übergeben den Abiturjahrgang ihrer Ansicht, damit Wiederholer passend gedruckt werden
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("abiturjahrgangPlanung", "Abiturjahrgang der gedruckten Laufbahnplanung",
+										ReportingReportvorlageParameterTyp.INTEGER,
+										"", false, ReportingUIKomponentenTyp.NUMBERPICKER, 1)
 						))),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), true, true);
@@ -181,7 +185,11 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 						List.of(
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("nurBelegteFaecher", "nur belegte Fächer",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								// Die Laufbahnplanung und die Laufbahnen-Liste übergeben den Abiturjahrgang ihrer Ansicht, damit Wiederholer passend gedruckt werden
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("abiturjahrgangPlanung", "Abiturjahrgang der gedruckten Laufbahnplanung",
+										ReportingReportvorlageParameterTyp.INTEGER,
+										"", false, ReportingUIKomponentenTyp.NUMBERPICKER, 1)
 						))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.SCHUELER,

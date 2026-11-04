@@ -47,6 +47,7 @@
 				</template>
 				<template #cell(name)="{rowData}">
 					<span class="line-clamp-1 leading-tight -my-0.5 break-all">{{ rowData.schueler.nachname }}, {{ rowData.schueler.vorname }}</span>
+					<span v-if="mapWiederholungen().get(rowData.schueler.id)?.wechselVollzogen === false" class="icon-sm i-ri-arrow-go-back-fill icon-ui-danger ml-2 inline-block shrink-0" title="Geplante Wiederholung zweier GOSt-Halbjahre" />
 					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold mt-0 ml-1 bg-ui-50 text-ui-100">
 						{{ SchuelerStatus.data().getEintragByID(rowData.schueler.status)?.text ?? '—' }}
 					</span>
@@ -313,6 +314,8 @@
 			: ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT;
 
 		const reportingParameter = reportvorlage.getReportingParameter();
+		// Wiederholer werden so gedruckt, wie die Liste dieses Jahrgangs sie zeigt
+		reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "abiturjahrgangPlanung", props.jahrgangsdaten().abiturjahr.toString());
 
 		if (vorlage === "Laufbahnwahlbogen") {
 			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "nurBelegteFaecher", nurBelegung.toString());

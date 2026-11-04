@@ -20,6 +20,7 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
+import de.svws_nrw.module.reporting.types.schueler.gost.ReportingSchuelerGostWiederholung;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
@@ -101,6 +102,9 @@ public class ReportingSchueler extends ReportingPerson {
 
 	/** Daten der GOSt-Laufbahnplanung. */
 	protected ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung;
+
+	/** Die Wiederholung zweier GOSt-Halbjahre im folgenden Abiturjahrgang. Sie wird erst beim Zugriff ermittelt und steht daher nicht im Konstruktor. */
+	protected ReportingSchuelerGostWiederholung gostWiederholung;
 
 	/** Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers. */
 	protected Long haltestelleID;
@@ -524,6 +528,15 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
 		return this.gostLaufbahnplanung;
+	}
+
+	/**
+	 * Die Wiederholung zweier GOSt-Halbjahre im folgenden Abiturjahrgang, solange der Wechsel nicht vollzogen ist.
+	 *
+	 * @return Inhalt des Feldes gostWiederholung; kann {@code null} sein, wenn keine Wiederholung besteht oder der Wechsel vollzogen ist.
+	 */
+	public ReportingSchuelerGostWiederholung gostWiederholung() {
+		return this.gostWiederholung;
 	}
 
 	/**

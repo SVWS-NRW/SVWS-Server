@@ -152,6 +152,13 @@
 	mask-position: center;
 }
 
+@utility i-ri-arrow-go-back-fill {
+	mask-image: url(@icons/Arrows/arrow-go-back-fill.svg);
+	-webkit-mask-image: url(@icons/Arrows/arrow-go-back-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
 @utility i-ri-arrow-go-back-line {
 	mask-image: url(@icons/Arrows/arrow-go-back-line.svg);
 	-webkit-mask-image: url(@icons/Arrows/arrow-go-back-line.svg);

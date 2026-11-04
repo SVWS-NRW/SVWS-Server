@@ -57,6 +57,11 @@ export class SchuelerListeEintrag extends JavaObject {
 	public abiturjahrgang: number | null = null;
 
 	/**
+	 * Der Abiturjahrgang einer geltenden Wiederholung, zu dem der Schüler bis zum Wechsel zusätzlich gehört, oder null.
+	 */
+	public abiturjahrgangWiederholung: number | null = null;
+
+	/**
 	 * Das Kürzel der aktuellen Schulgliederung des Schülers
 	 */
 	public idSchulgliederung: number = -1;
@@ -156,6 +161,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result.jahrgang = obj.jahrgang;
 		result.epJahre = (obj.epJahre === undefined) ? null : obj.epJahre === null ? null : obj.epJahre;
 		result.abiturjahrgang = (obj.abiturjahrgang === undefined) ? null : obj.abiturjahrgang === null ? null : obj.abiturjahrgang;
+		result.abiturjahrgangWiederholung = (obj.abiturjahrgangWiederholung === undefined) ? null : obj.abiturjahrgangWiederholung === null ? null : obj.abiturjahrgangWiederholung;
 		if (obj.idSchulgliederung === undefined)
 			throw new Error('invalid json format, missing attribute idSchulgliederung');
 		result.idSchulgliederung = obj.idSchulgliederung;
@@ -192,6 +198,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
 		result += '"abiturjahrgang" : ' + ((obj.abiturjahrgang === null) ? 'null' : obj.abiturjahrgang.toString()) + ',';
+		result += '"abiturjahrgangWiederholung" : ' + ((obj.abiturjahrgangWiederholung === null) ? 'null' : obj.abiturjahrgangWiederholung.toString()) + ',';
 		result += '"idSchulgliederung" : ' + obj.idSchulgliederung + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"istDuplikat" : ' + obj.istDuplikat.toString() + ',';
@@ -242,6 +249,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		}
 		if (obj.abiturjahrgang !== undefined) {
 			result += '"abiturjahrgang" : ' + ((obj.abiturjahrgang === null) ? 'null' : obj.abiturjahrgang.toString()) + ',';
+		}
+		if (obj.abiturjahrgangWiederholung !== undefined) {
+			result += '"abiturjahrgangWiederholung" : ' + ((obj.abiturjahrgangWiederholung === null) ? 'null' : obj.abiturjahrgangWiederholung.toString()) + ',';
 		}
 		if (obj.idSchulgliederung !== undefined) {
 			result += '"idSchulgliederung" : ' + obj.idSchulgliederung + ',';

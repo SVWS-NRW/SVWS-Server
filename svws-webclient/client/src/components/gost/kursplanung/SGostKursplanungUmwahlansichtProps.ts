@@ -1,6 +1,7 @@
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
 import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate";
+import type { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
 import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
 import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 
@@ -18,4 +19,5 @@ export interface GostKursplanungUmwahlansichtProps {
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	schueler: Schueler | undefined;
 	apiStatus: ApiStatus;
+	mapWiederholungen: () => Map<number, GostSchuelerWiederholung>;
 }

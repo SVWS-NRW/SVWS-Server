@@ -264,7 +264,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		daten.typ = regelTyp.typ;
 		// Füge Default-Parameter zu der Regel hinzu.
 		final List<DTOSchueler> schueler =
-				GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(blockung.Abi_Jahrgang);
+				GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByBlockung(blockung);
 		final GostFaecherManager faecher = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
 		final Set<Long> setSchuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toSet());
 		for (int i = 0; i < regelTyp.getParamCount(); i++) {
@@ -417,7 +417,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			long idRegel = conn.transactionGetNextID(DTOGostBlockungRegel.class);
 			// Bestimme die Schüler des Abiturjahrgangs, falls Regeln einen Schüler-Bezug haben
 			final List<DTOSchueler> schueler =
-					GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(blockung.Abi_Jahrgang);
+					GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByBlockung(blockung);
 			final Set<Long> setSchuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toSet());
 			final GostFaecherManager faecher = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
 			// Validiere alle Regeln

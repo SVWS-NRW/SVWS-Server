@@ -56,6 +56,54 @@ public interface GostLaufbahnplanungController {
 	 */
 	Response patchFachwahl(Long idSchueler, Long idFach, InputStream is);
 
+
+	/**
+	 * Gibt die geltende Wiederholung des angegebenen Schülers im folgenden Abiturjahrgang zurück.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return die Response mit der Wiederholung
+	 */
+	Response getWiederholung(long idSchueler);
+
+
+	/**
+	 * Gibt alle Wiederholungen von Schülern im folgenden Abiturjahrgang zurück, auf die der Benutzer zugreifen darf.
+	 *
+	 * @return die Response mit der Liste der Wiederholungen
+	 */
+	Response getWiederholungen();
+
+
+	/**
+	 * Legt für den angegebenen Schüler eine Wiederholung im folgenden Abiturjahrgang an.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return die Response mit der angelegten Wiederholung
+	 */
+	Response createWiederholung(long idSchueler);
+
+
+	/**
+	 * Entfernt die Wiederholung des angegebenen Schülers im folgenden Abiturjahrgang.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return die Response mit dem Stand nach dem Entfernen
+	 */
+	Response deleteWiederholung(long idSchueler);
+
+
+	/**
+	 * Übernimmt die Planung der Wiederholung des angegebenen Schülers, sofern der Wechsel in den neuen Jahrgang vollzogen ist.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return die Response mit dem Stand nach der Übernahme
+	 */
+	Response uebernehmeWiederholung(long idSchueler);
+
 	/**
 	 * Gibt die Wahlen des angegebenen Schülers zu den Gleichwertig Komplexen Lernleistunen zurück.
 	 *

@@ -16,12 +16,15 @@ import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
+import de.svws_nrw.module.reporting.types.schueler.gost.ReportingSchuelerGostWiederholung;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
@@ -310,6 +313,25 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			super.gostLaufbahnplanung = new ProxyReportingSchuelerGostLaufbahnplanung(this.reportingContext, this);
 		}
 		return super.gostLaufbahnplanung;
+	}
+
+	/**
+	 * Stellt die Wiederholung zweier GOSt-Halbjahre im folgenden Abiturjahrgang zur Verfügung. Nach dem vollzogenen Wechsel gilt die Laufbahn
+	 * wie jede andere, daher entfällt die Wiederholung dann, auch wenn ihre Planung noch nicht übernommen ist.
+	 *
+	 * @return Daten der Wiederholung; kann {@code null} sein, wenn keine Wiederholung besteht, der Wechsel vollzogen ist oder das Laden fehlgeschlagen ist.
+	 */
+	@Override
+	public ReportingSchuelerGostWiederholung gostWiederholung() {
+		if (super.gostWiederholung == null) {
+			final GostSchuelerWiederholung wiederholung = this.reportingContext.repositoryGost().wiederholung(id());
+			if ((wiederholung == null) || (wiederholung.abiturjahr == null) || (wiederholung.gostHalbjahr == null) || wiederholung.wechselVollzogen) {
+				return null;
+			}
+			super.gostWiederholung = new ReportingSchuelerGostWiederholung(wiederholung.abiturjahrLernabschnitt, wiederholung.abiturjahr,
+					GostHalbjahr.fromIDorException(wiederholung.gostHalbjahr), wiederholung.wechselFaellig);
+		}
+		return super.gostWiederholung;
 	}
 
 	/**

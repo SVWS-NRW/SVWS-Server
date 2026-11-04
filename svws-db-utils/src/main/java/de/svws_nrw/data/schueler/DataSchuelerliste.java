@@ -12,6 +12,7 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
@@ -30,6 +31,7 @@ import de.svws_nrw.mapper.schueler.SchuelerListeEintragComparator;
 import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
@@ -221,6 +223,12 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				}
 				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByIDOrNull(s.idSchulgliederung),
 						schuljahresabschnitt.schuljahr, s.jahrgang);
+			}
+			final Map<Long, GostSchuelerWiederholung> mapWiederholungen = GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService()
+					.getMapWiederholungen(schuelerListe.stream().map(s -> s.id).toList());
+			for (final SchuelerListeEintrag s : schuelerListe) {
+				final GostSchuelerWiederholung wiederholung = mapWiederholungen.get(s.id);
+				s.abiturjahrgangWiederholung = (wiederholung == null) ? null : wiederholung.abiturjahr;
 			}
 		}
 		// Und gib die Schülerliste mit den belegten Kursen zurück...

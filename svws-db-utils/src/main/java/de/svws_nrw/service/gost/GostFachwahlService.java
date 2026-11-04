@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
@@ -19,6 +21,8 @@ import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
+import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
+import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -378,6 +382,8 @@ public class GostFachwahlService {
 	public void patch(final Long idSchueler, final Long idFach, final InputStream is) throws ApiOperationException {
 		transactional(() -> {
 			pruefeGymOb();
+			// Ist der Wechsel einer Wiederholung vollzogen, so gehen ihre Planungsdaten vor der Änderung in die Laufbahnplanung über
+			gostSchuelerService.uebernehmeWiederholungen(List.of(idSchueler));
 
 			final Map<String, Object> map = JSONMapper.toMap(is);
 			if (map.isEmpty()) {
@@ -408,12 +414,20 @@ public class GostFachwahlService {
 			if (dtoJahrgang.ASDJahrgang == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Der Jahrgang des aktuellen Lernabschnittes des Schülers ist nicht korrekt gesetzt.");
 			}
-			final GostHalbjahr aktHalbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(dtoJahrgang.ASDJahrgang, schuljahresabschnitt.abschnitt);
 			final Schulgliederung schulgliederung = (lernabschnitt.Schulgliederung == null)
 					? Schulgliederung.getDefault(schulform)
 					: Schulgliederung.data().getWertByKuerzel(lernabschnitt.Schulgliederung);
 			final Jahrgaenge jahrgang = Jahrgaenge.data().getWertBySchluessel(dtoJahrgang.ASDJahrgang);
-			final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schulform, schulgliederung, schuljahresabschnitt.schuljahr, jahrgang);
+			// Bei einer Wiederholung beginnt die Planung im Einstiegshalbjahr, das Halbjahr davor gilt daher als aktuelles Halbjahr.
+			// Die aktuelle Planung wird wie ohne Wiederholung geplant.
+			final GostSchuelerWiederholung wiederholung = gostSchuelerService.istAktuellePlanung() ? null
+					: gostSchuelerService.getMapWiederholungen(List.of(idSchueler)).get(idSchueler);
+			final GostHalbjahr aktHalbjahr = (wiederholung == null)
+					? GostHalbjahr.fromJahrgangUndHalbjahr(dtoJahrgang.ASDJahrgang, schuljahresabschnitt.abschnitt)
+					: GostHalbjahr.fromIDorException(wiederholung.gostHalbjahr).previous();
+			final Integer abiturjahr = (wiederholung == null)
+					? DBUtilsGost.getAbiturjahr(schulform, schulgliederung, schuljahresabschnitt.schuljahr, jahrgang)
+					: wiederholung.abiturjahr;
 			if (abiturjahr == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Das Abiturjahr konnte für den Schüler nicht ermittelt werden.");
 			}
@@ -489,12 +503,11 @@ public class GostFachwahlService {
 		// Entferne auch die GKLs, sofern sie nicht in bewerteten Abschnitten liegen
 		if (AbiturdatenManager.istAbitur2030(abijahr)) {
 			final Map<Long, Abiturdaten> mapAbidaten = gostAbiturdatenService.getMap(idsSchueler);
-			final Map<Long, DTOGostSchueler> mapGostSchueler = gostSchuelerRepository.findMapByIds(idsSchueler);
-			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(mapGostSchueler.values());
+			final Map<Long, GostSchuelerGKLWahl> mapGKLWahlen = gostSchuelerService.getMapGKLWahlen(idsSchueler);
+			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(mapGKLWahlen.values());
 			for (final long idSchueler : idsSchueler) {
-				final DTOGostSchueler gostSchueler = mapGostSchueler.get(idSchueler);
 				final Abiturdaten abidaten = mapAbidaten.get(idSchueler);
-				loescheGKLsBeiNichtBewertetenHalbjahren(gostSchueler, abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
+				loescheGKLsBeiNichtBewertetenHalbjahren(mapGKLWahlen.get(idSchueler), abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
 			}
 			gostSchuelerRepository.flush();
 		}
@@ -535,11 +548,14 @@ public class GostFachwahlService {
 	public void reset(final long idSchueler) {
 		transactional(() -> {
 			pruefeGymOb();
+			// Ist der Wechsel einer Wiederholung vollzogen, so gehen ihre Planungsdaten vor der Änderung in die Laufbahnplanung über
+			gostSchuelerService.uebernehmeWiederholungen(List.of(idSchueler));
 			final Abiturdaten abidaten = gostAbiturdatenService.get(idSchueler);
 			final DTOGostJahrgangsdaten jahrgang = gostJahrgangsdatenRepository.findById(abidaten.abiturjahr)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Abiturjahrgang konnte nicht gefunden werden."));
-			final DTOGostSchueler gostSchueler = gostSchuelerRepository.getById(idSchueler);
-			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(List.of(gostSchueler));
+			gostSchuelerRepository.getById(idSchueler);
+			final GostSchuelerGKLWahl gklWahl = gostSchuelerService.getMapGKLWahlen(List.of(idSchueler)).get(idSchueler);
+			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(List.of(gklWahl));
 
 			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id]) {
 				resetAbijahrgangSchuelerInternal(jahrgang.Abi_Jahrgang, List.of(idSchueler));
@@ -547,7 +563,7 @@ public class GostFachwahlService {
 			}
 
 			// Entferne auch die Informationen zu den GKL-Wahlen, sofern diese nicht im Bereich eines bewerteten Halbjahres liegen
-			loescheGKLsBeiNichtBewertetenHalbjahren(gostSchueler, abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
+			loescheGKLsBeiNichtBewertetenHalbjahren(gklWahl, abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
 
 			final Map<Long, DTOGostSchuelerFachbelegungen> mapFachwahlen =
 					gostSchuelerFachbelegungenRepository.getMap2DBySchuelerIDAndFachID(List.of(idSchueler)).getSubMapOrNull(idSchueler);
@@ -594,32 +610,35 @@ public class GostFachwahlService {
 			gostJahrgangsdatenRepository.findById(abijahr)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Abiturjahrgang konnte nicht gefunden werden."));
 			final List<DTOSchueler> listSchueler = gostSchuelerService.getByAbiturjahrgang(abijahr);
-			final List<Long> idsSchueler = listSchueler.stream().map(s -> s.ID).distinct().toList();
+			// Wer im folgenden Jahrgang wiederholt, wird dort geplant. Diese Planung bleibt beim Zurücksetzen des bisherigen Jahrgangs erhalten.
+			final Set<Long> idsAndererJahrgang = gostSchuelerService.getMapWiederholungen(listSchueler.stream().map(s -> s.ID).toList()).values().stream()
+					.filter(w -> !abijahr.equals(w.abiturjahr)).map(w -> w.idSchueler).collect(Collectors.toSet());
+			final List<Long> idsSchueler = listSchueler.stream().map(s -> s.ID).filter(id -> !idsAndererJahrgang.contains(id)).distinct().toList();
 			resetAbijahrgangSchuelerInternal(abijahr, idsSchueler);
 		});
 	}
 
 
-	private Map<Long, DTOGostKlausurenVorgaben> getMapKlausurvorgabenByGKLWahlen(final Collection<DTOGostSchueler> gostSchueler) {
-		final List<Long> idsKlausurvorgaben = gostSchueler.stream().flatMap(s -> {
+	private Map<Long, DTOGostKlausurenVorgaben> getMapKlausurvorgabenByGKLWahlen(final Collection<GostSchuelerGKLWahl> gklWahlen) {
+		final List<Long> idsKlausurvorgaben = gklWahlen.stream().flatMap(w -> {
 			final List<Long> result = new ArrayList<>();
-			if (s.GKL_EF_AF1_Klausurvorgabe_ID != null) {
-				result.add(s.GKL_EF_AF1_Klausurvorgabe_ID);
+			if (w.idKlausurvorgabeEF_Sprachen != null) {
+				result.add(w.idKlausurvorgabeEF_Sprachen);
 			}
-			if (s.GKL_EF_AF2_Klausurvorgabe_ID != null) {
-				result.add(s.GKL_EF_AF2_Klausurvorgabe_ID);
+			if (w.idKlausurvorgabeEF_GW != null) {
+				result.add(w.idKlausurvorgabeEF_GW);
 			}
-			if (s.GKL_EF_AF3_Klausurvorgabe_ID != null) {
-				result.add(s.GKL_EF_AF3_Klausurvorgabe_ID);
+			if (w.idKlausurvorgabeEF_NW != null) {
+				result.add(w.idKlausurvorgabeEF_NW);
 			}
-			if (s.GKL_Q_AF1_Klausurvorgabe_ID != null) {
-				result.add(s.GKL_Q_AF1_Klausurvorgabe_ID);
+			if (w.idKlausurvorgabeQ_Sprachen != null) {
+				result.add(w.idKlausurvorgabeQ_Sprachen);
 			}
-			if (s.GKL_Q_AF2_Klausurvorgabe_ID != null) {
-				result.add(s.GKL_Q_AF2_Klausurvorgabe_ID);
+			if (w.idKlausurvorgabeQ_GW != null) {
+				result.add(w.idKlausurvorgabeQ_GW);
 			}
-			if (s.GKL_Q_AF3_Klausurvorgabe_ID != null) {
-				result.add(s.GKL_Q_AF3_Klausurvorgabe_ID);
+			if (w.idKlausurvorgabeQ_NW != null) {
+				result.add(w.idKlausurvorgabeQ_NW);
 			}
 			return result.stream();
 		}).distinct().toList();
@@ -640,15 +659,15 @@ public class GostFachwahlService {
 	}
 
 
-	private void loescheGKLsBeiNichtBewertetenHalbjahren(final DTOGostSchueler gostSchueler, final boolean[] bewertetesHalbjahr,
+	private void loescheGKLsBeiNichtBewertetenHalbjahren(final GostSchuelerGKLWahl wahl, final boolean[] bewertetesHalbjahr,
 			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben) {
-		gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
-		gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
-		gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
-		gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
-		gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
-		gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
-		gostSchuelerRepository.update(gostSchueler);
+		wahl.idKlausurvorgabeEF_Sprachen = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(wahl.idKlausurvorgabeEF_Sprachen, bewertetesHalbjahr, mapKlausurvorgaben);
+		wahl.idKlausurvorgabeEF_GW = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(wahl.idKlausurvorgabeEF_GW, bewertetesHalbjahr, mapKlausurvorgaben);
+		wahl.idKlausurvorgabeEF_NW = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(wahl.idKlausurvorgabeEF_NW, bewertetesHalbjahr, mapKlausurvorgaben);
+		wahl.idKlausurvorgabeQ_Sprachen = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(wahl.idKlausurvorgabeQ_Sprachen, bewertetesHalbjahr, mapKlausurvorgaben);
+		wahl.idKlausurvorgabeQ_GW = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(wahl.idKlausurvorgabeQ_GW, bewertetesHalbjahr, mapKlausurvorgaben);
+		wahl.idKlausurvorgabeQ_NW = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(wahl.idKlausurvorgabeQ_NW, bewertetesHalbjahr, mapKlausurvorgaben);
+		gostSchuelerService.setGKLWahl(wahl);
 	}
 
 
@@ -662,12 +681,15 @@ public class GostFachwahlService {
 	public void delete(final List<Long> idsSchueler) {
 		transactional(() -> {
 			pruefeGymOb();
+			// Ist der Wechsel einer Wiederholung vollzogen, so gehen ihre Planungsdaten vor der Änderung in die Laufbahnplanung über
+			gostSchuelerService.uebernehmeWiederholungen(idsSchueler);
 
 			final Map<Long, Abiturdaten> mapAbidaten = gostAbiturdatenService.getMap(idsSchueler);
 			final Map<Long, List<DTOGostSchuelerFachbelegungen>> mapFachwahlen = gostSchuelerFachbelegungenRepository.getMapBySchuelerID(idsSchueler);
 
 			final Map<Long, DTOGostSchueler> mapGostSchueler = gostSchuelerRepository.findMapByIds(idsSchueler);
-			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(mapGostSchueler.values());
+			final Map<Long, GostSchuelerGKLWahl> mapGKLWahlen = gostSchuelerService.getMapGKLWahlen(idsSchueler);
+			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(mapGKLWahlen.values());
 
 			for (final long idSchueler : idsSchueler) {
 				final DTOGostSchueler gostSchueler = mapGostSchueler.get(idSchueler);
@@ -695,7 +717,7 @@ public class GostFachwahlService {
 				}
 
 				// Entferne auch die Informationen zu den GKL-Wahlen, sofern diese nicht im Bereich eines bewerteten Halbjahres liegen
-				loescheGKLsBeiNichtBewertetenHalbjahren(gostSchueler, abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
+				loescheGKLsBeiNichtBewertetenHalbjahren(mapGKLWahlen.get(idSchueler), abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
 
 				// Wenn es keine Bewertung gibt, dann können einfach alle Fachwahlen des Schülers komplett gelöscht werden
 				if (halbjahr == null) {

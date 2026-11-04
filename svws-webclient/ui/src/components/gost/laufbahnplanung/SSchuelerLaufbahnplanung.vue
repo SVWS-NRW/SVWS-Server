@@ -1,17 +1,20 @@
 <template>
 	<div class="page page-flex-row max-w-480">
-		<Teleport v-if="hatUpdateKompetenz" defer to=".svws-sub-nav-target">
+		<Teleport v-if="hatUpdateKompetenz || hatWiederholung" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>
-				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
-				<svws-ui-button type="transparent" @click="show = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
-				<s-laufbahnplanung-import-modal v-model:show="show" :import-laufbahnplanung="(data) => gostLaufbahnplanungState.importLaufbahnplanung(data)" />
-				<svws-ui-button :type="gostLaufbahnplanungState.hatZwischenspeicher ? 'error' : 'transparent'" @click="gostLaufbahnplanungState.saveLaufbahnplanung()">Planung merken</svws-ui-button>
-				<svws-ui-button type="danger" @click="gostLaufbahnplanungState.restoreLaufbahnplanung()" v-if="gostLaufbahnplanungState.hatZwischenspeicher">Planung wiederherstellen</svws-ui-button>
-				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()" title="Modus wechseln">
-					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
-				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht />
-				<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
+				<template v-if="hatUpdateKompetenz">
+					<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
+					<svws-ui-button type="transparent" @click="show = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
+					<s-laufbahnplanung-import-modal v-model:show="show" :import-laufbahnplanung="(data) => gostLaufbahnplanungState.importLaufbahnplanung(data)" />
+					<svws-ui-button :type="gostLaufbahnplanungState.hatZwischenspeicher ? 'error' : 'transparent'" @click="gostLaufbahnplanungState.saveLaufbahnplanung()">Planung merken</svws-ui-button>
+					<svws-ui-button type="danger" @click="gostLaufbahnplanungState.restoreLaufbahnplanung()" v-if="gostLaufbahnplanungState.hatZwischenspeicher">Planung wiederherstellen</svws-ui-button>
+					<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()" title="Modus wechseln">
+						<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
+					</svws-ui-button>
+					<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht />
+					<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
+				</template>
+				<s-laufbahnplanung-wiederholung v-if="visible && gostLaufbahnplanungState.valid && serverState.hasDev" :hat-update-kompetenz />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport defer to=".svws-ui-header--actions">
@@ -21,6 +24,11 @@
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit grid content-start auto-cols-min gap-2">
+			<div v-if="visible && nichtVollzogen" class="p-2 rounded-md bg-ui-danger text-ui-ondanger min-w-fit font-bold flex flex-row items-center gap-2">
+				<span class="icon-lg i-ri-error-warning-fill icon-ui-ondanger" />
+				Die geplante Wiederholung im Abiturjahrgang {{ gostLaufbahnplanungState.wiederholung.abiturjahr }} wurde nicht vollzogen. Der aktuelle Lernabschnitt
+				passt nicht zu diesem Jahrgang. Bitte den Lernabschnitt prüfen oder die geplante Wiederholung zurücknehmen.
+			</div>
 			<s-laufbahnplanung-card-planung v-if="visible" :manager />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-xl overflow-y-auto overflow-x-hidden pr-4">
@@ -65,14 +73,21 @@
 		{ faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }
 	));
 
+	// Bis zum Wechsel gehört ein Schüler mit Wiederholung zu beiden Jahrgängen, daher genügt die Kompetenz für einen davon
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		if ((gostLaufbahnplanungState.schuelerOrNull === null) || (gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang === null)) {
 			return false;
 		}
+		const abiturjahrWiederholung = gostLaufbahnplanungState.wiederholung.abiturjahr;
 		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 			|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
-				&& benutzerState.kompetenzenAbiturjahrgaenge.has(gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang));
+				&& (benutzerState.kompetenzenAbiturjahrgaenge.has(gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang)
+					|| ((abiturjahrWiederholung !== null) && benutzerState.kompetenzenAbiturjahrgaenge.has(abiturjahrWiederholung))));
 	});
+
+	const hatWiederholung = computed<boolean>(() => gostLaufbahnplanungState.wiederholung.abiturjahr !== null);
+
+	const nichtVollzogen = computed<boolean>(() => gostLaufbahnplanungState.wiederholung.wechselFaellig && !gostLaufbahnplanungState.wiederholung.wechselVollzogen);
 
 	const visible = computed<boolean>(() => (gostLaufbahnplanungState.schuelerOrNull !== null)
 		&& (gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang !== null));
@@ -114,6 +129,9 @@
 		const reportingParameter = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
 		reportingParameter.idsHauptdaten.add(gostLaufbahnplanungState.schueler.id);
+		// Der Wahlbogen zeigt dieselbe Planung wie die Ansicht, bei einer Wiederholung also ggf. die aktuelle Laufbahnplanung
+		ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.setReportingParameterVorlageparameter(reportingParameter, "abiturjahrgangPlanung",
+			gostLaufbahnplanungState.gostJahrgangsdaten.abiturjahr.toString());
 		schleifen: for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {
 			if (gruppe.name === "Inhaltsoptionen") {
 				for (const vp of gruppe.reportvorlageParameter) {

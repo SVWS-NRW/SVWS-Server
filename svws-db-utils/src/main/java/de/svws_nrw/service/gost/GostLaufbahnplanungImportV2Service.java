@@ -24,6 +24,7 @@ import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
+import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v2.GostLaufbahnplanungExportV2;
@@ -59,6 +60,7 @@ public class GostLaufbahnplanungImportV2Service {
 	private final SchuelerCredentialsService schuelerCredentialsService;
 	private final GostAbiturdatenService gostAbiturdatenService;
 	private final GostFaecherService gostFaecherService;
+	private final GostSchuelerService gostSchuelerService;
 
 	/**
 	 * Erstellt einen neuen Service.
@@ -70,6 +72,7 @@ public class GostLaufbahnplanungImportV2Service {
 	 * @param schuelerCredentialsService                das Repository für den Zugriff auf die Schüler-Credentials
 	 * @param gostAbiturdatenService                    der Service für den Zugriff auf die Abiturdaten der gymnasialen Oberstufe
 	 * @param gostFaecherService                        der Service für den Zugruff auf die Fächerdaten eines Abiturjahrganges der gymnasialen Oberstufe
+	 * @param gostSchuelerService                       der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe, u.a. die GKL-Wahlen
 	 */
 	public GostLaufbahnplanungImportV2Service(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
@@ -77,7 +80,8 @@ public class GostLaufbahnplanungImportV2Service {
 			final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository,
 			final SchuelerCredentialsService schuelerCredentialsService,
 			final GostAbiturdatenService gostAbiturdatenService,
-			final GostFaecherService gostFaecherService) {
+			final GostFaecherService gostFaecherService,
+			final GostSchuelerService gostSchuelerService) {
 		this.benutzerRepository = benutzerRepository;
 		this.schuelerRepository = schuelerRepository;
 		this.gostSchuelerRepository = gostSchuelerRepository;
@@ -85,6 +89,7 @@ public class GostLaufbahnplanungImportV2Service {
 		this.schuelerCredentialsService = schuelerCredentialsService;
 		this.gostAbiturdatenService = gostAbiturdatenService;
 		this.gostFaecherService = gostFaecherService;
+		this.gostSchuelerService = gostSchuelerService;
 	}
 
 
@@ -159,6 +164,9 @@ public class GostLaufbahnplanungImportV2Service {
 					"Es konnte nicht für alle Importe ein Verschlüsselungsobjekt erstellt werden. Ein Import ist in diesem Fall nicht mögliche. Der Import wird abgebrochen.");
 			return false;
 		}
+
+		// Ist der Wechsel einer Wiederholung vollzogen, so gehen ihre Planungsdaten vor dem Import in die Laufbahnplanung über
+		gostSchuelerService.uebernehmeWiederholungen(idsSchueler);
 
 		// Lese die GOST-spezifischen Informationen der Schüler ein
 		final Map<Long, DTOGostSchueler> mapGostSchueler = gostSchuelerRepository.findMapByIds(idsSchueler);
@@ -293,13 +301,17 @@ public class GostLaufbahnplanungImportV2Service {
 			}
 		}
 
-		// Übernehme die Schüler-Wahlen zu den gleichwertigen komplexen Leistungsnachweisen (GKL)
-		gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID = daten.gkl[0];
-		gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID = daten.gkl[1];
-		gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID = daten.gkl[2];
-		gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID = daten.gkl[3];
-		gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID = daten.gkl[4];
-		gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID = daten.gkl[5];
+		// Übernehme die Schüler-Wahlen zu den gleichwertigen komplexen Leistungsnachweisen (GKL), bei einer Wiederholung außerhalb der aktuellen
+		// Planung für den neuen Jahrgang
+		final GostSchuelerGKLWahl gklWahl = new GostSchuelerGKLWahl();
+		gklWahl.idSchueler = gostSchueler.Schueler_ID;
+		gklWahl.idKlausurvorgabeEF_Sprachen = daten.gkl[0];
+		gklWahl.idKlausurvorgabeEF_GW = daten.gkl[1];
+		gklWahl.idKlausurvorgabeEF_NW = daten.gkl[2];
+		gklWahl.idKlausurvorgabeQ_Sprachen = daten.gkl[3];
+		gklWahl.idKlausurvorgabeQ_GW = daten.gkl[4];
+		gklWahl.idKlausurvorgabeQ_NW = daten.gkl[5];
+		gostSchuelerService.setGKLWahl(gklWahl);
 
 		// Prüfe die Fachbelegungen bei den Fachbelegungen, wo bereits Leistungsdaten in der Datenbank hinterlegt sind und übernehme die restlichen Fachwahlen
 		final Map<Long, AbiturFachbelegung> dbBelegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));

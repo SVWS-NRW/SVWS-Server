@@ -143,6 +143,10 @@
 								<template v-if="getDatenmanager().schuelerGet(s.id).abschlussjahrgang !== getDatenmanager().daten().abijahrgang">
 									<span class="ml-1">(Abi {{ getDatenmanager().schuelerGet(s.id).abschlussjahrgang }})</span>
 								</template>
+								<template v-if="mapWiederholungen().get(s.id)?.wechselVollzogen === false">
+									<span class="icon-sm i-ri-arrow-go-back-fill icon-ui-danger ml-2 inline-block shrink-0" title="Geplante Wiederholung zweier GOSt-Halbjahre" />
+									<span class="text-ui-danger ml-1" :title="`Geplante Wiederholung im Abiturjahrgang ${mapWiederholungen().get(s.id)?.abiturjahr}`">{{ abiturjahrgaengeWiederholung(s.id) }}</span>
+								</template>
 								<template v-if="s.status !== 2">
 									<span class="ml-1">({{ SchuelerStatus.data().getWertByKuerzel("" + s.status)?.daten(schuljahr)?.text ?? '—' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
 								</template>
@@ -269,6 +273,16 @@
 		return anzahl > 0 ? `+${anzahl} weitere` : '';
 	});
 
+
+	// Die Abiturjahrgänge erscheinen zweistellig, damit der Hinweis neben dem Namen wenig Platz braucht
+	function abiturjahrgaengeWiederholung(idSchueler: number): string {
+		const wiederholung = props.mapWiederholungen().get(idSchueler);
+		if (wiederholung === undefined) {
+			return "";
+		}
+		const kurz = (abiturjahr: number | null) => (abiturjahr === null) ? "—" : String(abiturjahr % 100).padStart(2, "0");
+		return `${kurz(wiederholung.abiturjahrLernabschnitt)} → ${kurz(wiederholung.abiturjahr)}`;
+	}
 
 	function istSchriftlich(id: number) {
 		const kurs = props.schuelerFilter().kurs;

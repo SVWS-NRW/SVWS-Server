@@ -6,6 +6,7 @@ import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.gost.GostJahrgang;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -102,6 +103,40 @@ public final class GostAbiturjahrUtils {
 			strJG = "0" + strJG;
 		}
 		return strJG;
+	}
+
+
+	/**
+	 * Bestimmt das Halbjahr, mit dem ein Schüler bei einer Wiederholung im neuen Jahrgang einsteigt. Das ist das Halbjahr,
+	 * das auf den Schuljahresabschnitt folgt, in dem die Wiederholung angelegt wird.
+	 *
+	 * @param abiturjahr   das Abiturjahr des Jahrgangs der Wiederholung
+	 * @param schuljahr    das Schuljahr des Schuljahresabschnitts, in dem die Wiederholung angelegt wird
+	 * @param abschnitt    der Abschnitt (das Halbjahr) des Schuljahresabschnitts, in dem die Wiederholung angelegt wird
+	 *
+	 * @return das Halbjahr im neuen Jahrgang oder null, wenn dieser im Folgeabschnitt nicht in der gymnasialen Oberstufe ist
+	 */
+	public static GostHalbjahr getWiederholungHalbjahr(final int abiturjahr, final int schuljahr, final int abschnitt) {
+		final boolean neuesSchuljahr = (abschnitt >= 2);
+		return GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, neuesSchuljahr ? (schuljahr + 1) : schuljahr, neuesSchuljahr ? 1 : 2);
+	}
+
+
+	/**
+	 * Prüft, ob ein Schuljahresabschnitt vor dem Halbjahr liegt, mit dem ein Schüler bei einer Wiederholung im neuen Jahrgang einsteigt.
+	 * Für solche Abschnitte gehört der Schüler noch zum Jahrgang seines Lernabschnitts, ab dem Einstieg zum neuen Jahrgang.
+	 *
+	 * @param wiederholungAbiturjahr   das Abiturjahr des Jahrgangs der Wiederholung
+	 * @param wiederholungHalbjahr     das Halbjahr, mit dem der Schüler im neuen Jahrgang einsteigt
+	 * @param schuljahr                das Schuljahr des zu prüfenden Abschnitts
+	 * @param abschnitt                der zu prüfende Abschnitt (das Halbjahr) im Schuljahr
+	 *
+	 * @return true, wenn der Abschnitt vor dem Einstieg liegt
+	 */
+	public static boolean liegtVorWiederholung(final int wiederholungAbiturjahr, final @NotNull GostHalbjahr wiederholungHalbjahr, final int schuljahr,
+			final int abschnitt) {
+		final int schuljahrWiederholung = wiederholungHalbjahr.getSchuljahrFromAbiturjahr(wiederholungAbiturjahr);
+		return (schuljahr < schuljahrWiederholung) || ((schuljahr == schuljahrWiederholung) && (abschnitt < wiederholungHalbjahr.halbjahr));
 	}
 
 

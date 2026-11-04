@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
+import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -98,6 +99,37 @@ export class GostAbiturjahrUtils extends JavaObject {
 			strJG = "0" + strJG;
 		}
 		return strJG;
+	}
+
+	/**
+	 * Bestimmt das Halbjahr, mit dem ein Schüler bei einer Wiederholung im neuen Jahrgang einsteigt. Das ist das Halbjahr,
+	 * das auf den Schuljahresabschnitt folgt, in dem die Wiederholung angelegt wird.
+	 *
+	 * @param abiturjahr   das Abiturjahr des Jahrgangs der Wiederholung
+	 * @param schuljahr    das Schuljahr des Schuljahresabschnitts, in dem die Wiederholung angelegt wird
+	 * @param abschnitt    der Abschnitt (das Halbjahr) des Schuljahresabschnitts, in dem die Wiederholung angelegt wird
+	 *
+	 * @return das Halbjahr im neuen Jahrgang oder null, wenn dieser im Folgeabschnitt nicht in der gymnasialen Oberstufe ist
+	 */
+	public static getWiederholungHalbjahr(abiturjahr: number, schuljahr: number, abschnitt: number): GostHalbjahr | null {
+		const neuesSchuljahr: boolean = (abschnitt >= 2);
+		return GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, neuesSchuljahr ? (schuljahr + 1) : schuljahr, neuesSchuljahr ? 1 : 2);
+	}
+
+	/**
+	 * Prüft, ob ein Schuljahresabschnitt vor dem Halbjahr liegt, mit dem ein Schüler bei einer Wiederholung im neuen Jahrgang einsteigt.
+	 * Für solche Abschnitte gehört der Schüler noch zum Jahrgang seines Lernabschnitts, ab dem Einstieg zum neuen Jahrgang.
+	 *
+	 * @param wiederholungAbiturjahr   das Abiturjahr des Jahrgangs der Wiederholung
+	 * @param wiederholungHalbjahr     das Halbjahr, mit dem der Schüler im neuen Jahrgang einsteigt
+	 * @param schuljahr                das Schuljahr des zu prüfenden Abschnitts
+	 * @param abschnitt                der zu prüfende Abschnitt (das Halbjahr) im Schuljahr
+	 *
+	 * @return true, wenn der Abschnitt vor dem Einstieg liegt
+	 */
+	public static liegtVorWiederholung(wiederholungAbiturjahr: number, wiederholungHalbjahr: GostHalbjahr, schuljahr: number, abschnitt: number): boolean {
+		const schuljahrWiederholung: number = wiederholungHalbjahr.getSchuljahrFromAbiturjahr(wiederholungAbiturjahr);
+		return (schuljahr < schuljahrWiederholung) || ((schuljahr === schuljahrWiederholung) && (abschnitt < wiederholungHalbjahr.halbjahr));
 	}
 
 	transpilerCanonicalName(): string {

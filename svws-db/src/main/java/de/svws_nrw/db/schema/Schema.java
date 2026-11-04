@@ -84,6 +84,8 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Termine_Jahrgaenge;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Vorgaben;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Schueler;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Schueler_Fachwahlen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Schueler_Wiederholung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Schueler_Wiederholung_Fachwahlen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunft;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunft_Keys;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Herkunft_Schulformen;
@@ -772,6 +774,12 @@ public final class Schema {
 
 	/** Tabelle Gost_Schueler_Fachwahlen */
 	public static final Tabelle_Gost_Schueler_Fachwahlen tab_Gost_Schueler_Fachwahlen = add(new Tabelle_Gost_Schueler_Fachwahlen());
+
+	/** Tabelle Gost_Schueler_Wiederholung */
+	public static final Tabelle_Gost_Schueler_Wiederholung tab_Gost_Schueler_Wiederholung = add(new Tabelle_Gost_Schueler_Wiederholung());
+
+	/** Tabelle Gost_Schueler_Wiederholung_Fachwahlen */
+	public static final Tabelle_Gost_Schueler_Wiederholung_Fachwahlen tab_Gost_Schueler_Wiederholung_Fachwahlen = add(new Tabelle_Gost_Schueler_Wiederholung_Fachwahlen());
 
 	/** Tabelle KlassenLehrer */
 	public static final Tabelle_KlassenLehrer tab_KlassenLehrer = add(new Tabelle_KlassenLehrer());

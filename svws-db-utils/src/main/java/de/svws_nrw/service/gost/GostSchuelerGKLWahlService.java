@@ -3,14 +3,12 @@ package de.svws_nrw.service.gost;
 import static de.svws_nrw.data.TransactionSupport.transactional;
 
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
-import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
-import de.svws_nrw.repo.gost.GostSchuelerRepository;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenVorgabeRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import jakarta.ws.rs.core.Response.Status;
@@ -22,7 +20,7 @@ public class GostSchuelerGKLWahlService {
 
 	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final SchuelerRepository schuelerRepository;
-	private final GostSchuelerRepository gostSchuelerRepository;
+	private final GostSchuelerService gostSchuelerService;
 	private final GostKlausurenVorgabeRepository gostKlausurenVorgabeRepository;
 
 	/**
@@ -30,16 +28,16 @@ public class GostSchuelerGKLWahlService {
 	 *
 	 * @param benutzerRepository               das Repository für den Zugriff auf Benutzerdaten und den angemeldeten Benutzer
 	 * @param schuelerRepository               das Repository für den Zugriff auf Schülerdaten
-	 * @param gostSchuelerRepository           das Repository für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe
+	 * @param gostSchuelerService              der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe
 	 * @param gostKlausurenVorgabeRepository   das Repository für den Zugriff auf die Klausurvorgaben der gymnasialen Oberstufe
 	 */
 	public GostSchuelerGKLWahlService(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
-			final GostSchuelerRepository gostSchuelerRepository,
+			final GostSchuelerService gostSchuelerService,
 			final GostKlausurenVorgabeRepository gostKlausurenVorgabeRepository) {
 		this.benutzerRepository = benutzerRepository;
 		this.schuelerRepository = schuelerRepository;
-		this.gostSchuelerRepository = gostSchuelerRepository;
+		this.gostSchuelerService = gostSchuelerService;
 		this.gostKlausurenVorgabeRepository = gostKlausurenVorgabeRepository;
 	}
 
@@ -64,25 +62,7 @@ public class GostSchuelerGKLWahlService {
 			if (schuelerRepository.findById(idSchueler).isEmpty()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
 			}
-			final Optional<DTOGostSchueler> gostSchueler = gostSchuelerRepository.findById(idSchueler);
-			final GostSchuelerGKLWahl wahl = new GostSchuelerGKLWahl();
-			wahl.idSchueler = idSchueler;
-			gostSchueler.ifPresentOrElse(w -> {
-				wahl.idKlausurvorgabeEF_Sprachen = w.GKL_EF_AF1_Klausurvorgabe_ID;
-				wahl.idKlausurvorgabeEF_GW = w.GKL_EF_AF2_Klausurvorgabe_ID;
-				wahl.idKlausurvorgabeEF_NW = w.GKL_EF_AF3_Klausurvorgabe_ID;
-				wahl.idKlausurvorgabeQ_Sprachen = w.GKL_Q_AF1_Klausurvorgabe_ID;
-				wahl.idKlausurvorgabeQ_GW = w.GKL_Q_AF2_Klausurvorgabe_ID;
-				wahl.idKlausurvorgabeQ_NW = w.GKL_Q_AF3_Klausurvorgabe_ID;
-			}, () -> {
-				wahl.idKlausurvorgabeEF_Sprachen = null;
-				wahl.idKlausurvorgabeEF_GW = null;
-				wahl.idKlausurvorgabeEF_NW = null;
-				wahl.idKlausurvorgabeQ_Sprachen = null;
-				wahl.idKlausurvorgabeQ_GW = null;
-				wahl.idKlausurvorgabeQ_NW = null;
-			});
-			return wahl;
+			return gostSchuelerService.getMapGKLWahlen(List.of(idSchueler)).get(idSchueler);
 		});
 	}
 
@@ -127,15 +107,10 @@ public class GostSchuelerGKLWahlService {
 				}
 			}
 
-			// Setze die IDs der Klausurvorgaben für die GKL-Wahlen
-			final DTOGostSchueler gostSchueler = gostSchuelerRepository.findById(wahl.idSchueler).orElse(new DTOGostSchueler(wahl.idSchueler, false));
-			gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID = wahl.idKlausurvorgabeEF_Sprachen;
-			gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID = wahl.idKlausurvorgabeEF_GW;
-			gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID = wahl.idKlausurvorgabeEF_NW;
-			gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID = wahl.idKlausurvorgabeQ_Sprachen;
-			gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID = wahl.idKlausurvorgabeQ_GW;
-			gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID = wahl.idKlausurvorgabeQ_NW;
-			gostSchuelerRepository.update(gostSchueler);
+			// Setze die IDs der Klausurvorgaben für die GKL-Wahlen, bei einer Wiederholung außerhalb der aktuellen Planung für den neuen Jahrgang. Ist der Wechsel
+			// bereits vollzogen, so gehen die Planungsdaten zuvor in die Laufbahnplanung über.
+			gostSchuelerService.uebernehmeWiederholungen(List.of(wahl.idSchueler));
+			gostSchuelerService.setGKLWahl(wahl);
 		});
 	}
 

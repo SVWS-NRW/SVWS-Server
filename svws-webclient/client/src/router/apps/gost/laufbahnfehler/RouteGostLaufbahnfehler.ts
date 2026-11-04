@@ -86,6 +86,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 	public getProps(to: RouteLocationNormalized): GostLaufbahnfehlerProps {
 		return {
 			listBelegpruefungsErgebnisse: () => this.data.listBelegpruefungsErgebnisse,
+			mapWiederholungen: () => this.data.mapWiederholungen,
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,

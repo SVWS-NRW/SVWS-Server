@@ -143,6 +143,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 			setIsSchuelerFilterOpen: routeGostKursplanung.data.setIsSchuelerFilterOpen,
 			showGeschlecht: () => routeGostKursplanung.data.showGeschlecht,
 			setShowGeschlecht: routeGostKursplanung.data.setShowGeschlecht,
+			mapWiederholungen: () => routeGostKursplanung.data.mapWiederholungen,
 		};
 	}
 
@@ -159,6 +160,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
 			schueler: routeGostKursplanung.data.hatSchueler ? routeGostKursplanung.data.auswahlSchueler : undefined,
 			apiStatus: api.status,
+			mapWiederholungen: () => routeGostKursplanung.data.mapWiederholungen,
 		};
 	}
 
