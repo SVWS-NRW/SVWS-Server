@@ -69,6 +69,24 @@ class EigeneSchuleServiceTest {
 	}
 
 	// -------------------------------------------------------------------------
+	// getIdSchuljahresabschnitt()
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getIdSchuljahresabschnitt()")
+	class GetIdSchuljahresabschnitt {
+
+		@Test
+		@DisplayName("gibt die ID des aktuellen Schuljahresabschnitts aus dem Repository zurück")
+		void getIdSchuljahresabschnitt_returnsIdFromRepository() {
+			when(eigeneSchuleRepository.getIdSchuljahresabschnitt()).thenReturn(42L);
+
+			assertThat(service.getIdSchuljahresabschnitt()).isEqualTo(42L);
+			verify(eigeneSchuleRepository).getIdSchuljahresabschnitt();
+		}
+	}
+
+	// -------------------------------------------------------------------------
 	// getSchuljahr()
 	// -------------------------------------------------------------------------
 

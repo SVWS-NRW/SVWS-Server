@@ -124,9 +124,10 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
 	public Response getSchuelerAktuell(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerliste(conn, null).getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+		return SchuelerControllerFactory
+				.withReadAccess(request)
+				.getSchuelerListeEintragController()
+				.getListeAktuell(false);
 	}
 
 
@@ -154,9 +155,10 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
 	public Response getSchuelerFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerliste(conn, abschnitt).getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+		return SchuelerControllerFactory
+				.withReadAccess(request)
+				.getSchuelerListeEintragController()
+				.getListe(abschnitt, false);
 	}
 
 

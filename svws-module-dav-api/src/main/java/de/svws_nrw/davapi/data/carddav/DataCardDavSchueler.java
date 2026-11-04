@@ -18,7 +18,6 @@ import de.svws_nrw.core.data.adressbuch.Telefonnummer;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerTelefon;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
@@ -116,8 +115,12 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 		}
 
 		// Bestimme zunächst die Schülerliste für den Schuljahresabschnitt und filtere anschließend die relevanten Schüler anhand des Schüler-Status
-		final List<SchuelerListeEintrag> listSchueler = DataSchuelerliste.getListeSchueler(conn, schuljahresabschnitt.id, false).stream()
-				.filter(DataCardDavSchueler::filterBySchuelerStatus).toList();
+		final List<SchuelerListeEintrag> listSchueler = SchuelerServiceFactory.getNewInstance()
+				.getSchuelerListeEintragService()
+				.getListe(schuljahresabschnitt.id, false)
+				.stream()
+				.filter(DataCardDavSchueler::filterBySchuelerStatus)
+				.toList();
 
 		// Wenn keine Payload erzeugt wird, so können leere Adressbuch-Einträge zurückgegeben werden ...
 		if (!withPayload) {

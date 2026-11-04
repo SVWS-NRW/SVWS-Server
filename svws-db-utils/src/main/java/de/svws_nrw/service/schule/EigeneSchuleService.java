@@ -36,6 +36,15 @@ public final class EigeneSchuleService {
 	}
 
 	/**
+	 * Liefert die ID des aktuellen Schuljahresabschnitts der Schule
+	 *
+	 * @return die ID des aktuellen Schuljahresabschnitts der Schule
+	 */
+	public long getIdSchuljahresabschnitt() {
+		return eigeneSchuleRepository.getIdSchuljahresabschnitt();
+	}
+
+	/**
 	 * Liefert das Schuljahr der Schule
 	 *
 	 * @return das Schuljahr der Schule

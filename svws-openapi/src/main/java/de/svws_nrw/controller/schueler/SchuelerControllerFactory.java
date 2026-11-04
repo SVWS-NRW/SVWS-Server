@@ -6,6 +6,8 @@ import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungControll
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungControllerImpl;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittControllerImpl;
+import de.svws_nrw.controller.schueler.liste.SchuelerListeEintragController;
+import de.svws_nrw.controller.schueler.liste.SchuelerListeEintragControllerImpl;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformControllerImpl;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
@@ -200,6 +202,15 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerCreateController getSchuelerCreateController() {
 		return new SchuelerCreateControllerImpl(schuelerServiceFactory.getSchuelerCreateService());
+	}
+
+	/**
+	 * Erstellt eine neue SchuelerListeEintragController-Instanz.
+	 *
+	 * @return ein neuer SchuelerListeEintragController mit dem konfigurierten SchuelerListeEintragService
+	 */
+	public SchuelerListeEintragController getSchuelerListeEintragController() {
+		return new SchuelerListeEintragControllerImpl(schuelerServiceFactory.getSchuelerListeEintragService());
 	}
 
 }

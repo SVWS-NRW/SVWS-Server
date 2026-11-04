@@ -13,16 +13,24 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.gost.GostSchuelerWiederholungRepository;
+import de.svws_nrw.repo.kurse.KursSchuelerRepository;
+import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.einwilligung.SchuelerEinwilligungRepository;
 import de.svws_nrw.repo.schueler.lernplattform.SchuelerLernplattformRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformCredentialRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
+import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 
 /**
@@ -49,12 +57,18 @@ class SchuelerServiceFactoryTest {
 	@Mock
 	private EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
+	@Mock
+	private KurseRepositoryFactory kurseRepositoryFactory;
+
+	@Mock
+	private GostRepositoryFactory gostRepositoryFactory;
+
 	private SchuelerServiceFactory factory;
 
 	@BeforeEach
 	void setUp() {
 		factory = SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory,
-				katalogServiceFactory, eigeneSchuleRepositoryFactory, eigeneSchuleServiceFactory);
+				katalogServiceFactory, eigeneSchuleRepositoryFactory, eigeneSchuleServiceFactory, kurseRepositoryFactory, gostRepositoryFactory);
 	}
 
 	@Test
@@ -100,6 +114,36 @@ class SchuelerServiceFactoryTest {
 		verify(schuelerRepositoryFactory).getSchuelerEinwilligungRepository();
 		verify(schuelerRepositoryFactory).getSchuelerRepository();
 		verify(katalogRepositoryFactory).getEinwilligungsartRepository();
+	}
+
+	@Test
+	@DisplayName("getSchuelerListeEintragService | Erstellt den Service und ruft alle benötigten Repositories und Services ab")
+	void getSchuelerListeEintragService_success() {
+		final var schuelerRepository = mock(SchuelerRepository.class);
+		final var lernabschnittRepository = mock(SchuelerLernabschnittRepository.class);
+		final var kursSchuelerRepository = mock(KursSchuelerRepository.class);
+		final var jahrgangRepository = mock(JahrgangRepository.class);
+		final var wiederholungRepository = mock(GostSchuelerWiederholungRepository.class);
+		final var eigeneSchuleService = mock(EigeneSchuleService.class);
+		final var schuljahresabschnittService = mock(SchuljahresabschnittService.class);
+		when(schuelerRepositoryFactory.getSchuelerRepository()).thenReturn(schuelerRepository);
+		when(schuelerRepositoryFactory.getSchuelerLernabschnittRepository()).thenReturn(lernabschnittRepository);
+		when(kurseRepositoryFactory.getKursSchuelerRepository()).thenReturn(kursSchuelerRepository);
+		when(katalogRepositoryFactory.getJahrgangRepository()).thenReturn(jahrgangRepository);
+		when(gostRepositoryFactory.getGostSchuelerWiederholungRepository()).thenReturn(wiederholungRepository);
+		when(eigeneSchuleServiceFactory.getSchuleService()).thenReturn(eigeneSchuleService);
+		when(eigeneSchuleServiceFactory.getSchuljahresabschnittService()).thenReturn(schuljahresabschnittService);
+
+		final var service = factory.getSchuelerListeEintragService();
+
+		assertThat(service).isNotNull();
+		verify(schuelerRepositoryFactory).getSchuelerRepository();
+		verify(schuelerRepositoryFactory).getSchuelerLernabschnittRepository();
+		verify(kurseRepositoryFactory).getKursSchuelerRepository();
+		verify(katalogRepositoryFactory).getJahrgangRepository();
+		verify(gostRepositoryFactory).getGostSchuelerWiederholungRepository();
+		verify(eigeneSchuleServiceFactory).getSchuleService();
+		verify(eigeneSchuleServiceFactory).getSchuljahresabschnittService();
 	}
 
 }

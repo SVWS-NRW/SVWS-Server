@@ -14,6 +14,8 @@ import de.svws_nrw.mapper.schule.katalog.ort.OrtMapper;
 import de.svws_nrw.mapper.schule.katalog.ortsteil.OrtsteilMapper;
 import de.svws_nrw.mapper.schule.katalog.religion.ReligionMapper;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
@@ -80,7 +82,9 @@ public final class KatalogServiceFactory {
 						repositoryFactory,
 						getNewInstance(repositoryFactory, eigeneSchuleRepositoryFactory),
 						EigeneSchuleRepositoryFactory.getNewInstance(),
-						eigeneSchuleRepositoryFactory).getSchuelerLernplattformService(),
+						eigeneSchuleRepositoryFactory,
+						KurseRepositoryFactory.getNewInstance(),
+						GostRepositoryFactory.getNewInstance()).getSchuelerLernplattformService(),
 				() -> LehrerServiceFactory.getNewInstance(
 						LehrerRepositoryFactory.getNewInstance(),
 						EigeneSchuleRepositoryFactory.getNewInstance(),
@@ -91,7 +95,9 @@ public final class KatalogServiceFactory {
 						repositoryFactory,
 						getNewInstance(repositoryFactory, eigeneSchuleRepositoryFactory),
 						EigeneSchuleRepositoryFactory.getNewInstance(),
-						eigeneSchuleRepositoryFactory).getSchuelerEinwilligungService(),
+						eigeneSchuleRepositoryFactory,
+						KurseRepositoryFactory.getNewInstance(),
+						GostRepositoryFactory.getNewInstance()).getSchuelerEinwilligungService(),
 				() -> LehrerServiceFactory.getNewInstance(
 						LehrerRepositoryFactory.getNewInstance(),
 						EigeneSchuleRepositoryFactory.getNewInstance(),

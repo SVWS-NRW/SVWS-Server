@@ -11,7 +11,6 @@ import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -86,8 +85,12 @@ public final class DataCardDavErzieher extends DataManagerCardDav {
 
 		// Bestimme alle Erzieher
 		// Bestimme zunächst die Schülerliste für den Schuljahresabschnitt und filtere anschließend die relevanten Schüler anhand des Schüler-Status
-		final List<SchuelerListeEintrag> listSchueler = DataSchuelerliste.getListeSchueler(conn, schuljahresabschnitt.id, false).stream()
-				.filter(DataCardDavSchueler::filterBySchuelerStatus).toList();
+		final List<SchuelerListeEintrag> listSchueler = SchuelerServiceFactory.getNewInstance()
+				.getSchuelerListeEintragService()
+				.getListe(schuljahresabschnitt.id, false)
+				.stream()
+				.filter(DataCardDavSchueler::filterBySchuelerStatus)
+				.toList();
 		final List<Long> idsSchueler = listSchueler.stream().map(s -> s.id).toList();
 
 		final List<DTOSchuelerErzieherAdresse> listErzieher =

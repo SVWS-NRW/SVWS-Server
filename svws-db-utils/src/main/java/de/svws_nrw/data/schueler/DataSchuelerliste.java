@@ -1,238 +1,38 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.data.schueler.SchuelerListe;
-import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.mapper.schueler.SchuelerListeEintragComparator;
-import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import de.svws_nrw.service.schueler.liste.SchuelerListeEintragService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
-import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link SchuelerListeEintrag}.
+ * Diese Klasse stellt statische Hilfsmethoden für die Schülerliste bereit. Sie bleibt vorerst für das
+ * Aggregat der Auswahlliste ({@link #getSchuelerListe(DBEntityManager, long)}) bestehen. Die Einträge der
+ * Schülerliste werden vom {@link SchuelerListeEintragService} erstellt.
  */
-public final class DataSchuelerliste extends DataManager<Long> {
-
-	private final Long abschnitt;
+public final class DataSchuelerliste {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerListeEintrag}.
-	 *
-	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param abschnitt   der Lernabschnitt, für welchen die Schülerliste erstellt werden soll
+	 * Privater Konstruktor, da die Klasse nur statische Methoden bereitstellt.
 	 */
-	public DataSchuelerliste(final DBEntityManager conn, final Long abschnitt) {
-		super(conn);
-		this.abschnitt = abschnitt;
-	}
-
-	@Override
-	public Response getAll() throws ApiOperationException {
-		Long tmpAbschnitt = this.abschnitt;
-		if (tmpAbschnitt == null) {
-			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null) {
-				throw new ApiOperationException(Status.NOT_FOUND);
-			}
-			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
-		}
-		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, false);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-	@Override
-	public Response getList() throws ApiOperationException {
-		Long tmpAbschnitt = this.abschnitt;
-		if (tmpAbschnitt == null) {
-			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null) {
-				throw new ApiOperationException(Status.NOT_FOUND);
-			}
-			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
-		}
-		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, true);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-	@Override
-	public Response get(final Long id) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
-	}
-
-
-	/**
-	 * Ermittelt die Kurse, welche von den Schülern in der Liste belegt wurden und ordnet diese zu.
-	 * Die Ermittlung der Kurse sollte mit einer gültigen Schuljahresabschnitts-ID eingeschränkt werden.
-	 *
-	 * @param conn        die Datenbankverbindung
-	 * @param schuelerListe             die Schülerliste
-	 * @param schuljahresabschnittsID   die ID des Schuljahrsabschnitts
-	 */
-	private static void getSchuelerKurse(final DBEntityManager conn, final List<SchuelerListeEintrag> schuelerListe, final Long schuljahresabschnittsID) {
-		if (!schuelerListe.isEmpty()) {
-			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.id).toList();
-			final Map<Long, List<DTOKursSchueler>> kursSchueler;
-			if (schuljahresabschnittsID == null) {
-				final String jpql =
-						"SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";
-				kursSchueler = conn.query(jpql, DTOKursSchueler.class)
-						.setParameter("ids", schuelerIDs)
-						.getResultList()
-						.stream()
-						.collect(Collectors.groupingBy(ks -> ks.Schueler_ID));
-			} else {
-				final String jpql =
-						"SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND k.Schuljahresabschnitts_ID = :abschnitt AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";
-				kursSchueler = conn.query(jpql, DTOKursSchueler.class)
-						.setParameter("abschnitt", schuljahresabschnittsID)
-						.setParameter("ids", schuelerIDs)
-						.getResultList()
-						.stream()
-						.collect(Collectors.groupingBy(ks -> ks.Schueler_ID));
-			}
-			for (final SchuelerListeEintrag eintrag : schuelerListe) {
-				final List<DTOKursSchueler> kurs_schueler = kursSchueler.get(eintrag.id);
-				if ((kurs_schueler != null) && (!kurs_schueler.isEmpty())) {
-					for (final DTOKursSchueler ks : kurs_schueler) {
-						eintrag.kurse.add(ks.Kurs_ID);
-					}
-				}
-			}
-		}
-	}
-
-
-
-	/**
-	 * Erstellt eine Liste aller nicht gelöschten Schüler mit Daten in Bezug für den angegebenen Schuljahresabschnitt.
-	 *
-	 * @param conn        die Datenbankverbindung
-	 * @param abschnitt   die ID des Schuljahresabschnitts, dessen Daten eingelesen werden soll.
-	 * @param nurAktive   gibt an, dass nur aktive Schüler des aktuellen Schuljahrabschnitts der Schule zurückgegeben werden sollen.
-	 *
-	 * @return die Schülerliste
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static List<SchuelerListeEintrag> getListeSchueler(final DBEntityManager conn, final long abschnitt, final boolean nurAktive)
-			throws ApiOperationException {
-		// Lese die Schüler aus der Datenbank
-		List<DTOSchueler> schueler = null;
-		if (nurAktive) {
-			final TypedQuery<DTOSchueler> querySchueler = conn.query("SELECT s FROM DTOSchueler s WHERE s.ID IS NOT NULL AND "
-					+ "(s.hatLoeschvermerk = null OR s.hatLoeschvermerk = false) AND s.Status = :status", DTOSchueler.class);
-			schueler = querySchueler.setParameter("status", SchuelerStatus.AKTIV).getResultList();
-		} else {
-			final TypedQuery<DTOSchueler> querySchueler = conn.query("SELECT s FROM DTOSchueler s WHERE s.ID IS NOT NULL AND "
-					+ "(s.hatLoeschvermerk = null OR s.hatLoeschvermerk = false)", DTOSchueler.class);
-			schueler = querySchueler.getResultList();
-		}
-		if (schueler == null) {
-			throw new ApiOperationException(Status.NOT_FOUND);
-		}
-		// Bestimme die aktuellen Lernabschnitte für die Schüler, ignoriere dabei Lernabschnitte, welche vor einem Wechsel liegen, aber in dem gleichen Lernabschnitt (ein seltener Spezialfall)
-		final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
-		if (schuelerIDs.isEmpty()) {
-			return new ArrayList<>();
-		}
-		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = conn.queryList(
-				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
-						+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0",
-				DTOSchuelerLernabschnittsdaten.class,
-				schuelerIDs);
-		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-		// Bestimme die Lernabschnitt für den ausgewählten Abschnitt
-		final List<DTOSchuelerLernabschnittsdaten> listGewaehlteAbschnitte = conn.queryList(
-				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
-						+ " AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr = 0",
-				DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
-		final Map<Long, DTOSchuelerLernabschnittsdaten> mapGewaehlteAbschnitte =
-				listGewaehlteAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-		// Führe die beiden Maps zusammen und bevorzuge dabei die gewählten Abschnitte
-		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = new HashMap<>();
-		for (final long id : schuelerIDs) {
-			final DTOSchuelerLernabschnittsdaten a = mapGewaehlteAbschnitte.get(id);
-			mapAbschnitte.put(id, (a == null) ? mapAktAbschnitte.get(id) : a);
-		}
-		// Bestimme die Jahrgänge der Schule
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
-		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-		// Erstelle die Schüler-Liste und sortiere sie
-		final List<SchuelerListeEintrag> schuelerListe = new ArrayList<>();
-		for (final DTOSchueler s : schueler) {
-			final DTOSchuelerLernabschnittsdaten sla = mapAbschnitte.get(s.ID);
-			if (sla == null) {
-				continue;
-			}
-			final Schuljahresabschnitt sja = conn.getUser().schuleGetAbschnittById(sla.Schuljahresabschnitts_ID);
-			if (sja == null) {
-				continue;
-			}
-			final SchuelerListeEintrag sle = SchuelerListeEintragMapper.INSTANCE.toSchuelerListeEintrag(s, sja.schuljahr, mapAbschnitte.get(s.ID), mapJahrgaenge, schulform);
-			schuelerListe.add(sle);
-		}
-		schuelerListe.sort(SchuelerListeEintragComparator.INSTANCE);
-		// Ermittle die Kurse, welche von den Schülern belegt wurden.
-		getSchuelerKurse(conn, schuelerListe, abschnitt);
-		// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
-		if (schulform.daten(conn.getUser().schuleGetAbschnittById(abschnitt).schuljahr).hatGymOb) {
-			for (final SchuelerListeEintrag s : schuelerListe) {
-				final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(s.idSchuljahresabschnitt);
-				if (schuljahresabschnitt == null) {
-					continue;
-				}
-				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByIDOrNull(s.idSchulgliederung),
-						schuljahresabschnitt.schuljahr, s.jahrgang);
-			}
-			final Map<Long, GostSchuelerWiederholung> mapWiederholungen = GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService()
-					.getMapWiederholungen(schuelerListe.stream().map(s -> s.id).toList());
-			for (final SchuelerListeEintrag s : schuelerListe) {
-				final GostSchuelerWiederholung wiederholung = mapWiederholungen.get(s.id);
-				s.abiturjahrgangWiederholung = (wiederholung == null) ? null : wiederholung.abiturjahr;
-			}
-		}
-		// Und gib die Schülerliste mit den belegten Kursen zurück...
-		return schuelerListe;
+	private DataSchuelerliste() {
+		// leer
 	}
 
 
@@ -260,7 +60,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		// Erstelle das Ergebnis-DTO
 		final SchuelerListe result = new SchuelerListe();
 		result.idSchuljahresabschnitt = idSchuljahresabschnitt;
-		result.schueler.addAll(getListeSchueler(conn, idSchuljahresabschnitt, false));
+		result.schueler.addAll(getSchuelerListeEintragService().getListe(idSchuljahresabschnitt, false));
 		result.klassen.addAll(dataKlassendaten.getListBySchuljahresabschnittID(idSchuljahresabschnitt, false));
 		result.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(getJahrgangService().getAll());
@@ -280,6 +80,10 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		}
 
 		return result;
+	}
+
+	private static @NotNull SchuelerListeEintragService getSchuelerListeEintragService() {
+		return SchuelerServiceFactory.getNewInstance().getSchuelerListeEintragService();
 	}
 
 	private static @NotNull JahrgangService getJahrgangService() {

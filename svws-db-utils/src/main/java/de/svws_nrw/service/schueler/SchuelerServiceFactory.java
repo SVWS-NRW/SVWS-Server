@@ -2,6 +2,7 @@ package de.svws_nrw.service.schueler;
 
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
+import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.mapper.schueler.einwilligung.SchuelerEinwilligungMapper;
 import de.svws_nrw.mapper.schueler.foto.SchuelerFotoMapper;
 import de.svws_nrw.mapper.schueler.leistungsdaten.SchuelerLeistungsdatenMapper;
@@ -14,7 +15,9 @@ import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMapper;
 import de.svws_nrw.mapper.schueler.stammdaten.SchuelerStammdatenMapper;
 import de.svws_nrw.repo.DbConnectionProvider;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.gost.GostRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
+import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
@@ -23,6 +26,7 @@ import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.schueler.create.SchuelerCreateService;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
+import de.svws_nrw.service.schueler.liste.SchuelerListeEintragService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenRepos;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
@@ -60,6 +64,10 @@ public final class SchuelerServiceFactory {
 	/** die Factory für die Services der eigenen Schule */
 	private final EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
+	private final KurseRepositoryFactory kurseRepositoryFactory;
+
+	private final GostRepositoryFactory gostRepositoryFactory;
+
 
 	private SchuelerServiceFactory(
 			final BenutzerRepositoryFactory benutzerRepositoryFactory,
@@ -67,13 +75,17 @@ public final class SchuelerServiceFactory {
 			final KatalogRepositoryFactory katalogRepositoryFactory,
 			final KatalogServiceFactory katalogServiceFactory,
 			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory,
-			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
+			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory,
+			final KurseRepositoryFactory kurseRepositoryFactory,
+			final GostRepositoryFactory gostRepositoryFactory) {
 		this.benutzerRepositoryFactory = benutzerRepositoryFactory;
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
 		this.katalogRepositoryFactory = katalogRepositoryFactory;
 		this.katalogServiceFactory = katalogServiceFactory;
 		this.eigeneSchuleRepositoryFactory = eigeneSchuleRepositoryFactory;
 		this.eigeneSchuleServiceFactory = eigeneSchuleServiceFactory;
+		this.kurseRepositoryFactory = kurseRepositoryFactory;
+		this.gostRepositoryFactory = gostRepositoryFactory;
 	}
 
 
@@ -86,6 +98,8 @@ public final class SchuelerServiceFactory {
 	 * @param katalogServiceFactory   die Factory für Katalog-Repositories
 	 * @param eigeneSchuleRepositoryFactory   die Factory für Repositories der eigenen Schule
 	 * @param eigeneSchuleServiceFactory      die Factory für Services der eigenen Schule
+	 * @param kurseRepositoryFactory          die Factory für Kurs-Repositories
+	 * @param gostRepositoryFactory           die Factory für Gost-Repositories
 	 *
 	 * @return die Factory
 	 */
@@ -95,9 +109,11 @@ public final class SchuelerServiceFactory {
 			final KatalogRepositoryFactory katalogRepositoryFactory,
 			final KatalogServiceFactory katalogServiceFactory,
 			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory,
-			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
+			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory,
+			final KurseRepositoryFactory kurseRepositoryFactory,
+			final GostRepositoryFactory gostRepositoryFactory) {
 		return new SchuelerServiceFactory(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory,
-				katalogServiceFactory, eigeneSchuleRepositoryFactory, eigeneSchuleServiceFactory);
+				katalogServiceFactory, eigeneSchuleRepositoryFactory, eigeneSchuleServiceFactory, kurseRepositoryFactory, gostRepositoryFactory);
 	}
 
 	/**
@@ -112,8 +128,10 @@ public final class SchuelerServiceFactory {
 		final var eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
 		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
 		final var katalogServiceFactory = KatalogServiceFactory.getNewInstance(katalogRepositoryFactory, eigeneSchuleServiceFactory);
+		final var kurseRepositoryFactory = KurseRepositoryFactory.getNewInstance();
+		final var gostRepositoryFactory = GostRepositoryFactory.getNewInstance();
 		return new SchuelerServiceFactory(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory,
-				katalogServiceFactory, eigeneSchuleRepositoryFactory, eigeneSchuleServiceFactory);
+				katalogServiceFactory, eigeneSchuleRepositoryFactory, eigeneSchuleServiceFactory, kurseRepositoryFactory, gostRepositoryFactory);
 	}
 
 
@@ -300,6 +318,24 @@ public final class SchuelerServiceFactory {
 				this.getSchulbesuchService(),
 				this.getSchuelerLernplattformService(),
 				this.getSchuelerEinwilligungService()
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerListeEintragService}.
+	 *
+	 * @return ein neuer {@code SchuelerListeEintragService} mit allen erforderlichen Abhängigkeiten
+	 */
+	public SchuelerListeEintragService getSchuelerListeEintragService() {
+		return new SchuelerListeEintragService(
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
+				kurseRepositoryFactory.getKursSchuelerRepository(),
+				katalogRepositoryFactory.getJahrgangRepository(),
+				gostRepositoryFactory.getGostSchuelerWiederholungRepository(),
+				eigeneSchuleServiceFactory.getSchuleService(),
+				eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
+				SchuelerListeEintragMapper.INSTANCE
 		);
 	}
 
