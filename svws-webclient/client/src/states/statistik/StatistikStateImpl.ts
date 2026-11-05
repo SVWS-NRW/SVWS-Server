@@ -138,6 +138,7 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, id);
 		lehrerListeManager.setPersonalDaten(personaldaten);
 		this.setPatchedState({ lehrerListeManager });
+		lehrerAuswahlStateImpl.commit();
 	};
 
 	public setSchueler = async (id: number) => {
@@ -153,6 +154,7 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const daten = await api.server.getKurs(api.schema, id);
 		kursListeManager.setDaten(daten);
 		this.setPatchedState({ kursListeManager });
+		kurseAuswahlStateImpl.commit();
 	};
 
 	public setKlasse = async (id: number) => {
@@ -160,6 +162,7 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const daten = await api.server.getKlasse(api.schema, id);
 		klassenListeManager.setDaten(daten);
 		this.setPatchedState({ klassenListeManager });
+		klassenAuswahlStateImpl.commit();
 	};
 }
 
