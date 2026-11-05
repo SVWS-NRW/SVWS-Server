@@ -137,6 +137,10 @@
 						v-model="model.proxy.erhaeltSchuelerBAFOEG">
 						BAFöG
 					</svws-ui-checkbox>
+					<svws-ui-checkbox :readonly statistics
+						v-model="model.proxy.istJva">
+						JVA-Schüler
+					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>

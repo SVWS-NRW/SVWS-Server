@@ -57,7 +57,7 @@ export class SchuelerIndividualdatenModelProxy extends ModelProxy<SchuelerStammd
 			"haltestelleID", "idStaatsangehoerigkeit", "idStaatsangehoerigkeit2", "religionID", "idGeburtsland",
 			"idVerkehrspracheFamilie", "idGeburtslandMutter", "idGeburtslandVater", "istDuplikat", "istVolljaehrig",
 			"keineAuskunftAnDritte", "istSchulpflichtErfuellt", "istBerufsschulpflichtErfuellt", "hatMasernimpfnachweis",
-			"erhaeltSchuelerBAFOEG", "druckeKonfessionAufZeugnisse", "hatMigrationshintergrund", "externeSchulNr",
+			"erhaeltSchuelerBAFOEG", "druckeKonfessionAufZeugnisse", "hatMigrationshintergrund", "externeSchulNr", "istJva",
 		];
 		super({ data, patch, listOfAutopatchProps });
 
