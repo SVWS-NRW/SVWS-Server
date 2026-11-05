@@ -70,7 +70,7 @@ stages:
 
 
 lint:eslint:
-    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node24
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node26
     stage: lint
     interruptible: true
     before_script:
@@ -87,11 +87,15 @@ lint:eslint:
         - *rule_branch
 
 build:
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node26
     stage: build
     interruptible: true
     cache:
         <<: *global_cache
         policy: pull
+    variables:
+        # Node aus dem Runner Image wird verwendet und nicht erneut heruntergeladen
+        USE_SYSTEM_NODE: "1"
     script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
@@ -119,7 +123,7 @@ build:
         - *rule_branch
 
 test:integration-tests:
-    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node24-playwright1.64.1
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node26-playwright1.64.1
     stage: test
     dependencies:
         - build
