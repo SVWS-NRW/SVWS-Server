@@ -382,6 +382,22 @@ class KlassenServiceTest {
 			verify(klassenleitungenRepository, times(1)).getMapKlassenleitungen(anyCollection());
 		}
 
+		@Test
+		@DisplayName("Ohne Schüler: Es werden keine Schüler geladen, die Reihenfolge der IDs bleibt erhalten")
+		void ohneSchueler() {
+			stubAbschnitt(ID_ABSCHNITT_1, 1, null, null);
+			when(klassenRepository.findMapByIds(Set.of(2L, 1L))).thenReturn(Map.of(
+					1L, createKlasse(1L, ID_ABSCHNITT_1, "07a"),
+					2L, createKlasse(2L, ID_ABSCHNITT_1, "07b")));
+			when(klassenleitungenRepository.getMapKlassenleitungen(List.of(2L, 1L))).thenReturn(Map.of());
+
+			final List<KlassenDaten> result = service.getListByIds(List.of(2L, 1L), false);
+
+			assertThat(result).extracting(k -> k.id).containsExactly(2L, 1L);
+			assertThat(result).allSatisfy(k -> assertThat(k.schueler).isEmpty());
+			verifyNoInteractions(lernabschnittRepository, schuelerRepository);
+		}
+
 	}
 
 	@Nested

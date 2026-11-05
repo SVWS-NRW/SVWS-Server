@@ -12,9 +12,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
-import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
@@ -24,6 +22,8 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
+import de.svws_nrw.service.klassen.KlassenService;
+import de.svws_nrw.service.klassen.KlassenServiceFactory;
 
 /**
  * Domänen-Repository für Klassen und Kurse.
@@ -135,20 +135,7 @@ public class ReportingRepositoryLerngruppen {
 				this.reportingContext.filterService().getFilter(ReportingKlasse.class.getSimpleName()), null);
 
 		return ReportingRepositoryUtils.waehleAus(idsKlassen, mapKlassenStammdaten, mapKlassen,
-				fehlendeIds -> {
-					final DataKlassendaten dataKlassendaten = new DataKlassendaten(this.reportingContext.conn());
-					final List<DTOKlassen> dtos = dataKlassendaten.getDTOsByIds(fehlendeIds);
-					// Sollte der Fall eintreten, dass die IDs der Klassen aus unterschiedlichen Schuljahresabschnitten stammen,
-					// so werden die Klassen in Abschnittsgruppen getrennt abgefragt.
-					final Map<Long, List<Long>> idsByAbschnitt = dtos.stream()
-							.collect(Collectors.groupingBy(dto -> dto.Schuljahresabschnitts_ID,
-									Collectors.mapping(dto -> dto.ID, Collectors.toList())));
-					final List<KlassenDaten> result = new ArrayList<>();
-					for (final Map.Entry<Long, List<Long>> entry : idsByAbschnitt.entrySet()) {
-						result.addAll(dataKlassendaten.getListByIdsOhneSchueler(entry.getValue(), entry.getKey()));
-					}
-					return result;
-				},
+				fehlendeIds -> getKlassenService().getListByIds(fehlendeIds, false),
 				key -> {
 					final KlassenDaten daten = mapKlassenStammdaten.get(key);
 					/* Der Aufruf 'klasse' über den Schuljahresabschnitt ruft durch Überladung folgende Methode auf:
@@ -193,7 +180,7 @@ public class ReportingRepositoryLerngruppen {
 	public List<KlassenDaten> klassenBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
 		return mapKlassenDatenBySchuljahresabschnitt.computeIfAbsent(idSchuljahresabschnitt, id -> {
 			try {
-				return new DataKlassendaten(this.reportingContext.conn()).getListBySchuljahresabschnittID(id, true);
+				return getKlassenService().getListBySchuljahresabschnitt(id, true);
 			} catch (final Exception e) {
 				// Der Zugriff gilt allen Klassen des Schuljahresabschnitts und nicht einem einzelnen Datensatz; der Schlüssel führt deshalb keine ID.
 				ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(ReportingKlasse.class),
@@ -201,6 +188,17 @@ public class ReportingRepositoryLerngruppen {
 				return new ArrayList<>();
 			}
 		});
+	}
+
+
+	/**
+	 * Erstellt den Service für den lesenden Zugriff auf Klassen. Die Datenbank-Verbindung kommt nicht aus dem {@link ReportingContext},
+	 * sondern wird von der Factory anhand des aktuellen Requests bestimmt.
+	 *
+	 * @return der Service
+	 */
+	private static KlassenService getKlassenService() {
+		return KlassenServiceFactory.getNewInstance().getKlassenService();
 	}
 
 

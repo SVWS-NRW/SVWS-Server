@@ -17,7 +17,6 @@ import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerTelefon;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
@@ -28,6 +27,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 
 /**
@@ -205,8 +205,8 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 
 		final Map<Long, String> jahrgangById = conn.queryAll(DTOJahrgang.class).stream()
 				.collect(Collectors.toMap(j -> j.ID, j -> j.InternKrz));
-		final Map<Long, DTOKlassen> klassenById = new DataKlassendaten(conn)
-				.getDTOsBySchuljahresabschnittId(schuljahresabschnitt.id)
+		final Map<Long, DTOKlassen> klassenById = KlassenRepositoryFactory.getNewInstance().getKlassenRepository()
+				.getListBySchuljahresabschnitt(schuljahresabschnitt.id)
 				.stream().collect(Collectors.toMap(s -> s.ID, Function.identity()));
 
 		addLernabschnittKategorien(result, idsSchueler, jahrgangById, klassenById, setNeuaufnahmen);

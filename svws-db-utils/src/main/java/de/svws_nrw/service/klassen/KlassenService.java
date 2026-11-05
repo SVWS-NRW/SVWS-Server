@@ -89,7 +89,20 @@ public final class KlassenService {
 	 * @return die Daten der Klassen mit Schülern, bzw. eine leere Liste, wenn keine IDs übergeben wurden
 	 */
 	public List<KlassenDaten> getListByIdsMitSchueler(final List<Long> ids) {
-		return toKlassenDaten(getDtosByIds(ids), true);
+		return getListByIds(ids, true);
+	}
+
+	/**
+	 * Bestimmt die Daten der Klassen zu den übergebenen IDs. Die Klassen werden in der Reihenfolge der IDs
+	 * zurückgegeben, wobei doppelte IDs nur einmal berücksichtigt werden.
+	 *
+	 * @param ids           die IDs der Klassen
+	 * @param mitSchueler   gibt an, ob die Schüler der Klassen mitgeliefert werden sollen
+	 *
+	 * @return die Daten der Klassen, bzw. eine leere Liste, wenn keine IDs übergeben wurden
+	 */
+	public List<KlassenDaten> getListByIds(final List<Long> ids, final boolean mitSchueler) {
+		return toKlassenDaten(getDtosByIds(ids), mitSchueler);
 	}
 
 	/**

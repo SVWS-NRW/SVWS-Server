@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.klassen.KlassenRepository;
+import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -172,22 +173,22 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	public static DTOSchuelerLernabschnittsdaten createByPrevious(final long idSLA, final DBEntityManager conn, final long idSchueler,
 			final Schuljahresabschnitt schuljahresabschnitt) throws ApiOperationException {
 		// Prüfe, ob der vorige Lernabschnitt existiert
-		final DataKlassendaten dataKlassendaten = new DataKlassendaten(conn);
+		final KlassenRepository klassenRepository = KlassenRepositoryFactory.getNewInstance().getKlassenRepository();
 		final DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.idVorigerAbschnitt);
 		if (slaPrev != null) {
 			// Bestimme Klasse, Jahrgang und weiteres aus dem vorigen Schuljahresabschnitt
 			final boolean schuljahrNeu = (schuljahresabschnitt.abschnitt == 1);
 			DTOKlassen klassePrev;  // Bestimme die entsprechende Klasse im vorigen Lernabschnitt
 			if (slaPrev.Folgeklasse_ID == null) { // Wenn die Folge-Klasse gesetzt ist, dann muss bei einem neuen Schuljahr dieses Feld genutzt werden...
-				klassePrev = dataKlassendaten.getDTO(slaPrev.Klassen_ID);
+				klassePrev = getKlasse(klassenRepository, slaPrev.Klassen_ID);
 				if (schuljahrNeu) {
-					klassePrev = dataKlassendaten.getDTOByKuerzelOrASDKuerzelAndHalbjahresabschnittId(klassePrev.FKlasse, null,
+					klassePrev = getKlasseByKuerzelOrASDKuerzel(klassenRepository, klassePrev.FKlasse, null,
 							klassePrev.Schuljahresabschnitts_ID);
 				}
 			} else {
-				klassePrev = dataKlassendaten.getDTO(schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
+				klassePrev = getKlasse(klassenRepository, schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
 			}
-			final DTOKlassen klasse = dataKlassendaten.getDTOByKuerzelOrASDKuerzelAndHalbjahresabschnittId(klassePrev.Klasse, klassePrev.ASDKlasse,
+			final DTOKlassen klasse = getKlasseByKuerzelOrASDKuerzel(klassenRepository, klassePrev.Klasse, klassePrev.ASDKlasse,
 					schuljahresabschnitt.id);
 			final DTOJahrgang jahrgang = KatalogRepositoryFactory.getNewInstance().getJahrgangRepository().getById(klasse.Jahrgang_ID);
 			final DTOSchuelerLernabschnittsdaten sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
@@ -214,6 +215,44 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 		throw new ApiOperationException(Status.NOT_FOUND, ("Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine"
 				+ " ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.")
 				.formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt, idSchueler));
+	}
+
+	/**
+	 * Bestimmt die Klasse zu der ID.
+	 *
+	 * @param klassenRepository   das Repository für die Klassen
+	 * @param id                  die ID der Klasse
+	 *
+	 * @return die Klasse
+	 */
+	private static DTOKlassen getKlasse(final KlassenRepository klassenRepository, final Long id) {
+		if (id == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Klasse darf nicht null sein.");
+		}
+		return klassenRepository.findById(id)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Keine Klasse zur ID " + id + " gefunden."));
+	}
+
+
+	/**
+	 * Bestimmt die Klasse zu dem Kürzel bzw. dem ASD-Kürzel im angegebenen Schuljahresabschnitt.
+	 *
+	 * @param klassenRepository        das Repository für die Klassen
+	 * @param kuerzel                  das Kürzel der Klasse, kann null sein
+	 * @param asdKuerzel               das ASD-Kürzel der Klasse, kann null sein
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 *
+	 * @return die Klasse
+	 */
+	private static DTOKlassen getKlasseByKuerzelOrASDKuerzel(final KlassenRepository klassenRepository, final String kuerzel, final String asdKuerzel,
+			final long idSchuljahresabschnitt) {
+		if ((kuerzel == null) && (asdKuerzel == null)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es muss mindestens ein Kürzel oder ASD-Kürzel angegeben sein. Das Beide Kürzel dürfen nicht "
+					+ "null sein.");
+		}
+		return klassenRepository.findByKuerzelOrASDKuerzelAndSchuljahresabschnitt(kuerzel, asdKuerzel, idSchuljahresabschnitt)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND,
+						"Es wurde keine Klasse mit dem Kürzel %s und dem Halbjahresabschnitt mit der ID %d gefunden.".formatted(kuerzel, idSchuljahresabschnitt)));
 	}
 
 }

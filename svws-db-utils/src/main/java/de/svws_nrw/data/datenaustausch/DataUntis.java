@@ -81,7 +81,6 @@ import de.svws_nrw.data.faecher.DataFaecher;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
-import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
@@ -112,6 +111,10 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRau
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
+import de.svws_nrw.repo.klassen.KlassenleitungenRepository;
+import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepositoryImpl;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
@@ -643,6 +646,60 @@ public final class DataUntis {
 
 
 	/**
+	 * Bestimmt zu den übergebenen Klassen-IDs die jeweils zugehörigen Klassenlehrer.
+	 *
+	 * @param idsKlassen   die IDs der Klassen
+	 *
+	 * @return die Zuordnung der Klassenlehrer zu den Klassen-IDs
+	 */
+	private static @NotNull Map<Long, List<DTOLehrer>> getKlassenlehrerByKlassenId(final @NotNull List<Long> idsKlassen) {
+		return getKlassenlehrerByKlassenId(
+				KlassenRepositoryFactory.getNewInstance().getKlassenleitungenRepository(),
+				LehrerRepositoryFactory.getNewInstance().getLehrerRepository(),
+				idsKlassen
+		);
+	}
+
+
+	/**
+	 * Bestimmt zu den übergebenen Klassen-IDs die jeweils zugehörigen Klassenlehrer in der Reihenfolge der Klassenleitung.
+	 * Klassen ohne Klassenlehrer sind nicht in der Zuordnung enthalten, unbekannte Lehrer-IDs werden übersprungen.
+	 *
+	 * @param klassenleitungenRepository   das Repository für die Klassenleitungen
+	 * @param lehrerRepository             das Repository für die Lehrer
+	 * @param idsKlassen                   die IDs der Klassen
+	 *
+	 * @return die Zuordnung der Klassenlehrer zu den Klassen-IDs
+	 */
+	static @NotNull Map<Long, List<DTOLehrer>> getKlassenlehrerByKlassenId(final @NotNull KlassenleitungenRepository klassenleitungenRepository,
+			final @NotNull LehrerRepository lehrerRepository, final @NotNull List<Long> idsKlassen) {
+		final var idsLehrerByKlassenId = klassenleitungenRepository.getMapKlassenleitungen(idsKlassen);
+		final var idsLehrer = idsLehrerByKlassenId.values().stream()
+				.flatMap(List::stream)
+				.distinct()
+				.toList();
+
+		if (idsLehrer.isEmpty()) {
+			return new HashMap<>();
+		}
+
+		final var lehrerById = lehrerRepository.findMapByIds(idsLehrer);
+		final Map<Long, List<DTOLehrer>> result = new HashMap<>();
+		idsLehrerByKlassenId.forEach((idKlasse, ids) -> {
+			final var lehrer = ids.stream()
+					.map(lehrerById::get)
+					.filter(Objects::nonNull)
+					.toList();
+
+			if (!lehrer.isEmpty()) {
+				result.put(idKlasse, lehrer);
+			}
+		});
+		return result;
+	}
+
+
+	/**
 	 * Bestimmt anhand der übergebenen Klassenliste, der übergebenen Jahrgangsinformationen, Klassenlehrer und Vorjahresklassen
 	 * zu den Klassen die Liste der zugehörigen Klasseneinträge für die GPU003.TXT-Datei von Untis.
 	 *
@@ -736,7 +793,7 @@ public final class DataUntis {
 		logger.logLn("-> bestimme die zugehörigen Jahrgänge...");
 		final Map<Long, DTOJahrgang> mapJahrgaengeByKlassenId = getJahrgaengeByKlassenId(conn, klassen);
 		logger.logLn("-> bestimme die zugehörigen Klassenlehrer...");
-		final Map<Long, List<DTOLehrer>> mapKlassenlehrerByKlassenId = DataKlassendaten.getDTOMapKlassenlehrerByKlassenID(conn, idsKlassen);
+		final Map<Long, List<DTOLehrer>> mapKlassenlehrerByKlassenId = getKlassenlehrerByKlassenId(idsKlassen);
 		return getGPU003(logger, klassen, mapJahrgaengeByKlassenId, mapKlassenlehrerByKlassenId);
 	}
 

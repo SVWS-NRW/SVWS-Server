@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -25,7 +24,6 @@ import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
@@ -36,7 +34,6 @@ import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
@@ -52,6 +49,8 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.service.gost.GostServiceFactory;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
+import de.svws_nrw.service.klassen.KlassenService;
+import de.svws_nrw.service.klassen.KlassenServiceFactory;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -316,7 +315,7 @@ class TestReportingRepositoryRueckfallwerte {
 	 * Verdrahtet den Filter-Service, den die Listen-Zugriffe für den Benutzerfilter abfragen. Der Mock liefert keine Filtergruppe, sodass ungefiltert
 	 * ausgewählt wird.
 	 */
-	private void gebeFilterServiceVor() {
+	private void stubFilterService() {
 		when(reportingContext.filterService()).thenReturn(mock(ReportingFilterService.class));
 	}
 
@@ -324,7 +323,7 @@ class TestReportingRepositoryRueckfallwerte {
 	void testEineNichtLadbareLehrkraftFehltInDerListeUndWirdGemeldet() {
 		// Der Listen-Zugriff gibt nur die Objekte heraus. Ohne die Meldung fehlte eine nicht ladbare Lehrkraft - etwa eine Klassenleitung - völlig still,
 		// denn der Rückkanal des Ladefehlers unterdrückt dessen Logeintrag.
-		gebeFilterServiceVor();
+		stubFilterService();
 		final ReportingRepositoryLehrer repository = new ReportingRepositoryLehrer(reportingContext);
 
 		assertTrue(repository.lehrer(List.of(ID_LEHRER)).isEmpty(), "Die nicht ladbare Lehrkraft fehlt in der Liste.");
@@ -335,7 +334,7 @@ class TestReportingRepositoryRueckfallwerte {
 
 	@Test
 	void testEinNichtLadbarerSchuelerFehltInDerListeUndWirdGemeldet() {
-		gebeFilterServiceVor();
+		stubFilterService();
 		final ReportingRepositorySchueler repository = new ReportingRepositorySchueler(reportingContext);
 
 		assertTrue(repository.schueler(List.of(ID_SCHUELER)).isEmpty(), "Der nicht ladbare Schüler fehlt in der Liste.");
@@ -346,7 +345,7 @@ class TestReportingRepositoryRueckfallwerte {
 
 	@Test
 	void testEineNichtLadbareKlasseFehltInDerListeUndWirdGemeldet() {
-		gebeFilterServiceVor();
+		stubFilterService();
 		final ReportingRepositoryLerngruppen repository = new ReportingRepositoryLerngruppen(reportingContext);
 
 		assertTrue(repository.klassen(List.of(ID_KLASSE)).isEmpty(), "Die nicht ladbare Klasse fehlt in der Liste.");
@@ -357,7 +356,7 @@ class TestReportingRepositoryRueckfallwerte {
 
 	@Test
 	void testEinNichtLadbarerKursFehltInDerListeUndWirdGemeldet() {
-		gebeFilterServiceVor();
+		stubFilterService();
 		final ReportingRepositoryLerngruppen repository = new ReportingRepositoryLerngruppen(reportingContext);
 
 		assertTrue(repository.kurse(List.of(ID_KURS)).isEmpty(), "Der nicht ladbare Kurs fehlt in der Liste.");
@@ -368,10 +367,14 @@ class TestReportingRepositoryRueckfallwerte {
 
 	@Test
 	void testEineIdOhneDatensatzWirdBeimListenzugriffNichtGemeldet() {
-		// Die Gegenprobe: Der Zugriff gelingt und findet nichts. Das ist kein Ladefehler - eine Meldung machte aus jeder unbekannten ID ein Ausgabeproblem.
-		gebeFilterServiceVor();
-		try (MockedConstruction<DataKlassendaten> dataKlassendaten = mockConstruction(DataKlassendaten.class,
-				(dataMock, ctx) -> when(dataMock.getDTOsByIds(any())).thenReturn(List.of()))) {
+		// Gegenprobe: Der Zugriff gelingt und findet nichts. Das ist kein Ladefehler und wird deshalb nicht gemeldet.
+		stubFilterService();
+		final KlassenService klassenService = mock(KlassenService.class);
+		when(klassenService.getListByIds(any(), eq(false))).thenReturn(List.of());
+		final KlassenServiceFactory klassenServiceFactory = mock(KlassenServiceFactory.class);
+		when(klassenServiceFactory.getKlassenService()).thenReturn(klassenService);
+		try (MockedStatic<KlassenServiceFactory> klassenServiceFactoryStatic = mockStatic(KlassenServiceFactory.class)) {
+			klassenServiceFactoryStatic.when(KlassenServiceFactory::getNewInstance).thenReturn(klassenServiceFactory);
 			final ReportingRepositoryLerngruppen repository = new ReportingRepositoryLerngruppen(reportingContext);
 			assertTrue(repository.klassen(List.of(ID_KLASSE)).isEmpty());
 		}
