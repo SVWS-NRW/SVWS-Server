@@ -147,6 +147,8 @@ tasks.register('runTestsAfterSetup', NpmRun) {
 tasks.register('testAgainstDockerEnv') {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
 	group = 'testing'
+
+	dependsOn ':npmPrepare'
 	dependsOn ':svws-webclient:core:assemble'
 	dependsOn ':svws-webclient:client:assemble'
 	dependsOn 'starteDockerContainerMitTestUmgebung'

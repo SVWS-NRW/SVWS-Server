@@ -1,16 +1,4 @@
-# Source: https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Gradle.gitlab-ci.yml
-
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Gradle.gitlab-ci.yml
-
-# This is the Gradle build system for JVM applications
-# https://gradle.org/
-# https://github.com/gradle/gradle
-
-
-image: ${REGISTRY_HOST}/svwsnrw/docker-runner:21
+image: ${REGISTRY_HOST}/svws-ci/builder:jdk21
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -82,7 +70,7 @@ stages:
 
 
 lint:eslint:
-    image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node24
     stage: lint
     interruptible: true
     before_script:
@@ -131,13 +119,14 @@ build:
         - *rule_branch
 
 test:integration-tests:
-    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node24-playwright1.56
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node24-playwright1.64.1
     stage: test
     dependencies:
         - build
     interruptible: false
     variables:
-        USE_SYSTEM_NODE: "1" # Node aus dem Test-Runner Image wird verwendet und nicht erneut heruntergeladen
+        # Node aus dem Test-Runner Image wird verwendet und nicht erneut heruntergeladen
+        USE_SYSTEM_NODE: "1"
     before_script:
         - chmod +x ./.gitlab/.script/*.sh
         - chmod +x ./deployment/setupVersion.sh
@@ -145,7 +134,10 @@ test:integration-tests:
 
         - ./.gitlab/.script/docker_login.sh ${REGISTRY_HOST} ${REGISTRY_USER} ${REGISTRY_PASSWORD}
     script:
-        ./gradlew --build-cache tests:integrationTest --stacktrace
+        - ./gradlew --build-cache tests:integrationTest --stacktrace
+          -x compileJava -x compileTestJava -x processResources -x processTestResources
+          -x sourcesJar -x transpile
+          -x assembleClient -x assembleEnmServer -x doZip
     cache:
         <<: *global_cache
         policy: pull
@@ -330,7 +322,7 @@ package:installer:linux:release:
         - *rule_release
 
 sign:installer:release:
-    image: ${REGISTRY_HOST}/svwsnrw/docker-runner:17
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk17
     stage: sign
     needs:
         - build
