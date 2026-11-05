@@ -23,7 +23,10 @@
 			</div>
 			<Transition>
 				<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0" class="mt-1" center>
-					<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="i => `${i.name ?? 'SCHEMANAME FEHLT'}${i.isDeactivated ? ' (Nicht verfügbar)':''}`" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
+					<ui-select v-model="schema" label="Datenbank-Schema"
+						:manager="schemaSelectManager"
+						@update:model-value="value => value && setSchema(value)"
+						:removable="false" required />
 					<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
 					<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 					<svws-ui-spacing />
@@ -49,7 +52,7 @@
 
 <script setup lang="ts">
 
-	import { nextTick, onMounted, ref, shallowRef } from "vue";
+	import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 
 	import type { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
@@ -59,6 +62,7 @@
 	import type { List } from "@core/java/util/List";
 	import { githash } from "@githash";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
 	import { version } from "@version";
 
@@ -95,6 +99,13 @@
 	const connection_failed = ref(false);
 
 	const inputDBSchemata = shallowRef<List<DBSchemaListeEintrag>>(new ArrayList());
+
+	const schemaText = (i: DBSchemaListeEintrag) => `${i.name ?? 'SCHEMANAME FEHLT'}${i.isDeactivated ? ' (Nicht verfügbar)' : ''}`;
+	const schemaSelectManager = new SelectManager({
+		options: inputDBSchemata,
+		optionDisplayText: schemaText,
+		selectionDisplayText: schemaText,
+	});
 
 	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
 	void connect();

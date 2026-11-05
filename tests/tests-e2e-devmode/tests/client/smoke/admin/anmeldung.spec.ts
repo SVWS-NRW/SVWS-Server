@@ -19,7 +19,7 @@ test.use({
 test.describe('Anmeldung — Smoke', () => {
 	test('Login-Seite zeigt Schema-Dropdown @smoke', async ({ page }) => {
 		await page.goto(getBaseUrl(), { waitUntil: 'networkidle', timeout: 60000 });
-		const schemaDropdown = page.getByLabel('Datenbank-Schema');
+		const schemaDropdown = page.getByRole('combobox', { name: 'Datenbank-Schema' });
 		await expect(schemaDropdown).toBeVisible({ timeout: 10000 });
 		await expect(page).not.toHaveURL(/\/error/);
 	});
