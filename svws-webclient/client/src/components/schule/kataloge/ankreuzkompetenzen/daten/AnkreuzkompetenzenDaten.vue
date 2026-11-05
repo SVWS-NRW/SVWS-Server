@@ -4,9 +4,9 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-textarea-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
 					v-model="model.proxy.floskelText"
-					@change="patchFloskeltext"
+					@change="model.patch"
 					:validation="() => model.getFehler('floskelText')"
-					:max-len="255" :readonly="!hatKompetenzUpdate" required />
+					:max-len="255" :readonly required />
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input v-if="model.istASV.value"
 						placeholder="Fach"
@@ -17,24 +17,24 @@
 						v-model="model.fach.value"
 						:validation="() => model.getFehler('idFach')"
 						:manager="faecherSelectManager"
-						:removable="false" required />
+						:removable="false" required
+						:readonly />
 					<svws-ui-checkbox class="my-auto"
 						v-model="model.istASV.value"
-						:readonly="!hatKompetenzUpdate">
+						:readonly>
 						ASV
 					</svws-ui-checkbox>
 					<ui-select label="Schulgliederung"
 						v-model="model.schulgliederung.value"
 						:manager="schulgliederungSelectManager"
-						:readonly="!hatKompetenzUpdate" />
+						:readonly />
 					<ui-select label="Abschnitt"
 						v-model="model.abschnitt.value"
+						:validation="() => model.getFehler('abschnitt')"
 						:manager="abschnittSelectManager"
-						:readonly="!hatKompetenzUpdate" :removable="false" required />
+						:readonly :removable="false" required />
 					<svws-ui-checkbox v-model="model.proxy.istAktiv"
-						:validation="() => model.getFehler('istAktiv')"
-						@change="model.patch"
-						:readonly="!hatKompetenzUpdate">
+						:readonly>
 						Aktiv
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -47,10 +47,10 @@
 						:validation="() => model.getFehler('sortierung')"
 						@change="model.patch"
 						:min="0"
-						:readonly="!hatKompetenzUpdate"
-						:removeable="false" required />
+						:readonly
+						required />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly="!hatKompetenzUpdate">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -127,8 +127,9 @@
 	const schuleState = useSchuleState();
 
 	const manager = () => props.manager();
-	const model = new AnkreuzkompetenzenModelProxy(() => manager().daten(), () => manager().liste.list(), () => manager().faecherById, schuleState.abschnitt.schuljahr, props.patch);
-	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const model = new AnkreuzkompetenzenModelProxy(() => manager().daten(), manager, props.patch);
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Jahrgang" },
@@ -166,12 +167,12 @@
 			return;
 		}
 
-		isLoading.value = true;
 		if (jahrgaengeToBeAdded.value.length === 0) {
 			closeModal();
 			return;
 		}
 
+		isLoading.value = true;
 		const idsJahrgaenge = Arrays.asList(jahrgaengeToBeAdded.value.map(jahrgang => jahrgang.id));
 		await props.addJahrgaengezuordnungen(manager().daten().id, idsJahrgaenge);
 
@@ -208,11 +209,6 @@
 	function openModal() {
 		jahrgaengeToBeAdded.value = [];
 		modalIsOpen.value = true;
-	}
-
-	async function patchFloskeltext(v: string | null) {
-		model.proxy.floskelText = v ?? '';
-		await model.patch();
 	}
 
 </script>

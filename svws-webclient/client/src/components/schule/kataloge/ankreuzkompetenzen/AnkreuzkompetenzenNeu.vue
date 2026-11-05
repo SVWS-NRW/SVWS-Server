@@ -5,7 +5,7 @@
 				<svws-ui-textarea-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
 					v-model="model.proxy.floskelText"
 					:validation="() => model.getFehler('floskelText')"
-					:max-len="255" :disabled required />
+					:max-len="255" :readonly required />
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input v-if="model.istASV.value" placeholder="Fach"
 						model-value="ASV"
@@ -14,23 +14,23 @@
 						:manager="faecherManager"
 						v-model="model.fach.value"
 						:validation="() => model.getFehler('idFach')"
-						:disabled required />
+						:readonly required :removable="false" />
 					<svws-ui-checkbox class="my-auto"
 						v-model="model.istASV.value"
-						:validation="() => model.getFehler('istASV')"
-						:disabled>
+						:readonly>
 						ASV
 					</svws-ui-checkbox>
 					<ui-select label="Schulgliederung"
 						v-model="model.schulgliederung.value"
 						:manager="schulgliederungSelectManager"
-						:disabled />
+						:readonly />
 					<ui-select label="Abschnitt"
 						v-model="model.abschnitt.value"
+						:validation="() => model.getFehler('abschnitt')"
 						:manager="abschnittSelectManager"
-						:removable="false" :disabled required />
+						:removable="false" :readonly required />
 					<svws-ui-checkbox v-model="model.proxy.istAktiv"
-						:disabled>
+						:readonly>
 						Aktiv
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -42,11 +42,11 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						:min="0"
-						:disabled
-						:removeable="false" required />
+						:readonly
+						required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
-						:validation="() => model.getFehler('istSichtbar')">
+						:readonly>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -55,7 +55,7 @@
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
 				</svws-ui-button>
-				<svws-ui-button @click="add" :disabled="!isValid">
+				<svws-ui-button @click="add" :disabled="model.hatBlockierendeFehler() || readonly">
 					Speichern
 				</svws-ui-button>
 			</div>
@@ -93,11 +93,11 @@
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
-	const data = ref<Ankreuzkompetenz>(Object.assign(new Ankreuzkompetenz(), { istSichtbar: true, sortierung: 32000 }));
-	const model = new AnkreuzkompetenzenModelProxy(() => data.value, () => props.manager().liste.list(), () => props.manager().faecherById, schuleState.abschnitt.schuljahr);
+	const initialData = ref<Ankreuzkompetenz>(Object.assign(new Ankreuzkompetenz(), { istSichtbar: true, sortierung: 32000 }));
+	const model = new AnkreuzkompetenzenModelProxy(() => initialData.value, props.manager);
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
+	const readonly = computed<boolean>(() => !hatKompetenzAdd.value);
 	const jahrgaengeToBeAdded = ref<JahrgangsDaten[]>([]);
 	const jahrgaengeIdsToBeAdded = computed<List<number>>(() => Arrays.asList(jahrgaengeToBeAdded.value.map(jahrgang => jahrgang.id)));
 
@@ -126,8 +126,6 @@
 		selectionDisplayText: a => a.text,
 	});
 
-	const isValid = computed<boolean>(() => model.getAlleFehler().isEmpty());
-
 	// --- util ---
 	async function add() {
 		if (isLoading.value) {
@@ -149,7 +147,7 @@
 		await props.gotoDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
