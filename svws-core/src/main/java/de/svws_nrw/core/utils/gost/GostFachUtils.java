@@ -147,7 +147,9 @@ public final class GostFachUtils {
 	 * Prüft, ob das übergebene Fach als erster Leistungskurs wählbahr ist.
 	 * Dafür muss es laut APO Gost §12 (4) "eine aus der Sekundarstufe I
 	 * fortgeführte Fremdsprache oder Mathematik oder eine Naturwissenschaft
-	 * oder Deutsch sein".
+	 * oder Deutsch sein". Als Naturwissenschaft gelten hier nur Biologie,
+	 * Chemie und Physik, da die Belegprüfung die neu einsetzenden
+	 * Naturwissenschaften (EL, IF, TC) als ersten Leistungskurs nicht zulässt.
 	 *
 	 * @param fach   das Fach der gymnasialen Oberstufe
 	 *
@@ -158,7 +160,7 @@ public final class GostFachUtils {
 		return ((fach != null) && (fach.istMoeglichAbiLK) && (fach.istMoeglichQ11) && (fach.istMoeglichQ12)
 				&& (fach.istMoeglichQ21) && (fach.istMoeglichQ22))
 				&& ((GostFachbereich.FREMDSPRACHE.hat(fach) && !fach.istFremdSpracheNeuEinsetzend)
-						|| (GostFachbereich.MATHEMATIK.hat(fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH.hat(fach))
+						|| (GostFachbereich.MATHEMATIK.hat(fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(fach))
 						|| (GostFachbereich.DEUTSCH.hat(fach)));
 	}
 

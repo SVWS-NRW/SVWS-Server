@@ -110,13 +110,13 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 	}
 
 
-	private stepAbiturGK(wahl: GostSchuelerFachwahl): boolean {
+	private stepAbiturGK(fach: GostFach, wahl: GostSchuelerFachwahl): boolean {
 		const aktuell = wahl.abiturFach;
 		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === "M") && ((aktuell === null) || (aktuell === 3))) {
 			wahl.abiturFach = 4;
 		} else if ((wahl.halbjahre[GostHalbjahr.Q22.id] === "M") && (aktuell === 4)) {
 			wahl.abiturFach = 5;
-		} else if ((wahl.halbjahre[GostHalbjahr.Q22.id] === "S") && ((aktuell === null) || (aktuell === 4) || (aktuell === 5))) {
+		} else if ((wahl.halbjahre[GostHalbjahr.Q22.id] === "S") && ((aktuell === null) || (aktuell === 4) || (aktuell === 5)) && !GostFachbereich.SPORT.hat(fach)) { // Sport darf nicht 3. Abiturfach sein
 			wahl.abiturFach = 3;
 		} else { // z.B. aktuell === 1 oder aktuell === 2
 			wahl.abiturFach = null;
@@ -161,7 +161,7 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 
 		// Die mögliche Kursart im Abitur ist GK (Grundkurs)
 		if (abiMoeglicheKursart === GostKursart.GK) {
-			return this.stepAbiturGK(wahl);
+			return this.stepAbiturGK(fach, wahl);
 		}
 		return false;
 	}
@@ -301,6 +301,14 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 			return;
 		}
 
+		// Ist die Q2.1 bereits bewertet, so wird sie nicht mehr geändert. Ein vorhandener Projektkurs kann dann nur noch in der Q2.2 ergänzt werden
+		if (this.manager.istBewertet(GostHalbjahr.Q21)) {
+			if ((wahl.halbjahre[GostHalbjahr.Q21.id] !== null) && (wahl.halbjahre[GostHalbjahr.Q22.id] === null)) {
+				wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
+			}
+			return;
+		}
+
 		// Wenn ein Projektkurs gewählt ist, dann wähle ihn ab, ...
 		const aktuell = wahl.halbjahre[halbjahr.id];
 		if (aktuell !== null) {
@@ -360,7 +368,12 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 				if (this.istFachWaehlbar(fach, halbjahr.next())) {
 					wahl.halbjahre[halbjahr.nextOrException().id] = "M";
 				} else if (this.istFachWaehlbar(fach, halbjahr.previous())) {
-					wahl.halbjahre[halbjahr.previousOrException().id] = "M";
+					if (this.manager.istBewertet(halbjahr.previousOrException())) {
+						// Das bewertete Halbjahr davor kann nicht mehr ergänzt werden, daher ist das Ersatzfach hier nicht wählbar
+						wahl.halbjahre[halbjahr.id] = null;
+					} else {
+						wahl.halbjahre[halbjahr.previousOrException().id] = "M";
+					}
 				}
 			}
 		} else {
@@ -576,6 +589,11 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 		} else if ((aktuell === "S") && (halbjahr === GostHalbjahr.Q22)) {
 			wahl.halbjahre[halbjahr.id] = "M";
 			wahl.abiturFach = (wahl.abiturFach === 3) && !this.manager.pruefeExistiertAbiFach(this.manager.getFachbelegungen(), GostAbiturFach.AB4) ? 4 : null;
+		} else if (this.istFruehereQHalbjahrBewertet(halbjahr)) {
+			// Die Kursart steht durch das bewertete Halbjahr fest, ein Wechsel zwischen GK und LK würde dieses Halbjahr mit überschreiben
+			if (aktuell === null) {
+				wahl.halbjahre[halbjahr.id] = (wahl.halbjahre[halbjahr.previousOrException().id] === "LK") ? "LK" : (halbjahr === GostHalbjahr.Q22) ? "M" : "S";
+			}
 		} else if ((aktuell === null) || (aktuell === "M") || ((aktuell === "S") && !fach.istMoeglichAbiLK)) {
 			this.setzeWahlQSchriftlich(fach, wahl);
 		} else if ((aktuell === "S") && fach.istMoeglichAbiLK) {
@@ -626,6 +644,10 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 
 	private entferneZKWahl(wahl: GostSchuelerFachwahl, halbjahr: GostHalbjahr, beginnZK: GostHalbjahr | null): void {
 		if ((beginnZK !== null) && (halbjahr !== GostHalbjahr.Q11) && (beginnZK === halbjahr.previousOrException())) {
+			// Ein Zusatzkurs, dessen erstes Halbjahr bereits bewertet ist, kann nicht mehr entfernt werden
+			if (this.manager.istBewertet(halbjahr.previousOrException())) {
+				return;
+			}
 			wahl.halbjahre[halbjahr.previousOrException().id] = null;
 		}
 		wahl.halbjahre[halbjahr.id] = null;
@@ -641,8 +663,23 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 			if (checkFachwahl && (this.hatSchuelerFachwahl(wahl, beginnZK.previousOrException()) || this.uiManager.hatDoppelbelegung(fach, beginnZK.previousOrException()))) {
 				return false;
 			}
-			wahl.halbjahre[beginnZK.id] = 'ZK';
-			wahl.halbjahre[beginnZK.nextOrException().id] = 'ZK';
+			// Bewertete Halbjahre sind nicht änderbar: Ein Zusatzkurs ist dort nur wählbar, wenn bereits ZK eingetragen ist
+			const zkHalbjahre = [beginnZK, beginnZK.nextOrException()];
+			for (const zkHalbjahr of zkHalbjahre) {
+				if (this.manager.istBewertet(zkHalbjahr) && (wahl.halbjahre[zkHalbjahr.id] !== 'ZK')) {
+					return false;
+				}
+			}
+			// Ist in den beiden Halbjahren davor bereits ZK eingetragen, so wäre dies ein drittes Halbjahr mit Zusatzkurs
+			if ((halbjahr.id >= GostHalbjahr.Q12.id) && (wahl.halbjahre[halbjahr.previousOrException().id] === 'ZK')
+				&& (halbjahr.previousOrException() !== GostHalbjahr.Q11) && (wahl.halbjahre[halbjahr.previousOrException().previousOrException().id] === 'ZK')) {
+				return false;
+			}
+			for (const zkHalbjahr of zkHalbjahre) {
+				if (!this.manager.istBewertet(zkHalbjahr)) {
+					wahl.halbjahre[zkHalbjahr.id] = 'ZK';
+				}
+			}
 			return true;
 		}
 		return false;
@@ -695,15 +732,17 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 			return;
 		}
 
+		// Sport darf in der Q2.2 nicht schriftlich belegt werden (Abiturfach 2, 4 oder 5 bzw. kein Abiturfach), daher entfällt dort "S"
+		const istSportQ22 = GostFachbereich.SPORT.hat(fach) && (halbjahr === GostHalbjahr.Q22) && (aktuell === "M");
 		if (aktuell === null) {
 			wahl.halbjahre[halbjahr.id] = "M";
-		} else if (aktuell === "M") {
+		} else if ((aktuell === "M") && !istSportQ22) {
 			wahl.halbjahre[halbjahr.id] = "S";
 			wahl.abiturFach = (halbjahr === GostHalbjahr.Q22) && ((wahl.abiturFach === 4) || (wahl.abiturFach === 5)) && !this.manager.pruefeExistiertAbiFach(this.manager.getFachbelegungen(), GostAbiturFach.AB3)
 				? 3 : null;
-		} else if (fach.istMoeglichAbiLK && (wahl.halbjahre[halbjahr.previousOrException().id] === "LK") && (aktuell === "S")) {
+		} else if (fach.istMoeglichAbiLK && (wahl.halbjahre[halbjahr.previousOrException().id] === "LK") && ((aktuell === "S") || istSportQ22)) {
 			wahl.halbjahre[halbjahr.id] = "LK";
-		} else if ((aktuell === "S") || (aktuell === "LK")) {
+		} else if ((aktuell === "S") || (aktuell === "LK") || istSportQ22) {
 			this.leereWahlAb(wahl, halbjahr);
 			if (hatZK && (beginnZK !== null)) {
 				this.stepZKWahl(fach, wahl, halbjahr, beginnZK, false);
@@ -713,6 +752,22 @@ export class LaufbahnplanungUiStepperAbi2030 implements LaufbahnplanungUiStepper
 		}
 	}
 
+
+	/**
+	 * Prüft, ob ein Halbjahr der Qualifikationsphase vor dem übergebenen Halbjahr bereits bewertet ist.
+	 *
+	 * @param halbjahr   das aktuelle Halbjahr
+	 *
+	 * @returns true, wenn ein früheres Halbjahr der Qualifikationsphase bewertet ist, und ansonsten false
+	 */
+	private istFruehereQHalbjahrBewertet(halbjahr: GostHalbjahr): boolean {
+		for (const hj of GostHalbjahr.values()) {
+			if (hj.istQualifikationsphase() && (hj.id < halbjahr.id) && this.manager.istBewertet(hj)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Prüft, ob das aktuelle Halbjahr oder ein Folgehalbjahr bereits bewertet und damit für Änderungen gesperrt ist.
