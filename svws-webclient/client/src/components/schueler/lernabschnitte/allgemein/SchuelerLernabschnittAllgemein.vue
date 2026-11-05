@@ -61,18 +61,24 @@
 						:manager="organisationsformManager"
 						:validation="() => model.getFehler('idOrganisationsform')"
 						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
-					<ui-select label="Klassenart"
-						v-model="model.klassenart.value"
-						:manager="klassenartManager"
-						:validation="() => model.getFehler('idKlassenart')"
-						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
-				</svws-ui-input-wrapper>
-				<svws-ui-spacing />
-				<svws-ui-input-wrapper :grid="2">
+					<ui-select v-if="![Schulform.BK, Schulform.SB, Schulform.WB].includes(schuleState.schulform)"
+						label="Betreuungsart" statistics
+						v-model="model.betreuungsart.value"
+						:manager="betreuungsartManager"
+						:disabled="!hatUpdateKompetenz" />
 					<ui-select label="Bilingualer Zweig"
 						v-model="model.bilingualerZweig.value"
 						:manager="bilingualerZweigManager"
 						:disabled="!hatUpdateKompetenz" />
+				</svws-ui-input-wrapper>
+				<svws-ui-spacing />
+				<svws-ui-input-wrapper :grid="2">
+					<ui-select v-if="![Schulform.BK, Schulform.SB].includes(schuleState.schulform)"
+						label="Klassenart"
+						v-model="model.klassenart.value"
+						:manager="klassenartManager"
+						:validation="() => model.getFehler('idKlassenart')"
+						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2">
@@ -99,6 +105,7 @@
 	import { computed } from 'vue';
 
 	import type { KlassenDaten } from '@core/asd/data/klassen/KlassenDaten';
+	import type { BetreuungsartKatalogEintrag } from '@core/asd/data/schueler/BetreuungsartKatalogEintrag';
 	import type { SchuelerLernabschnittsdaten } from '@core/asd/data/schueler/SchuelerLernabschnittsdaten';
 	import type { OrganisationsformKatalogEintrag } from '@core/asd/data/schule/OrganisationsformKatalogEintrag';
 	import { BilingualeSprache } from '@core/asd/types/fach/BilingualeSprache';
@@ -195,6 +202,12 @@
 
 	const organisationsformManager = new SelectManager<OrganisationsformKatalogEintrag>({
 		options: model.organisationsformen,
+		optionDisplayText: i => i.text,
+		selectionDisplayText: i => i.text,
+	});
+
+	const betreuungsartManager = new SelectManager<BetreuungsartKatalogEintrag>({
+		options: model.betreuungsarten,
 		optionDisplayText: i => i.text,
 		selectionDisplayText: i => i.text,
 	});

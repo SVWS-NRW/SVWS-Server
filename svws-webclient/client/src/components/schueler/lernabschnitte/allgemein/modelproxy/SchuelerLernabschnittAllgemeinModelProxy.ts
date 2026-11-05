@@ -4,6 +4,7 @@ import type { BilingualeSpracheKatalogEintrag } from "@core/asd/data/fach/Biling
 import type { PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag } from "@core/asd/data/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag";
 import type { KlassenartKatalogEintrag } from "@core/asd/data/klassen/KlassenartKatalogEintrag";
 import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { BetreuungsartKatalogEintrag } from "@core/asd/data/schueler/BetreuungsartKatalogEintrag";
 import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 import type { OrganisationsformKatalogEintrag } from "@core/asd/data/schule/OrganisationsformKatalogEintrag";
 import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
@@ -11,6 +12,7 @@ import { BilingualeSprache } from "@core/asd/types/fach/BilingualeSprache";
 import { PrimarstufeSchuleingangsphaseBesuchsjahre } from "@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre";
 import { Klassenart } from "@core/asd/types/klassen/Klassenart";
 import { Note } from "@core/asd/types/Note";
+import { Betreuungsart } from "@core/asd/types/schueler/Betreuungsart";
 import { AllgemeinbildendOrganisationsformen } from "@core/asd/types/schule/AllgemeinbildendOrganisationsformen";
 import { BerufskollegOrganisationsformen } from "@core/asd/types/schule/BerufskollegOrganisationsformen";
 import { Schulform } from "@core/asd/types/schule/Schulform";
@@ -51,7 +53,7 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 			"bilingualerZweig", "foerderschwerpunkt1ID", "foerderschwerpunkt2ID",
 			"hatAOSF", "hatAutismus", "hatSchwerbehinderungsNachweis",
 			"hatZieldifferentenUnterricht", "datumAnfang", "datumEnde", "idEpJahre",
-			"noteLernbereichNW", "noteLernbereichGSbzwAL",
+			"noteLernbereichNW", "noteLernbereichGSbzwAL", "idBetreuung",
 		];
 		super({ data, patch, listOfAutopatchProps });
 		this.lehrer = lehrer;
@@ -158,6 +160,13 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 		set: (v: SchulgliederungKatalogEintrag | null) => this.proxy.idSchulgliederung = v?.id ?? null,
 	});
 
+	betreuungsart = computed({
+		get: () => {
+			return Betreuungsart.data().getEintragByID(this.proxy.idBetreuung);
+		},
+		set: (v) => this.proxy.idBetreuung = v?.id ?? 0,
+	});
+
 	organisationsform = computed<OrganisationsformKatalogEintrag | null>({
 		get: () => {
 			const idOrga = this.proxy.idOrganisationsform;
@@ -184,6 +193,12 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 			return BilingualeSprache.data().getEintragBySchuljahrUndWert(this.schuleState.abschnitt.schuljahr, sprache);
 		},
 		set: (v: BilingualeSpracheKatalogEintrag | null) => this.proxy.bilingualerZweig = v?.kuerzel ?? null,
+	});
+
+	betreuungsarten = computed<Iterable<BetreuungsartKatalogEintrag>>(() => {
+		return [...Betreuungsart.data().getWerteBySchulform(this.schuleState.schulform)]
+			.map(e => e.daten(this.schuleState.abschnitt.schuljahr))
+			.filter(e => e !== null);
 	});
 
 	organisationsformen = computed<Iterable<OrganisationsformKatalogEintrag>>(() => {
