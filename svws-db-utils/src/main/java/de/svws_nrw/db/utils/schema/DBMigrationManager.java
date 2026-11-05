@@ -38,8 +38,6 @@ import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.MigrationDTOs;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppeSchueler;
 import de.svws_nrw.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin;
@@ -563,12 +561,12 @@ public final class DBMigrationManager {
 	 */
 	private boolean fixSchulform() throws ApiOperationException {
 		final DBEntityManager conn = tgtManager.getConnection();
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		final MigrationDTOEigeneSchule schule = conn.querySingle(MigrationDTOEigeneSchule.class);
 		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");
 		}
 		final Schulform tmpSchulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		final MigrationDTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(MigrationDTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		logger.logLn("- Schulnummer: " + schule.SchulNr);
 		logger.logLn("- Schulform: " + ((tmpSchulform == null) ? "???" : tmpSchulform.daten(schuljahresabschnitt.Jahr).kuerzel));
 		final List<SchulenKatalogEintrag> katalogSchulen = CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);
