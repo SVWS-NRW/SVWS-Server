@@ -45,8 +45,14 @@
 				<svws-ui-spacing :size="2" />
 
 				<svws-ui-input-wrapper :grid="1">
+					<svws-ui-checkbox v-if="[Schulform.BK, Schulform.SB].includes(schuleState.schulform)" v-model="modelProxy.proxy.istJva" :disabled="!hatKompetenzUpdate" statistics> JVA-Klasse </svws-ui-checkbox>
+					<svws-ui-spacing :size="1" />
+					<svws-ui-checkbox v-if="showReformpaedagogik" v-model="modelProxy.proxy.istReformpaedagogik" :disabled="!hatKompetenzUpdate" statistics> Reformpädagogik </svws-ui-checkbox>
+					<svws-ui-spacing :size="1" />
 					<svws-ui-checkbox v-model="modelProxy.proxy.noteneingabeGesperrt" :disabled="!hatKompetenzUpdate"> Noteneingabe gesperrt </svws-ui-checkbox>
+					<svws-ui-spacing :size="1" />
 					<svws-ui-checkbox v-if="schuleState.schulform === Schulform.G" :disabled="!hatKompetenzUpdate" v-model="modelProxy.proxy.verwendungAnkreuzkompetenzen">In dieser Klasse werden Ankreuzkompetenzen verwendet </svws-ui-checkbox>
+					<svws-ui-spacing :size="1" />
 					<svws-ui-checkbox v-if="schuleState.schulform === Schulform.WB" :disabled="!hatKompetenzUpdate" v-model="modelProxy.proxy.beginnSommersemester"> Beginn im Sommersemester </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -151,7 +157,8 @@
 	const dataNotPatched = () => klassenState.manager.daten();
 	const listOfAutopatchProps: Iterable<keyof KlassenDaten> = ["idJahrgang", "parallelitaet", "idVorgaengerklasse",
 		"idFolgeklasse", "idSchulgliederung", "idKlassenart", "idBerufsbildendOrganisationsform", "idAllgemeinbildendOrganisationsform",
-		"idWeiterbildungOrganisationsform", "noteneingabeGesperrt", "verwendungAnkreuzkompetenzen", "beginnSommersemester"];
+		"idWeiterbildungOrganisationsform", "noteneingabeGesperrt", "verwendungAnkreuzkompetenzen", "beginnSommersemester",
+		"istReformpaedagogik", "istJva"];
 	const modelProxy = new KlassenDatenModelProxy(
 		() => dataNotPatched(),
 		() => listAndereKlassen.value,
@@ -165,6 +172,9 @@
 	});
 
 	const schuljahr = computed<number>(() => schuleState.schuljahr);
+
+	const showReformpaedagogik = [Schulform.G, Schulform.H, Schulform.V, Schulform.S, Schulform.R, Schulform.PS, Schulform.SK, Schulform.GE, Schulform.GY, Schulform.SR, Schulform.SG]
+		.includes(schuleState.schulform);
 
 	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen | BerufskollegOrganisationsformen | WeiterbildungskollegOrganisationsformen) {
 		return value.daten(schuleState.schuljahr)?.kuerzel + ' - ' + value.daten(schuleState.schuljahr)?.text;
