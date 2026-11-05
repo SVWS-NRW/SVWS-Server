@@ -72,6 +72,14 @@ export class HerkunftschulenStateImpl extends StateManager<HerkunftschulenReacti
 		this._herkunftschulen = katalogState as HerkunftSchuleKatalogState;
 	}
 
+	/**
+	 * Setzt den State zurück. Die Map der nach eigener Schulform gefilterten Schulen wird dabei
+	 * geleert, da sie sonst als Teil des Default-States über Schemawechsel hinweg erhalten bleibt.
+	 */
+	override reset(): void {
+		super.reset();
+	}
+
 	/** Initialisiert den State und lädt Daten der Kataloge */
 	public async init(): Promise<void> {
 		try {
@@ -91,6 +99,7 @@ export class HerkunftschulenStateImpl extends StateManager<HerkunftschulenReacti
 
 	private initBySchulnummerStatikstikFilteredByEigeneSchuleSchulform() {
 		const schuleState = useSchuleState();
+		const bySchulnummerStatistik = new Map<string, SchulEintrag>();
 
 		for (const schule of this.state.schulen) {
 			if (schule.schulnummerStatistik === null) {
@@ -107,11 +116,14 @@ export class HerkunftschulenStateImpl extends StateManager<HerkunftschulenReacti
 					? null
 					: Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
 			if (sf === schuleState.schulform) {
-				this.state.bySchulnummerStatistikFilteredByEigeneSchulform.set(schule.schulnummerStatistik, schule);
+				bySchulnummerStatistik.set(schule.schulnummerStatistik, schule);
 			}
 		}
 
+		// Neue Map per Patch setzen, damit der Default-State unverändert bleibt und die Reaktivität ausgelöst wird
+		this.setPatchedState({ bySchulnummerStatistikFilteredByEigeneSchulform: bySchulnummerStatistik });
 	}
+
 }
 
 export const herkunftschulenStateImpl = new HerkunftschulenStateImpl();
