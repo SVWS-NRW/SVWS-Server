@@ -45,5 +45,6 @@
 | keineAuskunftAnDritte         | boolean  |       | False    |          |             | gibt an, ob über den Schüler eine Auskunft an dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte. |
 | erhaeltSchuelerBAFOEG         | boolean  |       | False    |          |             | gibt an, ob der Schüler BAFÖG erhält oder nicht                                                                                   |
 | erhaeltMeisterBAFOEG          | boolean  |       | False    |          |             | gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht                                                                           |
+| istJva                        | boolean  |       | False    |          |             | gibt an, ob der Schüler Schüler einer Justizvollzugsanstalt ist oder nicht                                                        |
 
 - [ ] Ist Volljährig fehlt

@@ -28809,6 +28809,7 @@ SchuelerStammdaten {
   "idVerkehrspracheFamilie": null,
   "istBerufsschulpflichtErfuellt": false,
   "istDuplikat": false,
+  "istJva": false,
   "istSchulpflichtErfuellt": true,
   "istVolljaehrig": true,
   "keineAuskunftAnDritte": false,

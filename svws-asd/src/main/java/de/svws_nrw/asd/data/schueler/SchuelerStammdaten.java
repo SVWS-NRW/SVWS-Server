@@ -213,6 +213,10 @@ public class SchuelerStammdaten {
 	@Schema(description = "gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht", example = "true")
 	public boolean erhaeltMeisterBAFOEG;
 
+	/** Gibt an, ob der Schüler Schüler einer Justizvollzugsanstalt ist oder nicht. */
+	@Schema(description = "gibt an, ob der Schüler Schüler einer Justizvollzugsanstalt ist oder nicht", example = "true")
+	public boolean istJva;
+
 
 	/** Der Beginn des Bildungsgangs eines Schülers. */
 	@Schema(description = "der Beginn des Bildungsgangs eines Schülers", example = "1911-11-11")

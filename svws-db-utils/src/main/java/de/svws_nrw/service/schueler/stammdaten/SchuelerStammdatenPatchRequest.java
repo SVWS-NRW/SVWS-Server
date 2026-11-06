@@ -201,6 +201,10 @@ public class SchuelerStammdatenPatchRequest {
 	@Schema(description = "gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht", example = "true")
 	public JsonNullable<@NotNull Boolean> erhaeltMeisterBAFOEG = JsonNullable.undefined();
 
+	/** Gibt an, ob der Schüler Schüler einer Justizvollzugsanstalt ist oder nicht. */
+	@Schema(description = "gibt an, ob der Schüler Schüler einer Justizvollzugsanstalt ist oder nicht", example = "true")
+	public JsonNullable<@NotNull Boolean> istJva = JsonNullable.undefined();
+
 	/** Der Beginn des Bildungsgangs eines Schülers. */
 	@Schema(description = "der Beginn des Bildungsgangs eines Schülers", example = "1911-11-11")
 	public JsonNullable<@ValidDateFormat String> beginnBildungsgang = JsonNullable.undefined();

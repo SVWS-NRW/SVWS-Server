@@ -264,6 +264,24 @@ class SchuelerStammdatenMapperTest {
 					.hasFieldOrPropertyWithValue("beruf", "Tischler")
 					.hasFieldOrPropertyWithValue("dauerBildungsgang", 3);
 		}
+
+		@Test
+		@DisplayName("Mappt JVA auf istJva")
+		void toApi_mapptIstJva() {
+			final var entity = createEntity(7L);
+			entity.JVA = true;
+
+			assertThat(mapper.toApi(entity).istJva).isTrue();
+		}
+
+		@Test
+		@DisplayName("Mappt JVA = null auf istJva = false")
+		void toApi_mapptNullJvaAufFalse() {
+			final var entity = createEntity(7L);
+			entity.JVA = null;
+
+			assertThat(mapper.toApi(entity).istJva).isFalse();
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -514,6 +532,7 @@ class SchuelerStammdatenMapperTest {
 			request.druckeKonfessionAufZeugnisse = JsonNullable.of(true);
 			request.hatMigrationshintergrund = JsonNullable.of(true);
 			request.istDuplikat = JsonNullable.of(false);
+			request.istJva = JsonNullable.of(true);
 			final var entity = createEntity(1L);
 
 			mapper.patch(request, entity);
@@ -528,7 +547,8 @@ class SchuelerStammdatenMapperTest {
 					.hasFieldOrPropertyWithValue("MeisterBafoeg", false)
 					.hasFieldOrPropertyWithValue("KonfDruck", true)
 					.hasFieldOrPropertyWithValue("Migrationshintergrund", true)
-					.hasFieldOrPropertyWithValue("Duplikat", false);
+					.hasFieldOrPropertyWithValue("Duplikat", false)
+					.hasFieldOrPropertyWithValue("JVA", true);
 		}
 
 		@Test
