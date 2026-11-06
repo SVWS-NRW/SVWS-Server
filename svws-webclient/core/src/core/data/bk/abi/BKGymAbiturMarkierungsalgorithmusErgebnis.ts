@@ -119,7 +119,7 @@ export class BKGymAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 		result += '"fehlerLog" : [ ';
 		for (let i = 0; i < obj.fehlerLog.size(); i++) {
 			const elem = obj.fehlerLog.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.fehlerLog.size() - 1)
 				result += ',';
 		}
@@ -135,7 +135,7 @@ export class BKGymAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 		result += '"log" : [ ';
 		for (let i = 0; i < obj.log.size(); i++) {
 			const elem = obj.log.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.log.size() - 1)
 				result += ',';
 		}
@@ -169,7 +169,7 @@ export class BKGymAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 			result += '"fehlerLog" : [ ';
 			for (let i = 0; i < obj.fehlerLog.size(); i++) {
 				const elem = obj.fehlerLog.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.fehlerLog.size() - 1)
 					result += ',';
 			}
@@ -189,7 +189,7 @@ export class BKGymAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
 				const elem = obj.log.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.log.size() - 1)
 					result += ',';
 			}

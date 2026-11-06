@@ -71,7 +71,7 @@ export class AbiturStatistikGesamt extends JavaObject {
 		result += '"abifach" : [ ';
 		for (let i = 0; i < obj.abifach.size(); i++) {
 			const elem = obj.abifach.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.abifach.size() - 1)
 				result += ',';
 		}
@@ -91,7 +91,7 @@ export class AbiturStatistikGesamt extends JavaObject {
 			result += '"abifach" : [ ';
 			for (let i = 0; i < obj.abifach.size(); i++) {
 				const elem = obj.abifach.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.abifach.size() - 1)
 					result += ',';
 			}

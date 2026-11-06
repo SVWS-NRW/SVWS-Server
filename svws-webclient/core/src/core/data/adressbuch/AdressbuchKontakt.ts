@@ -170,7 +170,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		result += '"kategorien" : [ ';
 		for (let i = 0; i < obj.kategorien.size(); i++) {
 			const elem = obj.kategorien.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.kategorien.size() - 1)
 				result += ',';
 		}
@@ -239,7 +239,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			result += '"kategorien" : [ ';
 			for (let i = 0; i < obj.kategorien.size(); i++) {
 				const elem = obj.kategorien.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.kategorien.size() - 1)
 					result += ',';
 			}

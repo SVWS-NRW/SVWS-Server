@@ -84,7 +84,7 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 		result += '"bkGliederungen" : [ ';
 		for (let i = 0; i < obj.bkGliederungen.size(); i++) {
 			const elem = obj.bkGliederungen.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.bkGliederungen.size() - 1)
 				result += ',';
 		}
@@ -127,7 +127,7 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 			result += '"bkGliederungen" : [ ';
 			for (let i = 0; i < obj.bkGliederungen.size(); i++) {
 				const elem = obj.bkGliederungen.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.bkGliederungen.size() - 1)
 					result += ',';
 			}

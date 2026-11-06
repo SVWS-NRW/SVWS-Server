@@ -62,7 +62,7 @@ export class SchuleAbschnitte extends JavaObject {
 		result += '"bezAbschnitte" : [ ';
 		for (let i = 0; i < obj.bezAbschnitte.size(); i++) {
 			const elem = obj.bezAbschnitte.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.bezAbschnitte.size() - 1)
 				result += ',';
 		}
@@ -84,7 +84,7 @@ export class SchuleAbschnitte extends JavaObject {
 			result += '"bezAbschnitte" : [ ';
 			for (let i = 0; i < obj.bezAbschnitte.size(); i++) {
 				const elem = obj.bezAbschnitte.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.bezAbschnitte.size() - 1)
 					result += ',';
 			}

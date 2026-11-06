@@ -114,7 +114,7 @@ export class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 		result += '"fussnoten" : [ ';
 		for (let i = 0; i < obj.fussnoten.size(); i++) {
 			const elem = obj.fussnoten.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.fussnoten.size() - 1)
 				result += ',';
 		}
@@ -170,7 +170,7 @@ export class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 			result += '"fussnoten" : [ ';
 			for (let i = 0; i < obj.fussnoten.size(); i++) {
 				const elem = obj.fussnoten.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.fussnoten.size() - 1)
 					result += ',';
 			}

@@ -68,7 +68,7 @@ export class KAOAKategorieKatalogEintrag extends CoreTypeData {
 		result += '"jahrgaenge" : [ ';
 		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
 			const elem = obj.jahrgaenge.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.jahrgaenge.size() - 1)
 				result += ',';
 		}
@@ -105,7 +105,7 @@ export class KAOAKategorieKatalogEintrag extends CoreTypeData {
 			result += '"jahrgaenge" : [ ';
 			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
 				const elem = obj.jahrgaenge.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.jahrgaenge.size() - 1)
 					result += ',';
 			}

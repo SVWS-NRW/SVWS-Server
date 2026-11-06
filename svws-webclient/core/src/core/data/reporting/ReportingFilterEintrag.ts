@@ -60,7 +60,7 @@ export class ReportingFilterEintrag extends JavaObject {
 		result += '"werte" : [ ';
 		for (let i = 0; i < obj.werte.size(); i++) {
 			const elem = obj.werte.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.werte.size() - 1)
 				result += ',';
 		}
@@ -82,7 +82,7 @@ export class ReportingFilterEintrag extends JavaObject {
 			result += '"werte" : [ ';
 			for (let i = 0; i < obj.werte.size(); i++) {
 				const elem = obj.werte.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.werte.size() - 1)
 					result += ',';
 			}

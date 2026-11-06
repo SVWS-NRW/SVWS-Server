@@ -69,7 +69,7 @@ export class GostLaufbahnplanungExportV1Fachbelegung extends JavaObject {
 		result += '"kursart" : [ ';
 		for (let i = 0; i < obj.kursart.length; i++) {
 			const elem = obj.kursart[i];
-			result += (elem === null) ? null : '"' + elem + '"';
+			result += (elem === null) ? 'null' : JSON.stringify(elem);
 			if (i < obj.kursart.length - 1)
 				result += ',';
 		}
@@ -100,7 +100,7 @@ export class GostLaufbahnplanungExportV1Fachbelegung extends JavaObject {
 			result += '"kursart" : [ ';
 			for (let i = 0; i < a.length; i++) {
 				const elem = a[i];
-				result += (elem === null) ? null : '"' + elem + '"';
+				result += (elem === null) ? 'null' : JSON.stringify(elem);
 				if (i < a.length - 1)
 					result += ',';
 			}

@@ -126,7 +126,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 			result += '"nurSchulformen" : [ ';
 			for (let i = 0; i < obj.nurSchulformen.size(); i++) {
 				const elem = obj.nurSchulformen.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.nurSchulformen.size() - 1)
 					result += ',';
 			}
@@ -158,7 +158,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 				result += '"nurSchulformen" : [ ';
 				for (let i = 0; i < obj.nurSchulformen.size(); i++) {
 					const elem = obj.nurSchulformen.get(i);
-					result += '"' + elem + '"';
+					result += JSON.stringify(elem);
 					if (i < obj.nurSchulformen.size() - 1)
 						result += ',';
 				}

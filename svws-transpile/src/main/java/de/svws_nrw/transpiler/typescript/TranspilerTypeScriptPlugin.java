@@ -2260,9 +2260,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				sb.append(getIndent() + "const elem = " + objAttr + ".get(i);" + System.lineSeparator());
 				if (paramType.isString()) {
 					if (paramType.isNotNull()) {
-						sb.append(getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += JSON.stringify(elem);" + System.lineSeparator());
 					} else {
-						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? 'null' : JSON.stringify(elem);" + System.lineSeparator());
 					}
 				} else if (paramType.isNumberClass() || paramType.isBoolean()) {
 					if (paramType.isNotNull()) {
@@ -2306,9 +2306,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				sb.append(getIndent() + "const elem = " + objAttr + "[i];" + System.lineSeparator());
 				if (contentType.isString()) {
 					if (contentType.isNotNull()) {
-						sb.append(getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += JSON.stringify(elem);" + System.lineSeparator());
 					} else {
-						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? 'null' : JSON.stringify(elem);" + System.lineSeparator());
 					}
 				} else if (contentType.isNumberClass() || contentType.isBoolean()) {
 					if (contentType.isNotNull()) {
@@ -2426,9 +2426,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				sb.append(getIndent() + "const elem = " + objAttr + ".get(i);" + System.lineSeparator());
 				if (paramType.isString()) {
 					if (paramType.isNotNull()) {
-						sb.append(getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += JSON.stringify(elem);" + System.lineSeparator());
 					} else {
-						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? 'null' : JSON.stringify(elem);" + System.lineSeparator());
 					}
 				} else if (paramType.isNumberClass() || paramType.isBoolean()) {
 					if (paramType.isNotNull()) {
@@ -2472,9 +2472,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				sb.append(getIndent() + "const elem = a[i];" + System.lineSeparator());
 				if (contentType.isString()) {
 					if (contentType.isNotNull()) {
-						sb.append(getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += JSON.stringify(elem);" + System.lineSeparator());
 					} else {
-						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? 'null' : JSON.stringify(elem);" + System.lineSeparator());
 					}
 				} else if (contentType.isNumberClass() || contentType.isBoolean()) {
 					if (contentType.isNotNull()) {

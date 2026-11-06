@@ -64,7 +64,7 @@ export class BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit exten
 		result += '"abifach3" : [ ';
 		for (let i = 0; i < obj.abifach3.size(); i++) {
 			const elem = obj.abifach3.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.abifach3.size() - 1)
 				result += ',';
 		}
@@ -72,7 +72,7 @@ export class BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit exten
 		result += '"abifach4" : [ ';
 		for (let i = 0; i < obj.abifach4.size(); i++) {
 			const elem = obj.abifach4.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.abifach4.size() - 1)
 				result += ',';
 		}
@@ -80,7 +80,7 @@ export class BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit exten
 		result += '"abifach5" : [ ';
 		for (let i = 0; i < obj.abifach5.size(); i++) {
 			const elem = obj.abifach5.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.abifach5.size() - 1)
 				result += ',';
 		}
@@ -96,7 +96,7 @@ export class BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit exten
 			result += '"abifach3" : [ ';
 			for (let i = 0; i < obj.abifach3.size(); i++) {
 				const elem = obj.abifach3.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.abifach3.size() - 1)
 					result += ',';
 			}
@@ -106,7 +106,7 @@ export class BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit exten
 			result += '"abifach4" : [ ';
 			for (let i = 0; i < obj.abifach4.size(); i++) {
 				const elem = obj.abifach4.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.abifach4.size() - 1)
 					result += ',';
 			}
@@ -116,7 +116,7 @@ export class BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit exten
 			result += '"abifach5" : [ ';
 			for (let i = 0; i < obj.abifach5.size(); i++) {
 				const elem = obj.abifach5.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.abifach5.size() - 1)
 					result += ',';
 			}

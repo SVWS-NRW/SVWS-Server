@@ -91,7 +91,7 @@ export class SchuelerblockungInput extends JavaObject {
 		result += '"fachwahlenText" : [ ';
 		for (let i = 0; i < obj.fachwahlenText.size(); i++) {
 			const elem = obj.fachwahlenText.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.fachwahlenText.size() - 1)
 				result += ',';
 		}
@@ -130,7 +130,7 @@ export class SchuelerblockungInput extends JavaObject {
 			result += '"fachwahlenText" : [ ';
 			for (let i = 0; i < obj.fachwahlenText.size(); i++) {
 				const elem = obj.fachwahlenText.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.fachwahlenText.size() - 1)
 					result += ',';
 			}

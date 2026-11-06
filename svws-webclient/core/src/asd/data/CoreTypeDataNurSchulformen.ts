@@ -68,7 +68,7 @@ export class CoreTypeDataNurSchulformen extends CoreTypeData {
 		result += '"schulformen" : [ ';
 		for (let i = 0; i < obj.schulformen.size(); i++) {
 			const elem = obj.schulformen.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.schulformen.size() - 1)
 				result += ',';
 		}
@@ -105,7 +105,7 @@ export class CoreTypeDataNurSchulformen extends CoreTypeData {
 			result += '"schulformen" : [ ';
 			for (let i = 0; i < obj.schulformen.size(); i++) {
 				const elem = obj.schulformen.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.schulformen.size() - 1)
 					result += ',';
 			}

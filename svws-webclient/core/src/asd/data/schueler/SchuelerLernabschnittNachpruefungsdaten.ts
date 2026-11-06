@@ -55,7 +55,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 		result += '"moegliche" : [ ';
 		for (let i = 0; i < obj.moegliche.size(); i++) {
 			const elem = obj.moegliche.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.moegliche.size() - 1)
 				result += ',';
 		}
@@ -79,7 +79,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 			result += '"moegliche" : [ ';
 			for (let i = 0; i < obj.moegliche.size(); i++) {
 				const elem = obj.moegliche.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.moegliche.size() - 1)
 					result += ',';
 			}

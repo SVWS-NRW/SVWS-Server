@@ -161,7 +161,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		result += '"muss" : [ ';
 		for (let i = 0; i < obj.muss.size(); i++) {
 			const elem = obj.muss.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.muss.size() - 1)
 				result += ',';
 		}
@@ -169,7 +169,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		result += '"kann" : [ ';
 		for (let i = 0; i < obj.kann.size(); i++) {
 			const elem = obj.kann.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.kann.size() - 1)
 				result += ',';
 		}
@@ -177,7 +177,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		result += '"hinweis" : [ ';
 		for (let i = 0; i < obj.hinweis.size(); i++) {
 			const elem = obj.hinweis.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.hinweis.size() - 1)
 				result += ',';
 		}
@@ -195,7 +195,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		result += '"vorbedingung" : [ ';
 		for (let i = 0; i < obj.vorbedingung.size(); i++) {
 			const elem = obj.vorbedingung.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.vorbedingung.size() - 1)
 				result += ',';
 		}
@@ -220,7 +220,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 			result += '"muss" : [ ';
 			for (let i = 0; i < obj.muss.size(); i++) {
 				const elem = obj.muss.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.muss.size() - 1)
 					result += ',';
 			}
@@ -230,7 +230,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 			result += '"kann" : [ ';
 			for (let i = 0; i < obj.kann.size(); i++) {
 				const elem = obj.kann.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.kann.size() - 1)
 					result += ',';
 			}
@@ -240,7 +240,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 			result += '"hinweis" : [ ';
 			for (let i = 0; i < obj.hinweis.size(); i++) {
 				const elem = obj.hinweis.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.hinweis.size() - 1)
 					result += ',';
 			}
@@ -280,7 +280,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 			result += '"vorbedingung" : [ ';
 			for (let i = 0; i < obj.vorbedingung.size(); i++) {
 				const elem = obj.vorbedingung.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.vorbedingung.size() - 1)
 					result += ',';
 			}

@@ -85,7 +85,7 @@ export class SimpleOperationResponse extends JavaObject {
 		result += '"log" : [ ';
 		for (let i = 0; i < obj.log.size(); i++) {
 			const elem = obj.log.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.log.size() - 1)
 				result += ',';
 		}
@@ -107,7 +107,7 @@ export class SimpleOperationResponse extends JavaObject {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
 				const elem = obj.log.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.log.size() - 1)
 					result += ',';
 			}

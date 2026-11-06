@@ -68,7 +68,7 @@ export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
 		result += '"lehraemter" : [ ';
 		for (let i = 0; i < obj.lehraemter.size(); i++) {
 			const elem = obj.lehraemter.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.lehraemter.size() - 1)
 				result += ',';
 		}
@@ -105,7 +105,7 @@ export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
 			result += '"lehraemter" : [ ';
 			for (let i = 0; i < obj.lehraemter.size(); i++) {
 				const elem = obj.lehraemter.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.lehraemter.size() - 1)
 					result += ',';
 			}

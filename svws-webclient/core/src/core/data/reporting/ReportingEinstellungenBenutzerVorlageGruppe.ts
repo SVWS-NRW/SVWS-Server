@@ -53,7 +53,7 @@ export class ReportingEinstellungenBenutzerVorlageGruppe extends JavaObject {
 		result += '"bezeichnungen" : [ ';
 		for (let i = 0; i < obj.bezeichnungen.size(); i++) {
 			const elem = obj.bezeichnungen.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.bezeichnungen.size() - 1)
 				result += ',';
 		}
@@ -72,7 +72,7 @@ export class ReportingEinstellungenBenutzerVorlageGruppe extends JavaObject {
 			result += '"bezeichnungen" : [ ';
 			for (let i = 0; i < obj.bezeichnungen.size(); i++) {
 				const elem = obj.bezeichnungen.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.bezeichnungen.size() - 1)
 					result += ',';
 			}

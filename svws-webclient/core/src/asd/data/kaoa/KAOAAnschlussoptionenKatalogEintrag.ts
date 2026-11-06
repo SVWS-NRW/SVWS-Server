@@ -78,7 +78,7 @@ export class KAOAAnschlussoptionenKatalogEintrag extends CoreTypeData {
 		result += '"stufen" : [ ';
 		for (let i = 0; i < obj.stufen.size(); i++) {
 			const elem = obj.stufen.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.stufen.size() - 1)
 				result += ',';
 		}
@@ -86,7 +86,7 @@ export class KAOAAnschlussoptionenKatalogEintrag extends CoreTypeData {
 		result += '"anzeigeZusatzmerkmal" : [ ';
 		for (let i = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
 			const elem = obj.anzeigeZusatzmerkmal.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.anzeigeZusatzmerkmal.size() - 1)
 				result += ',';
 		}
@@ -123,7 +123,7 @@ export class KAOAAnschlussoptionenKatalogEintrag extends CoreTypeData {
 			result += '"stufen" : [ ';
 			for (let i = 0; i < obj.stufen.size(); i++) {
 				const elem = obj.stufen.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.stufen.size() - 1)
 					result += ',';
 			}
@@ -133,7 +133,7 @@ export class KAOAAnschlussoptionenKatalogEintrag extends CoreTypeData {
 			result += '"anzeigeZusatzmerkmal" : [ ';
 			for (let i = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
 				const elem = obj.anzeigeZusatzmerkmal.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.anzeigeZusatzmerkmal.size() - 1)
 					result += ',';
 			}

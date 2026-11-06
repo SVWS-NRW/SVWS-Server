@@ -50,7 +50,7 @@ export class TLSCertificateInfo extends JavaObject {
 		result += '"sans" : [ ';
 		for (let i = 0; i < obj.sans.size(); i++) {
 			const elem = obj.sans.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.sans.size() - 1)
 				result += ',';
 		}
@@ -69,7 +69,7 @@ export class TLSCertificateInfo extends JavaObject {
 			result += '"sans" : [ ';
 			for (let i = 0; i < obj.sans.size(); i++) {
 				const elem = obj.sans.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.sans.size() - 1)
 					result += ',';
 			}

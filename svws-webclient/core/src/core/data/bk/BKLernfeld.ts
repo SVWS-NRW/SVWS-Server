@@ -78,7 +78,7 @@ export class BKLernfeld extends JavaObject {
 		result += '"buendelfaecher" : [ ';
 		for (let i = 0; i < obj.buendelfaecher.size(); i++) {
 			const elem = obj.buendelfaecher.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.buendelfaecher.size() - 1)
 				result += ',';
 		}
@@ -102,7 +102,7 @@ export class BKLernfeld extends JavaObject {
 			result += '"buendelfaecher" : [ ';
 			for (let i = 0; i < obj.buendelfaecher.size(); i++) {
 				const elem = obj.buendelfaecher.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.buendelfaecher.size() - 1)
 					result += ',';
 			}

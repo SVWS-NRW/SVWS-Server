@@ -79,7 +79,7 @@ export class AbschlussErgebnis extends JavaObject {
 			result += '"npFaecher" : [ ';
 			for (let i = 0; i < obj.npFaecher.size(); i++) {
 				const elem = obj.npFaecher.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.npFaecher.size() - 1)
 					result += ',';
 			}
@@ -91,7 +91,7 @@ export class AbschlussErgebnis extends JavaObject {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
 				const elem = obj.log.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.log.size() - 1)
 					result += ',';
 			}
@@ -117,7 +117,7 @@ export class AbschlussErgebnis extends JavaObject {
 				result += '"npFaecher" : [ ';
 				for (let i = 0; i < obj.npFaecher.size(); i++) {
 					const elem = obj.npFaecher.get(i);
-					result += '"' + elem + '"';
+					result += JSON.stringify(elem);
 					if (i < obj.npFaecher.size() - 1)
 						result += ',';
 				}
@@ -131,7 +131,7 @@ export class AbschlussErgebnis extends JavaObject {
 				result += '"log" : [ ';
 				for (let i = 0; i < obj.log.size(); i++) {
 					const elem = obj.log.get(i);
-					result += '"' + elem + '"';
+					result += JSON.stringify(elem);
 					if (i < obj.log.size() - 1)
 						result += ',';
 				}

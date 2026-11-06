@@ -68,7 +68,7 @@ export class FilterCategoryResponse extends JavaObject {
 			result += '"attributes" : [ ';
 			for (let i = 0; i < obj.attributes.size(); i++) {
 				const elem = obj.attributes.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.attributes.size() - 1)
 					result += ',';
 			}
@@ -97,7 +97,7 @@ export class FilterCategoryResponse extends JavaObject {
 				result += '"attributes" : [ ';
 				for (let i = 0; i < obj.attributes.size(); i++) {
 					const elem = obj.attributes.get(i);
-					result += '"' + elem + '"';
+					result += JSON.stringify(elem);
 					if (i < obj.attributes.size() - 1)
 						result += ',';
 				}

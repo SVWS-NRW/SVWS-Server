@@ -61,7 +61,7 @@ export class ENMv2AnkreuzkompetenzenKatalog extends JavaObject {
 		result += '"textStufen" : [ ';
 		for (let i = 0; i < obj.textStufen.length; i++) {
 			const elem = obj.textStufen[i];
-			result += (elem === null) ? null : '"' + elem + '"';
+			result += (elem === null) ? 'null' : JSON.stringify(elem);
 			if (i < obj.textStufen.length - 1)
 				result += ',';
 		}
@@ -87,7 +87,7 @@ export class ENMv2AnkreuzkompetenzenKatalog extends JavaObject {
 			result += '"textStufen" : [ ';
 			for (let i = 0; i < a.length; i++) {
 				const elem = a[i];
-				result += (elem === null) ? null : '"' + elem + '"';
+				result += (elem === null) ? 'null' : JSON.stringify(elem);
 				if (i < a.length - 1)
 					result += ',';
 			}

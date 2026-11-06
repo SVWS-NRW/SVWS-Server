@@ -73,7 +73,7 @@ export class ReportingSortierungDefinition extends JavaObject {
 		result += '"attribute" : [ ';
 		for (let i = 0; i < obj.attribute.size(); i++) {
 			const elem = obj.attribute.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.attribute.size() - 1)
 				result += ',';
 		}
@@ -98,7 +98,7 @@ export class ReportingSortierungDefinition extends JavaObject {
 			result += '"attribute" : [ ';
 			for (let i = 0; i < obj.attribute.size(); i++) {
 				const elem = obj.attribute.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.attribute.size() - 1)
 					result += ',';
 			}

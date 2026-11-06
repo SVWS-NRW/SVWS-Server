@@ -59,7 +59,7 @@ export class LongAndStringLists extends JavaObject {
 		result += '"strings" : [ ';
 		for (let i = 0; i < obj.strings.size(); i++) {
 			const elem = obj.strings.get(i);
-			result += '"' + elem + '"';
+			result += JSON.stringify(elem);
 			if (i < obj.strings.size() - 1)
 				result += ',';
 		}
@@ -85,7 +85,7 @@ export class LongAndStringLists extends JavaObject {
 			result += '"strings" : [ ';
 			for (let i = 0; i < obj.strings.size(); i++) {
 				const elem = obj.strings.get(i);
-				result += '"' + elem + '"';
+				result += JSON.stringify(elem);
 				if (i < obj.strings.size() - 1)
 					result += ',';
 			}
