@@ -16,7 +16,6 @@ import de.svws_nrw.db.converter.current.GeschlechtConverter;
 import de.svws_nrw.db.converter.current.GeschlechtConverterFromString;
 import de.svws_nrw.db.converter.current.KursFortschreibungsartConverter;
 import de.svws_nrw.db.converter.current.NationalitaetenConverter;
-import de.svws_nrw.db.converter.current.PersonTypConverter;
 import de.svws_nrw.db.converter.current.PersonTypNullableConverter;
 import de.svws_nrw.db.converter.current.PersonalTypConverter;
 import de.svws_nrw.db.converter.current.ReportingBildDefinitionConverter;
@@ -114,7 +113,6 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 		add(new GeschlechtConverterFromString());
 		add(new KursFortschreibungsartConverter());
 		add(new NationalitaetenConverter());
-		add(new PersonTypConverter());
 		add(new PersonTypNullableConverter());
 		add(new PersonalTypConverter());
 		add(new StringToIntegerConverter());

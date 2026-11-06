@@ -21,15 +21,13 @@ public class Einwilligungsart {
 	@Schema(description = "die Bezeichnung der Einwilligungsart", example = "Verwendung Foto")
 	public @NotNull String bezeichnung = "";
 
-
 	/** Der Schlüssel der Einwilligungsart. */
 	@Schema(description = "der Schlüssel der Einwilligungsart", example = "FOTO")
-	public String schluessel = "";
-
+	public String schluessel;
 
 	/** Eine ausführliche Beschreibung der Einwilligungsart. */
 	@Schema(description = "Eine ausführliche Beschreibung der Einwilligungsart", example = "Einwilligung zur Verwendung von Fotos")
-	public String beschreibung = "";
+	public String beschreibung;
 
 	/** Die Id des PersonTyps der Einwilligungsart. */
 	@Schema(description = "Die Id des PersonTyps der Einwilligungsart.", example = "2")
@@ -45,13 +43,6 @@ public class Einwilligungsart {
 
 	/** Gibt an, ob die Einwilligungsart in anderen Datenbanktabellen referenziert ist oder nicht. */
 	@Schema(description = "Gibt an, ob die Einwilligungsart in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
-	public Boolean referenziertInAnderenTabellen = false;
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public Einwilligungsart() {
-		// leer
-	}
+	public boolean referenziertInAnderenTabellen;
 
 }

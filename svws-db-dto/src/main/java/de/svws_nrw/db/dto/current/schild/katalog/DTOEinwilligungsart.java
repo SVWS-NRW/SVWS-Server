@@ -2,7 +2,7 @@ package de.svws_nrw.db.dto.current.schild.katalog;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
-import de.svws_nrw.db.converter.current.PersonTypConverter;
+import de.svws_nrw.db.converter.current.PersonTypNullableConverter;
 
 import de.svws_nrw.core.types.schule.PersonTyp;
 
@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterSerializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDeserializer;
-import de.svws_nrw.csv.converter.current.PersonTypConverterSerializer;
-import de.svws_nrw.csv.converter.current.PersonTypConverterDeserializer;
+import de.svws_nrw.csv.converter.current.PersonTypNullableConverterSerializer;
+import de.svws_nrw.csv.converter.current.PersonTypNullableConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Datenschutz.
@@ -125,9 +125,9 @@ public final class DTOEinwilligungsart {
 	/** Personentyp der Einwilligungsart (S=Schueler L=Lehrer E=Erzieher) */
 	@Column(name = "PersonArt")
 	@JsonProperty
-	@Convert(converter = PersonTypConverter.class)
-	@JsonSerialize(using = PersonTypConverterSerializer.class)
-	@JsonDeserialize(using = PersonTypConverterDeserializer.class)
+	@Convert(converter = PersonTypNullableConverter.class)
+	@JsonSerialize(using = PersonTypNullableConverterSerializer.class)
+	@JsonDeserialize(using = PersonTypNullableConverterDeserializer.class)
 	public PersonTyp personTyp;
 
 	/**

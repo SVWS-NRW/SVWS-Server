@@ -1,7 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
-import de.svws_nrw.db.converter.current.PersonTypConverter;
+import de.svws_nrw.db.converter.current.PersonTypNullableConverter;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -58,7 +58,7 @@ public class Tabelle_K_Datenschutz extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte PersonArt */
 	public final SchemaTabelleSpalte col_PersonArt = add("PersonArt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-			.setConverter(PersonTypConverter.class)
+			.setConverter(PersonTypNullableConverter.class)
 			.setConverterRevision(SchemaRevisionen.REV_17)
 			.setJavaName("personTyp")
 			.setJavaComment("Personentyp der Einwilligungsart (S=Schueler L=Lehrer E=Erzieher)");

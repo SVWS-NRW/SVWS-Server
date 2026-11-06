@@ -16,12 +16,12 @@ export class Einwilligungsart extends JavaObject {
 	/**
 	 * Der Schlüssel der Einwilligungsart.
 	 */
-	public schluessel: string | null = "";
+	public schluessel: string | null = null;
 
 	/**
 	 * Eine ausführliche Beschreibung der Einwilligungsart.
 	 */
-	public beschreibung: string | null = "";
+	public beschreibung: string | null = null;
 
 	/**
 	 * Die Id des PersonTyps der Einwilligungsart.
@@ -41,12 +41,9 @@ export class Einwilligungsart extends JavaObject {
 	/**
 	 * Gibt an, ob die Einwilligungsart in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
-	public referenziertInAnderenTabellen: boolean | null = false;
+	public referenziertInAnderenTabellen: boolean = false;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
@@ -81,7 +78,9 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		result.referenziertInAnderenTabellen = (obj.referenziertInAnderenTabellen === undefined) ? null : obj.referenziertInAnderenTabellen === null ? null : obj.referenziertInAnderenTabellen;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -94,7 +93,7 @@ export class Einwilligungsart extends JavaObject {
 		result += '"idPersonTyp" : ' + obj.idPersonTyp.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -124,7 +123,7 @@ export class Einwilligungsart extends JavaObject {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.referenziertInAnderenTabellen !== undefined) {
-			result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

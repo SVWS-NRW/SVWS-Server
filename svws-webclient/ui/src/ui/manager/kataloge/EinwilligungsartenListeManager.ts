@@ -42,8 +42,12 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	 * @param schulform     					die Schulform der Schule
 	 * @param einwilligungsarten     			die Liste der Einwilligungsarten
 	 */
-	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-		schulform: Schulform | null, einwilligungsarten: List<Einwilligungsart>) {
+	public constructor(
+		idSchuljahresabschnitt: number,
+		idSchuljahresabschnittSchule: number,
+		schuljahresabschnitte: List<Schuljahresabschnitt>,
+		schulform: Schulform | null,
+		einwilligungsarten: List<Einwilligungsart>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, einwilligungsarten, EinwilligungsartenListeManager.comparator,
 			EinwilligungsartenListeManager._einwilligungsArtToId, EinwilligungsartenListeManager._einwilligungsArtToId, []);
 	}
@@ -60,7 +64,7 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	protected onMehrfachauswahlChanged(): void {
 		this.idsReferencedEinwilligungsarten.clear();
 		for (const l of this.liste.auswahl()) {
-			if ((l.referenziertInAnderenTabellen !== null) && l.referenziertInAnderenTabellen) {
+			if (l.referenziertInAnderenTabellen) {
 				this.idsReferencedEinwilligungsarten.add(l.id);
 			}
 		}
@@ -71,11 +75,7 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	}
 
 	protected checkFilter(eintrag: Einwilligungsart): boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
-			return false;
-		}
-
-		return true;
+		return !(this._filterNurSichtbar && !eintrag.istSichtbar);
 	}
 
 	/**
