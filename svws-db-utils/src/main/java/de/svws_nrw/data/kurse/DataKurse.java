@@ -1,7 +1,5 @@
 package de.svws_nrw.data.kurse;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -9,26 +7,23 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.mapper.schueler.SchuelerMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
-import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.kurse.KursMapper;
+import de.svws_nrw.service.kurse.KursService;
+import de.svws_nrw.service.kurse.KursServiceFactory;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -59,7 +54,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 */
 	@Override
 	public KursDaten getById(final Long id) throws ApiOperationException {
-		return getKursdaten(conn, id);
+		return getKursdaten(id);
 	}
 
 	@Override
@@ -78,43 +73,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	}
 
 	@Override
-	protected KursDaten map(final DTOKurs dto) throws ApiOperationException {
-		return mapInternal(dto, this.conn);
-	}
-
-
-	/**
-	 * Führt das Mapping von einem Datenbank-DTO auf ein Core-DTO aus, um dieses zu
-	 * initialisieren. Weitere Angaben, wie z.B. die Schülerliste müssen anschließend noch
-	 * ergänzt werden.
-	 *
-	 * @param dto			das Datenbank-DTO
-	 * @param conn			die Datenbank-Verbindung für den Datenbankzugriff
-	 *
-	 * @return das initialisierte Core-DTO
-	 */
-	private static KursDaten mapInternal(final DTOKurs dto, final DBEntityManager conn) {
-		final KursDaten daten = new KursDaten();
-		daten.id = dto.ID;
-		daten.idSchuljahresabschnitt = dto.Schuljahresabschnitts_ID;
-		daten.kuerzel = dto.KurzBez;
-		daten.idJahrgaenge.addAll(convertJahrgaenge(dto));
-		daten.idFach = dto.Fach_ID;
-		daten.idLehrer = dto.Lehrer_ID;
-		daten.kursartAllg = (dto.KursartAllg == null) ? "" : dto.KursartAllg;
-		daten.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
-		daten.istSichtbar = (dto.Sichtbar == null) || dto.Sichtbar;
-		daten.schienen.addAll(convertSchienenStrToList(dto.Schienen));
-		daten.wochenstunden = (dto.WochenStd == null) ? 0 : dto.WochenStd;
-		daten.wochenstundenLehrer = (dto.WochenstdKL == null) ? daten.wochenstunden : dto.WochenstdKL;
-		daten.idKursFortschreibungsart = (dto.Fortschreibungsart == null) ? KursFortschreibungsart.KEINE.id : dto.Fortschreibungsart.id;
-		daten.schulnummer = dto.SchulNr;
-		daten.istEpochalunterricht = (dto.EpochU != null) && dto.EpochU;
-		daten.bezeichnungZeugnis = dto.ZeugnisBez;
-		if ((daten.bezeichnungZeugnis != null) && daten.bezeichnungZeugnis.isBlank()) {
-			daten.bezeichnungZeugnis = null;
-		}
-		daten.weitereLehrer = new DataKursLehrer(conn, dto.ID).getList();
+	protected KursDaten map(final DTOKurs dto) {
+		final var daten = KursMapper.INSTANCE.toKursDaten(dto);
+		daten.weitereLehrer.addAll(new DataKursLehrer(conn, dto.ID).getList());
 		return daten;
 	}
 
@@ -146,7 +107,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 
 	private void mapIdJahrgaenge(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
 		final List<Long> neu = JSONMapper.convertToListOfLong(value, false, name);
-		final List<Long> vorher = convertJahrgaenge(dto);
+		final List<Long> vorher = KursMapper.INSTANCE.mapIdJahrgaenge(dto);
 		boolean changed = (neu.size() != vorher.size());
 		for (final long n : neu) {
 			if (!vorher.contains(n)) {
@@ -181,7 +142,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 
 	private void mapSchienen(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
 		final List<Integer> neu = JSONMapper.convertToListOfInteger(value, false, name);
-		final List<Integer> vorher = convertSchienenStrToList(dto.Schienen);
+		final List<Integer> vorher = KursMapper.INSTANCE.mapSchienen(dto.Schienen);
 		boolean changed = (neu.size() != vorher.size());
 		for (final int n : neu) {
 			if (n < 0) {
@@ -251,103 +212,18 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 
 
 	/**
-	 * Ermittelt für die angegebenen Kurse alle Kurs-Schüler und gibt die Listen für die einzelnen Kurse
-	 * in einer Map zugeordnet zu ihrer Kurs-ID zurück. Bei leeren Kursen wird eine leere Liste zugeordnet.
-	 *
-	 * @param conn       die Datenbank-Verbindung
-	 * @param idsKurse   die IDs der Kurse
-	 *
-	 * @return die Map mit der Kurs-Schüler-Zuordnung
-	 */
-	private static @NotNull Map<Long, List<Schueler>> getMapKursSchuelerByKursID(final DBEntityManager conn, final @NotNull List<Long> idsKurse) {
-		final @NotNull Map<Long, List<Schueler>> result = idsKurse.stream().collect(Collectors.toMap(id -> id, id -> new ArrayList<>()));
-		if (idsKurse.isEmpty()) {
-			return result;
-		}
-		final List<DTOKursSchueler> listKursSchueler =
-				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, idsKurse);
-		final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
-		final List<DTOSchueler> listSchueler =
-				((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>() : conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
-		final Map<Long, Schueler> mapSchueler = listSchueler.stream()
-				.filter(dto -> Boolean.FALSE.equals(dto.hatLoeschvermerk))
-				.map(dto -> SchuelerMapper.INSTANCE.toSchueler(dto))
-				.collect(Collectors.toMap(s -> s.id, s -> s));
-		for (final @NotNull DTOKursSchueler kursSchueler : listKursSchueler) {
-			final List<Schueler> tmpList = result.get(kursSchueler.Kurs_ID);
-			final Schueler schueler = mapSchueler.get(kursSchueler.Schueler_ID);
-			if (schueler != null) {
-				tmpList.add(schueler);
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Ermittelt die Daten zu dem Kurs mit der angegebenen ID.
 	 *
-	 * @param conn   die Datenbankverbindung
-	 * @param id     die ID des Kurses
+	 * @param id   die ID des Kurses
 	 *
 	 * @return die Daten des Kurses
-	 *
-	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static KursDaten getKursdaten(final DBEntityManager conn, final Long id) throws ApiOperationException {
+	public static KursDaten getKursdaten(final Long id) {
 		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Kurses darf nicht null sein.");
 		}
-		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, id);
-		if (kurs == null) {
-			throw new ApiOperationException(Status.NOT_FOUND);
-		}
-		final KursDaten daten = mapInternal(kurs, conn);
-		// Bestimme die Schüler des Kurses
-		daten.schueler.addAll(getMapKursSchuelerByKursID(conn, List.of(daten.id)).get(daten.id));
-		return daten;
+		return getKursService().getById(id);
 	}
-
-
-	/**
-	 * Wandelt den übergebenen String aus komma-separierten Schienenlisten in eine Liste der
-	 * Schienen-Nummern um.
-	 *
-	 * @param strSchienen   der String mit der Schienenliste
-	 *
-	 * @return die Liste der Schienennummern
-	 */
-	public static List<Integer> convertSchienenStrToList(final String strSchienen) {
-		final List<Integer> result = new ArrayList<>();
-		if ((strSchienen != null) && (!strSchienen.isBlank())) {
-			for (final String strSchiene : strSchienen.split(",")) {
-				if (strSchiene.trim().isEmpty()) {
-					continue;
-				}
-				try {
-					result.add(Integer.parseInt(strSchiene.trim()));
-				} catch (final NumberFormatException ignored) {
-				}
-			}
-		}
-		return result;
-	}
-
-
-	private static List<Long> convertJahrgaenge(final DTOKurs kurs) {
-		final List<Long> result = new ArrayList<>();
-		if (kurs.Jahrgang_ID != null) {
-			result.add(kurs.Jahrgang_ID);
-		}
-		if (kurs.Jahrgaenge != null) {
-			for (final String jahrgang : kurs.Jahrgaenge.split(",")) {
-				if (jahrgang.matches("^\\d+$")) {
-					result.add(Long.parseLong(jahrgang));
-				}
-			}
-		}
-		return result;
-	}
-
 
 	/**
 	 * Ermittelt die Kurse zu dem Schuljahresabschnitt mit der angegebenen ID.
@@ -356,143 +232,39 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 * @param attachSchueler			gibt an, ob die Schüler zu den Kursen mit geladen werden sollen
 	 *
 	 * @return eine Liste mit den Kursen des Schuljahresabschnitts
-	 *
-	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<KursDaten> getListBySchuljahresabschnittID(final Long idSchuljahresabschnitt, final boolean attachSchueler) throws ApiOperationException {
-		if (idSchuljahresabschnitt == null) {
-			throw new ApiOperationException(Status.NOT_FOUND);
-		}
-		final List<DTOKurs> kurse = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
-		return getKurseDaten(kurse, attachSchueler);
+	public List<KursDaten> getListBySchuljahresabschnittID(final Long idSchuljahresabschnitt, final boolean attachSchueler) {
+		return getKursService().getListBySchuljahresabschnitt(idSchuljahresabschnitt, attachSchueler);
 	}
 
 	/**
 	 * Ermittelt die Kurse zu den übergebenen Kurs-IDs.
 	 *
-	 * @param ids				die ID des Schuljahresabschnitts
+	 * @param ids				die IDs der Kurse
 	 * @param attachSchueler	gibt an, ob die Schüler zu den Kursen mit geladen werden sollen
 	 *
 	 * @return eine Liste mit den Kursen zu den übergebenen IDs
-	 *
-	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<KursDaten> getListByIDs(final List<Long> ids, final boolean attachSchueler) throws ApiOperationException {
-		if (ids == null) {
-			throw new ApiOperationException(Status.NOT_FOUND);
-		}
-		final List<DTOKurs> kurse = conn.queryByKeyList(DTOKurs.class, ids);
-		return getKurseDaten(kurse, attachSchueler);
+	public List<KursDaten> getListByIDs(final List<Long> ids, final boolean attachSchueler) {
+		return getKursService().getListByIds(ids, attachSchueler);
 	}
-
-	/**
-	 * Ermittelt die Kursdaten der übergebenen Kurs-DTOs
-	 *
-	 * @param dtoKurse			die DTOs der Kurse
-	 * @param attachSchueler	gibt an, ob die Schüler zu den Kursen mit geladen werden sollen
-	 *
-	 * @return eine Liste der Kursdaten zu den DTOs der Kurse
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	private List<KursDaten> getKurseDaten(final List<DTOKurs> dtoKurse, final boolean attachSchueler) throws ApiOperationException {
-		if ((dtoKurse == null) || dtoKurse.isEmpty()) {
-			throw new ApiOperationException(Status.NOT_FOUND);
-		}
-
-		// Bestimme die IDs der Kurse
-		final List<Long> idsKurse = dtoKurse.stream().map(k -> k.ID).toList();
-		final Map<Long, List<Schueler>> mapKursSchueler = attachSchueler ? getMapKursSchuelerByKursID(conn, idsKurse) : new HashMap<>();
-		final List<KursDaten> kurseDaten = new ArrayList<>();
-		for (final DTOKurs kurs : dtoKurse) {
-			final KursDaten kursdaten = map(kurs);
-			// Bestimme die Schüler der Kurse, wenn gewünscht.
-			if (attachSchueler) {
-				kursdaten.schueler.addAll(mapKursSchueler.get(kurs.ID));
-			}
-			kurseDaten.add(kursdaten);
-		}
-		return kurseDaten;
-	}
-
 
 	/**
 	 * Bestimmt die Liste der Kurse für den angegeben Abschnitt. Ist dieser Abschnitt null, so werden die Kurse
 	 * aller Abschnitte zurückgegeben. Dabei kann gewählt werden, ob die Schülerlisten zu den Kursen mitbestimmt werden
 	 * sollen oder nicht.
 	 *
-	 * @param conn                     die Datenbankverbindung
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 * @param mitSchuelerListe         gibt an, ob die Kurslisten-Einträge die Information zu Schülern beinhalten soll
 	 *
 	 * @return die Liste der Kurse
 	 */
-	public static @NotNull List<KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn, final Long idSchuljahresabschnitt,
-			final boolean mitSchuelerListe) {
-		final @NotNull List<DTOKurs> kurse = (idSchuljahresabschnitt == null)
-				? conn.queryAll(DTOKurs.class)
-				: conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
-		if (kurse.isEmpty()) {
-			return new ArrayList<>();
-		}
-		// Erstelle die Liste der Kurse
-		final @NotNull List<KursDaten> daten = new ArrayList<>();
-		for (final @NotNull DTOKurs dtoKurs : kurse) {
-			daten.add(mapInternal(dtoKurs, conn));
-		}
- 		// Prüfe, ob die Jahrgänge der Kurse in der DB vorhanden. Falls nicht, lösche die Jahrgangs-Referenz des Kurses.
-		final Map<Long, DTOJahrgang> mapAlle = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-		for (final KursDaten kursDaten : daten) {
-		    kursDaten.idJahrgaenge.removeIf(id -> !mapAlle.containsKey(id));
-		}
-
-		daten.sort((a, b) -> Long.compare(a.sortierung, b.sortierung));
-		if (!mitSchuelerListe) {
-			return daten;
-		}
-		// Ergänze die Liste der Schüler in den Kursen
-		final List<Long> kursIDs = daten.stream().map(k -> k.id).toList();
-		final List<DTOKursSchueler> listKursSchueler = conn.queryList(
-				"SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs);
-		final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).distinct().toList();
-		final Map<Long, DTOSchueler> mapSchueler = conn.queryByKeyList(DTOSchueler.class, schuelerIDs).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		final HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
-		for (final DTOKursSchueler ks : listKursSchueler) {
-			final DTOSchueler dtoSchueler = mapSchueler.get(ks.Schueler_ID);
-			if ((dtoSchueler == null) || (Boolean.TRUE.equals(dtoSchueler.hatLoeschvermerk))) {
-				continue;
-			}
-			List<Schueler> listSchueler = mapKursSchueler.get(ks.Kurs_ID);
-			if (listSchueler == null) {
-				listSchueler = new ArrayList<>();
-				mapKursSchueler.put(ks.Kurs_ID, listSchueler);
-			}
-			listSchueler.add(SchuelerMapper.INSTANCE.toSchueler(dtoSchueler));   // TODO Abschlussjahrgang bestimmen
-		}
-		for (final KursDaten eintrag : daten) {
-			final List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);
-			if (listSchueler != null) {
-				eintrag.schueler.addAll(listSchueler);
-			}
-		}
-		return daten;
+	public static @NotNull List<KursDaten> getKursListenFuerAbschnitt(final Long idSchuljahresabschnitt, final boolean mitSchuelerListe) {
+		return getKursService().getListBySchuljahresabschnitt(idSchuljahresabschnitt, mitSchuelerListe);
 	}
 
-
-	/**
-	 * Bestimmt die Liste der Kurse für den angegeben Abschnitt. Ist dieser Abschnitt null, so werden die Kurse
-	 * aller Abschnitte zurückgegeben. Dabei kann gewählt werden, ob die Schülerlisten zu den Kursen mitbestimmt werden
-	 * sollen oder nicht.
-	 *
-	 * @param conn                     die Datenbankverbindung
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * @param mitSchuelerListe         gibt an, ob die Kurslisten-Einträge die Information zu Schülern beinhalten soll
-	 *
-	 * @return die Liste der Kurse
-	 */
-	public static Response getKurslistenFuerAbschnittAsResponse(final DBEntityManager conn, final Long idSchuljahresabschnitt, final boolean mitSchuelerListe) {
-		final @NotNull List<de.svws_nrw.asd.data.kurse.KursDaten> daten = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, mitSchuelerListe);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	private static KursService getKursService() {
+		return KursServiceFactory.getNewInstance().getKursService();
 	}
 
 }

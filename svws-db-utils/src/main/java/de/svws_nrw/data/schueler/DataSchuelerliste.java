@@ -62,7 +62,7 @@ public final class DataSchuelerliste {
 		result.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		result.schueler.addAll(getSchuelerListeEintragService().getListe(idSchuljahresabschnitt, false));
 		result.klassen.addAll(dataKlassendaten.getListBySchuljahresabschnittID(idSchuljahresabschnitt, false));
-		result.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
+		result.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(getJahrgangService().getAll());
 
 		if (conn.getUser().schuleHatGymOb()) {

@@ -156,7 +156,7 @@ public final class DataUntis {
 		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.id);
 		final Map<String, DTOKlassen> mapKlassenByKuerzel = klassen.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Bestimme die Kurse des Schuljahresabschnitts
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(idSchuljahresabschnitt, false);
 		final HashMap2D<String, Long, KursDaten> mapKurseByKuerzelUndJahrgang = new HashMap2D<>();
 		for (final KursDaten kurs : kurse) {
 			for (final long idJahrgang : kurs.idJahrgaenge) {
@@ -1402,7 +1402,7 @@ public final class DataUntis {
 		// Bestimme zunächst die Kurse für den Schuljahresabschnitt und hole dabei auch die Schülerzuordnungen
 		final String strSchuljahresabschnitt = "Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt);
 		logger.logLn("-> für den " + strSchuljahresabschnitt);
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(idSchuljahresabschnitt, true);
 		if (kurse.isEmpty()) {
 			final String error = "Keine Kurse in dem %s gefunden.".formatted(strSchuljahresabschnitt);
 			logger.logLn("-> " + error);
@@ -1854,7 +1854,7 @@ public final class DataUntis {
 		}
 		final String strSchuljahresabschnitt = "Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt);
 		logger.logLn("-> für den " + strSchuljahresabschnitt);
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(idSchuljahresabschnitt, false);
 		if (kurse.isEmpty()) {
 			final String error = "Keine Kurse in dem %s gefunden.".formatted(strSchuljahresabschnitt);
 			logger.logLn("-> " + error);

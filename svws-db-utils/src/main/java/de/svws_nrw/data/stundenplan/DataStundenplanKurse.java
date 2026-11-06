@@ -91,7 +91,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		}
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, stundenplan.Schuljahresabschnitts_ID, false);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(stundenplan.Schuljahresabschnitts_ID, false);
 		if (kurse.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -152,12 +152,12 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Kurs mit der ID null ist unzulässig.");
 		}
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, stundenplan.Schuljahresabschnitts_ID, false);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(stundenplan.Schuljahresabschnitts_ID, false);
 		if (kurse.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden keine Kurse in dem Schuljahresabschnitt mit der ID %d gefunden.".formatted(stundenplan.Schuljahresabschnitts_ID));
 		}
-		final KursDaten kurs = DataKurse.getKursdaten(conn, id);
+		final KursDaten kurs = DataKurse.getKursdaten(id);
 		if (kurs == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Kurs mit der ID %d gefunden.".formatted(id));
 		}

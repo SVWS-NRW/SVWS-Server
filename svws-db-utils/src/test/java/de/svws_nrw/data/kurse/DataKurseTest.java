@@ -143,17 +143,6 @@ class DataKurseTest {
 	}
 
 	@Test
-	@DisplayName("getById | Erfolg")
-	void getByIdTest() throws ApiOperationException {
-		final var dto = getDto();
-		when(this.conn.queryByKey(DTOKurs.class, 1L)).thenReturn(dto);
-
-		assertThat(this.data.getById(1L))
-				.isInstanceOf(KursDaten.class)
-				.hasFieldOrPropertyWithValue("id", dto.ID);
-	}
-
-	@Test
 	@DisplayName("getByID | ID can't be null")
 	void getByIdTest_IdNull() {
 		final var throwable = Assertions.catchThrowable(() -> this.data.getById(null));

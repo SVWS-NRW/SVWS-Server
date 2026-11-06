@@ -92,7 +92,7 @@ public final class GostKlausurenAllDataRepository {
 	 * @return die Kurse
 	 */
 	public List<KursDaten> getKurseBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
-		return DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true);
+		return DataKurse.getKursListenFuerAbschnitt(idSchuljahresabschnitt, true);
 	}
 
 	/**

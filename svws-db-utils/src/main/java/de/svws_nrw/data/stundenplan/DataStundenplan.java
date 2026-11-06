@@ -247,7 +247,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	public Stundenplan add(final Map<String, Object> initAttributes) {
 		final Stundenplan stundenplan = super.add(initAttributes);
 		// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, stundenplan.idSchuljahresabschnitt, false);
+		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(stundenplan.idSchuljahresabschnitt, false);
 		DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.id, kurse);
 		return stundenplan;
 	}
