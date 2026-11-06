@@ -137,7 +137,7 @@
 						v-model="model.proxy.erhaeltSchuelerBAFOEG">
 						BAFöG
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly statistics
+					<svws-ui-checkbox v-if="[Schulform.SB, Schulform.BK].includes(schuleState.schulform)" :readonly statistics
 						v-model="model.proxy.istJva">
 						JVA-Schüler
 					</svws-ui-checkbox>
