@@ -1,7 +1,6 @@
 package de.svws_nrw.module.reporting.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,6 +17,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.SQLNonTransientConnectionException;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
@@ -30,6 +30,7 @@ import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
@@ -74,8 +75,14 @@ class TestReportingRepositoryRueckfallwerte {
 	/** Die ID des Schülers, dessen GKL-Wahlen sich nicht laden lassen. */
 	private static final long ID_SCHUELER = 17L;
 
-	/** Die ID der Klausurvorgabe, die sich nicht laden lässt. */
+	/** Die ID der gewählten Klausurvorgabe, deren Jahrgang sich nicht laden lässt. */
 	private static final long ID_KLAUSURVORGABE = 23L;
+
+	/** Ein Abiturjahrgang, für den es GKL gibt. */
+	private static final int ABITURJAHR_GKL = 2030;
+
+	/** Die ID des Faches, für das ein GKL abgefragt wird. */
+	private static final long ID_FACH = 4L;
 
 	/** Das Abiturjahr, dessen Fachwahlstatistik sich nicht laden lässt. */
 	private static final int ABITURJAHR = 2025;
@@ -193,26 +200,38 @@ class TestReportingRepositoryRueckfallwerte {
 
 	@Test
 	void testNichtLadbareGklWahlenWerdenAlsAusgabeproblemGemeldet() {
-		// Der Rückfallwert ist ein leeres Wahl-Objekt. Ohne Meldung wäre ein gescheiterter Zugriff von einem Schüler ohne GKL-Wahlen nicht zu unterscheiden.
+		// Der Rückfallwert ist „kein GKL“. Ohne Meldung wäre ein gescheiterter Zugriff von einem Schüler ohne GKL-Wahlen nicht zu unterscheiden.
 		final ReportingRepositorySchueler repositorySchueler = mock(ReportingRepositorySchueler.class);
 		when(repositorySchueler.idsGeladenerSchueler()).thenReturn(List.of());
 		when(reportingContext.repositorySchueler()).thenReturn(repositorySchueler);
 		final ReportingRepositoryGost repository = new ReportingRepositoryGost(reportingContext);
 
-		assertNotNull(repository.gklWahl(ID_SCHUELER), "Der Schüler erscheint weiterhin, seine GKL-Wahlen bleiben leer.");
+		assertFalse(repository.hatGkl(ID_SCHUELER, ABITURJAHR_GKL, GostHalbjahr.Q11, ID_FACH), "Der Schüler erscheint weiterhin, ohne GKL.");
 
 		erwarteGemeldetesProblem(ReportingProblemSchluessel.fuer(GostSchuelerGKLWahl.class, ID_SCHUELER));
 		erwarteKeinenFehlerImLog();
 	}
 
 	@Test
-	void testNichtLadbareKlausurvorgabenWerdenJeIdGemeldet() {
-		// Der Rückfallwert ist die leere Map. Ohne Meldung sähe der Aufrufer denselben fehlenden Eintrag wie bei einer Vorgabe, die es nicht gibt.
+	void testNichtLadbareKlausurvorgabenDesJahrgangsWerdenGemeldet() {
+		// Der Rückfallwert ist „kein GKL“. Ohne Meldung sähe die Ausgabe so aus, als hätte der Schüler keine GKL gewählt.
+		final ReportingRepositorySchueler repositorySchueler = mock(ReportingRepositorySchueler.class);
+		when(repositorySchueler.idsGeladenerSchueler()).thenReturn(List.of());
+		when(reportingContext.repositorySchueler()).thenReturn(repositorySchueler);
 		final ReportingRepositoryGost repository = new ReportingRepositoryGost(reportingContext);
+		final GostSchuelerGKLWahl wahl = new GostSchuelerGKLWahl();
+		wahl.idSchueler = ID_SCHUELER;
+		wahl.idKlausurvorgabeQ_GW = ID_KLAUSURVORGABE;
 
-		assertTrue(repository.klausurvorgaben(List.of(ID_KLAUSURVORGABE)).isEmpty());
+		try (MockedStatic<GostServiceFactoryBuilder> serviceFactoryBuilder = mockStatic(GostServiceFactoryBuilder.class)) {
+			final GostServiceFactory serviceFactory = mock(GostServiceFactory.class, RETURNS_DEEP_STUBS);
+			serviceFactoryBuilder.when(GostServiceFactoryBuilder::getGostServiceFactory).thenReturn(serviceFactory);
+			when(serviceFactory.getGostSchuelerService().getMapGKLWahlen(any(), any())).thenReturn(Map.of(ID_SCHUELER, wahl));
 
-		erwarteGemeldetesProblem(ReportingProblemSchluessel.fuer(GostKlausurvorgabe.class, ID_KLAUSURVORGABE));
+			assertFalse(repository.hatGkl(ID_SCHUELER, ABITURJAHR_GKL, GostHalbjahr.Q11, ID_FACH), "Ohne Vorgaben des Jahrgangs gibt es kein GKL.");
+		}
+
+		erwarteGemeldetesProblem(ReportingProblemSchluessel.fuer(GostKlausurvorgabe.class));
 		erwarteKeinenFehlerImLog();
 	}
 

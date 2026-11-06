@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
@@ -17,6 +18,7 @@ import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.core.utils.gost.GostLaufbahnplanungGKLKlausurvorgabe;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
@@ -48,9 +50,7 @@ public class ReportingRepositoryGost {
 	private final Map<Long, Abiturdaten> mapBeratungsdatenAbiturdaten = new HashMap<>();
 	private final Map<Long, Abiturdaten> mapSchuelerAbiturdaten = new HashMap<>();
 	private final Map<Integer, List<GostStatistikFachwahl>> mapFachwahlen = new HashMap<>();
-	private final Map<Long, GostSchuelerGKLWahl> mapGklWahlen = new HashMap<>();
 	private final Map<Integer, Map<Long, GostSchuelerGKLWahl>> mapGklWahlenAbiturjahrgang = new HashMap<>();
-	private final Map<Long, GostKlausurvorgabe> mapKlausurvorgaben = new HashMap<>();
 	private final Map<Integer, Map<Long, GostKlausurvorgabe>> mapKlausurvorgabenAbiturjahrgang = new HashMap<>();
 
 	/**
@@ -60,10 +60,8 @@ public class ReportingRepositoryGost {
 	private final Map<Long, Exception> ladefehlerBeratungsdaten = new HashMap<>();
 	private final Map<Long, Exception> ladefehlerBeratungsdatenAbiturdaten = new HashMap<>();
 	private final Map<Long, Exception> ladefehlerSchuelerAbiturdaten = new HashMap<>();
-	private final Map<Long, Exception> ladefehlerGklWahlen = new HashMap<>();
 	private final Map<Long, GostSchuelerWiederholung> mapWiederholungen = new HashMap<>();
 	private final Map<Long, Exception> ladefehlerWiederholungen = new HashMap<>();
-	private final Map<Long, Exception> ladefehlerKlausurvorgaben = new HashMap<>();
 
 	/** Die Fehler gescheiterter Ladevorgänge der Fachwahlstatistik je Abiturjahr; die Lebensdauer folgt derselben Regel wie bei den Maps oben. */
 	private final Map<Integer, Exception> ladefehlerFachwahlen = new HashMap<>();
@@ -462,36 +460,8 @@ public class ReportingRepositoryGost {
 	// ##### Gleichwertige komplexe Leistungsnachweise (GKL, Abitur ab 2030) #####
 
 	/**
-	 * Liefert die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen (GKL) des übergebenen Schülers. Beim ersten Zugriff
-	 * werden die Daten für alle bekannten Schüler gesammelt nachgeladen und im Cache abgelegt.
-	 *
-	 * @param idSchueler Die ID des Schülers.
-	 *
-	 * @return Die GKL-Wahlen des Schülers. Enthält ausschließlich {@code null}-Werte, falls für den Schüler keine Wahlen
-	 *         hinterlegt sind oder das Laden fehlgeschlagen ist; der Fehlschlag wird zusätzlich als Ausgabeproblem gemeldet.
-	 */
-	public GostSchuelerGKLWahl gklWahl(final long idSchueler) {
-		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().idsGeladenerSchueler());
-		ids.add(idSchueler);
-		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
-				ids,
-				mapGklWahlen,
-				this::ladeGklWahlen,
-				"GOSt-GKL-Wahlen",
-				this.reportingContext.logger(),
-				ladefehlerGklWahlen);
-		if (ladefehlerGklWahlen.containsKey(idSchueler)) {
-			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
-					ReportingProblemSchluessel.fuer(GostSchuelerGKLWahl.class, idSchueler),
-					"Die GKL-Wahlen des Schülers %d".formatted(idSchueler), ladefehlerGklWahlen.get(idSchueler));
-		}
-		final GostSchuelerGKLWahl wahl = mapGklWahlen.get(idSchueler);
-		return (wahl != null) ? wahl : new GostSchuelerGKLWahl();
-	}
-
-	/**
 	 * Liefert die GKL-Wahlen des Schülers für den angegebenen Abiturjahrgang. Ein Schüler mit Wiederholung hat je Jahrgang eigene Wahlen, daher
-	 * hält der Cache sie je Abiturjahrgang. Geladen wird wie bei {@link #gklWahl(long)} gesammelt für alle bekannten Schüler.
+	 * hält der Cache sie je Abiturjahrgang. Beim ersten Zugriff werden die Wahlen aller bekannten Schüler gesammelt geladen.
 	 *
 	 * @param idSchueler     Die ID des Schülers.
 	 * @param abiturjahrgang Der Abiturjahrgang, in dem das Fach belegt ist, z. B. der Jahrgang einer Blockung.
@@ -501,16 +471,19 @@ public class ReportingRepositoryGost {
 	 */
 	private GostSchuelerGKLWahl gklWahl(final long idSchueler, final int abiturjahrgang) {
 		final Map<Long, GostSchuelerGKLWahl> wahlen = mapGklWahlenAbiturjahrgang.computeIfAbsent(abiturjahrgang, jahr -> new HashMap<>());
-		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().idsGeladenerSchueler());
-		ids.add(idSchueler);
-		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
-				ids,
-				wahlen,
-				idsSchueler -> GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getMapGKLWahlen(idsSchueler, abiturjahrgang),
-				"GOSt-GKL-Wahlen",
-				this.reportingContext.logger(),
-				ladefehlerGklWahlenAbiturjahrgang.computeIfAbsent(abiturjahrgang, jahr -> new HashMap<>()));
-		final Map<Long, Exception> ladefehler = ladefehlerGklWahlenAbiturjahrgang.get(abiturjahrgang);
+		final Map<Long, Exception> ladefehler = ladefehlerGklWahlenAbiturjahrgang.computeIfAbsent(abiturjahrgang, jahr -> new HashMap<>());
+		// Der Wahlbogen fragt je Fach und Halbjahr ab; nach dem ersten Laden steht jeder Schüler im Cache, als Wahl oder als Fehler-Marker.
+		if (!wahlen.containsKey(idSchueler)) {
+			final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().idsGeladenerSchueler());
+			ids.add(idSchueler);
+			ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
+					ids,
+					wahlen,
+					idsSchueler -> GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getMapGKLWahlen(idsSchueler, abiturjahrgang),
+					"GOSt-GKL-Wahlen",
+					this.reportingContext.logger(),
+					ladefehlerGklWahlenAbiturjahrgang.computeIfAbsent(abiturjahrgang, jahr -> new HashMap<>()));
+		}
 		if (ladefehler.containsKey(idSchueler)) {
 			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
 					ReportingProblemSchluessel.fuer(GostSchuelerGKLWahl.class, idSchueler),
@@ -518,50 +491,6 @@ public class ReportingRepositoryGost {
 		}
 		final GostSchuelerGKLWahl wahl = wahlen.get(idSchueler);
 		return (wahl != null) ? wahl : new GostSchuelerGKLWahl();
-	}
-
-	/**
-	 * Lädt die GKL-Wahlen zu den übergebenen Schüler-IDs mit einer gesammelten Datenbankabfrage. Für Schüler ohne
-	 * GOSt-Eintrag wird ein leeres Wahl-Objekt hinterlegt, damit die IDs nicht erneut abgefragt werden. Bei einer Wiederholung
-	 * gelten die Wahlen derselben Planung wie bei den Abiturdaten der Laufbahnplanung.
-	 *
-	 * @param idsSchueler Die IDs der Schüler, deren GKL-Wahlen geladen werden sollen.
-	 *
-	 * @return Map mit Schüler-ID als Schlüssel und den zugehörigen GKL-Wahlen als Wert.
-	 */
-	private Map<Long, GostSchuelerGKLWahl> ladeGklWahlen(final List<Long> idsSchueler) {
-		return GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getMapGKLWahlen(idsSchueler, abiturjahrgangPlanung());
-	}
-
-	/**
-	 * Liefert zu den übergebenen IDs die zugehörigen GOSt-Klausurvorgaben. Die Daten werden bei erstem Zugriff aus der
-	 * Datenbank geladen und im Cache gehalten.
-	 *
-	 * @param idsKlausurvorgaben Die IDs der Klausurvorgaben.
-	 *
-	 * @return Map mit der ID der Klausurvorgabe als Schlüssel und der zugehörigen Klausurvorgabe als Wert. IDs, zu denen
-	 *         keine Klausurvorgabe gefunden werden konnte, fehlen in der Map; ein gescheiterter Zugriff wird zusätzlich
-	 *         als Ausgabeproblem gemeldet.
-	 */
-	public Map<Long, GostKlausurvorgabe> klausurvorgaben(final List<Long> idsKlausurvorgaben) {
-		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
-				idsKlausurvorgaben,
-				mapKlausurvorgaben,
-				ids -> gostKlausurenVorgabeService().getListByIds(ids).stream()
-						.collect(Collectors.toMap(vorgabe -> vorgabe.id, vorgabe -> vorgabe)),
-				"GOSt-Klausurvorgaben",
-				this.reportingContext.logger(),
-				ladefehlerKlausurvorgaben);
-		if (idsKlausurvorgaben != null) {
-			for (final Long id : idsKlausurvorgaben) {
-				if ((id != null) && ladefehlerKlausurvorgaben.containsKey(id)) {
-					ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
-							ReportingProblemSchluessel.fuer(GostKlausurvorgabe.class, id),
-							"Die GOSt-Klausurvorgabe %d".formatted(id), ladefehlerKlausurvorgaben.get(id));
-				}
-			}
-		}
-		return filtereMap(idsKlausurvorgaben, mapKlausurvorgaben);
 	}
 
 	/**
@@ -594,6 +523,40 @@ public class ReportingRepositoryGost {
 	}
 
 	/**
+	 * Prüft die GKL-Wahlen des Schülers mit der Belegprüfung des Kerns, wie es der Client tut. Die Fehler stehen danach im Ergebnis des Managers. Ist die
+	 * Wahl oder sind die Vorgaben nicht ladbar, unterbleibt die Prüfung, weil sie sonst Fehler meldete, die es nicht gibt; den Ladefehler meldet das
+	 * Repository als Ausgabeproblem.
+	 *
+	 * @param abiturdatenManager  Der Manager mit der Belegprüfung des Schülers.
+	 * @param idSchueler          Die ID des Schülers.
+	 * @param abiturjahrgang      Der Abiturjahrgang der Laufbahnplanung.
+	 * @param faecherManager      Die Fächer des Abiturjahrgangs.
+	 */
+	public void pruefeGkl(final AbiturdatenManager abiturdatenManager, final long idSchueler, final int abiturjahrgang,
+			final GostFaecherManager faecherManager) {
+		if (!AbiturdatenManager.istAbitur2030(abiturjahrgang)) {
+			return;
+		}
+		final GostSchuelerGKLWahl wahl = gklWahl(idSchueler, abiturjahrgang);
+		if (ladefehlerGklWahlenAbiturjahrgang.get(abiturjahrgang).containsKey(idSchueler)) {
+			return;
+		}
+		final Map<Long, GostKlausurvorgabe> vorgaben = klausurvorgabenAbiturjahrgang(abiturjahrgang);
+		if (ladefehlerKlausurvorgabenAbiturjahrgang.containsKey(abiturjahrgang)) {
+			return;
+		}
+		final Map<Long, GostLaufbahnplanungGKLKlausurvorgabe> mapKlausurvorgaben = new HashMap<>();
+		for (final GostKlausurvorgabe vorgabe : vorgaben.values()) {
+			final GostFach fach = faecherManager.get(vorgabe.idFach);
+			final GostHalbjahr halbjahr = GostHalbjahr.fromID(vorgabe.halbjahr);
+			if ((fach != null) && (halbjahr != null)) {
+				mapKlausurvorgaben.put(vorgabe.id, new GostLaufbahnplanungGKLKlausurvorgabe(fach, halbjahr, vorgabe));
+			}
+		}
+		abiturdatenManager.pruefeGKL(wahl, mapKlausurvorgaben);
+	}
+
+	/**
 	 * Liefert alle Klausurvorgaben des Abiturjahrgangs. Sie werden mit einer Abfrage geladen, statt je Schüler die gewählten Vorgaben einzeln anzufragen.
 	 * Ein gescheiterter Ladevorgang wird als Ausgabeproblem gemeldet und nicht wiederholt.
 	 *
@@ -613,8 +576,7 @@ public class ReportingRepositoryGost {
 		}
 		final Map<Long, GostKlausurvorgabe> vorgaben = mapKlausurvorgabenAbiturjahrgang.get(abiturjahrgang);
 		if (vorgaben == null) {
-			// Ohne ID im Schlüssel: Die Klausurvorgaben melden ihre Ladefehler sonst je Vorgaben-ID, und ein Abiturjahrgang könnte mit einer solchen ID
-			// zusammenfallen.
+			// Der Schlüssel trägt keinen Jahrgang, damit gescheiterte Vorgaben mehrerer Jahrgänge einen Befund ergeben.
 			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(GostKlausurvorgabe.class),
 					"Die GOSt-Klausurvorgaben des Abiturjahrgangs %d".formatted(abiturjahrgang), ladefehlerKlausurvorgabenAbiturjahrgang.get(abiturjahrgang));
 			return Map.of();

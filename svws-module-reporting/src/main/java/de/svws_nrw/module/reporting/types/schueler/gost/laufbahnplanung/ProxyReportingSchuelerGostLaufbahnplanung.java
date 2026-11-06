@@ -12,7 +12,6 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt;
-import de.svws_nrw.core.adt.map.ListMap2DLongKeys;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -20,8 +19,6 @@ import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
@@ -121,6 +118,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		// ##### Fachwahlliste erstellen
 		super.fachwahlen = getListFachwahlen(abiturdaten, gostFaecherManager, abiturdatenManager, reportingSchueler.id());
+
+		// ##### GKL-Wahlen prüfen, damit ihre Fehler wie im Client in der Fehlerliste stehen
+		this.reportingContext.repositoryGost().pruefeGkl(abiturdatenManager, reportingSchueler.id(), super.abiturjahr(), gostFaecherManager);
 
 		// ##### Fehlerliste und Hinweisliste erstellen
 		erstelleFehlerUndHinweisliste(abiturdatenManager);
@@ -306,8 +306,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final Map<String, Sprachbelegung> sprachbelegungen = abiturdaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		// Erzeuge eine Map einstelliges Sprachkürzel → Sprachprüfung aus den AbiturDaten
 		final Map<String, Sprachpruefung> sprachpruefungen = abiturdaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
-		// Ermittle die Klausurvorgaben zu Fach und Halbjahr, für die ein gleichwertiger komplexer Leistungsnachweis (GKL) gewählt wurde (nur Abitur ab 2030)
-		final ListMap2DLongKeys<GostKlausurvorgabe> gklVorgaben = ermittleGklVorgaben(idSchueler);
 
 		// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
 		for (final GostFach fach : gostFaecherManager.faecher()) {
@@ -315,7 +313,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 				continue;
 			}
 
-			fachwahlen.add(erstelleFachwahl(fach, belegungen, sprachbelegungen, sprachpruefungen, abiturdaten, abiturdatenManager, gklVorgaben));
+			fachwahlen.add(erstelleFachwahl(fach, belegungen, sprachbelegungen, sprachpruefungen, abiturdaten, abiturdatenManager, idSchueler));
 		}
 
 		return fachwahlen;
@@ -330,14 +328,14 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param sprachpruefungen Map mit Sprachprüfungen.
 	 * @param abiturdaten Abiturdaten des Schülers.
 	 * @param abiturdatenManager Der Manager für die Belegprüfung der Abiturdaten des Schülers.
-	 * @param gklVorgaben Die Klausurvorgaben je Fach und Halbjahr, für die ein gleichwertiger komplexer Leistungsnachweis (GKL) gewählt wurde.
+	 * @param idSchueler Die ID des Schülers.
 	 *
 	 * @return Ein fertig befülltes Objekt vom Typ ProxyReportingGostLaufbahnplanungFachwahl.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	private ProxyReportingGostLaufbahnplanungFachwahl erstelleFachwahl(final GostFach fach, final Map<Long, AbiturFachbelegung> belegungen,
 			final Map<String, Sprachbelegung> sprachbelegungen, final Map<String, Sprachpruefung> sprachpruefungen, final Abiturdaten abiturdaten,
-			final AbiturdatenManager abiturdatenManager, final ListMap2DLongKeys<GostKlausurvorgabe> gklVorgaben) {
+			final AbiturdatenManager abiturdatenManager, final long idSchueler) {
 
 		// Variablen initialisieren
 		String abiturfach = "";
@@ -356,12 +354,12 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			if (super.istAbiturAb2030() && (belegung.abiturFach == null) && istAbi30ProjektkursAbiturfach5(belegung, abiturdatenManager)) {
 				abiturfach = "(5)";
 			}
-			belegungEF1 = eintragFachbelegung(belegung.belegungen[0], gklVorgaben.containsKey12(fach.id, GostHalbjahr.EF1.id));
-			belegungEF2 = eintragFachbelegung(belegung.belegungen[1], gklVorgaben.containsKey12(fach.id, GostHalbjahr.EF2.id));
-			belegungQ11 = eintragFachbelegung(belegung.belegungen[2], gklVorgaben.containsKey12(fach.id, GostHalbjahr.Q11.id));
-			belegungQ12 = eintragFachbelegung(belegung.belegungen[3], gklVorgaben.containsKey12(fach.id, GostHalbjahr.Q12.id));
-			belegungQ21 = eintragFachbelegung(belegung.belegungen[4], gklVorgaben.containsKey12(fach.id, GostHalbjahr.Q21.id));
-			belegungQ22 = eintragFachbelegung(belegung.belegungen[5], gklVorgaben.containsKey12(fach.id, GostHalbjahr.Q22.id));
+			belegungEF1 = eintragFachbelegung(belegung.belegungen[0], GostHalbjahr.EF1, fach.id, idSchueler);
+			belegungEF2 = eintragFachbelegung(belegung.belegungen[1], GostHalbjahr.EF2, fach.id, idSchueler);
+			belegungQ11 = eintragFachbelegung(belegung.belegungen[2], GostHalbjahr.Q11, fach.id, idSchueler);
+			belegungQ12 = eintragFachbelegung(belegung.belegungen[3], GostHalbjahr.Q12, fach.id, idSchueler);
+			belegungQ21 = eintragFachbelegung(belegung.belegungen[4], GostHalbjahr.Q21, fach.id, idSchueler);
+			belegungQ22 = eintragFachbelegung(belegung.belegungen[5], GostHalbjahr.Q22, fach.id, idSchueler);
 			fachBelegtInGost = true;
 
 			if (super.istAbiturAb2030() && (belegung.idReferenzfach != null)) {
@@ -380,49 +378,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 				sprachdaten.jahrgangFremdsprachenbeginn(),
 				sprachdaten.positionFremdsprachenfolge(),
 				referenzfach);
-	}
-
-	/**
-	 * Ermittelt die Klausurvorgaben, für die der Schüler einen gleichwertigen komplexen Leistungsnachweis (GKL) gewählt hat, und
-	 * ordnet sie ihrer Fach-ID (1. Schlüssel) und Halbjahr-ID (2. Schlüssel) zu. Dies ist nur für Abiturjahrgänge ab 2030
-	 * relevant, für ältere Abiturjahrgänge wird eine leere Zuordnung geliefert.
-	 *
-	 * @param idSchueler Die ID des Schülers.
-	 *
-	 * @return Die Zuordnung Fach-ID und Halbjahr-ID → Klausurvorgabe mit gewählter GKL.
-	 */
-	private ListMap2DLongKeys<GostKlausurvorgabe> ermittleGklVorgaben(final long idSchueler) {
-		final ListMap2DLongKeys<GostKlausurvorgabe> result = new ListMap2DLongKeys<>();
-		if (!super.istAbiturAb2030()) {
-			return result;
-		}
-
-		final GostSchuelerGKLWahl wahl = this.reportingContext.repositoryGost().gklWahl(idSchueler);
-		final List<Long> idsKlausurvorgaben = new ArrayList<>();
-		ergaenzeFallsGesetzt(idsKlausurvorgaben, wahl.idKlausurvorgabeEF_Sprachen);
-		ergaenzeFallsGesetzt(idsKlausurvorgaben, wahl.idKlausurvorgabeEF_GW);
-		ergaenzeFallsGesetzt(idsKlausurvorgaben, wahl.idKlausurvorgabeEF_NW);
-		ergaenzeFallsGesetzt(idsKlausurvorgaben, wahl.idKlausurvorgabeQ_Sprachen);
-		ergaenzeFallsGesetzt(idsKlausurvorgaben, wahl.idKlausurvorgabeQ_GW);
-		ergaenzeFallsGesetzt(idsKlausurvorgaben, wahl.idKlausurvorgabeQ_NW);
-
-		final Map<Long, GostKlausurvorgabe> vorgaben = this.reportingContext.repositoryGost().klausurvorgaben(idsKlausurvorgaben);
-		for (final GostKlausurvorgabe vorgabe : vorgaben.values()) {
-			result.add(vorgabe.idFach, vorgabe.halbjahr, vorgabe);
-		}
-		return result;
-	}
-
-	/**
-	 * Ergänzt die übergebene Liste um die übergebene ID, sofern diese nicht {@code null} ist.
-	 *
-	 * @param ids Die Liste, die ergänzt werden soll.
-	 * @param id  Die zu ergänzende ID.
-	 */
-	private static void ergaenzeFallsGesetzt(final List<Long> ids, final Long id) {
-		if (id != null) {
-			ids.add(id);
-		}
 	}
 
 	/**
@@ -631,11 +586,13 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * Abiturjahrgänge ab 2030 relevant).
 	 *
 	 * @param belegungHj 	Halbjahresbelegung des Faches
-	 * @param hatGkl		Gibt an, ob für das Fach in diesem Halbjahr ein gleichwertiger komplexer Leistungsnachweis (GKL) gewählt wurde.
+	 * @param halbjahr		Das Halbjahr der Belegung.
+	 * @param idFach		Die ID des Faches.
+	 * @param idSchueler	Die ID des Schülers.
 	 *
 	 * @return 				String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
 	 */
-	private String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj, final boolean hatGkl) {
+	private String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj, final GostHalbjahr halbjahr, final long idFach, final long idSchueler) {
 		if (belegungHj == null) {
 			return "";
 		}
@@ -659,7 +616,11 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			eintrag = "";
 		}
 
-		return (hatGkl && !eintrag.isEmpty()) ? (eintrag + "+") : eintrag;
+		// Ohne Eintrag gibt es kein "+", die GKL wird dann nicht abgefragt.
+		if (eintrag.isEmpty()) {
+			return eintrag;
+		}
+		return this.reportingContext.repositoryGost().hatGkl(idSchueler, super.abiturjahr(), halbjahr, idFach) ? (eintrag + "+") : eintrag;
 	}
 
 }

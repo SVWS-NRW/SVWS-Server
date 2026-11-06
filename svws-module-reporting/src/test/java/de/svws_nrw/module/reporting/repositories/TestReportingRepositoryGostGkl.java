@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -21,18 +22,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 
+import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.core.utils.gost.GostLaufbahnplanungGKLKlausurvorgabe;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
@@ -46,7 +53,8 @@ import de.svws_nrw.service.gost.klausuren.GostKlausurenVorgabeService;
 /**
  * Prüft die GKL-Abfrage des GOSt-Repositorys. Eine Vorgabe zählt, wenn sie zum Abiturjahrgang gehört, Halbjahr und Fach passen und sie im Wahlfeld der
  * Phase des Halbjahres steht; ihre Kursart spielt keine Rolle. Die Vorgaben eines Abiturjahrgangs werden einmal gemeinsam geladen, auch für Schüler, die
- * erst später geladen werden. Die GKL-Wahlen gelten je Abiturjahrgang, weil ein Wiederholer im neuen Jahrgang eigene Wahlen hat.
+ * erst später geladen werden. Die GKL-Wahlen gelten je Abiturjahrgang, weil ein Wiederholer im neuen Jahrgang eigene Wahlen hat. Die Belegprüfung der
+ * GKL erhält Wahl und Vorgaben des Jahrgangs und unterbleibt, wenn eines davon nicht ladbar ist.
  */
 @DisplayName("Die GKL-Abfrage des GOSt-Repositorys")
 class TestReportingRepositoryGostGkl {
@@ -369,6 +377,101 @@ class TestReportingRepositoryGostGkl {
 
 		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
 				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(GostSchuelerGKLWahl.class, 10L)), anyString(), any());
+	}
+
+	@Test
+	void testNachDemErstenLadenKommtDieWahlOhneErneutenAbgleichAusDemCache() {
+		vorgabe(1L, ABITURJAHR, GostHalbjahr.Q11, ID_FACH, GostKursart.GK);
+		wahl(10L, 1L);
+		idsGeladenerSchueler.add(10L);
+
+		assertTrue(repository.hatGkl(10L, ABITURJAHR, GostHalbjahr.Q11, ID_FACH));
+		assertFalse(repository.hatGkl(10L, ABITURJAHR, GostHalbjahr.Q12, ID_FACH));
+		assertTrue(repository.hatGkl(10L, ABITURJAHR, GostHalbjahr.Q11, ID_FACH));
+
+		final ReportingRepositorySchueler repositorySchueler = reportingContext.repositorySchueler();
+		verify(repositorySchueler, times(1)).idsGeladenerSchueler();
+		assertEquals(List.of(ABITURJAHR), abfragenWahlen);
+	}
+
+	@Test
+	void testEineNichtLadbareWahlWirdNichtErneutAngefragtAberBeiJedemZugriffGemeldet() {
+		doThrow(new IllegalStateException("Fehlerinjektion")).when(schuelerService).getMapGKLWahlen(any(), any());
+
+		assertFalse(repository.hatGkl(10L, ABITURJAHR, GostHalbjahr.Q11, ID_FACH));
+		assertFalse(repository.hatGkl(10L, ABITURJAHR, GostHalbjahr.Q12, ID_FACH));
+
+		// Der erste Zugriff fragt gesammelt und dann einzeln an; danach steht der Fehler-Marker im Cache.
+		verify(schuelerService, times(2)).getMapGKLWahlen(any(), any());
+		verify(reportingContext, times(2)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(GostSchuelerGKLWahl.class, 10L)), anyString(), any());
+	}
+
+
+	// ##### Belegprüfung der GKL-Wahlen #####
+
+	/**
+	 * Erzeugt einen Fächermanager, der nur das Fach der Belegung kennt. Er ist gemockt, weil ein echter Fächermanager die Core-Type-Daten braucht.
+	 *
+	 * @return Der Fächermanager.
+	 */
+	private static GostFaecherManager faecherManager() {
+		final GostFach fach = new GostFach();
+		fach.id = ID_FACH;
+		fach.kuerzel = "GE";
+		final GostFaecherManager faecherManager = mock(GostFaecherManager.class);
+		when(faecherManager.get(ID_FACH)).thenReturn(fach);
+		return faecherManager;
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void testDieGklPruefungErhaeltDieWahlUndDieVorgabenDesJahrgangs() {
+		vorgabe(1L, ABITURJAHR, GostHalbjahr.Q11, ID_FACH, GostKursart.GK);
+		vorgabe(2L, ABITURJAHR, GostHalbjahr.Q12, ID_FACH_ANDERS, GostKursart.GK);
+		wahl(10L, 1L);
+		final AbiturdatenManager manager = mock(AbiturdatenManager.class);
+
+		repository.pruefeGkl(manager, 10L, ABITURJAHR, faecherManager());
+
+		final ArgumentCaptor<GostSchuelerGKLWahl> wahl = ArgumentCaptor.forClass(GostSchuelerGKLWahl.class);
+		final ArgumentCaptor<Map<Long, GostLaufbahnplanungGKLKlausurvorgabe>> vorgabenDerPruefung = ArgumentCaptor.forClass(Map.class);
+		verify(manager, times(1)).pruefeGKL(wahl.capture(), vorgabenDerPruefung.capture());
+		assertEquals(1L, wahl.getValue().idKlausurvorgabeQ_GW);
+		assertEquals(Set.of(1L), vorgabenDerPruefung.getValue().keySet(), "Eine Vorgabe zu einem Fach außerhalb des Fächermanagers entfällt.");
+		assertEquals(GostHalbjahr.Q11, vorgabenDerPruefung.getValue().get(1L).getHalbjahr());
+	}
+
+	@Test
+	void testVorDemAbiturjahrgang2030UnterbleibtDieGklPruefung() {
+		final AbiturdatenManager manager = mock(AbiturdatenManager.class);
+
+		repository.pruefeGkl(manager, 10L, 2029, faecherManager());
+
+		verifyNoInteractions(manager, schuelerService);
+		assertTrue(abfragenVorgaben.isEmpty());
+	}
+
+	@Test
+	void testEineNichtLadbareWahlVerhindertDieGklPruefung() {
+		vorgabe(1L, ABITURJAHR, GostHalbjahr.Q11, ID_FACH, GostKursart.GK);
+		doThrow(new IllegalStateException("Fehlerinjektion")).when(schuelerService).getMapGKLWahlen(any(), any());
+		final AbiturdatenManager manager = mock(AbiturdatenManager.class);
+
+		repository.pruefeGkl(manager, 10L, ABITURJAHR, faecherManager());
+
+		verify(manager, never()).pruefeGKL(any(), any());
+	}
+
+	@Test
+	void testNichtLadbareVorgabenVerhindernDieGklPruefung() {
+		wahl(10L, 1L);
+		doThrow(new IllegalStateException("Fehlerinjektion")).when(service).getListByAbiturjahr(anyInt(), anyInt(), anyBoolean());
+		final AbiturdatenManager manager = mock(AbiturdatenManager.class);
+
+		repository.pruefeGkl(manager, 10L, ABITURJAHR, faecherManager());
+
+		verify(manager, never()).pruefeGKL(any(), any());
 	}
 
 }
