@@ -87,7 +87,7 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 			optionsAuswahlAnsicht.add(ENMLehrerFunktion.KLASSENLEITUNG);
 		}
 		const abteilungenState = useAbteilungenState();
-		if ((benutzerState.benutzertyp === BenutzerTyp.LEHRER) && (abteilungenState.abteilungen.abteilungsleitungen.has(benutzerState.benutzerdaten.typID))) {
+		if ((benutzerState.benutzertyp === BenutzerTyp.LEHRER) && (abteilungenState.abteilungsleitungen.has(benutzerState.benutzerdaten.typID))) {
 			optionsAuswahlAnsicht.add(ENMLehrerFunktion.ABTEILUNGSLEITUNG);
 		}
 		const schulleitungSet = new Set(LehrerLeitungsfunktion.all_values_by_ordinal);
