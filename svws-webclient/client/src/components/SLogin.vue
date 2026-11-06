@@ -26,7 +26,7 @@
 					<ui-select v-model="schema" label="Datenbank-Schema"
 						:manager="schemaSelectManager"
 						@update:model-value="value => value && setSchema(value)"
-						:removable="false" required />
+						:removable="false" />
 					<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
 					<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 					<svws-ui-spacing />
@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
+	import { nextTick, onMounted, ref, shallowRef } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 
 	import type { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
