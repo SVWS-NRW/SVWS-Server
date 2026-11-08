@@ -87,6 +87,38 @@ public final class ReportingReportvorlageUtils {
 			final List<ReportingFilterDefinitionGruppe> filterDefinitionenGruppen,
 			final @NotNull boolean uiIstSichtbarEinzelausgabeDaten,
 			final @NotNull boolean uiIstSichtbarDuplexdruck) {
+		return erzeugeReportingParameter(ausgabeformatOptionen, reportvorlageParameterGruppen, eMailDaten, sortierungDefinitionenGruppen,
+				filterDefinitionenGruppen, uiIstSichtbarEinzelausgabeDaten, uiIstSichtbarDuplexdruck, false);
+	}
+
+	/**
+	 * Erstellt ein ReportingParameter-Objekt basierend auf den angegebenen Parametern, inklusive der Angabe zur Sichtbarkeit des Broschürendrucks.
+	 *
+	 * @param ausgabeformatOptionen                 Liste von Ausgabeformat-Optionen. Wenn null oder leer, wird standardmäßig PDF verwendet.
+	 * @param reportvorlageParameterGruppen         Liste von ReportingReportvorlageParameterGruppen. Wenn null, wird eine leere Liste erstellt.
+	 * @param eMailDaten                            Die Einstellungen und Informationen zum E-Mail-Versand. Wenn null, werden Standardwerte initialisiert,
+	 *                                              die aber keinen E-Mail-Versand ermöglichen.
+	 * @param sortierungDefinitionenGruppen         Liste von ReportingSortierungDefinitionGruppen, die die Sortierungsdefinitionen enthalten. Wenn null, wird
+	 *                                              eine leere Liste erstellt.
+	 * @param filterDefinitionenGruppen             Liste von ReportingFilterDefinitionGruppen, die die Filterdefinitionen enthalten. Wenn null, wird eine
+	 *                                              leere Liste erstellt.
+	 * @param uiIstSichtbarEinzelausgabeDaten       Gibt an, ob die Option "Einzelausgabe" in der UI sichtbar sein soll.
+	 * @param uiIstSichtbarDuplexdruck              Gibt an, ob die Option "Duplexdruck" in der UI sichtbar sein soll.
+	 * @param uiIstSichtbarBroschuerendruck         Gibt an, ob die Option "Broschürendruck" in der UI sichtbar sein soll. Sie eignet sich für Vorlagen, deren
+	 *                                              Ausgabe je Datensatz mehr als zwei Seiten umfasst und gefalzt werden soll.
+	 *
+	 * @return Ein konfiguriertes ReportingParameter-Objekt mit den angegebenen Eigenschaften.
+	 */
+	// SONARQUBE WARNUNG: Es sollen max. 7 Parameter an eine Methode übergeben werden. Hier sind es acht, sie sind aber alle gut nachvollziehbar.
+	@SuppressWarnings("java:S107")
+	public static @NotNull ReportingParameter erzeugeReportingParameter(final List<Integer> ausgabeformatOptionen,
+			final List<ReportingReportvorlageParameterGruppe> reportvorlageParameterGruppen,
+			final ReportingEMailDaten eMailDaten,
+			final List<ReportingSortierungDefinitionGruppe> sortierungDefinitionenGruppen,
+			final List<ReportingFilterDefinitionGruppe> filterDefinitionenGruppen,
+			final @NotNull boolean uiIstSichtbarEinzelausgabeDaten,
+			final @NotNull boolean uiIstSichtbarDuplexdruck,
+			final @NotNull boolean uiIstSichtbarBroschuerendruck) {
 
 		final ReportingParameter reportingParameter = new ReportingParameter();
 		reportingParameter.ausgabeformatOptionen = new ArrayList<>(
@@ -98,7 +130,11 @@ public final class ReportingReportvorlageUtils {
 				: "";
 		ausgabeoptionenBeschreibung += (uiIstSichtbarDuplexdruck)
 				? ("Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt "
-						+ "werden.")
+						+ "werden. ")
+				: "";
+		ausgabeoptionenBeschreibung += (uiIstSichtbarBroschuerendruck)
+				? ("Mit dem Broschürendruck entsteht eine Datei im Format DIN A3 quer: Je vier Seiten liegen so auf einem Blatt, dass ein beidseitiger Druck "
+						+ "mit Wendung über die kurze Seite gefalzt das Dokument ergibt. Jede Person belegt dabei eigene Blätter. ")
 				: "";
 
 		final ReportingReportvorlageParameterGruppe standardausgabeoptionenGruppe =
@@ -107,7 +143,9 @@ public final class ReportingReportvorlageUtils {
 								erzeugeVorlageParameter("einzelausgabeDaten", "Daten in einzelne Dateien ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, uiIstSichtbarEinzelausgabeDaten, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								erzeugeVorlageParameter("duplexdruck", "Duplexdruck", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-										uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
+										uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								erzeugeVorlageParameter("broschuerendruck", "Broschürendruck auf DIN A3", ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + false, uiIstSichtbarBroschuerendruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
 
 		// Die Parameter-Gruppen der Vorlage zuweisen, sowohl spezielle als auch allgemeine Gruppen.
 		reportingParameter.reportvorlageParameterGruppen = new ArrayList<>(

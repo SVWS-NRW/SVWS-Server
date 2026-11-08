@@ -246,8 +246,8 @@ public final class HtmlFactory {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die HTML-Ausgabe ist kein Dokument entstanden.");
 		}
 		if (htmlBuilders.size() > 1) {
-			// Reine Absicherung: Der Zweig ist unerreichbar, seit ReportingParameterBuilder die Aufteilung in Einzeldateien für die HTML-Ausgabe auf dem
-			// fertig kombinierten Parametersatz auf false festlegt - ohne Aufteilung entsteht genau ein Builder.
+			// Reine Absicherung: Der Zweig ist unerreichbar, weil ReportingParameterBuilder für die HTML-Ausgabe beide aufteilenden Parameter - Einzelausgabe
+			// und Broschürendruck - auf dem fertig kombinierten Parametersatz auf false festlegt; ohne Aufteilung entsteht genau ein Builder.
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die HTML-Ausgabe ist mehr als ein Dokument entstanden.");
 		}
 
@@ -299,7 +299,9 @@ public final class HtmlFactory {
 
 		final List<ReportBuilderHtml> htmlBuilders = new ArrayList<>();
 
-		if (reportingParameter.einzelausgabeDaten()) {
+		// Der Broschürendruck teilt ebenfalls auf, auch ohne Einzelausgabe: Der Umbau auf DIN A3 braucht die Seitenzahl eines einzelnen Datensatzes, damit
+		// jeder Datensatz eigene Bogen füllt. Im kombinierten Dokument ließe sich nicht erkennen, wo ein Datensatz endet.
+		if (reportingParameter.einzelausgabeDaten() || reportingParameter.broschuerendruck()) {
 			erzeugeEinzelContexts(htmlBuilders, htmlTemplateCode);
 		} else {
 			htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));

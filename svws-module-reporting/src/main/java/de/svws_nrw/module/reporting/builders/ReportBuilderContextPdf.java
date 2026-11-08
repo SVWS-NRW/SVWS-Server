@@ -26,6 +26,9 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	/** Die IDs der Hauptdaten, für die der Builder die PDF-Datei erzeugt. Sie dienen der Auflösung gleicher Dateinamen in der ZIP-Sammelausgabe. */
 	private final Set<Long> ids = new LinkedHashSet<>();
 
+	/** Gibt an, ob das gerenderte A4-Dokument anschließend zu einer Broschüre im Format DIN A3 quer umgebaut wird. */
+	private boolean broschuerendruck;
+
 
 	/**
 	 * Setzt den Dateinamen für den Report.
@@ -87,6 +90,18 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 		return this;
 	}
 
+	/**
+	 * Legt fest, ob das gerenderte A4-Dokument zu einer Broschüre im Format DIN A3 quer umgebaut wird.
+	 *
+	 * @param broschuerendruck true, wenn der Umbau erfolgen soll.
+	 *
+	 * @return Die Instanz dieses Kontexts für die Weiterverwendung.
+	 */
+	public ReportBuilderContextPdf withBroschuerendruck(final boolean broschuerendruck) {
+		this.broschuerendruck = broschuerendruck;
+		return this;
+	}
+
 
 	/**
 	 * Führt eine Validierung der aktuellen Instanz von {@code ReportBuilderContextPdf} durch.
@@ -136,6 +151,15 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 */
 	Set<Long> getIds() {
 		return ids;
+	}
+
+	/**
+	 * Gibt zurück, ob das gerenderte A4-Dokument zu einer Broschüre im Format DIN A3 quer umgebaut wird.
+	 *
+	 * @return true, wenn der Umbau erfolgt.
+	 */
+	boolean istBroschuerendruck() {
+		return broschuerendruck;
 	}
 
 	/**

@@ -139,6 +139,39 @@ class TestReportingParameterBuilder {
 	}
 
 	@Test
+	void testBroschuerendruckWirdBeiHtmlAbgeschaltet() {
+		// Erzwungen wird auf dem kombinierten Parametersatz. Ein gespeicherter und ein übermittelter Wert true müssen deshalb gleichermaßen weichen: Die
+		// Anzeige im Browser kennt keinen Bogen, und ohne Aufteilung gäbe es keine Seitenzahl je Datensatz, an der der Umbau ansetzen könnte.
+		final ReportingReportvorlage vorlage = ReportingReportvorlage.LEHRER_V_STAMMDATENLISTE;
+		final List<ReportingReportvorlageParameterGruppe> soll = List.of(gruppe("Ausgabeoptionen", true, boolParam("broschuerendruck", false)));
+
+		final ReportingParameter html = new ReportingParameter();
+		html.ausgabeformat = ReportingAusgabeformat.HTML.getId();
+		html.reportvorlageParameterGruppen =
+				builder.kombiniereParameterGruppen(soll, Map.of("broschuerendruck", "true"), Map.of("broschuerendruck", "true"), new HashSet<>(), null);
+		assertEquals("true", flach(html.reportvorlageParameterGruppen).get("broschuerendruck"),
+				"Gegenprobe: Der kombinierte Satz trägt das true aus gespeichertem und übermitteltem Wert.");
+
+		ReportingParameterBuilder.erzwingeAusgabeformatabhaengigeParameter(html, vorlage);
+
+		assertEquals("false", flach(html.reportvorlageParameterGruppen).get("broschuerendruck"), "Bei HTML wird der Broschürendruck auf false erzwungen.");
+	}
+
+	@Test
+	void testBroschuerendruckBleibtBeiPdfUndEmailErhalten() {
+		final ReportingReportvorlage vorlage = ReportingReportvorlage.LEHRER_V_STAMMDATENLISTE;
+
+		final ReportingParameter pdf = parameterMitBroschuerendruck(ReportingAusgabeformat.PDF.getId());
+		ReportingParameterBuilder.erzwingeAusgabeformatabhaengigeParameter(pdf, vorlage);
+		assertEquals("true", flach(pdf.reportvorlageParameterGruppen).get("broschuerendruck"), "Bei PDF bleibt der kombinierte Wert unverändert.");
+
+		final ReportingParameter email = parameterMitBroschuerendruck(ReportingAusgabeformat.EMAIL.getId());
+		ReportingParameterBuilder.erzwingeAusgabeformatabhaengigeParameter(email, vorlage);
+		assertEquals("true", flach(email.reportvorlageParameterGruppen).get("broschuerendruck"),
+				"Beim E-Mail-Versand bleibt der kombinierte Wert unverändert; jeder Anhang trägt dann die Broschüre einer Person.");
+	}
+
+	@Test
 	void testPrivateEmailWirdOhneZulassungDerVorlageAbgeschaltet() {
 		final ReportingParameter request = parameterMitPrivaterEmail(true, true);
 		final ReportingParameter soll = parameterMitPrivaterEmail(false, false);
@@ -420,6 +453,13 @@ class TestReportingParameterBuilder {
 		final ReportingParameter rp = new ReportingParameter();
 		rp.ausgabeformat = ausgabeformat;
 		rp.reportvorlageParameterGruppen = List.of(gruppe("Ausgabeoptionen", true, boolParam("einzelausgabeDaten", wert)));
+		return rp;
+	}
+
+	private static ReportingParameter parameterMitBroschuerendruck(final int ausgabeformat) {
+		final ReportingParameter rp = new ReportingParameter();
+		rp.ausgabeformat = ausgabeformat;
+		rp.reportvorlageParameterGruppen = List.of(gruppe("Ausgabeoptionen", true, boolParam("broschuerendruck", true)));
 		return rp;
 	}
 

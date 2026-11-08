@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ReportingReportvorlageParameter } from '../../../core/data/reporting/ReportingReportvorlageParameter';
 import { ReportingSortierungDefinitionGruppe } from '../../../core/data/reporting/ReportingSortierungDefinitionGruppe';
-import { ReportingEMailDaten } from '../../../core/data/reporting/ReportingEMailDaten';
+import { ReportingEMailDaten, cast_de_svws_nrw_core_data_reporting_ReportingEMailDaten } from '../../../core/data/reporting/ReportingEMailDaten';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
 import { ReportingFilterKriterium } from '../../../core/data/reporting/ReportingFilterKriterium';
@@ -82,18 +82,65 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein konfiguriertes ReportingParameter-Objekt mit den angegebenen Eigenschaften.
 	 */
-	public static erzeugeReportingParameter(ausgabeformatOptionen: List<number> | null, reportvorlageParameterGruppen: List<ReportingReportvorlageParameterGruppe> | null, eMailDaten: ReportingEMailDaten | null, sortierungDefinitionenGruppen: List<ReportingSortierungDefinitionGruppe> | null, filterDefinitionenGruppen: List<ReportingFilterDefinitionGruppe> | null, uiIstSichtbarEinzelausgabeDaten: boolean, uiIstSichtbarDuplexdruck: boolean): ReportingParameter {
-		const reportingParameter: ReportingParameter | null = new ReportingParameter();
-		reportingParameter.ausgabeformatOptionen = new ArrayList(((ausgabeformatOptionen === null) || ausgabeformatOptionen.isEmpty()) ? ArrayList.of(ReportingAusgabeformat.PDF.getId()) : ausgabeformatOptionen);
-		let ausgabeoptionenBeschreibung: string | null = (uiIstSichtbarEinzelausgabeDaten) ? "Die Option 'Daten in einzelne Dateien ausgeben' ermöglicht es, bei der Ausgabe pro Datensatz in eine einzelne Datei zu erzeugen. " : "";
-		ausgabeoptionenBeschreibung += (uiIstSichtbarDuplexdruck) ? ("Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt werden.") : "";
-		const standardausgabeoptionenGruppe: ReportingReportvorlageParameterGruppe | null = ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Ausgabeoptionen", ausgabeoptionenBeschreibung, true, 3, Arrays.asList(ReportingReportvorlageUtils.erzeugeVorlageParameter("einzelausgabeDaten", "Daten in einzelne Dateien ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, uiIstSichtbarEinzelausgabeDaten, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("duplexdruck", "Duplexdruck", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
-		reportingParameter.reportvorlageParameterGruppen = new ArrayList((reportvorlageParameterGruppen === null) ? new ArrayList() : reportvorlageParameterGruppen);
-		reportingParameter.reportvorlageParameterGruppen.add(standardausgabeoptionenGruppe);
-		reportingParameter.eMailDaten = (eMailDaten === null) ? new ReportingEMailDaten() : eMailDaten;
-		reportingParameter.sortierungDefinitionenGruppen = new ArrayList((sortierungDefinitionenGruppen === null) ? new ArrayList() : sortierungDefinitionenGruppen);
-		reportingParameter.filterDefinitionenGruppen = new ArrayList((filterDefinitionenGruppen === null) ? new ArrayList() : filterDefinitionenGruppen);
-		return reportingParameter;
+	public static erzeugeReportingParameter(ausgabeformatOptionen: List<number> | null, reportvorlageParameterGruppen: List<ReportingReportvorlageParameterGruppe> | null, eMailDaten: ReportingEMailDaten | null, sortierungDefinitionenGruppen: List<ReportingSortierungDefinitionGruppe> | null, filterDefinitionenGruppen: List<ReportingFilterDefinitionGruppe> | null, uiIstSichtbarEinzelausgabeDaten: boolean, uiIstSichtbarDuplexdruck: boolean): ReportingParameter;
+
+	/**
+	 * Erstellt ein ReportingParameter-Objekt basierend auf den angegebenen Parametern, inklusive der Angabe zur Sichtbarkeit des Broschürendrucks.
+	 *
+	 * @param ausgabeformatOptionen                 Liste von Ausgabeformat-Optionen. Wenn null oder leer, wird standardmäßig PDF verwendet.
+	 * @param reportvorlageParameterGruppen         Liste von ReportingReportvorlageParameterGruppen. Wenn null, wird eine leere Liste erstellt.
+	 * @param eMailDaten                            Die Einstellungen und Informationen zum E-Mail-Versand. Wenn null, werden Standardwerte initialisiert,
+	 *                                              die aber keinen E-Mail-Versand ermöglichen.
+	 * @param sortierungDefinitionenGruppen         Liste von ReportingSortierungDefinitionGruppen, die die Sortierungsdefinitionen enthalten. Wenn null, wird
+	 *                                              eine leere Liste erstellt.
+	 * @param filterDefinitionenGruppen             Liste von ReportingFilterDefinitionGruppen, die die Filterdefinitionen enthalten. Wenn null, wird eine
+	 *                                              leere Liste erstellt.
+	 * @param uiIstSichtbarEinzelausgabeDaten       Gibt an, ob die Option "Einzelausgabe" in der UI sichtbar sein soll.
+	 * @param uiIstSichtbarDuplexdruck              Gibt an, ob die Option "Duplexdruck" in der UI sichtbar sein soll.
+	 * @param uiIstSichtbarBroschuerendruck         Gibt an, ob die Option "Broschürendruck" in der UI sichtbar sein soll. Sie eignet sich für Vorlagen, deren
+	 *                                              Ausgabe je Datensatz mehr als zwei Seiten umfasst und gefalzt werden soll.
+	 *
+	 * @return Ein konfiguriertes ReportingParameter-Objekt mit den angegebenen Eigenschaften.
+	 */
+	public static erzeugeReportingParameter(ausgabeformatOptionen: List<number> | null, reportvorlageParameterGruppen: List<ReportingReportvorlageParameterGruppe> | null, eMailDaten: ReportingEMailDaten | null, sortierungDefinitionenGruppen: List<ReportingSortierungDefinitionGruppe> | null, filterDefinitionenGruppen: List<ReportingFilterDefinitionGruppe> | null, uiIstSichtbarEinzelausgabeDaten: boolean, uiIstSichtbarDuplexdruck: boolean, uiIstSichtbarBroschuerendruck: boolean): ReportingParameter;
+
+	/**
+	 * Implementation for method overloads of 'erzeugeReportingParameter'
+	 */
+	public static erzeugeReportingParameter(__param0: List<number> | null, __param1: List<ReportingReportvorlageParameterGruppe> | null, __param2: ReportingEMailDaten | null, __param3: List<ReportingSortierungDefinitionGruppe> | null, __param4: List<ReportingFilterDefinitionGruppe> | null, __param5: boolean, __param6: boolean, __param7?: boolean): ReportingParameter {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.svws_nrw.core.data.reporting.ReportingEMailDaten'))) || (__param2 === null)) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null)) && ((__param5 !== undefined) && typeof __param5 === "boolean") && ((__param6 !== undefined) && typeof __param6 === "boolean") && (__param7 === undefined)) {
+			const ausgabeformatOptionen: List<number> | null = cast_java_util_List(__param0);
+			const reportvorlageParameterGruppen: List<ReportingReportvorlageParameterGruppe> | null = cast_java_util_List(__param1);
+			const eMailDaten: ReportingEMailDaten | null = cast_de_svws_nrw_core_data_reporting_ReportingEMailDaten(__param2);
+			const sortierungDefinitionenGruppen: List<ReportingSortierungDefinitionGruppe> | null = cast_java_util_List(__param3);
+			const filterDefinitionenGruppen: List<ReportingFilterDefinitionGruppe> | null = cast_java_util_List(__param4);
+			const uiIstSichtbarEinzelausgabeDaten: boolean = __param5 as boolean;
+			const uiIstSichtbarDuplexdruck: boolean = __param6 as boolean;
+			return ReportingReportvorlageUtils.erzeugeReportingParameter(ausgabeformatOptionen, reportvorlageParameterGruppen, eMailDaten, sortierungDefinitionenGruppen, filterDefinitionenGruppen, uiIstSichtbarEinzelausgabeDaten, uiIstSichtbarDuplexdruck, false);
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.svws_nrw.core.data.reporting.ReportingEMailDaten'))) || (__param2 === null)) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null)) && ((__param5 !== undefined) && typeof __param5 === "boolean") && ((__param6 !== undefined) && typeof __param6 === "boolean") && ((__param7 !== undefined) && typeof __param7 === "boolean")) {
+			const ausgabeformatOptionen: List<number> | null = cast_java_util_List(__param0);
+			const reportvorlageParameterGruppen: List<ReportingReportvorlageParameterGruppe> | null = cast_java_util_List(__param1);
+			const eMailDaten: ReportingEMailDaten | null = cast_de_svws_nrw_core_data_reporting_ReportingEMailDaten(__param2);
+			const sortierungDefinitionenGruppen: List<ReportingSortierungDefinitionGruppe> | null = cast_java_util_List(__param3);
+			const filterDefinitionenGruppen: List<ReportingFilterDefinitionGruppe> | null = cast_java_util_List(__param4);
+			const uiIstSichtbarEinzelausgabeDaten: boolean = __param5 as boolean;
+			const uiIstSichtbarDuplexdruck: boolean = __param6 as boolean;
+			const uiIstSichtbarBroschuerendruck: boolean = __param7 as boolean;
+			const reportingParameter: ReportingParameter | null = new ReportingParameter();
+			reportingParameter.ausgabeformatOptionen = new ArrayList(((ausgabeformatOptionen === null) || ausgabeformatOptionen.isEmpty()) ? ArrayList.of(ReportingAusgabeformat.PDF.getId()) : ausgabeformatOptionen);
+			let ausgabeoptionenBeschreibung: string | null = (uiIstSichtbarEinzelausgabeDaten) ? "Die Option 'Daten in einzelne Dateien ausgeben' ermöglicht es, bei der Ausgabe pro Datensatz in eine einzelne Datei zu erzeugen. " : "";
+			ausgabeoptionenBeschreibung += (uiIstSichtbarDuplexdruck) ? ("Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt werden. ") : "";
+			ausgabeoptionenBeschreibung += (uiIstSichtbarBroschuerendruck) ? ("Mit dem Broschürendruck entsteht eine Datei im Format DIN A3 quer: Je vier Seiten liegen so auf einem Blatt, dass ein beidseitiger Druck mit Wendung über die kurze Seite gefalzt das Dokument ergibt. Jede Person belegt dabei eigene Blätter. ") : "";
+			const standardausgabeoptionenGruppe: ReportingReportvorlageParameterGruppe | null = ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Ausgabeoptionen", ausgabeoptionenBeschreibung, true, 3, Arrays.asList(ReportingReportvorlageUtils.erzeugeVorlageParameter("einzelausgabeDaten", "Daten in einzelne Dateien ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, uiIstSichtbarEinzelausgabeDaten, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("duplexdruck", "Duplexdruck", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("broschuerendruck", "Broschürendruck auf DIN A3", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, uiIstSichtbarBroschuerendruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
+			reportingParameter.reportvorlageParameterGruppen = new ArrayList((reportvorlageParameterGruppen === null) ? new ArrayList() : reportvorlageParameterGruppen);
+			reportingParameter.reportvorlageParameterGruppen.add(standardausgabeoptionenGruppe);
+			reportingParameter.eMailDaten = (eMailDaten === null) ? new ReportingEMailDaten() : eMailDaten;
+			reportingParameter.sortierungDefinitionenGruppen = new ArrayList((sortierungDefinitionenGruppen === null) ? new ArrayList() : sortierungDefinitionenGruppen);
+			reportingParameter.filterDefinitionenGruppen = new ArrayList((filterDefinitionenGruppen === null) ? new ArrayList() : filterDefinitionenGruppen);
+			return reportingParameter;
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

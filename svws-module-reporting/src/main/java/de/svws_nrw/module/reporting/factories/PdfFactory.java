@@ -5,6 +5,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderContextPdf;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
+import de.svws_nrw.module.reporting.builders.ReportPdfBroschuere;
 import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingHinweisSerializer;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblem;
@@ -112,6 +113,9 @@ public class PdfFactory {
 					Response.ok(data, einzigerPdfBuilder.getContentType()).header("Content-Disposition", "attachment; " + encodedFilename),
 					reportingContext).build();
 		}
+		if (reportingContext.reportingParameter().broschuerendruck() && !reportingContext.reportingParameter().einzelausgabeDaten()) {
+			return erzeugeBroschuerenResponse(pdfBuilders);
+		}
 		return erzeugeZipResponse(pdfBuilders);
 	}
 
@@ -148,12 +152,69 @@ public class PdfFactory {
 
 	/**
 	 * Der Dateiname der ZIP-Ausgabe, abgeleitet aus der Reportvorlage. Die Vorlage liegt hier zwingend vor, weil die {@code HtmlFactory} sie beim Aufbau prüft
-	 * und diese Factory ohne deren HTML-Builder nicht entsteht.
+	 * und diese Factory ohne deren HTML-Builder nicht entsteht. Ein Archiv mit Broschüren nennt das Format schon am Archiv und nicht erst an den Dateien
+	 * darin.
 	 *
 	 * @return Der Dateiname des Archivs mit Endung.
 	 */
 	private String zipDateiname() {
-		return reportingContext.reportingParameter().reportVorlage().getDateiname() + ".zip";
+		final String dateiname = reportingContext.reportingParameter().reportVorlage().getDateiname();
+		if (reportingContext.reportingParameter().broschuerendruck()) {
+			return dateiname + ReportPdfBroschuere.DATEINAME_ERGAENZUNG + ".zip";
+		}
+		return dateiname + ".zip";
+	}
+
+	/**
+	 * Erzeugt die Response einer Sammelbroschüre: Die Broschüren der einzelnen Datensätze folgen in einer Datei aufeinander, jede auf eigenen Bogen.
+	 *
+	 * @param pdfBuilders Die PDF-Builder, deren Broschüren in die Datei gelangen.
+	 *
+	 * @return Die Response mit der zusammengefügten Datei.
+	 *
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
+	 */
+	private Response erzeugeBroschuerenResponse(final List<ReportBuilderPdf> pdfBuilders) throws ApiOperationException {
+		final List<byte[]> broschueren = new ArrayList<>(pdfBuilders.size());
+		for (final ReportBuilderPdf pdfBuilder : pdfBuilders) {
+			broschueren.add(erzeugeBroschuere(pdfBuilder));
+		}
+		final byte[] data = ReportPdfBroschuere.fuegeZusammen(broschueren);
+		final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(broschuerenDateiname(), StandardCharsets.UTF_8);
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+		return ReportingHinweiseHeader.ergaenze(
+				Response.ok(data, pdfBuilders.getFirst().getContentType()).header("Content-Disposition", "attachment; " + encodedFilename),
+				reportingContext).build();
+	}
+
+	/**
+	 * Erzeugt die Broschüre eines einzelnen Datensatzes.
+	 *
+	 * @param pdfBuilder Der Builder, der die Broschüre erzeugt.
+	 *
+	 * @return Die Broschüre im Format DIN A3 quer.
+	 *
+	 * @throws ApiOperationException Wird geworfen, wenn die Broschüre nicht entstehen kann. Ein bereits klassifizierter Fehler behält seinen Status.
+	 */
+	private byte[] erzeugeBroschuere(final ReportBuilderPdf pdfBuilder) throws ApiOperationException {
+		try {
+			return pdfBuilder.generate();
+		} catch (final ApiOperationException e) {
+			// Protokolliert wird allein der Dateiname: Er ist bei einer Sammelausgabe die einzige Angabe, welcher Datensatz betroffen ist. Die Meldung der
+			// Fehlerquelle reist mit der Exception und erscheint im Fehlerblock der Abschlussgrenze.
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "Betroffene Datei: " + pdfBuilder.getDateiname());
+			throw e;
+		}
+	}
+
+	/**
+	 * Der Dateiname der Sammelbroschüre, abgeleitet aus der Reportvorlage. Der Name eines einzelnen Datensatzes passt nicht, weil die Datei die Broschüren
+	 * aller Datensätze enthält.
+	 *
+	 * @return Der Dateiname der Sammelbroschüre mit Endung.
+	 */
+	private String broschuerenDateiname() {
+		return reportingContext.reportingParameter().reportVorlage().getDateiname() + ReportPdfBroschuere.DATEINAME_ERGAENZUNG + ".pdf";
 	}
 
 	/**
@@ -230,7 +291,8 @@ public class PdfFactory {
 						.withDateiname(reportBuilderHtml.getDateiname())
 						.addIds(reportBuilderHtml.getIds())
 						.withStatischerDateiname(reportBuilderHtml.getStatischerDateiname())
-						.withRootPfad(reportBuilderHtml.getRootPfad());
+						.withRootPfad(reportBuilderHtml.getRootPfad())
+						.withBroschuerendruck(reportingContext.reportingParameter().broschuerendruck());
 		return new ReportBuilderPdf(reportBuilderContext);
 	}
 

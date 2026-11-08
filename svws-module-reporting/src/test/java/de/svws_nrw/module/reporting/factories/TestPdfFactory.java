@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +33,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.builders.PdfSeitentexte;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
 import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
@@ -68,6 +71,9 @@ class TestPdfFactory {
 	/** Die Factory, deren Sammelausgabe geprüft wird. */
 	private PdfFactory pdfFactory;
 
+	/** Die Reporting-Parameter, die der Context liefert. Über sie stellen die Tests die Ausgabeoptionen ein. */
+	private ReportingParameterTypisiert reportingParameter;
+
 	/** Die Liste, die die Einträge des Loggers sammelt. */
 	private LogConsumerList log;
 
@@ -83,6 +89,10 @@ class TestPdfFactory {
 		when(reportingContext.serverMode()).thenReturn(ServerMode.DEV);
 		// Der Standard-Umfang der Tests: Alles Angeforderte wird ausgegeben, eine leere Ausgabe ist nicht zulässig.
 		when(reportingContext.ausgabeumfang()).thenReturn(new ReportingAusgabeumfang(2, 2, false));
+		// Die Factory liest die Ausgabeoptionen für jeden PDF-Builder. Der Mock liefert für alle Optionen false und damit die Ausgabe ohne Einzeldateien
+		// und ohne Broschürendruck.
+		reportingParameter = mock(ReportingParameterTypisiert.class);
+		when(reportingContext.reportingParameter()).thenReturn(reportingParameter);
 		// Die Factory verlangt mindestens einen HTML-Builder. Für die Sammelausgabe werden die PDF-Builder direkt übergeben.
 		pdfFactory = new PdfFactory(List.of(mock(ReportBuilderHtml.class)), reportingContext);
 	}
@@ -390,9 +400,7 @@ class TestPdfFactory {
 	 * @param reportvorlage Die Reportvorlage des Aufrufs.
 	 */
 	private void gebeReportvorlageVor(final ReportingReportvorlage reportvorlage) {
-		final ReportingParameterTypisiert reportingParameter = mock(ReportingParameterTypisiert.class);
 		when(reportingParameter.reportVorlage()).thenReturn(reportvorlage);
-		when(reportingContext.reportingParameter()).thenReturn(reportingParameter);
 		when(reportingContext.ausgabeprobleme()).thenReturn(List.of());
 	}
 
@@ -575,6 +583,139 @@ class TestPdfFactory {
 	private static String dateinameAusResponse(final Response response) {
 		final String disposition = response.getHeaderString("Content-Disposition");
 		return URLDecoder.decode(disposition.substring(disposition.indexOf("UTF-8''") + "UTF-8''".length()), StandardCharsets.UTF_8);
+	}
+
+
+	// ##### Ausgabe als Broschüre im Format DIN A3 #####
+
+	@Test
+	void testDieSammelbroschuereLiegtInEinerDateiUndGibtJederPersonEigeneBogen() throws Exception {
+		// Der produktive Weg mit Broschürendruck: Die Inhalte werden gerendert, je Datensatz auf DIN A3 umgebaut und danach zusammengefügt. Drei Personen
+		// mit 4, 3 und 6 Seiten belegen 1 + 1 + 2 Bogen. Geprüft wird neben der Zahl der Bogen die Zuordnung: Keine Person teilt ein Blatt mit einer anderen.
+		gebeBroschuerendruckVor(false);
+		final PdfFactory factory = new PdfFactory(List.of(
+				htmlBuilderMitSeiten("Zeugnis_Meier", 4711L, 4),
+				htmlBuilderMitSeiten("Zeugnis_Schulz", 4712L, 3),
+				htmlBuilderMitSeiten("Zeugnis_Yildiz", 4713L, 6)), reportingContext);
+
+		final Response response = factory.createPdfResponse();
+
+		assertEquals("application/pdf", response.getMediaType().toString(), "Die Sammelbroschüre ist eine PDF-Datei und kein Archiv.");
+		assertEquals("Grundschulzeugnis-Klasse4-DIN-A3.pdf", dateinameAusResponse(response));
+		try (PDDocument broschuere = Loader.loadPDF((byte[]) response.getEntity())) {
+			assertEquals(8, broschuere.getNumberOfPages(), "1 + 1 + 2 Bogen ergeben 8 A3-Seiten.");
+			assertEquals("Zeugnis_Meier 1", PdfSeitentexte.rechts(broschuere, 0));
+			assertEquals("Zeugnis_Meier 2", PdfSeitentexte.links(broschuere, 1), "Die Rückseite des Bogens gehört derselben Person.");
+			assertEquals("Zeugnis_Schulz 1", PdfSeitentexte.rechts(broschuere, 2), "Die zweite Person beginnt auf einem eigenen Bogen.");
+			assertEquals("Zeugnis_Yildiz 1", PdfSeitentexte.rechts(broschuere, 4), "Die dritte Person beginnt auf einem eigenen Bogen.");
+		}
+	}
+
+	@Test
+	void testDieEinzelausgabeLiefertDieBroschuerenAlsArchiv() throws Exception {
+		// Mit gewählter Einzelausgabe bleibt es beim Archiv; jede Datei darin ist eine eigene Broschüre und nennt das Format im Namen.
+		gebeBroschuerendruckVor(true);
+		final PdfFactory factory = new PdfFactory(List.of(
+				htmlBuilderMitSeiten("Zeugnis_Meier", 4711L, 4),
+				htmlBuilderMitSeiten("Zeugnis_Schulz", 4712L, 6)), reportingContext);
+
+		final Response response = factory.createPdfResponse();
+
+		assertEquals("application/zip", response.getMediaType().toString());
+		assertEquals("Grundschulzeugnis-Klasse4-DIN-A3.zip", dateinameAusResponse(response));
+		final byte[] zipData = (byte[]) response.getEntity();
+		assertEquals(List.of("Zeugnis_Meier-DIN-A3.pdf", "Zeugnis_Schulz-DIN-A3.pdf"),
+				eintragsnamen(zipData).stream().filter(name -> name.endsWith(".pdf")).toList());
+		try (PDDocument broschuere = Loader.loadPDF(eintragsbytes(zipData, "Zeugnis_Schulz-DIN-A3.pdf"))) {
+			assertEquals(4, broschuere.getNumberOfPages(), "Sechs Seiten ergeben zwei Bogen.");
+			assertEquals("Zeugnis_Schulz 1", PdfSeitentexte.rechts(broschuere, 0));
+		}
+	}
+
+	@Test
+	void testOhneBroschuerendruckBleibtDieAusgabeBeimFormatDerVorlage() throws Exception {
+		// Gegenprobe: Ohne die Option entsteht aus denselben Buildern das gewohnte Archiv mit A4-Dateien ohne Formatzusatz im Namen.
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4);
+		when(reportingParameter.einzelausgabeDaten()).thenReturn(true);
+		final PdfFactory factory = new PdfFactory(List.of(
+				htmlBuilderMitSeiten("Zeugnis_Meier", 4711L, 4),
+				htmlBuilderMitSeiten("Zeugnis_Schulz", 4712L, 6)), reportingContext);
+
+		final Response response = factory.createPdfResponse();
+
+		assertEquals("Grundschulzeugnis-Klasse4.zip", dateinameAusResponse(response));
+		final byte[] zipData = (byte[]) response.getEntity();
+		assertEquals(List.of("Zeugnis_Meier.pdf", "Zeugnis_Schulz.pdf"),
+				eintragsnamen(zipData).stream().filter(name -> name.endsWith(".pdf")).toList());
+		try (PDDocument dokument = Loader.loadPDF(eintragsbytes(zipData, "Zeugnis_Schulz.pdf"))) {
+			assertEquals(6, dokument.getNumberOfPages(), "Ohne Umbau bleiben die sechs A4-Seiten erhalten.");
+		}
+	}
+
+	/**
+	 * Schaltet den Broschürendruck für die Vorlage des Grundschulzeugnisses ein.
+	 *
+	 * @param einzelausgabeDaten true, wenn zusätzlich die Ausgabe in einzelne Dateien gewählt ist.
+	 */
+	private void gebeBroschuerendruckVor(final boolean einzelausgabeDaten) {
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4);
+		when(reportingParameter.broschuerendruck()).thenReturn(true);
+		when(reportingParameter.einzelausgabeDaten()).thenReturn(einzelausgabeDaten);
+	}
+
+	/**
+	 * Erzeugt einen HTML-Builder, dessen Inhalt die angegebene Zahl an A4-Seiten ergibt. Jede Seite nennt den Dateinamen und ihre Nummer; daran ist nach dem
+	 * Umbau ablesbar, welche Seite welcher Person auf welcher Hälfte eines Bogens liegt.
+	 *
+	 * @param dateiname    Der Dateiname ohne Endung; er steht auch auf jeder Seite.
+	 * @param id           Die ID der Hauptdaten des Builders.
+	 * @param anzahlSeiten Die Zahl der A4-Seiten.
+	 *
+	 * @return Der gemockte HTML-Builder.
+	 */
+	private static ReportBuilderHtml htmlBuilderMitSeiten(final String dateiname, final long id, final int anzahlSeiten) {
+		final StringBuilder html = new StringBuilder("""
+				<html><head><style>
+				@page { size: A4 portrait; margin: 5mm; }
+				.seite { page-break-before: always; }
+				.seite:first-child { page-break-before: avoid; }
+				</style></head><body>
+				""");
+		for (int nummer = 1; nummer <= anzahlSeiten; nummer++) {
+			html.append("<div class=\"seite\">%s %d</div>".formatted(dateiname, nummer));
+		}
+		html.append("</body></html>");
+
+		final ReportBuilderHtml htmlBuilder = mock(ReportBuilderHtml.class);
+		when(htmlBuilder.generate()).thenReturn(html.toString());
+		when(htmlBuilder.getDateiname()).thenReturn(dateiname);
+		when(htmlBuilder.getStatischerDateiname()).thenReturn("Sammelausgabe");
+		when(htmlBuilder.getRootPfad()).thenReturn(ROOT_PFAD);
+		when(htmlBuilder.getIds()).thenReturn(Set.of(id));
+		return htmlBuilder;
+	}
+
+	/**
+	 * Liest den Inhalt eines ZIP-Eintrags als Byte-Array.
+	 *
+	 * @param zipData      Die ZIP-Datei als Byte-Array.
+	 * @param eintragsname Der Name des gesuchten Eintrags.
+	 *
+	 * @return Der Inhalt des Eintrags, oder ein leeres Array, wenn er fehlt.
+	 *
+	 * @throws IOException Falls die ZIP-Daten nicht gelesen werden können.
+	 */
+	private static byte[] eintragsbytes(final byte[] zipData, final String eintragsname) throws IOException {
+		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipData))) {
+			ZipEntry eintrag = zis.getNextEntry();
+			while (eintrag != null) {
+				if (eintragsname.equals(eintrag.getName())) {
+					return zis.readAllBytes();
+				}
+				eintrag = zis.getNextEntry();
+			}
+		}
+		return new byte[0];
 	}
 
 }

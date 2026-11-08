@@ -41,12 +41,16 @@ public final class ReportBuilderPdf extends ReportBuilder<byte[]> {
 	}
 
 	/**
-	 * Gibt den vollständigen Dateinamen des PDF-Reports mit der Dateiendung ".pdf" zurück.
+	 * Gibt den vollständigen Dateinamen des PDF-Reports mit der Dateiendung ".pdf" zurück. Eine Broschürenausgabe trägt zusätzlich das Format im Namen,
+	 * damit am Dateinamen erkennbar ist, dass sie auf DIN A3 gedruckt wird.
 	 *
 	 * @return der vollständige Dateiname des Reports als String mit der Endung ".pdf"
 	 */
 	@Override
 	public String getDateinameMitEndung() {
+		if (builderContext.istBroschuerendruck()) {
+			return dateiname + ReportPdfBroschuere.DATEINAME_ERGAENZUNG + ".pdf";
+		}
 		return dateiname + ".pdf";
 	}
 
@@ -67,6 +71,8 @@ public final class ReportBuilderPdf extends ReportBuilder<byte[]> {
 	 * Generiert ein Byte-Array, das den Inhalt eines PDF-Reports darstellt.
 	 * Diese Methode nutzt eine Rendering-Strategie, um den PDF-Report basierend auf HTML-Inhalt zu rendern.
 	 * Der gerenderte Inhalt wird in einen ByteArrayOutputStream geschrieben und als Byte-Array zurückgegeben.
+	 * <p>Bei einer Broschürenausgabe folgt dem Rendern der Umbau auf DIN A3. Er setzt an dieser Stelle an, weil hier genau die Seiten eines Datensatzes
+	 * vorliegen: Nur so füllt jeder Datensatz eigene Bogen, unabhängig von seiner Seitenzahl.</p>
 	 *
 	 * @return Ein Byte-Array, das den generierten PDF-Report repräsentiert
 	 *
@@ -80,7 +86,11 @@ public final class ReportBuilderPdf extends ReportBuilder<byte[]> {
 		final int initialSize = Math.clamp(htmlLength, 8 * 1024, 1024 * 1024);
 		final ByteArrayOutputStream baoStream = new ByteArrayOutputStream(initialSize);
 		this.builderContext.getRenderer().renderPdf(this.builderContext.getHtmlInput(), this.reportBuilderContext.getRootPfad(), baoStream);
-		return baoStream.toByteArray();
+		final byte[] pdfA4 = baoStream.toByteArray();
+		if (this.builderContext.istBroschuerendruck()) {
+			return ReportPdfBroschuere.umbauAufA3(pdfA4);
+		}
+		return pdfA4;
 	}
 
 }

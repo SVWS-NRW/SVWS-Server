@@ -200,4 +200,14 @@ public class ReportingParameterTypisiert {
 		return (duplexdruck != null) && duplexdruck.wert.equalsIgnoreCase("true");
 	}
 
+	/**
+	 * Gibt zurück, ob die Ausgabe als Broschüre im Format DIN A3 quer erfolgen soll.
+	 *
+	 * @return true bei Broschürendruck
+	 */
+	public boolean broschuerendruck() {
+		final ReportingReportvorlageParameter broschuerendruck = mapReportVorlageParameter.get("broschuerendruck");
+		return (broschuerendruck != null) && broschuerendruck.wert.equalsIgnoreCase("true");
+	}
+
 }

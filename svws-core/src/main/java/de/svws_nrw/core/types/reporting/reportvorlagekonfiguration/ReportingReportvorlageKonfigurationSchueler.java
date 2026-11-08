@@ -55,7 +55,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1)
 				))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, true);
+				new ArrayList<>(), new ArrayList<>(), true, true, true);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 				new ReportingEMailDaten(),
 				new ArrayList<>(),
 				List.of(ReportingReportvorlageUtils.erzeugeLeistungsdatenZeugnisfilterGruppe(), ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()),
-				true, true);
+				true, true, true);
 	}
 
 	/**

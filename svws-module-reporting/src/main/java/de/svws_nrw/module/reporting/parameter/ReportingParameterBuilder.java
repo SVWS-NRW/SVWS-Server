@@ -45,6 +45,9 @@ public class ReportingParameterBuilder {
 	/** Der Name des Vorlage-Parameters, der die Aufteilung der Ausgabe in Einzeldateien steuert. */
 	private static final String PARAMETER_EINZELAUSGABE_DATEN = "einzelausgabeDaten";
 
+	/** Der Name des Vorlage-Parameters, der den Umbau der Ausgabe zu einer Broschüre im Format DIN A3 steuert. */
+	private static final String PARAMETER_BROSCHUERENDRUCK = "broschuerendruck";
+
 	/** Logger, über den nicht typkonforme (und damit verworfene) Werte protokolliert werden. */
 	private final Logger logger;
 
@@ -94,9 +97,10 @@ public class ReportingParameterBuilder {
 	 * Zusage unabhängig davon, ob der Client den Parameter überhaupt mitgesendet hat: Fehlt er, wirkte zuvor der Katalog-Default oder ein
 	 * gespeicherter Benutzerwert.
 	 *
-	 * <p>Derzeit betrifft das ausschließlich {@code einzelausgabeDaten}: Bei der HTML-Ausgabe (Browser, keine Einzeldateien) gilt zwingend
-	 * {@code false}, beim E-Mail-Versand (je Datensatz eine Datei an einen eigenen Empfänger) zwingend {@code true}. Bei der PDF-Ausgabe bleibt es
-	 * beim kombinierten Wert. Weitere ausgabeformatabhängige Festlegungen gehören ebenfalls hierher und an keine andere Stelle.</p>
+	 * <p>Betroffen sind {@code einzelausgabeDaten} und {@code broschuerendruck}. Bei der HTML-Ausgabe (Browser, keine Einzeldateien) gelten beide zwingend
+	 * {@code false}: Ohne Aufteilung entsteht genau ein Dokument, und eine Anordnung für den Falz ergibt in der Anzeige keinen Sinn. Beim E-Mail-Versand
+	 * (je Datensatz eine Datei an einen eigenen Empfänger) gilt {@code einzelausgabeDaten} zwingend {@code true}. Bei der PDF-Ausgabe bleibt es beim
+	 * kombinierten Wert. Weitere ausgabeformatabhängige Festlegungen gehören ebenfalls hierher und an keine andere Stelle.</p>
 	 *
 	 * @param reportingParameter das Reporting-Parameter-Objekt mit dem fertig kombinierten Parametersatz (wird verändert)
 	 * @param reportvorlage      die Reportvorlage, über die der Parameterwert gesetzt wird
@@ -105,6 +109,7 @@ public class ReportingParameterBuilder {
 			final ReportingReportvorlage reportvorlage) {
 		if (reportingParameter.ausgabeformat == ReportingAusgabeformat.HTML.getId()) {
 			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, PARAMETER_EINZELAUSGABE_DATEN, "false");
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, PARAMETER_BROSCHUERENDRUCK, "false");
 		} else if (reportingParameter.ausgabeformat == ReportingAusgabeformat.EMAIL.getId()) {
 			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, PARAMETER_EINZELAUSGABE_DATEN, "true");
 		}
