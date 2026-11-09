@@ -2,7 +2,10 @@ package de.svws_nrw.service.gost;
 
 import static de.svws_nrw.data.TransactionSupport.transactional;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -84,6 +87,37 @@ public class GostSchuelerGKLWahlService {
 			});
 			return wahl;
 		});
+	}
+
+
+	/**
+	 * Gibt die GKL-Wahlen der angegebenen Schüler zurück. Schüler ohne Eintrag erhalten leere Wahlen.
+	 *
+	 * @param idsSchueler   die IDs der Schüler
+	 *
+	 * @return die Map mit den GKL-Wahlen zu den Schüler-IDs
+	 */
+	public Map<Long, GostSchuelerGKLWahl> getMapGKLWahlen(final Collection<Long> idsSchueler) {
+		final Map<Long, GostSchuelerGKLWahl> result = new HashMap<>();
+		if ((idsSchueler == null) || idsSchueler.isEmpty()) {
+			return result;
+		}
+		final Map<Long, DTOGostSchueler> mapGostSchueler = gostSchuelerRepository.findMapByIds(idsSchueler);
+		for (final Long idSchueler : idsSchueler) {
+			final GostSchuelerGKLWahl wahl = new GostSchuelerGKLWahl();
+			wahl.idSchueler = idSchueler;
+			final DTOGostSchueler gostSchueler = mapGostSchueler.get(idSchueler);
+			if (gostSchueler != null) {
+				wahl.idKlausurvorgabeEF_Sprachen = gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeEF_GW = gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeEF_NW = gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeQ_Sprachen = gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeQ_GW = gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeQ_NW = gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID;
+			}
+			result.put(idSchueler, wahl);
+		}
+		return result;
 	}
 
 
