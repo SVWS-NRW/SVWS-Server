@@ -8,6 +8,8 @@ import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittContro
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittControllerImpl;
 import de.svws_nrw.controller.schueler.liste.SchuelerListeEintragController;
 import de.svws_nrw.controller.schueler.liste.SchuelerListeEintragControllerImpl;
+import de.svws_nrw.controller.schueler.liste.SchuelerListeController;
+import de.svws_nrw.controller.schueler.liste.SchuelerListeControllerImpl;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformControllerImpl;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
@@ -211,6 +213,19 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerListeEintragController getSchuelerListeEintragController() {
 		return new SchuelerListeEintragControllerImpl(schuelerServiceFactory.getSchuelerListeEintragService());
+	}
+
+	/**
+	 * Erstellt eine neue SchuelerListeController-Instanz.
+	 * <p>
+	 * Die Auswahlliste ist der zentrale Datenlieferant der Schüler-Auswahl im Client und wird deshalb, wie bisher,
+	 * mit {@link #withNoAccess(HttpServletRequest)} ohne zusätzliche Benutzerkompetenz bereitgestellt.
+	 * </p>
+	 *
+	 * @return ein neuer SchuelerListeController mit dem konfigurierten SchuelerListeService
+	 */
+	public SchuelerListeController getSchuelerListeController() {
+		return new SchuelerListeControllerImpl(schuelerServiceFactory.getSchuelerListeService());
 	}
 
 }

@@ -23,6 +23,7 @@ import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungService;
 import de.svws_nrw.service.lehrer.lernplattform.LehrerLernplattformService;
+import de.svws_nrw.service.schueler.SchuelerFactories;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
@@ -76,7 +77,7 @@ public final class KatalogServiceFactory {
 			final KatalogRepositoryFactory repositoryFactory,
 			final EigeneSchuleServiceFactory eigeneSchuleRepositoryFactory) {
 		return new KatalogServiceFactory(repositoryFactory, eigeneSchuleRepositoryFactory,
-				() -> SchuelerServiceFactory.getNewInstance(
+				() -> SchuelerServiceFactory.getNewInstance(new SchuelerFactories(
 						BenutzerRepositoryFactory.getNewInstance(),
 						SchuelerRepositoryFactory.getNewInstance(),
 						repositoryFactory,
@@ -84,12 +85,12 @@ public final class KatalogServiceFactory {
 						EigeneSchuleRepositoryFactory.getNewInstance(),
 						eigeneSchuleRepositoryFactory,
 						KurseRepositoryFactory.getNewInstance(),
-						GostRepositoryFactory.getNewInstance()).getSchuelerLernplattformService(),
+						GostRepositoryFactory.getNewInstance())).getSchuelerLernplattformService(),
 				() -> LehrerServiceFactory.getNewInstance(
 						LehrerRepositoryFactory.getNewInstance(),
 						EigeneSchuleRepositoryFactory.getNewInstance(),
 						repositoryFactory).getLehrerLernplattformService(),
-				() -> SchuelerServiceFactory.getNewInstance(
+				() -> SchuelerServiceFactory.getNewInstance(new SchuelerFactories(
 						BenutzerRepositoryFactory.getNewInstance(),
 						SchuelerRepositoryFactory.getNewInstance(),
 						repositoryFactory,
@@ -97,7 +98,7 @@ public final class KatalogServiceFactory {
 						EigeneSchuleRepositoryFactory.getNewInstance(),
 						eigeneSchuleRepositoryFactory,
 						KurseRepositoryFactory.getNewInstance(),
-						GostRepositoryFactory.getNewInstance()).getSchuelerEinwilligungService(),
+						GostRepositoryFactory.getNewInstance())).getSchuelerEinwilligungService(),
 				() -> LehrerServiceFactory.getNewInstance(
 						LehrerRepositoryFactory.getNewInstance(),
 						EigeneSchuleRepositoryFactory.getNewInstance(),

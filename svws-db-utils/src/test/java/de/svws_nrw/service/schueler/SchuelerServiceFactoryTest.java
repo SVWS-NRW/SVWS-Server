@@ -28,10 +28,17 @@ import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartReposit
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformCredentialRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
+import de.svws_nrw.service.klassen.KlassenService;
+import de.svws_nrw.service.klassen.KlassenServiceFactory;
+import de.svws_nrw.service.kurse.KursService;
+import de.svws_nrw.service.kurse.KursServiceFactory;
 import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
+import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
+import de.svws_nrw.repo.gost.GostJahrgangsdatenRepository;
+import de.svws_nrw.repo.gost.GostJahrgangsinformationenRepository;
 
 /**
  * Tests für die {@link SchuelerServiceFactory}.
@@ -63,12 +70,19 @@ class SchuelerServiceFactoryTest {
 	@Mock
 	private GostRepositoryFactory gostRepositoryFactory;
 
+	@Mock
+	private KlassenServiceFactory klassenServiceFactory;
+
+	@Mock
+	private KursServiceFactory kursServiceFactory;
+
 	private SchuelerServiceFactory factory;
 
 	@BeforeEach
 	void setUp() {
-		factory = SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory,
+		final var factories = new SchuelerFactories(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory,
 				katalogServiceFactory, eigeneSchuleRepositoryFactory, eigeneSchuleServiceFactory, kurseRepositoryFactory, gostRepositoryFactory);
+		factory = SchuelerServiceFactory.getNewInstance(factories, klassenServiceFactory, kursServiceFactory);
 	}
 
 	@Test
@@ -144,6 +158,36 @@ class SchuelerServiceFactoryTest {
 		verify(gostRepositoryFactory).getGostSchuelerWiederholungRepository();
 		verify(eigeneSchuleServiceFactory).getSchuleService();
 		verify(eigeneSchuleServiceFactory).getSchuljahresabschnittService();
+	}
+
+	@Test
+	@DisplayName("getSchuelerListeService | Erstellt den Service und ruft alle benötigten Factories ab")
+	void getSchuelerListeService_success() {
+		final var klassenService = mock(KlassenService.class);
+		final var kursService = mock(KursService.class);
+		final var jahrgangService = mock(JahrgangService.class);
+		final var jahrgangRepository = mock(JahrgangRepository.class);
+		final var jahrgangsdatenRepository = mock(GostJahrgangsdatenRepository.class);
+		final var jahrgangsinformationenRepository = mock(GostJahrgangsinformationenRepository.class);
+		final var eigeneSchuleService = mock(EigeneSchuleService.class);
+		final var schuljahresabschnittService = mock(SchuljahresabschnittService.class);
+		when(klassenServiceFactory.getKlassenService()).thenReturn(klassenService);
+		when(kursServiceFactory.getKursService()).thenReturn(kursService);
+		when(katalogServiceFactory.getJahrgangService()).thenReturn(jahrgangService);
+		when(katalogRepositoryFactory.getJahrgangRepository()).thenReturn(jahrgangRepository);
+		when(gostRepositoryFactory.getGostJahrgangsdatenRepository()).thenReturn(jahrgangsdatenRepository);
+		when(gostRepositoryFactory.getGostJahrgangsinformationenRepository()).thenReturn(jahrgangsinformationenRepository);
+		when(eigeneSchuleServiceFactory.getSchuleService()).thenReturn(eigeneSchuleService);
+		when(eigeneSchuleServiceFactory.getSchuljahresabschnittService()).thenReturn(schuljahresabschnittService);
+
+		final var service = factory.getSchuelerListeService();
+
+		assertThat(service).isNotNull();
+		verify(klassenServiceFactory).getKlassenService();
+		verify(kursServiceFactory).getKursService();
+		verify(katalogServiceFactory).getJahrgangService();
+		verify(gostRepositoryFactory).getGostJahrgangsdatenRepository();
+		verify(gostRepositoryFactory).getGostJahrgangsinformationenRepository();
 	}
 
 }

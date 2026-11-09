@@ -47,7 +47,6 @@ import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
-import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.service.schueler.create.SchuelerCreateRequest;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungPatchRequest;
@@ -82,7 +81,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import org.jboss.resteasy.annotations.GZIP;
 
 
@@ -186,10 +184,10 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Nicht alle Daten wurden gefunden, z.B. Schüler-Einträge")
 	public Response getSchuelerAuswahllisteFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataSchuelerliste.getSchuelerListe(conn, abschnitt)).build(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return SchuelerControllerFactory
+				.withNoAccess(request)
+				.getSchuelerListeController()
+				.getBySchuljahresabschnitt(abschnitt);
 	}
 
 

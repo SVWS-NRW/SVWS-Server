@@ -4,6 +4,7 @@ import de.svws_nrw.controller.schueler.create.SchuelerCreateController;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
+import de.svws_nrw.controller.schueler.liste.SchuelerListeController;
 import de.svws_nrw.controller.schueler.liste.SchuelerListeEintragController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalController;
@@ -214,6 +215,16 @@ class SchuelerControllerFactoryTest {
 		assertNotNull(factory);
 
 		final SchuelerListeEintragController controller = factory.getSchuelerListeEintragController();
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("withNoAccess | getSchuelerListeController gibt einen Controller zurück")
+	void getSchuelerListeController() {
+		final var factory = SchuelerControllerFactory.withNoAccess(request);
+		assertNotNull(factory);
+
+		final SchuelerListeController controller = factory.getSchuelerListeController();
 		assertNotNull(controller);
 	}
 
