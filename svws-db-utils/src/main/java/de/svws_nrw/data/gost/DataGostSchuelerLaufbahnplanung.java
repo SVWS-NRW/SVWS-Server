@@ -2,6 +2,7 @@ package de.svws_nrw.data.gost;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -12,8 +13,13 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
+import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.core.utils.gost.GostLaufbahnplanungGKLKlausurvorgabe;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.DBEntityManager;
@@ -21,6 +27,7 @@ import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
+import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -86,6 +93,15 @@ public final class DataGostSchuelerLaufbahnplanung {
 		// Bestimme die nicht erlaubten und die geforderten Fächerkombinationen des Abiturjahrgangs
 		faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr));
 
+		// Bestimme ab dem Abiturjahrgang 2030 die GKL-Wahlen der Schüler und die Klausurvorgaben des Jahrgangs für die GKL-Prüfung (nur bei der Gesamtprüfung)
+		final boolean pruefeGKL = AbiturdatenManager.istAbitur2030(abiturjahr) && (pruefungsArt == GostBelegpruefungsArt.GESAMT);
+		final Map<Long, GostSchuelerGKLWahl> mapGKLWahlen = pruefeGKL
+				? GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getMapGKLWahlen(listSchuelerIDs, abiturjahr)
+				: Map.of();
+		final Map<Long, GostLaufbahnplanungGKLKlausurvorgabe> mapKlausurvorgaben = pruefeGKL
+				? getMapKlausurvorgaben(faecherManager)
+				: Map.of();
+
 		// Führe für alle Schüler nacheinander die Belegprüfung durch
 		for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
 			final SchuelerStatus status = SchuelerStatus.data().getWertByID(dtoSchueler.idStatus == null ? null : dtoSchueler.idStatus.longValue());
@@ -106,6 +122,10 @@ public final class DataGostSchuelerLaufbahnplanung {
 			// Führe die Belegprüfung für den Schüler durch
 			final AbiturdatenManager abiManager =
 					new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
+			if (pruefeGKL) {
+				final GostSchuelerGKLWahl gklWahl = mapGKLWahlen.get(dtoSchueler.ID);
+				abiManager.pruefeGKL((gklWahl == null) ? new GostSchuelerGKLWahl() : gklWahl, mapKlausurvorgaben);
+			}
 			ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
 			ergebnisse.hatFachwahlen = abiManager.existsFachbelegung();
 			ergebnisse.beratungsDatum = (gostSchueler == null) ? null : gostSchueler.DatumBeratung;
@@ -147,6 +167,29 @@ public final class DataGostSchuelerLaufbahnplanung {
 
 		// Erzeuge die Response mit den Belegprüfungsergebnissen
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Bestimmt die Klausurvorgaben des Abiturjahrgangs für die GKL-Prüfung. Vorgaben zu Fächern, die der Fächer-Manager
+	 * nicht kennt, entfallen, wie bei der Laufbahnplanung im Client.
+	 *
+	 * @param faecherManager   der Fächer-Manager des Abiturjahrgangs
+	 *
+	 * @return die Map mit den Klausurvorgaben zu ihrer ID
+	 */
+	private Map<Long, GostLaufbahnplanungGKLKlausurvorgabe> getMapKlausurvorgaben(final @NotNull GostFaecherManager faecherManager) {
+		final Map<Long, GostLaufbahnplanungGKLKlausurvorgabe> result = new HashMap<>();
+		final List<GostKlausurvorgabe> vorgaben = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory()
+				.getGostKlausurenVorgabeService().getListByAbiturjahr(abiturjahr, -1, false);
+		for (final GostKlausurvorgabe vorgabe : vorgaben) {
+			final GostFach fach = faecherManager.get(vorgabe.idFach);
+			final GostHalbjahr halbjahr = GostHalbjahr.fromID(vorgabe.halbjahr);
+			if ((fach != null) && (halbjahr != null)) {
+				result.put(vorgabe.id, new GostLaufbahnplanungGKLKlausurvorgabe(fach, halbjahr, vorgabe));
+			}
+		}
+		return result;
 	}
 
 }
