@@ -154,6 +154,7 @@ tasks.register('copyApacheHostConfigSSL', Copy) {
  */
 tasks.register('buildDockerImageENM', Exec) {
 	description = 'Baue das Docker Image vom ENM Server'
+	dependsOn ':tests:dockerLoginInternal'
 	dependsOn generateENMDockerComposeFile
 	dependsOn generateENMDockerFile
 	dependsOn copySSLCerts

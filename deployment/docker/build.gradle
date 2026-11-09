@@ -1,17 +1,17 @@
-import java.nio.charset.StandardCharsets
+import svws.gradle.docker.DockerCommands
 
 dependencies {
 	implementation project(':svws-server-app')
 }
 
 
-def registryInternalHost = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_HOST')
-def registryInternalUsername = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_USERNAME')
-def registryInternalToken = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_TOKEN')
+def registryInternalHost = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_HOST') as Provider<String>
+def registryInternalUsername = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_USERNAME') as Provider<String>
+def registryInternalToken = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_TOKEN') as Provider<String>
 
-def registryDockerhubHost = providers.provider { 'docker.io' }
-def registryDockerhubUsername = providers.environmentVariable('DOCKER_REGISTRY_DOCKERHUB_USERNAME')
-def registryDockerhubToken = providers.environmentVariable('DOCKER_REGISTRY_DOCKERHUB_TOKEN')
+def registryDockerhubHost = providers.provider { 'docker.io' } as Provider<String>
+def registryDockerhubUsername = providers.environmentVariable('DOCKER_REGISTRY_DOCKERHUB_USERNAME') as Provider<String>
+def registryDockerhubToken = providers.environmentVariable('DOCKER_REGISTRY_DOCKERHUB_TOKEN') as Provider<String>
 
 def svwsServerImage = "svwsnrw/svws-server"
 def svwsServerLatestTag = "${svwsServerImage}:latest"
@@ -20,52 +20,6 @@ def svwsServerVersionTag = "${svwsServerImage}:${project.ext.svwsArtifactVersion
 def dockerRunnerImage = "svwsnrw/dockerrunner"
 def dockerRunner17Tag = "${dockerRunnerImage}:17"
 def dockerRunner21Tag = "${dockerRunnerImage}:21"
-
-def isWindows = System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')
-
-def dockerBuild = { Exec exec, String imageTag ->
-	if (isWindows) {
-		exec.commandLine "cmd", "/c", "docker build . -t ${imageTag}"
-	} else {
-		exec.commandLine "sh", "-c", "docker build . -t ${imageTag}"
-	}
-}
-
-// Login, optionales Tagging (wenn remoteTag vom lokalen imageTag abweicht) und Push laufen in einem Kommando,
-// da ein zweiter commandLine-Aufruf den ersten überschreiben würde. Das Token wird über stdin an docker login übergeben.
-// remoteTag ist ein String oder ein Provider<String> (erst zur Ausführung aufgelöst, z. B. wenn der Registry-Host im Tag steht).
-def dockerLoginAndPush = { Exec exec, String imageTag, Object remoteTagOrProvider, Provider<String> registry, Provider<String> registryUsername, Provider<String> registryToken ->
-	exec.doFirst {
-		if (!registry.isPresent()) {
-			throw new GradleException('Es existiert kein Host für die Registry.')
-		}
-
-		if (!registryUsername.isPresent()) {
-			throw new GradleException('Es existiert kein Username für die Registry.')
-		}
-
-		if (!registryToken.isPresent()) {
-			throw new GradleException('Es existiert kein Token für die Registry.')
-		}
-
-		def remoteTag = (remoteTagOrProvider instanceof Provider ? remoteTagOrProvider.get() : remoteTagOrProvider) as String
-
-		println "Veröffentlichung des Images ${remoteTag} in die Registry ${registry.get()}"
-
-		def loginCmd = "docker login ${registry.get()} --username ${registryUsername.get()} --password-stdin"
-		def tagCmd = (imageTag == remoteTag) ? "" : " && docker tag ${imageTag} ${remoteTag}"
-		def command = "${loginCmd}${tagCmd} && docker push ${remoteTag}"
-
-		if (isWindows) {
-			exec.commandLine "cmd", "/c", command
-		} else {
-			exec.commandLine "sh", "-c", command
-		}
-
-		exec.standardInput = new ByteArrayInputStream((registryToken.get() + System.lineSeparator()).getBytes(StandardCharsets.UTF_8) as byte[])
-	}
-}
-
 
 /* Vorbereitung der Dateien im build-Ordner, um das SVWS-Docker-Image zu bauen. */
 // Sync statt Copy: im Docker-Kontext dürfen nur die aktuellen Artefakte liegen (der Server startet mit Wildcards auf dem Classpath)
@@ -117,7 +71,7 @@ tasks.register('buildSvwsServerVersion', Exec) {
 	dependsOn syncSvwsServerArtifacts
 	workingDir "${projectDir}/build/svws"
 
-	dockerBuild(it, svwsServerVersionTag)
+	DockerCommands.build(it, svwsServerVersionTag)
 }
 
 /* Baut das svws-Docker-Image lokal mit dem latest Tag. */
@@ -126,7 +80,7 @@ tasks.register('buildSvwsServerLatest', Exec) {
 	dependsOn syncSvwsServerArtifacts
 	workingDir "${projectDir}/build/svws"
 
-	dockerBuild(it, svwsServerLatestTag)
+	DockerCommands.build(it, svwsServerLatestTag)
 }
 
 /* Task führt ein Docker-Runner-17-Build per docker durch. */
@@ -134,7 +88,7 @@ tasks.register('buildDockerRunner17', Exec) {
 	group = "docker"
 	workingDir "${projectDir}/dockerrunner/17"
 
-	dockerBuild(it, dockerRunner17Tag)
+	DockerCommands.build(it, dockerRunner17Tag)
 }
 
 /* Task führt ein Docker-Runner-17 push auf Dockerhub durch */
@@ -143,7 +97,7 @@ tasks.register('publishDockerRunner17Dockerhub', Exec) {
 	dependsOn buildDockerRunner17
 	workingDir "${projectDir}/dockerrunner/17"
 
-	dockerLoginAndPush(it, dockerRunner17Tag, dockerRunner17Tag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
+	DockerCommands.loginAndPush(it, dockerRunner17Tag, dockerRunner17Tag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
 }
 
 /* Task führt ein Docker-Runner-21-Build per docker durch. */
@@ -151,7 +105,7 @@ tasks.register('buildDockerRunner21', Exec) {
 	group = "docker"
 	workingDir "${projectDir}/dockerrunner/21"
 
-	dockerBuild(it, dockerRunner21Tag)
+	DockerCommands.build(it, dockerRunner21Tag)
 }
 
 /* Task führt ein Docker-Runner-21 push auf Dockerhub durch */
@@ -160,7 +114,7 @@ tasks.register('publishDockerRunner21Dockerhub', Exec) {
 	dependsOn buildDockerRunner21
 	workingDir "${projectDir}/dockerrunner/21"
 
-	dockerLoginAndPush(it, dockerRunner21Tag, dockerRunner21Tag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
+	DockerCommands.loginAndPush(it, dockerRunner21Tag, dockerRunner21Tag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
 }
 
 /* Veröffentlicht das SVWS-Server-Image des aktuellen dev-Stands als Snapshot-Tag in der internen Registry (Harbor: <Host>/svwsnrw/svws-server:snapshot). */
@@ -170,7 +124,7 @@ tasks.register('publishSvwsServerInternalSnapshot', Exec) {
 	workingDir "${projectDir}/build/svws"
 
 	def internalSnapshotTag = registryInternalHost.map { host -> "${host}/${svwsServerImage}:snapshot".toString() }
-	dockerLoginAndPush(it, svwsServerLatestTag, internalSnapshotTag, registryInternalHost, registryInternalUsername, registryInternalToken)
+	DockerCommands.loginAndPush(it, svwsServerLatestTag, internalSnapshotTag, registryInternalHost, registryInternalUsername, registryInternalToken)
 }
 
 /* Veröffentlicht das SVWS-Server-Image mit dem latest Tag in der internen Registry (Harbor: <Host>/svwsnrw/svws-server:latest). Wird nur beim Release verwendet. */
@@ -180,7 +134,7 @@ tasks.register('publishSvwsServerInternalLatest', Exec) {
 	workingDir "${projectDir}/build/svws"
 
 	def internalLatestTag = registryInternalHost.map { host -> "${host}/${svwsServerLatestTag}".toString() }
-	dockerLoginAndPush(it, svwsServerLatestTag, internalLatestTag, registryInternalHost, registryInternalUsername, registryInternalToken)
+	DockerCommands.loginAndPush(it, svwsServerLatestTag, internalLatestTag, registryInternalHost, registryInternalUsername, registryInternalToken)
 }
 
 /* Veröffentlicht das SVWS-Server-Image mit dem versionierten Tag in der internen Registry (Harbor: <Host>/svwsnrw/svws-server:<Version>). */
@@ -190,23 +144,37 @@ tasks.register('publishSvwsServerInternalRelease', Exec) {
 	workingDir "${projectDir}/build/svws"
 
 	def internalVersionTag = registryInternalHost.map { host -> "${host}/${svwsServerVersionTag}".toString() }
-	dockerLoginAndPush(it, svwsServerVersionTag, internalVersionTag, registryInternalHost, registryInternalUsername, registryInternalToken)
+	DockerCommands.loginAndPush(it, svwsServerVersionTag, internalVersionTag, registryInternalHost, registryInternalUsername, registryInternalToken)
 }
 
-/* Führt ein Docker-Push mit dem SVWS-Server-Image mit dem latest Tag zu Dockerhub durch. */
+/* Bezieht das SVWS-Server-Image mit dem latest Tag aus der internen Registry (Harbor), ohne es neu zu bauen. Das Image muss dort bereits veröffentlicht sein. */
+tasks.register('pullSvwsServerInternalLatest', Exec) {
+	group = "docker"
+
+	def internalLatestTag = registryInternalHost.map { host -> "${host}/${svwsServerLatestTag}".toString() }
+	DockerCommands.loginAndPull(it, internalLatestTag, svwsServerLatestTag, registryInternalHost, registryInternalUsername, registryInternalToken)
+}
+
+/* Bezieht das SVWS-Server-Image mit dem versionierten Tag aus der internen Registry (Harbor), ohne es neu zu bauen. Das Image muss dort bereits veröffentlicht sein. */
+tasks.register('pullSvwsServerInternalRelease', Exec) {
+	group = "docker"
+
+	def internalVersionTag = registryInternalHost.map { host -> "${host}/${svwsServerVersionTag}".toString() }
+	DockerCommands.loginAndPull(it, internalVersionTag, svwsServerVersionTag, registryInternalHost, registryInternalUsername, registryInternalToken)
+}
+
+/* Führt ein Docker-Push des aus Harbor bezogenen SVWS-Server-Images mit dem latest Tag zu Dockerhub durch. */
 tasks.register('publishSvwsServerDockerhubLatest', Exec) {
 	group = "docker"
-	dependsOn buildSvwsServerLatest
-	workingDir "${projectDir}/build/svws"
+	dependsOn pullSvwsServerInternalLatest
 
-	dockerLoginAndPush(it, svwsServerLatestTag, svwsServerLatestTag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
+	DockerCommands.loginAndPush(it, svwsServerLatestTag, svwsServerLatestTag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
 }
 
-/* Führt ein Docker-Push mit dem SVWS-Server-Image mit dem versionierten Tag zu Dockerhub durch. */
+/* Führt ein Docker-Push des aus Harbor bezogenen SVWS-Server-Images mit dem versionierten Tag zu Dockerhub durch. */
 tasks.register('publishSvwsServerDockerhubRelease', Exec) {
 	group = "docker"
-	dependsOn buildSvwsServerVersion
-	workingDir "${projectDir}/build/svws"
+	dependsOn pullSvwsServerInternalRelease
 
-	dockerLoginAndPush(it, svwsServerVersionTag, svwsServerVersionTag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
+	DockerCommands.loginAndPush(it, svwsServerVersionTag, svwsServerVersionTag, registryDockerhubHost, registryDockerhubUsername, registryDockerhubToken)
 }

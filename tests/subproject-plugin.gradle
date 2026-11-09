@@ -270,6 +270,7 @@ tasks.register('buildDockerImage', Exec) {
 // Startet die Docker-Container für die Testumgebung.
 tasks.register('starteDockerContainerMitTestUmgebung', Exec) {
 	description = 'Starten der Datenbank und des SVWS-Servers im Docker'
+	dependsOn ':tests:dockerLoginInternal'
 	dependsOn 'generateDockerComposeFile'
 	dependsOn ':tests:startTestDockerNetwork'
 	workingDir "$buildDirPath/tempdocker"

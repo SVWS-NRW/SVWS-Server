@@ -1,5 +1,6 @@
 import groovy.json.JsonSlurper
 import groovy.xml.XmlSlurper
+import svws.gradle.docker.DockerCommands
 import svws.gradle.scripts.FileUtils
 
 dependencies {
@@ -73,8 +74,25 @@ tasks.register('copyJavaBuildArtefacts', Copy) {
 }
 
 
+def registryInternalHost = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_HOST') as Provider<String>
+def registryInternalUsername = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_USERNAME') as Provider<String>
+def registryInternalToken = providers.environmentVariable('DOCKER_REGISTRY_INTERNAL_TOKEN') as Provider<String>
+
+/**
+ * Meldet sich an der internen Registry (Harbor) an. Die Basis-Images, das ENM-Image und die DB-Images der
+ * Testumgebung werden von dort bezogen. Der Login ist nur in der CI nötig, lokal ist der Entwickler selbst angemeldet.
+ * Fehlen die Zugangsdaten in der CI, bricht der Task mit einer Fehlermeldung ab.
+ */
+tasks.register('dockerLoginInternal', Exec) {
+	description = 'Meldet sich an der internen Docker-Registry an, aus der die Images der Testumgebung bezogen werden'
+	onlyIf { System.getenv('CI_SERVER') != null }
+
+	DockerCommands.login(it, registryInternalHost, registryInternalUsername, registryInternalToken)
+}
+
 tasks.register('buildAppBaseDockerImage', Exec) {
 	description = 'Erstellen des App-Base Docker-Images für die Testumgebung'
+	dependsOn 'dockerLoginInternal'
 	dependsOn 'generateAppBaseDockerfile'
 	commandLine 'docker', 'build', '-t', "${APP_BASE_IMAGE_NAME}", '-f', "${buildDirPath}/docker/app.base.dockerfile", '.'
 }

@@ -132,11 +132,8 @@ test:integration-tests:
         # Node aus dem Test-Runner Image wird verwendet und nicht erneut heruntergeladen
         USE_SYSTEM_NODE: "1"
     before_script:
-        - chmod +x ./.gitlab/.script/*.sh
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-
-        - ./.gitlab/.script/docker_login.sh ${REGISTRY_HOST} ${REGISTRY_USER} ${REGISTRY_PASSWORD}
     script:
         - ./gradlew --build-cache tests:integrationTest --stacktrace
           -x compileJava -x compileTestJava -x processResources -x processTestResources
@@ -457,7 +454,7 @@ publish:docker:internal:release:
 publish:docker:external:release:
     stage: publish
     needs:
-        - build
+        - publish:docker:internal:release
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     before_script:
@@ -468,8 +465,6 @@ publish:docker:external:release:
         - cat gradle_secure.properties >> gradle.properties
     script:
         - ./gradlew :deployment:docker:publishSvwsServerDockerhubRelease :deployment:docker:publishSvwsServerDockerhubLatest
-            -x :svws-webclient:client:assembleClient
-            -x :svws-webclient:admin:assembleAdminClient
     rules:
         - *rule_release
 
