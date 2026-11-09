@@ -16,6 +16,10 @@ class ActivityStateImpl implements ActivityState {
 	// Options für die Event-Listener
 	private readonly _options: AddEventListenerOptions = { capture: true, passive: true };
 
+	// Die Event-Listener als feste Referenzen, damit sie beim Beenden wieder entfernt werden können
+	private readonly _listener = () => this.activityTracker();
+	private readonly _listenerTrusted = (event: Event) => this.activityTrackerTrusted(event);
+
 	// Intervall-ID für die Aktivitätsprüfung
 	private _intervalID: ReturnType<typeof setInterval> | null = null;
 
@@ -83,11 +87,11 @@ class ActivityStateImpl implements ActivityState {
 	 */
 	public start(logoutHandler: () => Promise<void>): void {
 		this._logoutHandler = logoutHandler;
-		addEventListener("pointerdown", () => this.activityTracker(), this._options);
-		addEventListener("wheel", () => this.activityTracker(), this._options);
-		addEventListener("keydown", () => this.activityTracker(), this._options);
-		addEventListener("click", (event) => this.activityTrackerTrusted(event), this._options);
-		addEventListener("input", (event) => this.activityTrackerTrusted(event), this._options);
+		addEventListener("pointerdown", this._listener, this._options);
+		addEventListener("wheel", this._listener, this._options);
+		addEventListener("keydown", this._listener, this._options);
+		addEventListener("click", this._listenerTrusted, this._options);
+		addEventListener("input", this._listenerTrusted, this._options);
 		this._activity = false;
 		this._lastActivity = Date.now();
 		this._remainingSeconds.value = ActivityStateImpl.MAX_REMAINING_SECONDS;
@@ -105,11 +109,11 @@ class ActivityStateImpl implements ActivityState {
 		this._activity = false;
 		this._lastActivity = 0;
 		this._remainingSeconds.value = 0;
-		removeEventListener("pointerdown", () => this.activityTracker(), this._options);
-		removeEventListener("wheel", () => this.activityTracker(), this._options);
-		removeEventListener("keydown", () => this.activityTracker(), this._options);
-		removeEventListener("click", (event) => this.activityTrackerTrusted(event), this._options);
-		removeEventListener("input", (event) => this.activityTrackerTrusted(event), this._options);
+		removeEventListener("pointerdown", this._listener, this._options);
+		removeEventListener("wheel", this._listener, this._options);
+		removeEventListener("keydown", this._listener, this._options);
+		removeEventListener("click", this._listenerTrusted, this._options);
+		removeEventListener("input", this._listenerTrusted, this._options);
 		this._logoutHandler = async () => {};
 	}
 
