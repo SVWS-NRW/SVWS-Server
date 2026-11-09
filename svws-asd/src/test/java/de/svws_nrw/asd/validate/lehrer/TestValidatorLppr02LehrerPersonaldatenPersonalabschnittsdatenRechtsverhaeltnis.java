@@ -54,7 +54,7 @@ class TestValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
-				new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> schuljahr, () -> null, () -> idRechtsverhaeltnis, () -> null, kontext);
+				new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> schuljahr, () -> null, () -> idRechtsverhaeltnis, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

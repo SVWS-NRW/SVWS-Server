@@ -6,8 +6,6 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
-import de.svws_nrw.asd.validate.DateManager;
-import de.svws_nrw.asd.validate.InvalidDateException;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -22,19 +20,6 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 
 	/** Eine Liste von Einzel-Validatoren, die von diesem Sammel-Validator verwaltet werden. */
 	private final @NotNull List<Validator> validatoren = new ArrayList<>();
-
-	/** Das Geburtsdatum des Lehrers (aus den Stammdaten). */
-	private final @NotNull Supplier<@AllowNull String> _geburtsdatum;
-
-	/** Die ID des Schuljahresabschnittes, auf den sich die Personalabschnittsdaten beziehen. */
-	private final @NotNull Supplier<Long> _idSchuljahresabschnitt;
-
-	/** Die Staatsangehoerigkeit der Lehrkraft. */
-	private final @NotNull Supplier<@AllowNull Long> _idStaatsangehoerigkeit;
-
-	/** Das Rechtsverhältnis der Lehrkraft. */
-	private final @NotNull Supplier<@AllowNull Long> _idRechtsverhaeltnis;
-
 
 	/**
 	 * Erstellt einen neuen Sammel-Validator für Personalabschnittsdaten.
@@ -66,10 +51,8 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._geburtsdatum = geburtsdatum;
-		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
-		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
+
+
 		// Hinzufügen der fachspezifischen Validatoren
 		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(idSchuljahresabschnitt, anrechnungen, lehraemter, pflichtstundensoll, kontext));
 
@@ -85,29 +68,15 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,
 						kontext));
 
+		_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis,
+				geburtsdatum, this.kontext()));
+
 		_validatoren.add(new ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(idRechtsverhaeltnis, idBeschaeftigungsart,	kontext));
 
 	}
 
 	@Override
 	protected boolean pruefe() {
-		_validatoren.clear();
-		_validatoren.addAll(validatoren);
-
-		try {
-			// Prüfung des Rechtsverhältnisses erfordert ein gültiges Geburtsdatum
-			final @NotNull DateManager datum = DateManager.from(this._geburtsdatum.get());
-			final @NotNull Supplier<@AllowNull DateManager> supplierGeburtsdatumNullable = () -> datum;
-			final @NotNull Supplier<DateManager> supplierGeburtsdatum = this.getNotNullSupplierObject(supplierGeburtsdatumNullable);
-
-			_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(_idSchuljahresabschnitt, _idStaatsangehoerigkeit, _idRechtsverhaeltnis,
-					supplierGeburtsdatum, this.kontext()));
-		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
-			// Falls kein gültiges Geburtsdatum vorliegt, wird die spezifische Altersprüfung
-			// für das Rechtsverhältnis übersprungen. Die Validierung des Geburtsdatums
-			// selbst erfolgt separat in den Lehrer-Stammdaten.
-		}
-
 		return true;
 	}
 }

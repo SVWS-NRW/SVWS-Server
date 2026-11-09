@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -50,10 +49,9 @@ public final class ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRech
 		}
 
 		final int schuljahr = kontext().getSchuljahr();
-		final Schulform schulform = kontext().getSchulform();
 
 		final Nationalitaeten nationalitaet =
-				Nationalitaeten.data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, this._staatsangehoerigkeitSchluessel.get());
+				Nationalitaeten.data().getWertBySchluessel(this._staatsangehoerigkeitSchluessel.get());
 
 		if ((nationalitaet != null)) {
 			final NationalitaetenKatalogEintrag katalogEintrag = nationalitaet.daten(schuljahr);

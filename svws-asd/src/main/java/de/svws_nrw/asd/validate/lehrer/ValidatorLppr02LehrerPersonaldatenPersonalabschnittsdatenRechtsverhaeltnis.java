@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -27,14 +26,12 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 	 * @param schuljahr                Schuljahr
 	 * @param idStaatsangehoerigkeit   die Staatsangehoerigkeit
 	 * @param idRechtsverhaeltnis      das Rechtsverhaeltnis
-	 * @param geburtsdatum             das Geburtsdatum
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@NotNull Long> idRechtsverhaeltnis,
-			final @NotNull Supplier<@NotNull DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
@@ -47,10 +44,6 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 		final @NotNull Supplier<@NotNull String> staatsangehoerigkeitSchluessel =
 				getNotNullSupplier(() -> Nationalitaeten.data().getSchluesselByIDOrNull(idStaatsangehoerigkeit.get()));
 
-		_validatoren.add(new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		_validatoren.add(new ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(staatsangehoerigkeitSchluessel, rechtsverhaeltnisNotNull, kontext));
 
 	}

@@ -11,7 +11,7 @@ export class ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Das Geburtsdatum des Lehrers
 	 */
-	private readonly _geburtsdatum: Supplier<DateManager>;
+	private readonly _geburtsdatum: Supplier<DateManager | null>;
 
 	/**
 	 * Das aktuelle Schuljahr des Lehrers
@@ -32,7 +32,7 @@ export class ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	 * @param geburtsdatum               das Geburtsdatum des Lehrers
 	 * @param kontext                    der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._schuljahr = schuljahr;
 		this._rechtsverhaeltnis = rechtsverhaeltnisNotNull;
@@ -41,13 +41,16 @@ export class ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 
 	protected pruefe(): boolean {
 		const schuljahr: number = this._schuljahr.get().valueOf();
-		if (JavaObject.equalsTranspiler(this._rechtsverhaeltnis.get(), (LehrerRechtsverhaeltnis.L))) {
-			const minJahr: number = schuljahr - ((schuljahr <= 2023) ? 65 : ((schuljahr <= 2030) ? 66 : 67));
-			const maxJahr: number = schuljahr - 27;
-			if (!this._geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				this.addFehler(1, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Lebenszeit (Rechtsverhältnis = L) zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+		const geburtsdatumDateManager: DateManager | null = this._geburtsdatum.get();
+		if (geburtsdatumDateManager !== null) {
+			if (JavaObject.equalsTranspiler(LehrerRechtsverhaeltnis.L, (this._rechtsverhaeltnis.get()))) {
+				const minJahr: number = schuljahr - ((schuljahr <= 2023) ? 65 : ((schuljahr <= 2030) ? 66 : 67));
+				const maxJahr: number = schuljahr - 27;
+				if (!geburtsdatumDateManager.istInJahren(minJahr, maxJahr)) {
+					this.addFehler(1, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Lebenszeit (Rechtsverhältnis = L) zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+					return false;
+				}
 			}
-			return false;
 		}
 		return true;
 	}

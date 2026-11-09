@@ -2,88 +2,88 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.function.Supplier;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.DateManager;
-import de.svws_nrw.asd.validate.InvalidDateException;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Testklasse für den Validator LehrerStammdaten
+ * Testklasse für den Validator {@link ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis}.
  *
- * Testdaten 2: de/svws_nrw/asd/validate/lehrer/Testdaten_002_LehrerPersonalabschnittsdaten.json
- *
- * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
- *
- * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
- *
- * CoreType: LehrerStammdaten
+ * Die Testdaten werden aus einer statischen JSON-Ressource eingelesen.
  */
-@DisplayName("Teste den Validator zu LehrerPersonalabschnittsdaten")
+@DisplayName("Tests ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis")
 class TestValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
+
+	private static final String TESTDATEN = """
+			2018    ,2    ,'1981-01-01'  , true
+			2000    ,1    ,'1981-01-01'  , true
+			2000    ,null ,'1981-01-01'  , true
+			2000    ,2    ,null          , true
+			2000    ,-123 ,'1981-01-01'  , true
+			2018    ,1    ,'1981-01-01'  , true
+			2018    ,3    ,'1949-01-01'  , false
+			2018    ,3    ,'1990-01-01'  , true
+			2029    ,3    ,'1962-01-01'  , false
+			2029    ,3    ,'1963-01-01'  , true
+			2031    ,3    ,'1963-01-01'  , false
+			2031    ,3    ,'1964-01-01'  , true
+		""";
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
 			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
-	/** Personalabschnittsdaten des Lehrers */
-	static final LehrerPersonalabschnittsdaten LehrerPersonalabschnittsdaten_Plausibel = JsonReader.fromResource(
-			"de/svws_nrw/asd/validate/lehrer/Testdaten_Plausibel_LehrerPersonalabschnittsdaten.json",
-			LehrerPersonalabschnittsdaten.class);
-
-
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
-	 * Beim Laden der Core-Type-Daten werden die JSON-Dateien auf Plausibilität
-	 * geprüft.
 	 */
 	@BeforeAll
 	static void setup() {
 		ASDCoreTypeUtils.initAll();
 	}
 
-
 	/**
-	 * Test von ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum auf zu junges Geburtsdatum
+	 * Test von ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis.
 	 *
-	 * CoreType: LehrerPersonalabschnittsdaten
-	 * Testfall: Das Geburtsdatum ist für das Rechtsverhältnis zu jung
-	 * Ergebnis: Validator soll FALSE liefern
+	 * @param schuljahr                 Schuljahr
+	 * @param idRechtsverhaeltnis       die Katalog-ID des Rechtsverhaeltnisses
+	 * @param geburtsdatum              das Geburtsdatum des Lehrers
+	 * @param result                    gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("TestValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum: Fehler Geburtsdatum zu jung")
-	@Test
-	void testValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum_GeburtsdatumZuJung() {
-		// Erzeuge den Kontext für die Validierung
+	@DisplayName("Tests für ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis")
+	@ParameterizedTest
+	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
+	void testValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(final int schuljahr, final Long idRechtsverhaeltnis, final String geburtsdatum, final boolean result) {
+
+		final @NotNull Supplier<LehrerRechtsverhaeltnis> rechtsverhaeltnisNotNull =
+				() -> LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis);
+
+		@NotNull Supplier<@AllowNull DateManager> supplierGeburtsdatumNullable;
+		try {
+			final @NotNull DateManager datum = DateManager.from(geburtsdatum);
+			supplierGeburtsdatumNullable =  () -> datum;
+		} catch (Exception e) {
+			supplierGeburtsdatumNullable = () -> null;
+		}
+
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-
-		try {
-			final @NotNull DateManager geburtsdatum = DateManager.from("2025-01-01");
-			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.L;
-			final int schuljahr = kontext.getSchuljahresabschnitt().schuljahr;
-			final ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
-					new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
-							() -> schuljahr,
-							() -> rechtsverhaeltnis,
-							() -> geburtsdatum,
-							kontext);
-			assertEquals(false, validator.pruefe());
-		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
-			assertEquals(true, false); // darf hier nicht hin
-			// Ist kein gültiges Geburtsdatum gesetzt, so werden die Prüfungen übersprungen.
-			// Die eigentliche Validierung des Geburtsdatums erfolgt bei den Lehrer-Stammdaten
-		}
-
-
+		final ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
+				new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> schuljahr, rechtsverhaeltnisNotNull, supplierGeburtsdatumNullable, kontext);
+		assertEquals(result, validator.pruefe());
 	}
+
 }

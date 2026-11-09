@@ -22,8 +22,9 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
 
 	private static final String TESTDATEN = """
-			1   , true
-			999  , false
+			1     ,  true
+			999   ,  false
+			null  ,  false
 		""";
 
 	/** Stammdaten der Schule */

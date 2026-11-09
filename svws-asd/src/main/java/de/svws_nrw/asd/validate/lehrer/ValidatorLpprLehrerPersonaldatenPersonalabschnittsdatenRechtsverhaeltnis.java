@@ -30,16 +30,24 @@ public final class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechts
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
-			final @NotNull Supplier<DateManager> geburtsdatum,
+			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
+
+		@NotNull Supplier<@AllowNull DateManager> supplierGeburtsdatumNullable;
+		try {
+			final @NotNull DateManager datum = DateManager.from(geburtsdatum.get());
+			supplierGeburtsdatumNullable =  () -> datum;
+		} catch (Exception e) {
+			supplierGeburtsdatumNullable = () -> null;
+		}
 
 		_idSchuljahresabschnitt = idSchuljahresabschnitt;
 
 		final @NotNull Supplier<@NotNull Integer> schuljahr = () ->  kontext.getSchuljahrBySchuljahresabschnitt(getNotNullSupplierLong(idSchuljahresabschnitt));
 
-		_validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, supplierGeburtsdatumNullable, kontext));
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public final class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRech
 			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
-			final @NotNull Supplier<@NotNull DateManager> geburtsdatum,
+			final @NotNull Supplier<@AllowNull DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);

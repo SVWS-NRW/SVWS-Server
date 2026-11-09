@@ -20,11 +20,18 @@ export class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhae
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number | null>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number | null>, geburtsdatum: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
+		let supplierGeburtsdatumNullable: Supplier<DateManager | null>;
+		try {
+			const datum: DateManager = DateManager.from(geburtsdatum.get());
+			supplierGeburtsdatumNullable = { get: () => datum };
+		} catch (e: any) {
+			supplierGeburtsdatumNullable = { get: () => null };
+		}
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
-		this._validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, supplierGeburtsdatumNullable, kontext));
 	}
 
 	protected pruefe(): boolean {

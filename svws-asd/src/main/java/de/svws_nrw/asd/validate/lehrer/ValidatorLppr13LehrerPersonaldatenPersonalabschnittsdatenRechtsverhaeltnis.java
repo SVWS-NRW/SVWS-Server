@@ -6,6 +6,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -15,13 +16,13 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/** Das Geburtsdatum des Lehrers */
-	private final @NotNull Supplier<DateManager> _geburtsdatum;
+	private final @NotNull Supplier<@AllowNull DateManager> _geburtsdatum;
 
 	/** Das aktuelle Schuljahr des Lehrers */
 	private final @NotNull Supplier<@NotNull Integer> _schuljahr;
 
 	/** Das Rechtsverhältnis */
-	private final @NotNull Supplier<LehrerRechtsverhaeltnis> _rechtsverhaeltnis;
+	private final @NotNull Supplier<@NotNull LehrerRechtsverhaeltnis> _rechtsverhaeltnis;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -33,8 +34,8 @@ public final class ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRech
 	 */
 	public ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<@NotNull Integer> schuljahr,
-			final @NotNull Supplier<LehrerRechtsverhaeltnis> rechtsverhaeltnisNotNull,
-			final @NotNull Supplier<DateManager> geburtsdatum,
+			final @NotNull Supplier<@NotNull LehrerRechtsverhaeltnis> rechtsverhaeltnisNotNull,
+			final @NotNull Supplier<@AllowNull DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_schuljahr = schuljahr;
@@ -46,20 +47,26 @@ public final class ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRech
 	protected boolean pruefe() {
 		final int schuljahr = _schuljahr.get();
 
-		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
-		final LehrerRechtsverhaeltnis rv = _rechtsverhaeltnis.get();
+		final DateManager geburtsdatumDateManager = _geburtsdatum.get();
 
-		// Prüfe das Geburtsdatum bzw. das Alter bei den folgenden Rechtsverhältnissen...
-		if (!rv.equals(LehrerRechtsverhaeltnis.L) && !rv.equals(LehrerRechtsverhaeltnis.P) && !rv.equals(LehrerRechtsverhaeltnis.W)) {
-			// Sonstiges Rechtsverhältnis
-			final int minJahr = schuljahr - 80;   // das erste akzeptierte Geburtsjahr: vor 80 Jahren
-			final int maxJahr = schuljahr - 18;   // das letzte akzeptierte Geburtsjahr: vor 18 Jahren
+		// ohne datum keine Prüfung möglich
+		if (geburtsdatumDateManager != null) {
 
-			if (!_geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				addFehler(4, "Der Wert für das Geburtsjahr sollte bei sonstigen Rechtsverhältnissen"
-						+ " zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+			// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
+			final LehrerRechtsverhaeltnis rv = _rechtsverhaeltnis.get();
+
+			// Prüfe das Geburtsdatum bzw. das Alter bei den folgenden Rechtsverhältnissen...
+			if (!LehrerRechtsverhaeltnis.L.equals(rv) && !LehrerRechtsverhaeltnis.P.equals(rv) && !LehrerRechtsverhaeltnis.W.equals(rv)) {
+				// Sonstiges Rechtsverhältnis
+				final int minJahr = schuljahr - 80;   // das erste akzeptierte Geburtsjahr: vor 80 Jahren
+				final int maxJahr = schuljahr - 18;   // das letzte akzeptierte Geburtsjahr: vor 18 Jahren
+
+				if (!geburtsdatumDateManager.istInJahren(minJahr, maxJahr)) {
+					addFehler(4, "Der Wert für das Geburtsjahr sollte bei sonstigen Rechtsverhältnissen"
+							+ " zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+					return false;
+				}
 			}
-			return false;
 		}
 		return true;
 	}

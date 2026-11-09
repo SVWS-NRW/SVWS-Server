@@ -38,7 +38,7 @@ public final class ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRecht
 				&& new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> kontext.getSchuljahr(), getNotNullSupplierLong(idBeschaeftigungsart), () -> null, () -> null, kontext).pruefe()
 				&& new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> 0, () -> null, idRechtsverhaeltnis, datumUebergabe, kontext).pruefe()
 				&& new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> 0, () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, kontext).pruefe()
-				&& new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> kontext.getSchuljahr(), () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, kontext).pruefe()
+				&& new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> kontext.getSchuljahr(), () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), kontext).pruefe()
 				) {
 
 			final @NotNull Supplier<@AllowNull LehrerRechtsverhaeltnis> lehrerRechtsverhaeltnis =

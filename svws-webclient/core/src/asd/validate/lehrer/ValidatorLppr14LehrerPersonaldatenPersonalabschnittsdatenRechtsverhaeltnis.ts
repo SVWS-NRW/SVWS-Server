@@ -1,6 +1,5 @@
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { java_util_Set_of } from '../../../java/util/JavaSet';
-import { Schulform } from '../../../asd/types/schule/Schulform';
 import { NationalitaetenKatalogEintrag } from '../../../asd/data/schule/NationalitaetenKatalogEintrag';
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
@@ -41,8 +40,7 @@ export class ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 			return true;
 		}
 		const schuljahr: number = this.kontext().getSchuljahr();
-		const schulform: Schulform | null = this.kontext().getSchulform();
-		const nationalitaet: Nationalitaeten | null = Nationalitaeten.data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, this._staatsangehoerigkeitSchluessel.get());
+		const nationalitaet: Nationalitaeten | null = Nationalitaeten.data().getWertBySchluessel(this._staatsangehoerigkeitSchluessel.get());
 		if ((nationalitaet !== null)) {
 			const katalogEintrag: NationalitaetenKatalogEintrag | null = nationalitaet.daten(schuljahr);
 			if (ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis.setRechtsverhaeltnis.contains(this._rechtsverhaeltnis.get()) && (katalogEintrag !== null) && !ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis.setStaatsangehoerigkeit.contains(katalogEintrag.iso3)) {

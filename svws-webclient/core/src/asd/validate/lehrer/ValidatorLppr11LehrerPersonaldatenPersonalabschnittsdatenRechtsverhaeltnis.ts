@@ -11,7 +11,7 @@ export class ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Das Geburtsdatum des Lehrers
 	 */
-	private readonly _geburtsdatum: Supplier<DateManager>;
+	private readonly _geburtsdatum: Supplier<DateManager | null>;
 
 	/**
 	 * Das aktuelle Schuljahr des Lehrers
@@ -32,7 +32,7 @@ export class ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	 * @param geburtsdatum               das Geburtsdatum des Lehrers
 	 * @param kontext                    der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._schuljahr = schuljahr;
 		this._rechtsverhaeltnis = rechtsverhaeltnisNotNull;
@@ -41,13 +41,16 @@ export class ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 
 	protected pruefe(): boolean {
 		const schuljahr: number = this._schuljahr.get().valueOf();
-		if (JavaObject.equalsTranspiler(this._rechtsverhaeltnis.get(), (LehrerRechtsverhaeltnis.P))) {
-			const minJahr: number = schuljahr - 55;
-			const maxJahr: number = schuljahr - 20;
-			if (!this._geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				this.addFehler(2, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Probe (Rechtsverhältnis = P) zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+		const geburtsdatumDateManager: DateManager | null = this._geburtsdatum.get();
+		if (geburtsdatumDateManager !== null) {
+			if (JavaObject.equalsTranspiler(LehrerRechtsverhaeltnis.P, (this._rechtsverhaeltnis.get()))) {
+				const minJahr: number = schuljahr - 55;
+				const maxJahr: number = schuljahr - 20;
+				if (!geburtsdatumDateManager.istInJahren(minJahr, maxJahr)) {
+					this.addFehler(2, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Probe (Rechtsverhältnis = P) zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+					return false;
+				}
 			}
-			return false;
 		}
 		return true;
 	}

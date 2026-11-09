@@ -11,7 +11,7 @@ export class ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Das Geburtsdatum des Lehrers
 	 */
-	private readonly _geburtsdatum: Supplier<DateManager>;
+	private readonly _geburtsdatum: Supplier<DateManager | null>;
 
 	/**
 	 * Das aktuelle Schuljahr des Lehrers
@@ -32,7 +32,7 @@ export class ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	 * @param geburtsdatum               das Geburtsdatum des Lehrers
 	 * @param kontext                    der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._schuljahr = schuljahr;
 		this._rechtsverhaeltnis = rechtsverhaeltnisNotNull;
@@ -41,14 +41,17 @@ export class ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 
 	protected pruefe(): boolean {
 		const schuljahr: number = this._schuljahr.get().valueOf();
-		const rv: LehrerRechtsverhaeltnis | null = this._rechtsverhaeltnis.get();
-		if (!JavaObject.equalsTranspiler(rv, (LehrerRechtsverhaeltnis.L)) && !JavaObject.equalsTranspiler(rv, (LehrerRechtsverhaeltnis.P)) && !JavaObject.equalsTranspiler(rv, (LehrerRechtsverhaeltnis.W))) {
-			const minJahr: number = schuljahr - 80;
-			const maxJahr: number = schuljahr - 18;
-			if (!this._geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				this.addFehler(4, "Der Wert für das Geburtsjahr sollte bei sonstigen Rechtsverhältnissen zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+		const geburtsdatumDateManager: DateManager | null = this._geburtsdatum.get();
+		if (geburtsdatumDateManager !== null) {
+			const rv: LehrerRechtsverhaeltnis | null = this._rechtsverhaeltnis.get();
+			if (!JavaObject.equalsTranspiler(LehrerRechtsverhaeltnis.L, (rv)) && !JavaObject.equalsTranspiler(LehrerRechtsverhaeltnis.P, (rv)) && !JavaObject.equalsTranspiler(LehrerRechtsverhaeltnis.W, (rv))) {
+				const minJahr: number = schuljahr - 80;
+				const maxJahr: number = schuljahr - 18;
+				if (!geburtsdatumDateManager.istInJahren(minJahr, maxJahr)) {
+					this.addFehler(4, "Der Wert für das Geburtsjahr sollte bei sonstigen Rechtsverhältnissen zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+					return false;
+				}
 			}
-			return false;
 		}
 		return true;
 	}

@@ -32,10 +32,15 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
 
 	private static final String TESTDATEN_STAATSANGEOERIGKEITID = """
-			'000', 'L', true
-			'000', 'U', true
-			'327', 'U', true
-			'327', 'L', false
+			'000', null, true
+			'000', 'L' , true
+			'000', 'U' , true
+			'126', 'N' , true
+			'327', 'U' , true
+			'327', 'L' , false
+			'888', 'L' , true
+			null , 'A' , true
+			'120', 'L' , true
 		""";
 
 	/** Stammdaten der Schule */
@@ -61,7 +66,7 @@ class TestValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 	 * @param rechtsverhaeltnis                das Rechtsverhältnis, welches bei den eingelesenen Testdaten ersetzt wird
 	 * @param result                           gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID")
+	@DisplayName("Tests für ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_STAATSANGEOERIGKEITID, nullValues = { "null" })
 	void testValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(final String staatsangehoerigkeitSchluessel, final LehrerRechtsverhaeltnis rechtsverhaeltnis,

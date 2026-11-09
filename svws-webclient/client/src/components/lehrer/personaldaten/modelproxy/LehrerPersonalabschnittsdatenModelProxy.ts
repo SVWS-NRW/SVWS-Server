@@ -61,12 +61,11 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 	private addValidatoren(validatorKontext: () => ValidatorKontext) {
 		// Rechtsverhältnis
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idRechtsverhaeltnis), "idRechtsverhaeltnis");
-		const geburtsDatum: DateManager = DateManager.from(this.manager().daten().geburtsdatum); // Geburtsdatum aus Stammdaten holen
 		this.addValidator(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			{ get: () => this.proxy.idSchuljahresabschnitt },
 			{ get: () => this.manager().daten().idStaatsangehoerigkeit },
 			{ get: () => this.proxy.idRechtsverhaeltnis },
-			{ get: () => geburtsDatum },
+			{ get: () => this.manager().daten().geburtsdatum },
 			validatorKontext()), "idRechtsverhaeltnis", "pflichtstundensoll");
 
 		// Beschäftigungsart
