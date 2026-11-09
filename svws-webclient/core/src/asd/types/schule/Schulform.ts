@@ -281,6 +281,36 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	}
 
 	/**
+	 * Gibt zurück, ob die Schulform einen Primarbereich (Jahrgänge 1 bis 4) hat.
+	 *
+	 * @return true/false
+	 */
+	public hatPrimarbereich(): boolean {
+		let _sevar_1366640777;
+		const _seexpr_1366640777 = (this);
+		if (_seexpr_1366640777 === Schulform.FW) {
+			_sevar_1366640777 = true;
+		} else if (_seexpr_1366640777 === Schulform.HI) {
+			_sevar_1366640777 = true;
+		} else if (_seexpr_1366640777 === Schulform.WF) {
+			_sevar_1366640777 = true;
+		} else if (_seexpr_1366640777 === Schulform.G) {
+			_sevar_1366640777 = true;
+		} else if (_seexpr_1366640777 === Schulform.PS) {
+			_sevar_1366640777 = true;
+		} else if (_seexpr_1366640777 === Schulform.S) {
+			_sevar_1366640777 = true;
+		} else if (_seexpr_1366640777 === Schulform.KS) {
+			_sevar_1366640777 = true;
+		} else if (_seexpr_1366640777 === Schulform.V) {
+			_sevar_1366640777 = true;
+		} else {
+			_sevar_1366640777 = false;
+		}
+		return _sevar_1366640777;
+	}
+
+	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values

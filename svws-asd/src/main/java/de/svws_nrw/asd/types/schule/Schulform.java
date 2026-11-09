@@ -189,4 +189,15 @@ public enum Schulform implements @NotNull CoreType<SchulformKatalogEintrag, Schu
 		};
 	}
 
+	/**
+	 * Gibt zurück, ob die Schulform einen Primarbereich (Jahrgänge 1 bis 4) hat.
+	 *
+	 * @return true/false
+	 */
+	public boolean hatPrimarbereich() {
+		return switch (this) {
+			case FW, HI, WF, G, PS, S, KS, V -> true;
+			default -> false;
+		};
+	}
 }

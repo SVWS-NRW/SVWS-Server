@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
@@ -68,6 +70,12 @@ public final class SchuelerLernabschnittService {
 	private final BenutzerKompetenzService benutzerKompetenzService;
 
 	private static final String DATEN_NOT_FOUND_BY_ID = "Keine Lernabschnittsdaten zur Abschnitt-ID %d gefunden.";
+
+	/** Die ASD-Jahrgänge der Schuleingangsphase, in denen die EP-Jahre geändert werden dürfen */
+	private static final Set<String> ASD_JAHRGAENGE_EINGANGSPHASE = Set.of("01", "02");
+
+	/** Die ASD-Jahrgänge, in denen die EP-Jahre schreibgeschützt sind und aus der Eingangsphase fortgeschrieben werden */
+	private static final Set<String> ASD_JAHRGAENGE_FORTSCHREIBUNG_EP_JAHRE = Set.of("03", "04");
 
 	/**
 	 * Erstellt einen neuen {@code SchuelerLernabschnittService}.
@@ -185,7 +193,9 @@ public final class SchuelerLernabschnittService {
 			// die optionalen Felder werden hier mit der Patch-Logik auf die neue Entity angewendet.
 			mapper.patch(dto, entity, schuljahr, schulform);
 			validateAndResolveASDJahrgang(dto, entity);
-			return toApi(repository.create(entity));
+			final var neu = repository.create(entity);
+			propagateEpJahre(neu, schulform, dto);
+			return toApi(neu);
 		});
 	}
 
@@ -216,6 +226,7 @@ public final class SchuelerLernabschnittService {
 			validateRequest(dto, schuljahr, schulform, entity);
 			mapper.patch(dto, entity, schuljahr, schulform);
 			validateAndResolveASDJahrgang(dto, entity);
+			propagateEpJahre(entity, schulform, dto);
 			return toApi(entity);
 		});
 	}
@@ -359,6 +370,7 @@ public final class SchuelerLernabschnittService {
 		dto.bilingualerZweig.ifPresent(kuerzel -> validateBilingualerZweig(kuerzel, schuljahr, schulform));
 		dto.jahrgangID.ifPresent(this::validateIdJahrgang);
 		dto.klassenID.ifPresent(klassenID -> validateKlasseImSchuljahresabschnitt(klassenID, entity.Schuljahresabschnitts_ID));
+		dto.idEpJahre.ifPresent(idEpJahre -> validateEpJahreAenderbar(dto, idEpJahre, schulform, entity));
 
 		if (dto.datumAnfang.isPresent() || dto.datumEnde.isPresent()) {
 			validateDatumEndeNichtVorAnfang(dto.datumAnfang.orElse(entity.DatumVon), dto.datumEnde.orElse(entity.DatumBis));
@@ -368,6 +380,92 @@ public final class SchuelerLernabschnittService {
 					dto.fehlstundenUnentschuldigt.orElse(entity.SumFehlStdU));
 		}
 
+	}
+
+	/**
+	 * Prüft, ob die EP-Jahre (Besuchsjahre in der Schuleingangsphase) geändert werden dürfen. Das ist nur an Schulen mit
+	 * Primarbereich und nur in den Jahrgängen 1 und 2 erlaubt. Maßgeblich ist der Jahrgang, den der Lernabschnitt nach dem
+	 * Request haben wird. Wird ein unveränderter Wert übermittelt (z. B. weil der Client das gesamte Objekt sendet), so
+	 * wird dieser ignoriert und nicht als Änderung gewertet. Andernfalls gibt es einen Fehler mit dem Status BAD_REQUEST.
+	 *
+	 * @param dto           der Request
+	 * @param idEpJahre     die im Request übermittelte ID der EP-Jahre, ggf. {@code null}
+	 * @param schulform     die Schulform der eigenen Schule
+	 * @param entity        der Lernabschnitt vor der Anwendung des Requests
+	 */
+	private void validateEpJahreAenderbar(final SchuelerLernabschnittsdatenPatchRequest dto, final Long idEpJahre,
+			final Schulform schulform, final DTOSchuelerLernabschnittsdaten entity) {
+		if (Objects.equals(getIdEpJahre(entity), idEpJahre)) {
+			return;
+		}
+		if (!schulform.hatPrimarbereich()) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Besuchsjahre in der Schuleingangsphase können nur an Schulen mit Primarbereich geändert werden.");
+		}
+		final var asdJahrgang = getASDJahrgang(dto, entity);
+		if (!istInJahrgaengen(ASD_JAHRGAENGE_EINGANGSPHASE, asdJahrgang)) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Besuchsjahre in der Schuleingangsphase können nur in den Jahrgängen 1 und 2 geändert werden.");
+		}
+	}
+
+	private static Long getIdEpJahre(final DTOSchuelerLernabschnittsdaten entity) {
+		return (entity.EPJahre == null) ? null : Long.valueOf(entity.EPJahre);
+	}
+
+	private String getASDJahrgang(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity) {
+		return dto.jahrgangID.isPresent() ? getASDJahrgang(dto.jahrgangID.get()) : entity.ASDJahrgang;
+	}
+
+	private static boolean istInJahrgaengen(final Set<String> asdJahrgaenge, final String asdJahrgang) {
+		return (asdJahrgang != null) && asdJahrgaenge.contains(asdJahrgang);
+	}
+
+	private static boolean patchEnthaeltAenderungZurLaufbahn(final SchuelerLernabschnittsdatenPatchRequest dto) {
+		return dto.idEpJahre.isPresent() || dto.jahrgangID.isPresent();
+	}
+
+	/**
+	 * Schreibt die EP-Jahre (Besuchsjahre in der Schuleingangsphase) auf die Lernabschnitte der Jahrgänge 3 und 4 des
+	 * Schülers fort, da diese dort schreibgeschützt sind. Alle diese Lernabschnitte erhalten das Maximum der EP-Jahre
+	 * aus den Lernabschnitten der Jahrgänge 1 und 2. Die Fortschreibung erfolgt nur an Schulen mit Primarbereich und
+	 * nur, wenn der Request die EP-Jahre oder den Jahrgang ändert, also die Laufbahn betrifft. Liegen in den
+	 * Jahrgängen 1 und 2 keine EP-Jahre vor, so bleiben die Lernabschnitte unverändert.
+	 *
+	 * @param geaendert   der angelegte bzw. geänderte Lernabschnitt
+	 * @param schulform   die Schulform der eigenen Schule
+	 * @param dto         der Request
+	 */
+	private void propagateEpJahre(final DTOSchuelerLernabschnittsdaten geaendert, final Schulform schulform,
+			final SchuelerLernabschnittsdatenPatchRequest dto) {
+		if (!schulform.hatPrimarbereich() || !patchEnthaeltAenderungZurLaufbahn(dto)) {
+			return;
+		}
+		final var lernabschnitte = loadLernabschnitteMitAktuellemStand(geaendert);
+		determineMaxEpJahreEingangsphase(lernabschnitte)
+				.ifPresent(maximum -> setEpJahreInFolgeabschnitten(lernabschnitte, maximum));
+	}
+
+	private List<DTOSchuelerLernabschnittsdaten> loadLernabschnitteMitAktuellemStand(final DTOSchuelerLernabschnittsdaten geaendert) {
+		// Der geänderte Lernabschnitt wird immer mit seinem aktuellen Stand berücksichtigt
+		return repository.findListBySchuelerIDs(List.of(geaendert.Schueler_ID)).stream()
+				.map(lernabschnitt -> (lernabschnitt.ID == geaendert.ID) ? geaendert : lernabschnitt)
+				.toList();
+	}
+
+	private static OptionalInt determineMaxEpJahreEingangsphase(final List<DTOSchuelerLernabschnittsdaten> lernabschnitte) {
+		return lernabschnitte.stream()
+				.filter(lernabschnitt -> istInJahrgaengen(ASD_JAHRGAENGE_EINGANGSPHASE, lernabschnitt.ASDJahrgang))
+				.map(lernabschnitt -> lernabschnitt.EPJahre)
+				.filter(Objects::nonNull)
+				.mapToInt(Integer::intValue)
+				.max();
+	}
+
+	private static void setEpJahreInFolgeabschnitten(final List<DTOSchuelerLernabschnittsdaten> lernabschnitte, final int epJahre) {
+		lernabschnitte.stream()
+				.filter(lernabschnitt -> istInJahrgaengen(ASD_JAHRGAENGE_FORTSCHREIBUNG_EP_JAHRE, lernabschnitt.ASDJahrgang))
+				.forEach(lernabschnitt -> lernabschnitt.EPJahre = epJahre);
 	}
 
 	private void pruefeKompetenz(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity) {

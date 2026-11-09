@@ -1,14 +1,17 @@
 package de.svws_nrw.asd.types.schule;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
-import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Diese Klasse stellt JUnit-Tests für den Core-Type {@link Schulform}
@@ -76,6 +79,38 @@ class TestSchulform {
 		assertEquals("Gesamtschule", Schulform.GE.daten(2000).text);
 		assertNotNull(Schulform.GM.daten(2022));
 		assertNull(Schulform.GM.daten(2023));
+	}
+
+	/**
+	 * Test des CoreTypes Schulform
+	 *
+	 * CoreType: Schulform
+	 * Testfall: Prüft, dass die Schulformen mit Primarbereich dies melden
+	 * Ergebnis: FW, HI, WF, G, PS, S, KS und V haben einen Primarbereich
+	 *
+	 * @param schulform   die Schulform
+	 */
+	@ParameterizedTest
+	@EnumSource(value = Schulform.class, names = { "FW", "HI", "WF", "G", "PS", "S", "KS", "V" })
+	@DisplayName("Teste CoreType Schulform: Schulformen mit Primarbereich.")
+	void testSchulform_HatPrimarbereich(final Schulform schulform) {
+		assertTrue(schulform.hatPrimarbereich(), schulform.name());
+	}
+
+	/**
+	 * Test des CoreTypes Schulform
+	 *
+	 * CoreType: Schulform
+	 * Testfall: Prüft, dass alle anderen Schulformen keinen Primarbereich haben
+	 * Ergebnis: Keine andere Schulform hat einen Primarbereich
+	 *
+	 * @param schulform   die Schulform
+	 */
+	@ParameterizedTest
+	@EnumSource(value = Schulform.class, mode = EnumSource.Mode.EXCLUDE, names = { "FW", "HI", "WF", "G", "PS", "S", "KS", "V" })
+	@DisplayName("Teste CoreType Schulform: Schulformen ohne Primarbereich.")
+	void testSchulform_HatKeinenPrimarbereich(final Schulform schulform) {
+		assertFalse(schulform.hatPrimarbereich(), schulform.name());
 	}
 
 }

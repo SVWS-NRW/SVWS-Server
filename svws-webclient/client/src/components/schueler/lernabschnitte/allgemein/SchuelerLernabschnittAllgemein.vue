@@ -16,7 +16,7 @@
 					v-model="model.epJahre.value"
 					:manager="epJahrManager"
 					:validation="() => model.getFehler('idEpJahre')"
-					:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
+					:disabled="epJahreReadonly" statistics required :removable="false" />
 			</div>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Datum von" type="date"
@@ -109,6 +109,7 @@
 	import type { SchuelerLernabschnittsdaten } from '@core/asd/data/schueler/SchuelerLernabschnittsdaten';
 	import type { OrganisationsformKatalogEintrag } from '@core/asd/data/schule/OrganisationsformKatalogEintrag';
 	import { BilingualeSprache } from '@core/asd/types/fach/BilingualeSprache';
+	import { Jahrgaenge } from '@core/asd/types/jahrgang/Jahrgaenge';
 	import { PrimarstufeSchuleingangsphaseBesuchsjahre } from '@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre';
 	import { Klassenart } from '@core/asd/types/klassen/Klassenart';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
@@ -129,16 +130,18 @@
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
-	const primarschulformen = new Set<Schulform>([
-		Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V,
-	]);
-
 	const hatUpdateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)
 		|| ((benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
 			&& benutzerState.kompetenzenKlasse.has(props.manager().schuelerGet().idKlasse))
 	);
 	const schulform = computed<Schulform>(() => schuleState.schulform);
-	const istPrimarSchulform = computed<boolean>(() => primarschulformen.has(schulform.value));
+	const istPrimarSchulform = computed<boolean>(() => schulform.value.hatPrimarbereich());
+	/** Die EP-Jahre sind nur in den Jahrgängen 1 und 2 änderbar, ab Jahrgang 3 werden sie vom Server fortgeschrieben. */
+	const epJahreSchreibgeschuetzt = computed<boolean>(() => {
+		const jahrgang = props.manager().lernabschnittGetStatistikJahrgang();
+		return (jahrgang !== Jahrgaenge.JAHRGANG_01) && (jahrgang !== Jahrgaenge.JAHRGANG_02);
+	});
+	const epJahreReadonly = computed(() => !hatUpdateKompetenz.value || epJahreSchreibgeschuetzt.value);
 	const schuljahr = computed<number>(() => schuleState.abschnitt.schuljahr);
 	const klassen = computed<Iterable<KlassenDaten>>(() => props.manager().klasseGetMenge());
 	const jahrgaenge = computed<Iterable<JahrgangsDaten>>(() => props.manager().jahrgangGetMenge());

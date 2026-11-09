@@ -44,6 +44,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.ArgumentCaptor;
@@ -54,6 +55,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
@@ -196,6 +198,28 @@ class SchuelerLernabschnittServiceTest {
 		final var captor = ArgumentCaptor.forClass(SchuelerLernabschnittsdatenMappingContext.class);
 		verify(mapper).toApi(any(DTOSchuelerLernabschnittsdaten.class), anyInt(), any(Schulform.class), captor.capture());
 		return captor.getValue();
+	}
+
+	/**
+	 * Erzeugt einen Lernabschnitt (Wechsel-Nr. 0) des Schülers {@link #ID_SCHUELER} im Schuljahresabschnitt {@link #ID_SCHULJAHRESABSCHNITT}.
+	 *
+	 * @param id            die ID des Lernabschnitts
+	 * @param asdJahrgang   der ASD-Jahrgang, z. B. "01", oder {@code null}
+	 * @param epJahre       die EP-Jahre, oder {@code null}
+	 *
+	 * @return der Lernabschnitt
+	 */
+	private DTOSchuelerLernabschnittsdaten createLernabschnitt(final long id, final String asdJahrgang, final Integer epJahre) {
+		final var result = createEntity(id, ID_SCHULJAHRESABSCHNITT);
+		result.WechselNr = 0;
+		result.ASDJahrgang = asdJahrgang;
+		result.EPJahre = epJahre;
+		return result;
+	}
+
+	private void stubJahrgang(final long id, final String asdJahrgang) {
+		lenient().when(jahrgangRepository.existsById(id)).thenReturn(true);
+		lenient().when(jahrgangRepository.findById(id)).thenReturn(Optional.of(createJahrgang(id, asdJahrgang)));
 	}
 
 	// -------------------------------------------------------------------------
@@ -1345,6 +1369,480 @@ class SchuelerLernabschnittServiceTest {
 					.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
 			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
 			verifyNoInteractions(klassenRepository);
+		}
+	}
+
+	@Nested
+	@DisplayName("patch - EP-Jahre")
+	class PatchEpJahre {
+
+		private MockedStatic<TransactionSupport> transactionSupport;
+
+		@BeforeEach
+		void setUp() {
+			// führt den Task direkt aus, ohne echte Datenbank-Transaktion
+			transactionSupport = mockStatic(TransactionSupport.class);
+			transactionSupport.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
+					.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
+			entity.ASDJahrgang = "01";
+			entity.WechselNr = 0;
+			lenient().when(eigeneSchuleService.getSchulform()).thenReturn(Schulform.G);
+			lenient().when(repository.findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
+			lenient().when(schuljahresabschnitteRepo.findListByIds(anyCollection()))
+					.thenReturn(List.of(createSchuljahresabschnitt(ID_SCHULJAHRESABSCHNITT)));
+			lenient().when(mapper.toApi(any(DTOSchuelerLernabschnittsdaten.class), anyInt(), any(Schulform.class),
+					any(SchuelerLernabschnittsdatenMappingContext.class)))
+					.thenReturn(new SchuelerLernabschnittsdaten());
+			stubMapperPatch();
+			stubLernabschnitteDesSchuelers();
+		}
+
+		@AfterEach
+		void tearDown() {
+			transactionSupport.close();
+		}
+
+		private static SchuelerLernabschnittsdatenPatchRequest createPatchRequest(final long idEpJahre) {
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.idEpJahre = JsonNullable.of(idEpJahre);
+			return dto;
+		}
+
+		/**
+		 * Alle Lernabschnitte des Schülers, die das Repository zurückgibt. Der geänderte Lernabschnitt ({@code entity})
+		 * ist als dieselbe Instanz enthalten wie in {@code findById}.
+		 *
+		 * @param weitere   die weiteren Lernabschnitte des Schülers
+		 */
+		private void stubLernabschnitteDesSchuelers(final DTOSchuelerLernabschnittsdaten... weitere) {
+			final List<DTOSchuelerLernabschnittsdaten> alle = new ArrayList<>();
+			alle.add(entity);
+			alle.addAll(List.of(weitere));
+			lenient().when(repository.findListBySchuelerIDs(anyCollection())).thenReturn(alle);
+		}
+
+		/**
+		 * Stellt das Verhalten des echten Mappers für Jahrgang und EP-Jahre nach, da der Mapper in diesen Tests ein Mock ist.
+		 */
+		private void stubMapperPatch() {
+			lenient().doAnswer(invocation -> {
+				final SchuelerLernabschnittsdatenPatchRequest dto = invocation.getArgument(0);
+				final DTOSchuelerLernabschnittsdaten toPatch = invocation.getArgument(1);
+				if (dto.jahrgangID.isPresent()) {
+					toPatch.Jahrgang_ID = dto.jahrgangID.get();
+				}
+				if (dto.idEpJahre.isPresent()) {
+					toPatch.EPJahre = (dto.idEpJahre.get() == null) ? null : dto.idEpJahre.get().intValue();
+				}
+				return null;
+			}).when(mapper).patch(any(), any(), anyInt(), any());
+		}
+
+		private void verifyNichtGepatcht() {
+			verify(mapper, never()).patch(any(), any(), anyInt(), any());
+		}
+
+		// --- Nur an Schulen mit Primarbereich ---
+
+		@ParameterizedTest
+		@EnumSource(value = Schulform.class, names = { "G", "PS" })
+		@DisplayName("Schule mit Primarbereich - EP-Jahre im Jahrgang 1 dürfen geändert werden")
+		void patch_epJahre_schuleMitPrimarbereich(final Schulform schulform) {
+			lenient().when(eigeneSchuleService.getSchulform()).thenReturn(schulform);
+			entity.ASDJahrgang = "01";
+
+			final var patchRequest = createPatchRequest(2L);
+
+			assertThatCode(() -> service.patch(ID_LERNABSCHNITT, patchRequest)).doesNotThrowAnyException();
+
+			assertThat(entity.EPJahre).isEqualTo(2);
+		}
+
+		@ParameterizedTest
+		@EnumSource(value = Schulform.class, names = { "GY", "GE", "R", "H", "BK" })
+		@DisplayName("Schule ohne Primarbereich - Änderung der EP-Jahre ist nicht erlaubt - BAD_REQUEST")
+		void patch_epJahre_schuleOhnePrimarbereich(final Schulform schulform) {
+			lenient().when(eigeneSchuleService.getSchulform()).thenReturn(schulform);
+			entity.ASDJahrgang = "01";
+
+			final var patchRequest = createPatchRequest(2L);
+
+			assertThatThrownBy(() -> service.patch(ID_LERNABSCHNITT, patchRequest))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+			verifyNichtGepatcht();
+			assertThat(entity.EPJahre).isNull();
+		}
+
+		@Test
+		@DisplayName("Schule ohne Primarbereich - ein Patch ohne EP-Jahre ist weiterhin möglich und ändert keine EP-Jahre")
+		void patch_ohneEpJahre_schuleOhnePrimarbereich() {
+			lenient().when(eigeneSchuleService.getSchulform()).thenReturn(Schulform.GY);
+			entity.ASDJahrgang = "05";
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.fehlstundenGesamt = JsonNullable.of(3);
+
+			assertThatCode(() -> service.patch(ID_LERNABSCHNITT, dto)).doesNotThrowAnyException();
+
+			verify(repository, never()).findListBySchuelerIDs(anyCollection());
+		}
+
+		// --- Ab Jahrgang 3 schreibgeschützt ---
+
+		@ParameterizedTest
+		@ValueSource(strings = { "01", "02" })
+		@DisplayName("Jahrgang 1 und 2 - EP-Jahre dürfen geändert werden")
+		void patch_epJahre_jahrgang1und2(final String asdJahrgang) {
+			entity.ASDJahrgang = asdJahrgang;
+
+			final var patchRequest = createPatchRequest(3L);
+
+			assertThatCode(() -> service.patch(ID_LERNABSCHNITT, patchRequest)).doesNotThrowAnyException();
+
+			assertThat(entity.EPJahre).isEqualTo(3);
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "03", "04", "05" })
+		@DisplayName("Ab Jahrgang 3 - EP-Jahre sind schreibgeschützt - BAD_REQUEST")
+		void patch_epJahre_abJahrgang3Schreibgeschuetzt(final String asdJahrgang) {
+			entity.ASDJahrgang = asdJahrgang;
+			entity.EPJahre = 2;
+
+			final var patchRequest = createPatchRequest(3L);
+
+			assertThatThrownBy(() -> service.patch(ID_LERNABSCHNITT, patchRequest))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+			verifyNichtGepatcht();
+			assertThat(entity.EPJahre).isEqualTo(2);
+		}
+
+		@Test
+		@DisplayName("Jahrgang wird im selben Request von 2 auf 3 geändert - EP-Jahre sind bereits schreibgeschützt - BAD_REQUEST")
+		void patch_epJahre_jahrgangWechselAuf3() {
+			entity.ASDJahrgang = "02";
+			stubJahrgang(18L, "03");
+			final var patchRequest = createPatchRequest(3L);
+			patchRequest.jahrgangID = JsonNullable.of(18L);
+
+			assertThatThrownBy(() -> service.patch(ID_LERNABSCHNITT, patchRequest))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+			verifyNichtGepatcht();
+		}
+
+		@Test
+		@DisplayName("Jahrgang wird im selben Request von 3 auf 2 geändert - EP-Jahre sind jetzt änderbar")
+		void patch_epJahre_jahrgangWechselAuf2() {
+			entity.ASDJahrgang = "03";
+			entity.EPJahre = 2;
+			stubJahrgang(17L, "02");
+			final var patchRequest = createPatchRequest(3L);
+			patchRequest.jahrgangID = JsonNullable.of(17L);
+
+			assertThatCode(() -> service.patch(ID_LERNABSCHNITT, patchRequest)).doesNotThrowAnyException();
+
+			assertThat(entity.EPJahre).isEqualTo(3);
+		}
+
+		// --- Fortschreibung auf die Jahrgänge 3 und 4 ---
+
+		@Test
+		@DisplayName("Szenario 2 - 2. Klasse wird wiederholt: EP-Jahre 3 im 2. Durchgang werden in Jahrgang 3 und 4 übernommen")
+		void patch_epJahre_wiederholung2Klasse_schreibtAufJg3UndJg4Fort() {
+			entity.ASDJahrgang = "02";
+			entity.EPJahre = 2;
+			final var jg1 = createLernabschnitt(2L, "01", 1);
+			final var jg2ErsterDurchgang = createLernabschnitt(3L, "02", 2);
+			final var jg3 = createLernabschnitt(4L, "03", 2);
+			final var jg4 = createLernabschnitt(5L, "04", 2);
+			stubLernabschnitteDesSchuelers(jg1, jg2ErsterDurchgang, jg3, jg4);
+
+			final var patchRequest = createPatchRequest(3L);
+
+			service.patch(ID_LERNABSCHNITT, patchRequest);
+
+			assertThat(List.of(entity, jg3, jg4)).extracting(lernabschnitt -> lernabschnitt.EPJahre).containsOnly(3);
+		}
+
+		@Test
+		@DisplayName("Fortschreibung ändert die Lernabschnitte der Jahrgänge 1 und 2 nicht")
+		void patch_epJahre_fortschreibungLaesstJg1Und2Unveraendert() {
+			entity.ASDJahrgang = "02";
+			entity.EPJahre = 2;
+			final var jg1 = createLernabschnitt(2L, "01", 1);
+			final var jg2ErsterDurchgang = createLernabschnitt(3L, "02", 2);
+			final var jg3 = createLernabschnitt(4L, "03", 2);
+			stubLernabschnitteDesSchuelers(jg1, jg2ErsterDurchgang, jg3);
+
+			final var patchRequest = createPatchRequest(3L);
+
+			service.patch(ID_LERNABSCHNITT, patchRequest);
+
+			assertThat(List.of(jg1, jg2ErsterDurchgang, jg3)).extracting(lernabschnitt -> lernabschnitt.EPJahre).containsExactly(1, 2, 3);
+		}
+
+		@Test
+		@DisplayName("Fortschreibung verwendet das Maximum aller EP-Jahre der Jahrgänge 1 und 2, nicht den zuletzt gesetzten Wert")
+		void patch_epJahre_fortschreibungVerwendetMaximum() {
+			entity.ASDJahrgang = "01";
+			entity.EPJahre = 1;
+			final var jg2 = createLernabschnitt(2L, "02", 3);
+			final var jg3 = createLernabschnitt(3L, "03", 2);
+			stubLernabschnitteDesSchuelers(jg2, jg3);
+
+			final var patchRequest = createPatchRequest(2L);
+
+			service.patch(ID_LERNABSCHNITT, patchRequest);
+
+			assertThat(entity.EPJahre).isEqualTo(2);
+			assertThat(jg3.EPJahre).isEqualTo(3);
+		}
+
+		@Test
+		@DisplayName("Fortschreibung funktioniert auch nach unten - Korrektur von 3 auf 2 EP-Jahre")
+		void patch_epJahre_fortschreibungNachUntenBeiKorrektur() {
+			entity.ASDJahrgang = "02";
+			entity.EPJahre = 3;
+			final var jg1 = createLernabschnitt(2L, "01", 1);
+			final var jg3 = createLernabschnitt(3L, "03", 3);
+			final var jg4 = createLernabschnitt(4L, "04", 3);
+			stubLernabschnitteDesSchuelers(jg1, jg3, jg4);
+
+			final var patchRequest = createPatchRequest(2L);
+
+			service.patch(ID_LERNABSCHNITT, patchRequest);
+
+			assertThat(List.of(jg3, jg4)).extracting(lernabschnitt -> lernabschnitt.EPJahre).containsOnly(2);
+		}
+
+		@Test
+		@DisplayName("Fortschreibung ändert nur die Jahrgänge 3 und 4 - Lernabschnitte ohne oder mit anderem Jahrgang bleiben unverändert")
+		void patch_epJahre_fortschreibungBetrifftNurJg3Und4() {
+			entity.ASDJahrgang = "02";
+			entity.EPJahre = 2;
+			final var jg3 = createLernabschnitt(2L, "03", 2);
+			final var ohneJahrgang = createLernabschnitt(3L, null, null);
+			final var jg5 = createLernabschnitt(4L, "05", null);
+			stubLernabschnitteDesSchuelers(jg3, ohneJahrgang, jg5);
+
+			final var patchRequest = createPatchRequest(3L);
+
+			service.patch(ID_LERNABSCHNITT, patchRequest);
+
+			assertThat(List.of(jg3, ohneJahrgang, jg5)).extracting(lernabschnitt -> lernabschnitt.EPJahre).containsExactly(3, null, null);
+		}
+
+		@Test
+		@DisplayName("Fortschreibung betrifft nur die Lernabschnitte des geänderten Schülers")
+		void patch_epJahre_fortschreibungNurFuerDenSchueler() {
+			entity.ASDJahrgang = "02";
+			stubLernabschnitteDesSchuelers();
+
+			final var patchRequest = createPatchRequest(3L);
+
+			service.patch(ID_LERNABSCHNITT, patchRequest);
+
+			verify(repository).findListBySchuelerIDs(ArgumentMatchers.<Collection<Long>>argThat(
+					ids -> (ids.size() == 1) && ids.contains(ID_SCHUELER)));
+		}
+
+		@Test
+		@DisplayName("Szenario 3 - 1. Klasse wird wiederholt, Lernabschnitt im Jahrgang 2 wird auf EP-Jahre 3 gesetzt: Jahrgang 3 folgt")
+		void patch_epJahre_wiederholung1Klasse_schreibtAufJg3Fort() {
+			entity.ASDJahrgang = "02";
+			entity.EPJahre = 2;
+			final var jg1ErsterDurchgang = createLernabschnitt(2L, "01", 1);
+			final var jg1ZweiterDurchgang = createLernabschnitt(3L, "01", 2);
+			final var jg3 = createLernabschnitt(4L, "03", 2);
+			stubLernabschnitteDesSchuelers(jg1ErsterDurchgang, jg1ZweiterDurchgang, jg3);
+
+			final var patchRequest = createPatchRequest(3L);
+
+			service.patch(ID_LERNABSCHNITT, patchRequest);
+
+			assertThat(jg3.EPJahre).isEqualTo(3);
+		}
+
+		@Test
+		@DisplayName("Jahrgangswechsel von 3 auf 2 mit neuen EP-Jahren - nachfolgende Lernabschnitte der Jahrgänge 3 und 4 werden fortgeschrieben")
+		void patch_epJahre_jahrgangWechselAuf2_schreibtFolgendeAbschnitteFort() {
+			entity.ASDJahrgang = "03";
+			entity.EPJahre = 2;
+			stubJahrgang(17L, "02");
+			final var jg1 = createLernabschnitt(2L, "01", 1);
+			final var jg3Folgeabschnitt = createLernabschnitt(3L, "03", 2);
+			final var jg4 = createLernabschnitt(4L, "04", 2);
+			stubLernabschnitteDesSchuelers(jg1, jg3Folgeabschnitt, jg4);
+			final var patchRequest = createPatchRequest(3L);
+			patchRequest.jahrgangID = JsonNullable.of(17L);
+
+			service.patch(ID_LERNABSCHNITT, patchRequest);
+
+			assertThat(List.of(jg3Folgeabschnitt, jg4)).extracting(lernabschnitt -> lernabschnitt.EPJahre).containsOnly(3);
+		}
+
+		@Test
+		@DisplayName("Patch ohne EP-Jahre - es wird nichts fortgeschrieben")
+		void patch_ohneEpJahre_keineFortschreibung() {
+			entity.ASDJahrgang = "02";
+			final var jg3 = createLernabschnitt(2L, "03", 2);
+			stubLernabschnitteDesSchuelers(jg3);
+			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
+			dto.fehlstundenGesamt = JsonNullable.of(3);
+
+			service.patch(ID_LERNABSCHNITT, dto);
+
+			assertThat(jg3.EPJahre).isEqualTo(2);
+			verify(repository, never()).findListBySchuelerIDs(anyCollection());
+		}
+
+		@Test
+		@DisplayName("Ungültige EP-Jahre - BAD_REQUEST, es wird nichts fortgeschrieben")
+		void patch_epJahreUngueltig_keineFortschreibung() {
+			entity.ASDJahrgang = "02";
+			final var jg3 = createLernabschnitt(2L, "03", 2);
+			stubLernabschnitteDesSchuelers(jg3);
+
+			final var patchRequest = createPatchRequest(999999L);
+
+			assertThatThrownBy(() -> service.patch(ID_LERNABSCHNITT, patchRequest))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+			assertThat(jg3.EPJahre).isEqualTo(2);
+			verify(repository, never()).findListBySchuelerIDs(anyCollection());
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// create
+
+	@Nested
+	@DisplayName("create - EP-Jahre")
+	class CreateEpJahre {
+
+		/** Alle Lernabschnitte des Schülers, inklusive des neu angelegten */
+		private List<DTOSchuelerLernabschnittsdaten> lernabschnitteDesSchuelers;
+
+		private MockedStatic<TransactionSupport> transactionSupport;
+
+		@BeforeEach
+		void setUp() {
+			// führt den Task direkt aus, ohne echte Datenbank-Transaktion
+			transactionSupport = mockStatic(TransactionSupport.class);
+			transactionSupport.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
+					.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
+			lenient().when(eigeneSchuleService.getSchulform()).thenReturn(Schulform.G);
+			lenient().when(schuljahresabschnitteRepo.findListByIds(anyCollection()))
+					.thenReturn(List.of(createSchuljahresabschnitt(ID_SCHULJAHRESABSCHNITT)));
+			lenient().when(mapper.toApi(any(DTOSchuelerLernabschnittsdaten.class), anyInt(), any(Schulform.class),
+					any(SchuelerLernabschnittsdatenMappingContext.class)))
+					.thenReturn(new SchuelerLernabschnittsdaten());
+			lernabschnitteDesSchuelers = new ArrayList<>();
+			lenient().when(schuelerRepository.existsById(ID_SCHUELER)).thenReturn(true);
+			lenient().when(mapper.toDomain(any(SchuelerLernabschnittCreateRequest.class)))
+					.thenAnswer(invocation -> SchuelerLernabschnittsdatenMapper.INSTANCE.toDomain(invocation.getArgument(0)));
+			lenient().doAnswer(invocation -> {
+				SchuelerLernabschnittsdatenMapper.INSTANCE.patch(invocation.getArgument(0), invocation.getArgument(1),
+						invocation.getArgument(2, Integer.class), invocation.getArgument(3, Schulform.class));
+				return null;
+			}).when(mapper).patch(any(), any(), anyInt(), any());
+			lenient().when(repository.create(any(DTOSchuelerLernabschnittsdaten.class))).thenAnswer(invocation -> {
+				final DTOSchuelerLernabschnittsdaten neu = invocation.getArgument(0);
+				lernabschnitteDesSchuelers.add(neu);
+				return neu;
+			});
+			lenient().when(repository.findListBySchuelerIDs(anyCollection()))
+					.thenAnswer(invocation -> new ArrayList<>(lernabschnitteDesSchuelers));
+		}
+
+		@AfterEach
+		void tearDown() {
+			transactionSupport.close();
+		}
+
+		private SchuelerLernabschnittCreateRequest createRequest(final String asdJahrgang, final Long idEpJahre) {
+			final var dto = new SchuelerLernabschnittCreateRequest();
+			dto.schuelerID = ID_SCHUELER;
+			dto.schuljahresabschnitt = ID_SCHULJAHRESABSCHNITT;
+			if (asdJahrgang != null) {
+				stubJahrgang(18L, asdJahrgang);
+				dto.jahrgangID = JsonNullable.of(18L);
+			}
+			if (idEpJahre != null) {
+				dto.idEpJahre = JsonNullable.of(idEpJahre);
+			}
+			return dto;
+		}
+
+		@Test
+		@DisplayName("Schule mit Primarbereich, Jahrgang 1 - EP-Jahre werden übernommen")
+		void create_epJahre_jahrgang1() {
+			final var dto = createRequest("01", 1L);
+
+			service.create(dto);
+
+			assertThat(lernabschnitteDesSchuelers).singleElement().satisfies(neu -> assertThat(neu.EPJahre).isEqualTo(1));
+		}
+
+		@Test
+		@DisplayName("Schule ohne Primarbereich - EP-Jahre im Create-Request sind nicht erlaubt - BAD_REQUEST, es wird nichts angelegt")
+		void create_epJahre_schuleOhnePrimarbereich() {
+			lenient().when(eigeneSchuleService.getSchulform()).thenReturn(Schulform.GY);
+			final var dto = createRequest("05", 1L);
+
+			assertThatThrownBy(() -> service.create(dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "03", "04" })
+		@DisplayName("Ab Jahrgang 3 - EP-Jahre im Create-Request sind schreibgeschützt - BAD_REQUEST, es wird nichts angelegt")
+		void create_epJahre_abJahrgang3Schreibgeschuetzt(final String asdJahrgang) {
+			final var dto = createRequest(asdJahrgang, 3L);
+
+			assertThatThrownBy(() -> service.create(dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
+		}
+
+		@Test
+		@DisplayName("Neuer Lernabschnitt im Jahrgang 3 ohne EP-Jahre - EP-Jahre werden aus dem Maximum der Jahrgänge 1 und 2 übernommen")
+		void create_jahrgang3_uebernimmtMaximumDerJahrgaenge1Und2() {
+			lernabschnitteDesSchuelers.add(createLernabschnitt(2L, "01", 1));
+			lernabschnitteDesSchuelers.add(createLernabschnitt(3L, "02", 2));
+			lernabschnitteDesSchuelers.add(createLernabschnitt(4L, "02", 3));
+			final var dto = createRequest("03", null);
+
+			service.create(dto);
+
+			assertThat(lernabschnitteDesSchuelers).last().satisfies(neu -> assertThat(neu.EPJahre).isEqualTo(3));
+		}
+
+		@Test
+		@DisplayName("Neuer Lernabschnitt im Jahrgang 2 mit EP-Jahre 3 - vorhandene Lernabschnitte der Jahrgänge 3 und 4 werden fortgeschrieben")
+		void create_jahrgang2_schreibtVorhandeneJg3UndJg4Fort() {
+			lernabschnitteDesSchuelers.add(createLernabschnitt(2L, "01", 1));
+			lernabschnitteDesSchuelers.add(createLernabschnitt(3L, "02", 2));
+			final var jg3 = createLernabschnitt(4L, "03", 2);
+			final var jg4 = createLernabschnitt(5L, "04", 2);
+			lernabschnitteDesSchuelers.add(jg3);
+			lernabschnitteDesSchuelers.add(jg4);
+			final var dto = createRequest("02", 3L);
+
+			service.create(dto);
+
+			assertThat(List.of(jg3, jg4)).extracting(lernabschnitt -> lernabschnitt.EPJahre).containsOnly(3);
 		}
 	}
 }

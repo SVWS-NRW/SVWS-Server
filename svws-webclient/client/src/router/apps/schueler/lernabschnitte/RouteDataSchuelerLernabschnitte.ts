@@ -236,6 +236,10 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	patchLernabschnitt = async (data: Partial<SchuelerLernabschnittsdaten>) => {
 		await api.server.patchSchuelerLernabschnittsdaten(data, api.schema, this.daten.id);
 		Object.assign(this.daten, data);
+		// Der Server schreibt die EP-Jahre bei Änderungen an der Laufbahn ggf. fort (Jahrgang 3 und 4), daher wird der Wert neu geladen
+		if ((data.jahrgangID !== undefined) || (data.idEpJahre !== undefined)) {
+			this.daten.idEpJahre = (await api.server.getSchuelerLernabschnittsdatenByID(api.schema, this.daten.id)).idEpJahre;
+		}
 		this.commit();
 	};
 
