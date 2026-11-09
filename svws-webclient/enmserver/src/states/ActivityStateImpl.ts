@@ -48,6 +48,19 @@ class ActivityStateImpl implements ActivityState {
 	}
 
 	/**
+	 * Setzt die Aktivität für die Dauer des nächsten Intervalls auf true, sofern das Ereignis
+	 * vom Benutzer ausgelöst wurde. Dies erfasst z.B. Klicks über Screenreader oder Sprachsteuerung
+	 * sowie Texteingaben ohne Tastendruck (z.B. Diktat oder Wortvorschläge der Bildschirmtastatur).
+	 *
+	 * @param event   das Ereignis
+	 */
+	private activityTrackerTrusted(event: Event) {
+		if (event.isTrusted) {
+			this.activityTracker();
+		}
+	}
+
+	/**
 	 * Prüft, ob im letzten Intervall eine Aktivität vorgelegen hat und aktualisiert bei Bedarf
 	 * den Zähler für die verbleibenden Sekunden
 	 */
@@ -73,6 +86,8 @@ class ActivityStateImpl implements ActivityState {
 		addEventListener("pointerdown", () => this.activityTracker(), this._options);
 		addEventListener("wheel", () => this.activityTracker(), this._options);
 		addEventListener("keydown", () => this.activityTracker(), this._options);
+		addEventListener("click", (event) => this.activityTrackerTrusted(event), this._options);
+		addEventListener("input", (event) => this.activityTrackerTrusted(event), this._options);
 		this._activity = false;
 		this._lastActivity = Date.now();
 		this._remainingSeconds.value = ActivityStateImpl.MAX_REMAINING_SECONDS;
@@ -93,6 +108,8 @@ class ActivityStateImpl implements ActivityState {
 		removeEventListener("pointerdown", () => this.activityTracker(), this._options);
 		removeEventListener("wheel", () => this.activityTracker(), this._options);
 		removeEventListener("keydown", () => this.activityTracker(), this._options);
+		removeEventListener("click", (event) => this.activityTrackerTrusted(event), this._options);
+		removeEventListener("input", (event) => this.activityTrackerTrusted(event), this._options);
 		this._logoutHandler = async () => {};
 	}
 
