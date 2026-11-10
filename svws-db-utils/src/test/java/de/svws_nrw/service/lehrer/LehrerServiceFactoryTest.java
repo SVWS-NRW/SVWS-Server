@@ -172,4 +172,23 @@ class LehrerServiceFactoryTest {
 		verify(katalogRepositoryFactory).getEinwilligungsartRepository();
 	}
 
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerStammdatenService den Service korrekt erstellt")
+	void getLehrerStammdatenService() {
+		final var service = serviceFactory.getLehrerStammdatenService();
+		assertNotNull(service);
+
+		// Das Lehrer-Repository nutzen der Stammdaten-, der Lernplattform- und der Einwilligungs-Service
+		verify(repoLehrerFactory, times(3)).getLehrerRepository();
+		verify(repoLehrerFactory).getLehrerLernplattformRepository();
+		verify(repoLehrerFactory).getLehrerEinwilligungRepository();
+		verify(repoLehrerFactory).getLehrerFotoRepository();
+		verify(katalogRepositoryFactory).getLernplattformRepository();
+		verify(katalogRepositoryFactory).getLernplattformCredentialRepository();
+		verify(katalogRepositoryFactory).getEinwilligungsartRepository();
+		verify(katalogRepositoryFactory).getOrtRepository();
+		verify(katalogRepositoryFactory).getOrtsteilRepository();
+		verify(repoSchuleFactory).getSchulleitungRepository();
+	}
+
 }

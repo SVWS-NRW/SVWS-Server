@@ -204,4 +204,25 @@ class LehrerRepositoryImplTest {
 		assertEquals(List.of(1L, 2L, 3L), repository.getAllIds());
 	}
 
+	@Test
+	@DisplayName("Test: Prüfe, ob ein Kürzel bereits vergeben ist.")
+	void testExistsByKuerzel() {
+		when(conn.existsBy(DTOLehrer.QUERY_BY_KUERZEL, DTOLehrer.class, "L01")).thenReturn(true);
+		when(conn.existsBy(DTOLehrer.QUERY_BY_KUERZEL, DTOLehrer.class, "L99")).thenReturn(false);
+
+		assertTrue(repository.existsByKuerzel("L01"));
+		assertFalse(repository.existsByKuerzel("L99"));
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob ein Kürzel von einem anderen Lehrer verwendet wird.")
+	void testExistsByKuerzelExcludingId() {
+		final var query = "SELECT e FROM DTOLehrer e WHERE e.Kuerzel = ?1 AND e.ID <> ?2";
+		when(conn.existsBy(query, DTOLehrer.class, "L01", 43L)).thenReturn(true);
+		when(conn.existsBy(query, DTOLehrer.class, "L01", 42L)).thenReturn(false);
+
+		assertTrue(repository.existsByKuerzelExcludingId("L01", 43L));
+		assertFalse(repository.existsByKuerzelExcludingId("L01", 42L));
+	}
+
 }

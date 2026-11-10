@@ -13,6 +13,8 @@ import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import de.svws_nrw.mapper.lehrer.minderleistung.LehrerMinderleistungMapper;
 import de.svws_nrw.mapper.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.mapper.lehrer.personaldaten.LehrerPersonaldatenMapper;
+import de.svws_nrw.mapper.lehrer.stammdaten.LehrerStammdatenMapper;
+import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
@@ -33,6 +35,8 @@ import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnit
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenSubServices;
 import de.svws_nrw.service.lehrer.personaldaten.LehrerPersonaldatenService;
+import de.svws_nrw.service.lehrer.stammdaten.LehrerStammdatenRepositories;
+import de.svws_nrw.service.lehrer.stammdaten.LehrerStammdatenService;
 import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachService;
 
 /**
@@ -283,6 +287,29 @@ public final class LehrerServiceFactory {
 				lehrerRepositoryFactory.getLehrerRepository(),
 				katalogRepositoryFactory.getEinwilligungsartRepository(),
 				LehrerEinwilligungMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt einen neuen {@link LehrerStammdatenService}.
+	 *
+	 * @return ein neuer {@code LehrerStammdatenService}
+	 */
+	public LehrerStammdatenService getLehrerStammdatenService() {
+		final var repositories = new LehrerStammdatenRepositories(
+				lehrerRepositoryFactory.getLehrerRepository(),
+				eigeneSchuleRepositoryFactory.getSchulleitungRepository(),
+				katalogRepositoryFactory.getOrtRepository(),
+				katalogRepositoryFactory.getOrtsteilRepository()
+		);
+
+		return new LehrerStammdatenService(
+				repositories,
+				this.getLehrerFotoService(),
+				this.getLehrerLernplattformService(),
+				this.getLehrerEinwilligungService(),
+				LehrerStammdatenMapper.INSTANCE,
+				SchulleitungMapper.INSTANCE
 		);
 	}
 

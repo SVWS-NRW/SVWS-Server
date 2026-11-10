@@ -42,4 +42,23 @@ public interface LehrerRepository extends Repository<DTOLehrer> {
 	 */
 	List<Long> getAllIds();
 
+	/**
+	 * Prüft, ob bereits ein Lehrer mit dem übergebenen Kürzel existiert.
+	 *
+	 * @param kuerzel   das zu prüfende Kürzel
+	 *
+	 * @return {@code true}, wenn das Kürzel bereits vergeben ist, sonst {@code false}
+	 */
+	boolean existsByKuerzel(String kuerzel);
+
+	/**
+	 * Prüft, ob ein anderer Lehrer als der mit der übergebenen ID das übergebene Kürzel verwendet.
+	 *
+	 * @param kuerzel    das zu prüfende Kürzel
+	 * @param idLehrer   die ID des Lehrers, der bei der Prüfung ausgeschlossen wird
+	 *
+	 * @return {@code true}, wenn das Kürzel von einem anderen Lehrer verwendet wird, sonst {@code false}
+	 */
+	boolean existsByKuerzelExcludingId(String kuerzel, long idLehrer);
+
 }

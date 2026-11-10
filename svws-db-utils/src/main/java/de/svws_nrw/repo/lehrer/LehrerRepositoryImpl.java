@@ -15,6 +15,9 @@ import de.svws_nrw.repo.RepositoryImpl;
  */
 public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implements LehrerRepository {
 
+	private static final String QUERY_ALL_IDS = "SELECT e.ID FROM DTOLehrer e ORDER BY e.ID";
+	private static final String QUERY_BY_KUERZEL_EXCLUDING_ID = "SELECT e FROM DTOLehrer e WHERE e.Kuerzel = ?1 AND e.ID <> ?2";
+
 	private static final String QUERY_IDS_BY_IDS = "SELECT e.ID FROM DTOLehrer e WHERE e.ID IN ?1";
 
 	/**
@@ -53,7 +56,17 @@ public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implem
 
 	@Override
 	public List<Long> getAllIds() {
-		return conn.queryList("SELECT e.ID FROM DTOLehrer e ORDER BY e.ID", Long.class);
+		return conn.queryList(QUERY_ALL_IDS, Long.class);
+	}
+
+	@Override
+	public boolean existsByKuerzel(final String kuerzel) {
+		return conn.existsBy(DTOLehrer.QUERY_BY_KUERZEL, DTOLehrer.class, kuerzel);
+	}
+
+	@Override
+	public boolean existsByKuerzelExcludingId(final String kuerzel, final long idLehrer) {
+		return conn.existsBy(QUERY_BY_KUERZEL_EXCLUDING_ID, DTOLehrer.class, kuerzel, idLehrer);
 	}
 
 }

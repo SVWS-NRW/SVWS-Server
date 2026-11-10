@@ -597,6 +597,20 @@ class SchuelerStammdatenServiceTest {
 		assertThat(service.patch(1L, req)).isEqualTo(apiModel);
 	}
 
+	@Test
+	@DisplayName("patch - gültiger Ort ohne Ortsteil im Request (undefined) -> erfolgreich")
+	void patch_ortOhneOrtsteilImRequest() {
+		when(repository.findById(1L)).thenReturn(Optional.of(entity));
+		when(ortRepository.existsByIds(Set.of(100L))).thenReturn(Set.of(100L));
+		stubToApi(apiModel);
+
+		final var req = new SchuelerStammdatenPatchRequest();
+		req.wohnortID = JsonNullable.of(100L);
+		req.ortsteilID = JsonNullable.undefined();
+
+		assertThat(service.patch(1L, req)).isEqualTo(apiModel);
+	}
+
 	// =========================================================================
 	// patchMultiple
 	// =========================================================================

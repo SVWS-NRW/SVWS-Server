@@ -381,7 +381,7 @@ public final class SchuelerStammdatenService {
 			throw new ApiOperationException(Response.Status.NOT_FOUND,
 					"Kein Ort zur ID %d gefunden.".formatted(idOrt.get()));
 		}
-		validateOrtsteilMatchesToOrt(idOrt.get(), idOrtsteil.get(), context);
+		validateOrtsteilMatchesToOrt(idOrt.get(), idOrtsteil.orElse(null), context);
 	}
 
 	private void validateOrtsteilOhneOrtNichtGesetzt(final JsonNullable<Long> idOrtsteil) {

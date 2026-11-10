@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -21,11 +20,10 @@ import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
-import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.foto.LehrerFoto;
 import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
+import de.svws_nrw.service.lehrer.stammdaten.LehrerStammdatenService;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -186,13 +184,7 @@ public class ReportingRepositoryLehrer {
 		final Predicate<ReportingLehrer> filter = ReportingLehrer.FILTER.bedingung(
 				this.reportingContext.filterService().getFilter(ReportingLehrer.class.getSimpleName()), null);
 		return ReportingRepositoryUtils.waehleAus(idsLehrer, mapLehrerStammdaten, mapLehrer,
-				fehlendeIds -> new DataLehrerStammdaten(
-						this.reportingContext.conn(),
-						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
-						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
-						EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
-						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
-				).getListByIDsOhneFotos(fehlendeIds),
+				fehlendeIds -> getLehrerStammdatenService().getListOhneFotos(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				comparator, filter,
@@ -225,19 +217,23 @@ public class ReportingRepositoryLehrer {
 		return mapLehrerStammdaten.containsKey(idLehrer);
 	}
 
+	/**
+	 * Erstellt den Service für den Zugriff auf die Lehrerstammdaten. Die Datenbank-Verbindung kommt nicht aus dem {@link ReportingContext},
+	 * sondern wird von der Factory anhand des aktuellen Requests bestimmt.
+	 *
+	 * @return der Service
+	 */
+	private static LehrerStammdatenService getLehrerStammdatenService() {
+		return LehrerServiceFactory.getNewInstance().getLehrerStammdatenService();
+	}
+
 	private void ladeAlleLehrerStammdaten() {
 		if (alleLehrerStammdatenGeladen) {
 			return;
 		}
 		try {
 			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade alle Lehrerstammdaten.");
-			final List<LehrerStammdaten> alle = new DataLehrerStammdaten(
-					this.reportingContext.conn(),
-					KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
-					KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
-					EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
-					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
-			).getAllOhneFotos();
+			final List<LehrerStammdaten> alle = getLehrerStammdatenService().getAllOhneFotos();
 			for (final LehrerStammdaten ls : alle) {
 				mapLehrerStammdaten.putIfAbsent(ls.id, ls);
 			}

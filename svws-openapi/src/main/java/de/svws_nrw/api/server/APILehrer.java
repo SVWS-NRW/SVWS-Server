@@ -53,11 +53,7 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerMehrleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
-import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
 import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungPatchRequest;
@@ -81,6 +77,8 @@ import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnit
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenPatchRequest;
 import de.svws_nrw.service.lehrer.personaldaten.LehrerPersonaldatenBatchPatchRequest;
 import de.svws_nrw.service.lehrer.personaldaten.LehrerPersonaldatenPatchRequest;
+import de.svws_nrw.service.lehrer.stammdaten.LehrerStammdatenCreateRequest;
+import de.svws_nrw.service.lehrer.stammdaten.LehrerStammdatenPatchRequest;
 import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachCreateRequest;
 import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachPatchRequest;
 import de.svws_nrw.service.schule.schulleitung.SchulleitungCreateRequest;
@@ -230,18 +228,10 @@ public class APILehrer {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerStammdaten(
-						conn,
-						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
-						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
-						EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
-						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
-				).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_ANSEHEN
-
-		);
+		return LehrerControllerFactory
+				.withReadAccessStable(request)
+				.getLehrerStammdatenController()
+				.get(id);
 	}
 
 
@@ -249,7 +239,7 @@ public class APILehrer {
 	 * Die OpenAPI-Methode für die Abfrage der Stammdaten mehrerer Lehrer.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param is        Inputstream mit einer Liste von Lehrer IDs
+	 * @param ids       die Liste der Lehrer IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Stammdaten der Lehrer
@@ -266,17 +256,12 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerStammdatenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Lehrer", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-			conn -> new DataLehrerStammdaten(
-					conn,
-					KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
-					KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
-					EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
-					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
-			).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
-			request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
+		return LehrerControllerFactory
+				.withReadAccessStable(request)
+				.getLehrerStammdatenController()
+				.getList(ids);
 	}
 
 
@@ -284,7 +269,7 @@ public class APILehrer {
 	 * Die OpenAPI-Methode für das Hinzufügen neuer LehrerStammdaten.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der LehrerStammdaten
+	 * @param dto          die Daten der LehrerStammdaten
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit den erstellen LehrerStammdaten
@@ -300,17 +285,12 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLehrerStammdaten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden LehrerStammdaten ohne ID, da diese automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final LehrerStammdatenCreateRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerStammdaten(
-						conn,
-						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
-						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
-						EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
-						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
-				).addAsResponse(is), request,
-				ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
+		return LehrerControllerFactory
+				.withWriteAccessStable(request)
+				.getLehrerStammdatenController()
+				.create(dto);
 	}
 
 	/**
@@ -318,7 +298,7 @@ public class APILehrer {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation des Lehrers
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     das Patch-Objekt
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -337,18 +317,12 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Lehrer-Stammdaten", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final LehrerStammdatenPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerStammdaten(
-						conn,
-						KatalogRepositoryFactory.getNewInstance().getLernplattformRepository(),
-						KatalogRepositoryFactory.getNewInstance().getEinwilligungsartRepository(),
-						EigeneSchuleRepositoryFactory.getNewInstance().getSchulleitungRepository(),
-						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
-				).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_AENDERN);
+		return LehrerControllerFactory
+				.withWriteAccessStable(request)
+				.getLehrerStammdatenController()
+				.patch(id, patch);
 	}
 
 
@@ -373,7 +347,7 @@ public class APILehrer {
 	public Response getLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerPersonaldatenController()
 				.get(id);
 	}
@@ -406,7 +380,7 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerPersonaldaten.class))) final LehrerPersonaldatenPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerPersonaldatenController()
 				.patch(id, patch);
 	}
@@ -437,7 +411,7 @@ public class APILehrer {
 									implementation = LehrerPersonaldaten.class)))) final List<LehrerPersonaldatenBatchPatchRequest> dtos,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerPersonaldatenController()
 				.patchMultiple(dtos);
 	}
@@ -463,7 +437,7 @@ public class APILehrer {
 	public Response getLehrerLehraemter(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerLehramtController()
 				.getByIdLehrer(id);
 	}
@@ -495,7 +469,7 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerLehramtEintrag.class))) final LehrerLehramtPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerLehramtController()
 				.patch(idLehramt, patch);
 	}
@@ -525,7 +499,7 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerLehramtEintrag.class))) final LehrerLehramtCreateRequest dto,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerLehramtController()
 				.create(dto);
 	}
@@ -556,7 +530,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerLehramtController()
 				.delete(ids);
 	}
@@ -583,7 +557,7 @@ public class APILehrer {
 	public Response getLehrerLehramtLehrbefaehigungen(@PathParam("schema") final String schema, @PathParam("idLehramt") final long idLehramt,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerLehrbefaehigungController()
 				.getByIdLehramt(idLehramt);
 	}
@@ -615,7 +589,7 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerLehrbefaehigungEintrag.class))) final LehrerLehrbefaehigungPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerLehrbefaehigungController()
 				.patch(id, patch);
 	}
@@ -647,7 +621,7 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerLehrbefaehigungEintrag.class))) final LehrerLehrbefaehigungCreateRequest dto,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerLehrbefaehigungController()
 				.create(dto);
 	}
@@ -679,7 +653,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerLehrbefaehigungController()
 				.delete(ids);
 	}
@@ -706,7 +680,7 @@ public class APILehrer {
 	public Response getLehrerLehramtFachrichtungen(@PathParam("schema") final String schema, @PathParam("idLehramt") final long idLehramt,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerFachrichtungController()
 				.getByIdLehramt(idLehramt);
 	}
@@ -737,7 +711,7 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerFachrichtungEintrag.class))) final LehrerFachrichtungPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFachrichtungController()
 				.patch(id, patch);
 	}
@@ -768,7 +742,7 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerFachrichtungEintrag.class))) final LehrerFachrichtungCreateRequest dto,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFachrichtungController()
 				.create(dto);
 	}
@@ -797,7 +771,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFachrichtungController()
 				.delete(ids);
 	}
@@ -824,7 +798,7 @@ public class APILehrer {
 			@PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController()
 				.get(id);
 	}
@@ -852,7 +826,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController()
 				.getList(ids);
 	}
@@ -881,7 +855,7 @@ public class APILehrer {
 							schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final LehrerPersonalabschnittsdatenCreateRequest dto,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController()
 				.create(dto);
 	}
@@ -911,7 +885,7 @@ public class APILehrer {
 									implementation = LehrerPersonalabschnittsdaten.class)))) final List<LehrerPersonalabschnittsdatenCreateRequest> dtos,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController()
 				.createMultiple(dtos);
 	}
@@ -943,7 +917,7 @@ public class APILehrer {
 							schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final LehrerPersonalabschnittsdatenPatchRequest dto,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController()
 				.patch(id, dto);
 	}
@@ -974,7 +948,7 @@ public class APILehrer {
 									implementation = LehrerPersonalabschnittsdaten.class)))) final List<LehrerPersonalabschnittsdatenBatchPatchRequest> dtos,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController()
 				.patchMultiple(dtos);
 	}
@@ -1001,7 +975,7 @@ public class APILehrer {
 			@PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController()
 				.delete(id);
 	}
@@ -1029,7 +1003,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController()
 				.deleteMultiple(ids);
 	}
@@ -1055,7 +1029,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Keine Minderleistung mit der angegebenen ID gefunden")
 	public Response getLehrerPersonalabschnittsdatenMinderleistung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withReadAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenReadAccessStable(request)
 				.getLehrerMinderleistungController()
 				.get(id);
 	}
@@ -1088,7 +1062,7 @@ public class APILehrer {
 							schema = @Schema(
 									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerMinderleistungCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerMinderleistungController()
 				.create(input);
 	}
@@ -1115,7 +1089,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteLehrerPersonalabschnittsdatenMinderleistung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerMinderleistungController()
 				.delete(id);
 	}
@@ -1147,7 +1121,7 @@ public class APILehrer {
 			@RequestBody(description = "Der Patch für die Minderleistung", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerMinderleistungPatchRequest input,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerMinderleistungController()
 				.patch(input, id);
 	}
@@ -1178,7 +1152,7 @@ public class APILehrer {
 					array = @ArraySchema(schema = @Schema(
 							implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<LehrerMinderleistungBatchPatchRequest> input,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerMinderleistungController()
 				.patchMultiple(input);
 	}
@@ -1204,7 +1178,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Keine Mehrleistung mit der angegebenen ID gefunden")
 	public Response getLehrerPersonalabschnittsdatenMehrleistung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withReadAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenReadAccessStable(request)
 				.getLehrerMehrleistungController().get(id);
 	}
 
@@ -1236,7 +1210,7 @@ public class APILehrer {
 							schema = @Schema(
 									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerMehrleistungCreateRequest body,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerMehrleistungController().create(body);
 	}
 
@@ -1262,7 +1236,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteLehrerPersonalabschnittsdatenMehrleistung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerMehrleistungController().delete(id);
 	}
 
@@ -1296,7 +1270,7 @@ public class APILehrer {
 									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerMehrleistungPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		patch.id = id;
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerMehrleistungController().patch(patch);
 	}
 
@@ -1329,7 +1303,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(
 									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<@Valid LehrerMehrleistungPatchRequest> patches,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerMehrleistungController()
 				.patchMultiple(patches);
 	}
@@ -1354,7 +1328,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Keine allgemeine Anrechnung mit der angegebenen ID gefunden")
 	public Response getLehrerPersonalabschnittsdatenAllgemeineAnrechnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withReadAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenReadAccessStable(request)
 				.getLehrerAnrechnungsstundenController()
 				.get(id);
 	}
@@ -1388,7 +1362,7 @@ public class APILehrer {
 							schema = @Schema(
 									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerAnrechnungsstundeCreateRequest patch,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerAnrechnungsstundenController()
 				.create(patch);
 	}
@@ -1415,7 +1389,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerAnrechnungsstundenController()
 				.delete(id);
 	}
@@ -1450,7 +1424,7 @@ public class APILehrer {
 							schema = @Schema(
 									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerAnrechnungsstundePatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerAnrechnungsstundenController()
 				.patch(patch);
 	}
@@ -1485,7 +1459,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(
 									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<@Valid LehrerAnrechnungsstundePatchRequest> patches,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerAnrechnungsstundenController()
 				.patchMultiple(patches);
 	}
@@ -1511,7 +1485,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerUnterrichtsfaecher(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withReadAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenReadAccessStable(request)
 				.getLehrerUnterrichtsfachController()
 				.getListByLehrerId(id);
 	}
@@ -1540,7 +1514,7 @@ public class APILehrer {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = LehrerUnterrichtsfach.class))) final LehrerUnterrichtsfachCreateRequest patch,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerUnterrichtsfachController()
 				.create(patch);
 	}
@@ -1572,7 +1546,7 @@ public class APILehrer {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = LehrerUnterrichtsfach.class))) final LehrerUnterrichtsfachPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerUnterrichtsfachController()
 				.patch(id, patch);
 	}
@@ -1599,7 +1573,7 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteLehrerUnterrichtsfach(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return LehrerControllerFactory.withWriteAccessStable(request)
+		return LehrerControllerFactory.withPersonaldatenWriteAccessStable(request)
 				.getLehrerUnterrichtsfachController()
 				.delete(id);
 	}
@@ -2270,7 +2244,7 @@ public class APILehrer {
 			@PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerFunktionController()
 				.get(id);
 	}
@@ -2294,7 +2268,7 @@ public class APILehrer {
 	public Response getLehrerFunktionen(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerFunktionController()
 				.getAll();
 	}
@@ -2323,7 +2297,7 @@ public class APILehrer {
 			@PathParam("idAbschnitt") final long idAbschnitt,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessStable(request)
+				.withPersonaldatenReadAccessStable(request)
 				.getLehrerFunktionController()
 				.getListByIdAbschnitt(idAbschnitt);
 	}
@@ -2352,7 +2326,7 @@ public class APILehrer {
 							schema = @Schema(implementation = LehrerFunktion.class))) final LehrerFunktionCreateRequest dto,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFunktionController()
 				.create(dto);
 	}
@@ -2381,7 +2355,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = LehrerFunktion.class)))) final List<LehrerFunktionCreateRequest> dtos,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFunktionController()
 				.createMultiple(dtos);
 	}
@@ -2413,7 +2387,7 @@ public class APILehrer {
 							schema = @Schema(implementation = LehrerFunktion.class))) final LehrerFunktionPatchRequest dto,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFunktionController()
 				.patch(id, dto);
 	}
@@ -2443,7 +2417,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = LehrerFunktion.class)))) final List<LehrerFunktionBatchPatchRequest> dtos,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFunktionController()
 				.patchMultiple(dtos);
 	}
@@ -2469,7 +2443,7 @@ public class APILehrer {
 			@PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFunktionController()
 				.delete(id);
 	}
@@ -2497,7 +2471,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessStable(request)
+				.withPersonaldatenWriteAccessStable(request)
 				.getLehrerFunktionController()
 				.deleteMultiple(ids);
 	}

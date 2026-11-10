@@ -27,13 +27,13 @@ import org.mockito.MockedConstruction;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.service.lehrer.stammdaten.LehrerStammdatenService;
 import org.mockito.MockedStatic;
 
 /**
@@ -127,13 +127,13 @@ class TestReportingRepositoryLehrerNotenmodulKennwoerter {
 
 	/**
 	 * Legt den Vollbestand der Lehrerstammdaten in den Cache. Das Repository holt ihn beim Registrieren der ersten Lehrkraft, deshalb wird für diesen einen
-	 * Aufruf die Datenklasse ersetzt.
+	 * Aufruf der Service ersetzt.
 	 *
 	 * @param alle Die Stammdaten aller Lehrkräfte.
 	 */
 	private void gebeVollbestandVor(final List<LehrerStammdaten> alle) {
-		try (MockedConstruction<DataLehrerStammdaten> datenklasse = mockConstruction(DataLehrerStammdaten.class,
-				(dataLehrerStammdaten, kontext) -> when(dataLehrerStammdaten.getAllOhneFotos()).thenReturn(alle))) {
+		try (MockedConstruction<LehrerStammdatenService> service = mockConstruction(LehrerStammdatenService.class,
+				(stammdatenService, kontext) -> when(stammdatenService.getAllOhneFotos()).thenReturn(alle))) {
 			repository.registriereStammdaten(alle.getFirst().id, alle.getFirst());
 		}
 	}
