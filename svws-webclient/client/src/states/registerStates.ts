@@ -31,6 +31,7 @@ import { NotenmodulStateKey } from "@ui/states/NotenmodulState";
 import { NotificationsStateKey } from "@ui/states/NotificationsState";
 import { ReportingStateKey } from "@ui/states/ReportingState";
 import { SchuleStateKey } from "@ui/states/SchuleState";
+import { SchulwechselErfolgreicheBewerbungenStateKey } from "@ui/states/schulwechsel/SchulwechselErfolgreicheBewerbungenState";
 import { ServerStateKey } from "@ui/states/ServerState";
 import { StateRegistry } from "@ui/states/StateRegistry";
 import { StatistikStateKey } from "@ui/states/statistik/StatistikState";
@@ -79,6 +80,7 @@ import { reportingStateImpl } from "./ReportingStateImpl";
 import { SchuelerAuswahlStateKey } from "./schueler/SchuelerAuswahlState";
 import { schuelerAuswahlStateImpl } from "./schueler/SchuelerAuswahlStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
+import { schulwechselErfolgreicheBewerbungenStateImpl } from "./schulwechsel/SchulwechselErfolgreicheBewerbungenStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
 import { statistikStateImpl } from "./statistik/StatistikStateImpl";
 import { uvStateImpl } from "./UvStateImpl";
@@ -127,4 +129,5 @@ export function registerStates(): void {
 	registry.addSessionState(FloskelgruppenStateKey, floskelgruppenStateImpl);
 	registry.addSessionState(FloskelnStateKey, floskelnStateImpl);
 	registry.addSessionState(FaecherStateKey, faecherStateImpl);
+	registry.addSessionState(SchulwechselErfolgreicheBewerbungenStateKey, schulwechselErfolgreicheBewerbungenStateImpl);
 }

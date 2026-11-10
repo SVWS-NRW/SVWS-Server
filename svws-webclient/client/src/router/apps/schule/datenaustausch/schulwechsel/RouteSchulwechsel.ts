@@ -6,7 +6,7 @@ import type { RouteApp } from "../../../RouteApp";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteDataSchulwechsel } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteDataSchulwechsel";
 import { routeSchulwechselAbgaenge } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteSchulwechselAbgaenge";
-import { routeSchulwechselZugaenge } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteSchulwechselZugaenge";
+import { routeSchulwechselErfolgreicheBewerbungen } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteSchulwechselErfolgreicheBewerbungen";
 import { RouteTabNode } from "~/router/RouteTabNode";
 
 const schulwechselApp = () => import("~/components/schule/datenaustausch/schulwechsel/SchulwechselApp.vue");
@@ -21,7 +21,7 @@ export class RouteSchulwechsel extends RouteTabNode<RouteDataSchulwechsel, Route
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 		super.children = [
 			routeSchulwechselAbgaenge,
-			routeSchulwechselZugaenge,
+			routeSchulwechselErfolgreicheBewerbungen,
 		];
 		super.defaultChild = routeSchulwechselAbgaenge;
 	}
