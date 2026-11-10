@@ -1,6 +1,7 @@
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { Schulform } from "@core/asd/types/schule/Schulform";
 import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
+import type { PersonTyp } from "@core/core/types/schule/PersonTyp";
 import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { JavaLong } from "@core/java/lang/JavaLong";
 import { JavaString } from "@core/java/lang/JavaString";
@@ -16,6 +17,7 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	private static readonly _einwilligungsArtToId = (ea: Einwilligungsart) => ea.id;
 	private readonly idsReferencedEinwilligungsarten: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
+	private _filterPersonTypen: PersonTyp[] = [];
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Klassen in Klassenlisten.
@@ -50,6 +52,7 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 		einwilligungsarten: List<Einwilligungsart>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, einwilligungsarten, EinwilligungsartenListeManager.comparator,
 			EinwilligungsartenListeManager._einwilligungsArtToId, EinwilligungsartenListeManager._einwilligungsArtToId, []);
+		this._filterPermitAuswahl = false;
 	}
 
 	/**
@@ -75,7 +78,36 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	}
 
 	protected checkFilter(eintrag: Einwilligungsart): boolean {
-		return !(this._filterNurSichtbar && !eintrag.istSichtbar);
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
+			return false;
+		}
+		return this.matchesPersonTypFilter(eintrag);
+	}
+
+	private matchesPersonTypFilter(eintrag: Einwilligungsart): boolean {
+		if (this._filterPersonTypen.length === 0) {
+			return true;
+		}
+		return this._filterPersonTypen.some(personTyp => personTyp.id === eintrag.idPersonTyp);
+	}
+
+	/**
+	 * Setzt die Personenarten, nach denen die Einwilligungsarten gefiltert werden.
+	 *
+	 * @param value   die Personenarten. Ist die Liste leer, wird nicht nach Personenart gefiltert.
+	 */
+	public setFilterPersonTypen(value: PersonTyp[]): void {
+		this._filterPersonTypen = value;
+		this._eventHandlerFilterChanged();
+	}
+
+	/**
+	 * Gibt die Personenarten zurück, nach denen die Einwilligungsarten aktuell gefiltert werden.
+	 *
+	 * @return die gewählten Personenarten. Ist die Liste leer, wird nicht nach Personenart gefiltert.
+	 */
+	public filterPersonTypen(): PersonTyp[] {
+		return this._filterPersonTypen;
 	}
 
 	/**

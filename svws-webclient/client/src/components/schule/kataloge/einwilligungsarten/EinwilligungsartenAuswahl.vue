@@ -14,6 +14,13 @@
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="sichtbareEinwilligungsarten">Nur Sichtbare</svws-ui-checkbox>
+					<ui-select-multi label="Personenart"
+						v-model="filterPersonTypen"
+						:manager="personTypManager"
+						removable />
+				</template>
+				<template #cell(idPersonTyp)="{ value }">
+					<span>{{ getPersonTypBezeichnung(value) }}</span>
 				</template>
 				<template #actions v-if="!readonly">
 					<svws-ui-tooltip position="bottom">
@@ -29,7 +36,7 @@
 				</template>
 			</svws-ui-table>
 		</div>
-	</div>>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -38,9 +45,11 @@
 
 	import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { PersonTyp } from "@core/core/types/schule/PersonTyp";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	import type { EinwilligungenAuswahlProps } from "./EinwilligungsartenAuswahlProps";
@@ -94,8 +103,27 @@
 	});
 
 	const columns: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc", span: 2 },
+		{ key: "idPersonTyp", label: "Personenart", sortable: true, span: 1 },
 	];
+
+	const filterPersonTypen = computed<PersonTyp[]>({
+		get: () => props.manager().filterPersonTypen(),
+		set: (value: PersonTyp[]) => {
+			props.manager().setFilterPersonTypen(value);
+			void props.setFilter();
+		},
+	});
+
+	const personTypManager = new SelectManager<PersonTyp>({
+		options: PersonTyp.values(),
+		optionDisplayText: (personTyp: PersonTyp) => personTyp.bezeichnung,
+		selectionDisplayText: (personTyp: PersonTyp) => personTyp.bezeichnung,
+	});
+
+	function getPersonTypBezeichnung(idPersonTyp: number): string {
+		return PersonTyp.getByID(idPersonTyp)?.bezeichnung ?? "";
+	}
 
 	function setAuswahl(einwilligungsarten: Einwilligungsart[]) {
 		props.manager().liste.auswahlClear();
