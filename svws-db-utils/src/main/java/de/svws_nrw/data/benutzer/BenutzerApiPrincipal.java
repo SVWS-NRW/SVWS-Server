@@ -4,14 +4,17 @@ import java.io.Serializable;
 import java.security.Principal;
 
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
+import de.svws_nrw.db.DBConnectionException;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.PersistenceException;
 import jakarta.ws.rs.core.Response.Status;
 
 
@@ -24,6 +27,14 @@ import jakarta.ws.rs.core.Response.Status;
 public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 	private static final long serialVersionUID = -6227920753748399662L;
+
+	/** Die Meldung, wenn bei einer Anmeldung am Schema nicht auf die Datenbank zugegriffen werden kann */
+	static final String MELDUNG_DB_ZUGRIFF = "Die Anmeldung ist derzeit nicht möglich, da der SVWS-Server nicht auf die Datenbank zugreifen kann. "
+			+ "Bitte wenden Sie sich an Ihren System-Administrator.";
+
+	/** Die Meldung, wenn bei einer Anmeldung mit Datenbank-Zugangsdaten (z.B. im Admin-Client) keine Verbindung zur Datenbank besteht */
+	static final String MELDUNG_DB_ZUGRIFF_ADMIN = "Die Anmeldung ist derzeit nicht möglich, da der SVWS-Server keine Verbindung zur Datenbank herstellen kann. "
+			+ "Bitte prüfen Sie die Erreichbarkeit der Datenbank und die Datenbank-Konfiguration des SVWS-Servers.";
 
 	/** Das zu dem Principal gehörende {@link Benutzer}-Objekt für den Datenbankzugriff */
 	private final transient Benutzer user;
@@ -79,7 +90,24 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 	}
 
 
-	private static BenutzerApiPrincipal loginUsingDBAuthentication(final String username, final String password, final String path, final String schemaname) {
+	/**
+	 * Protokolliert, dass bei der Anmeldung nicht auf die Datenbank zugegriffen werden konnte, und wirft die
+	 * Exception für die Rückmeldung mit HTTP 503. Die Details des Fehlers werden nur protokolliert.
+	 *
+	 * @param e         der aufgetretene Fehler
+	 * @param meldung   die Meldung für die Rückmeldung an den Client
+	 *
+	 * @throws ApiOperationException   immer, mit dem HTTP-Status 503 und der übergebenen Meldung
+	 */
+	private static void throwApiOperationExceptionDBAccess(final Exception e, final String meldung) throws ApiOperationException {
+		Logger.global().logLn(LogLevel.ERROR, "Anmeldung nicht möglich, da nicht auf die Datenbank zugegriffen werden kann: %s%s"
+				.formatted(e.getMessage(), (e.getCause() == null) ? "" : " (" + e.getCause().getMessage() + ")"));
+		throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, e, meldung);
+	}
+
+
+	private static BenutzerApiPrincipal loginUsingDBAuthentication(final String username, final String password, final String path, final String schemaname)
+			throws ApiOperationException {
 		// Prüfe, ob der root-Zugriff per Konfiguration deaktiviert wurde. Dann darf aus Sicherheitgründen auch keine Kennwort-Prüfung stattfinden!
 		if (SVWSKonfiguration.get().isDBRootAccessDisabled()) {
 			return null;
@@ -118,9 +146,13 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 				}
 			}
 			return new BenutzerApiPrincipal(benutzer);
+		} catch (final DBConnectionException e) {
+			throwApiOperationExceptionDBAccess(e, MELDUNG_DB_ZUGRIFF_ADMIN);
 		} catch (@SuppressWarnings("unused") final DBException de) {
 			return null;
 		}
+		// nicht erreichbar, da throwApiOperationExceptionDBAccess immer eine Exception wirft
+		return null;
 	}
 
 
@@ -248,9 +280,21 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			DBBenutzerUtils.leseKompetenzen(user);
 
 			return new BenutzerApiPrincipal(user);
-		} catch (@SuppressWarnings("unused") final DBException de) {
-			return null;
+		} catch (final DBException de) {
+			// Bei einer Anmeldung mit Datenbank-Zugangsdaten kann eine abgelehnte Anmeldung an der Datenbank vorliegen. Ansonsten
+			// erfolgt der Datenbankzugriff mit den Zugangsdaten des Servers und ein Fehler ist keine fehlgeschlagene Anmeldung.
+			if (config.useDBLogin() && !(de instanceof DBConnectionException)) {
+				return null;
+			}
+			throwApiOperationExceptionDBAccess(de, MELDUNG_DB_ZUGRIFF);
+		} catch (final PersistenceException pe) {
+			if (config.useDBLogin() && !DBConnectionException.istVerbindungsfehler(pe)) {
+				throw pe;
+			}
+			throwApiOperationExceptionDBAccess(pe, MELDUNG_DB_ZUGRIFF);
 		}
+		// nicht erreichbar, da throwApiOperationExceptionDBAccess immer eine Exception wirft
+		return null;
 	}
 
 }

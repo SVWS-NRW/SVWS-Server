@@ -123,16 +123,50 @@ export class ApiConnection {
 			if ((error instanceof OpenApiError) && (error.response?.status === 404)) {
 				return;
 			}
-			if ((error instanceof OpenApiError) && (error.response?.status === 503)) {
-				const res = await error.response.text();
-				throw new UserNotificationException(res);
-			}
-			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._api = undefined;
 			this._apiExternal = undefined;
 			StateRegistry.instance.resetSessionStates();
+			// Nur bei HTTP 401 wird keine Meldung erzeugt, dann zeigt die Login-Seite an, dass die Zugangsdaten falsch sind
+			const meldung = await this.getLoginFehlermeldung(error);
+			if (meldung !== null) {
+				throw new UserNotificationException(meldung);
+			}
 		}
 	};
+
+
+	/**
+	 * Ermittelt die Meldung zu einem Fehler bei der Anmeldung. Nur bei HTTP 401 handelt es sich um eine
+	 * fehlgeschlagene Anmeldung mit falschen Zugangsdaten. Bei HTTP 503 (z.B. Datenbank nicht erreichbar oder
+	 * Schema gesperrt) wird die Meldung des Servers verwendet, sofern dieser eine Text-Meldung liefert.
+	 * Alle anderen Fehler werden mit einer neutralen Meldung beschrieben.
+	 *
+	 * @param error   der bei der Anmeldung aufgetretene Fehler
+	 *
+	 * @returns null bei einer fehlgeschlagenen Anmeldung, ansonsten die anzuzeigende Meldung
+	 */
+	private async getLoginFehlermeldung(error: unknown): Promise<string | null> {
+		if (!(error instanceof OpenApiError) || (error.response === null)) {
+			return "Anmeldung fehlgeschlagen: Der Server ist nicht erreichbar oder hat einen Fehler gemeldet.";
+		}
+		if (error.response.status === 401) {
+			return null;
+		}
+		if (error.response.status === 503) {
+			let text = "";
+			try {
+				text = (await error.response.text()).trim();
+			} catch {
+				// Der Inhalt der Antwort ist nicht lesbar (z.B. bereits gelesen), dann wird die allgemeine Meldung verwendet
+			}
+			// Eine HTML-Seite stammt nicht vom SVWS-Server, sondern z.B. von einem vorgeschalteten Proxy
+			if ((text !== "") && !text.startsWith("<")) {
+				return text;
+			}
+			return "Die Anmeldung ist derzeit nicht möglich, da der SVWS-Server vorübergehend nicht verfügbar ist. Bitte versuchen Sie es später erneut.";
+		}
+		return "Anmeldung fehlgeschlagen: Der Server ist nicht erreichbar oder hat einen Fehler gemeldet.";
+	}
 
 
 	/**

@@ -104,8 +104,11 @@
 	async function doLogin() {
 		inputFocus.value = false;
 		authenticating.value = true;
-		await props.login(username.value, password.value);
-		authenticating.value = false;
+		try {
+			await props.login(username.value, password.value);
+		} finally {
+			authenticating.value = false;
+		}
 		firstauth.value = false;
 		if (!props.authenticated) {
 			throw new Error("Passwort oder Benutzername falsch.");

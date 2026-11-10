@@ -107,6 +107,8 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 				}
 			} catch (final WebApplicationException wae) {
 				try (var r = wae.getResponse()) {
+					// Die CORS-Header werden auch hier benötigt, damit Browser-Anwendungen anderer Herkunft Status und Meldung lesen können
+					addCORSHeader(req, res);
 					res.setStatus(r.getStatus());
 					final String msg = (r.getEntity() == null) ? wae.getMessage() : r.getEntity().toString();
 					res.write(true, ByteBuffer.wrap(msg.getBytes()), callback);
@@ -115,6 +117,20 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 			}
 		}
 		res.getHeaders().add(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");
+		addCORSHeader(req, res);
+		// An OPTIONS-Http-Request must be OK for CORS-Preflight-Requests
+		Response.writeError(req, res, callback, "OPTIONS".equals(req.getMethod()) ? Status.OK.getStatusCode() : Status.UNAUTHORIZED.getStatusCode());
+		return AuthenticationState.SEND_SUCCESS;
+	}
+
+
+	/**
+	 * Fügt der Antwort die CORS-Header hinzu, falls die Authentifizierung nicht erfolgreich war.
+	 *
+	 * @param req   der HTTP-Request
+	 * @param res   die HTTP-Response
+	 */
+	private static void addCORSHeader(final Request req, final Response res) {
 		final int _ACCESS_CONTROL_MAX_AGE_IN_SECONDS = 12 * 60 * 60;
 		final String origin = req.getHeaders().get("Origin");
 		res.getHeaders().add("Vary", "Origin");
@@ -123,9 +139,6 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 		res.getHeaders().add("Access-Control-Allow-Credentials", "true");
 		res.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD");
 		res.getHeaders().add("Access-Control-Max-Age", _ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
-		// An OPTIONS-Http-Request must be OK for CORS-Preflight-Requests
-		Response.writeError(req, res, callback, "OPTIONS".equals(req.getMethod()) ? Status.OK.getStatusCode() : Status.UNAUTHORIZED.getStatusCode());
-		return AuthenticationState.SEND_SUCCESS;
 	}
 
 }
