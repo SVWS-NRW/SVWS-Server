@@ -11,7 +11,7 @@
       "svws" : true,
       "zebras" : true,
       "vorbedingung" : ["LPLA02"],
-      "muss": [ ],
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG", "BK", "SB"],
       "kann" : [ ],
       "hinweis" : [ ],
       "text" : "Bei den Lehrbefähigungen 'AE - Ästhetische Erziehung', 'MG - Mathematische Grundbildung', 'NG - Natur- und Gesellschaftswissenschaften' und 'SB - Sprachliche Grundbildung' muss das Lehramt 'Grundschule' oder 'Sonderpädagogische Förderung' bzw. die Lehramtseinträge 'Studierende' oder 'Lehramtsanwärter/-in / Studienreferendar/-in' angegeben werden.",
