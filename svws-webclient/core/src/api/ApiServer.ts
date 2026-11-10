@@ -103,6 +103,7 @@ import { GostSchuelerklausur } from '../core/data/gost/klausuren/GostSchuelerkla
 import { GostSchuelerklausurtermin } from '../core/data/gost/klausuren/GostSchuelerklausurtermin';
 import { GostSchuelerWiederholung } from '../core/data/gost/GostSchuelerWiederholung';
 import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
+import { GostZulassungSimulation } from '../core/data/gost/GostZulassungSimulation';
 import { Haltestelle } from '../core/data/schule/Haltestelle';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
 import { HerkunftsartenKatalogEintrag } from '../asd/data/schueler/HerkunftsartenKatalogEintrag';
@@ -8400,6 +8401,57 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostSchuelerZulassungSimulationAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/aktuelleplanung/zulassungsimulation
+	 *
+	 * Liest den Stand der Simulation der Abiturzulassung der aktuellen Planung für den angegebenen Schüler aus. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Stand der Simulation
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostZulassungSimulation
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stand auszulesen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Der Stand der Simulation
+	 */
+	public async getGostSchuelerZulassungSimulationAktuellePlanung(schema: string, schuelerid: number): Promise<GostZulassungSimulation> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/aktuelleplanung/zulassungsimulation"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return GostZulassungSimulation.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PUT-Methode putGostSchuelerZulassungSimulationAktuellePlanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/aktuelleplanung/zulassungsimulation
+	 *
+	 * Setzt den Stand der Simulation der Abiturzulassung der aktuellen Planung für den angegebenen Schüler. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Stand wurde erfolgreich übernommen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stand zu ändern.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *   Code 409: Der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.
+	 *
+	 * @param {GostZulassungSimulation} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 */
+	public async putGostSchuelerZulassungSimulationAktuellePlanung(data: GostZulassungSimulation, schema: string, schuelerid: number): Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/aktuelleplanung/zulassungsimulation"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const body: string = GostZulassungSimulation.transpilerToJSON(data);
+		return super.putJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostSchuelerFachwahl für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/fachwahl/{fachid : \d+}
 	 *
 	 * Liest für die gymnasiale Oberstufe die Fachwahlen zu einem Fach von dem angegebenen Schüler aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Fachwahlen besitzt.
@@ -8665,6 +8717,56 @@ export class ApiServer extends BaseApi {
 		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return GostSchuelerWiederholung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostSchuelerZulassungSimulation für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/zulassungsimulation
+	 *
+	 * Liest den Stand der Simulation der Abiturzulassung für den angegebenen Schüler aus. Bei einer Wiederholung im folgenden Abiturjahrgang gilt der Stand der Wiederholung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Stand der Simulation
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostZulassungSimulation
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stand auszulesen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Der Stand der Simulation
+	 */
+	public async getGostSchuelerZulassungSimulation(schema: string, schuelerid: number): Promise<GostZulassungSimulation> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/zulassungsimulation"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return GostZulassungSimulation.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PUT-Methode putGostSchuelerZulassungSimulation für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/zulassungsimulation
+	 *
+	 * Setzt den Stand der Simulation der Abiturzulassung für den angegebenen Schüler. Bei einer Wiederholung im folgenden Abiturjahrgang gilt der Stand der Wiederholung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Stand wurde erfolgreich übernommen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stand zu ändern.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {GostZulassungSimulation} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 */
+	public async putGostSchuelerZulassungSimulation(data: GostZulassungSimulation, schema: string, schuelerid: number): Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/zulassungsimulation"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const body: string = GostZulassungSimulation.transpilerToJSON(data);
+		return super.putJSON(path, body);
 	}
 
 

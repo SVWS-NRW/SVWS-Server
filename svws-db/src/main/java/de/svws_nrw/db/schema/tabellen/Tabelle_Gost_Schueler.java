@@ -91,6 +91,11 @@ public class Tabelle_Gost_Schueler extends SchemaTabelle {
 			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der Q-Phase in Aufgabenfeld 3")
 			.setRevision(SchemaRevisionen.REV_68);
 
+	/** Die Definition der Tabellenspalte ZulassungSimulation */
+	public final SchemaTabelleSpalte col_ZulassungSimulation = add("ZulassungSimulation", SchemaDatentypen.TEXT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Die Eingaben der Simulation der Abiturzulassung als JSON-Text")
+			.setRevision(SchemaRevisionen.REV_83);
+
 
 	/** Die Definition des Fremdschlüssels Gost_Schueler_Schueler_ID_FK */
 	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_Schueler_ID_FK = addForeignKey(

@@ -292,6 +292,21 @@ public final class GostServiceFactory {
 
 
 	/**
+	 * Erstellt einen neuen Service für die Simulation der Abiturzulassung der gymnasialen Oberstufe
+	 *
+	 * @return der Service
+	 */
+	public GostZulassungSimulationService getGostZulassungSimulationService() {
+		return new GostZulassungSimulationService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				gostRepositoryFactory.getGostSchuelerRepository(),
+				gostRepositoryFactory.getGostSchuelerWiederholungRepository(),
+				this.getGostSchuelerService(),
+				aktuellePlanung);
+	}
+
+
+	/**
 	 * Erstellt einen neuen Export-Service für die Laufbahnplanung der gymnasialen Oberstufe (Datenformat - Version 1)
 	 *
 	 * @return der Service

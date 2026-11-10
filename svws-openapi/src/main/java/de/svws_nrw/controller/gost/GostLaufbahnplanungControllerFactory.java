@@ -214,6 +214,7 @@ public final class GostLaufbahnplanungControllerFactory {
 				factory.getGostFachwahlService(),
 				factory.getGostSchuelerService(),
 				factory.getGostSchuelerGKLWahlService(),
+				factory.getGostZulassungSimulationService(),
 				factory.getGostJahrgangFachwahlService(),
 				factory.getGostLaufbahnplanungImportV1Service(),
 				factory.getGostLaufbahnplanungExportV2Service(),

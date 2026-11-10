@@ -13,6 +13,7 @@ import { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLauf
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
 import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
 import { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
+import type { GostZulassungSimulation } from "@core/core/data/gost/GostZulassungSimulation";
 import type { GostLaufbahnplanungExportV2 } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
@@ -289,6 +290,28 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		await api.server.patchGostSchuelerLaufbahnplanungBeratungsdaten(data, api.schema, this.schueler.id);
 		const gostLaufbahnBeratungsdaten = this.gostLaufbahnBeratungsdaten;
 		this.setPatchedState({ gostLaufbahnBeratungsdaten: Object.assign(gostLaufbahnBeratungsdaten, data) });
+	}
+
+
+	public get hatZulassungSimulation(): boolean {
+		return serverStateImpl.hasDev;
+	}
+
+
+	public async getZulassungSimulation(): Promise<GostZulassungSimulation> {
+		if (this.aktuellePlanung) {
+			return await api.server.getGostSchuelerZulassungSimulationAktuellePlanung(api.schema, this.schueler.id);
+		}
+		return await api.server.getGostSchuelerZulassungSimulation(api.schema, this.schueler.id);
+	}
+
+
+	public async setZulassungSimulation(simulation: GostZulassungSimulation) {
+		if (this.aktuellePlanung) {
+			await api.server.putGostSchuelerZulassungSimulationAktuellePlanung(simulation, api.schema, this.schueler.id);
+		} else {
+			await api.server.putGostSchuelerZulassungSimulation(simulation, api.schema, this.schueler.id);
+		}
 	}
 
 

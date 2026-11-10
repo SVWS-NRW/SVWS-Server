@@ -16,6 +16,7 @@ import de.svws_nrw.core.data.gost.GostJahrgangFachwahlen;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
+import de.svws_nrw.core.data.gost.GostZulassungSimulation;
 import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
@@ -36,6 +37,7 @@ import de.svws_nrw.service.gost.GostLaufbahnplanungImportV1Service;
 import de.svws_nrw.service.gost.GostLaufbahnplanungImportV2Service;
 import de.svws_nrw.service.gost.GostSchuelerGKLWahlService;
 import de.svws_nrw.service.gost.GostSchuelerService;
+import de.svws_nrw.service.gost.GostZulassungSimulationService;
 import de.svws_nrw.base.compression.Zip;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -63,6 +65,9 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	/** Der Service für den Zugriff auf die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen */
 	private final GostSchuelerGKLWahlService gostSchuelerGKLWahlService;
 
+	/** Der Service für den Zugriff auf die Simulation der Abiturzulassung. */
+	private final GostZulassungSimulationService gostZulassungSimulationService;
+
 	/** Der Service für den Zugriff auf die aggregierten Fachwahlen aus den Laufbahnplanungen eines Abiturjahrgangs. */
 	private final GostJahrgangFachwahlService gostJahrgangFachwahlService;
 
@@ -84,6 +89,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	 * @param gostFachwahlService                  der Service für den Zugriff auf die Fachwahlen der Laufbahnplanung
 	 * @param gostSchuelerService                  der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe
 	 * @param gostSchuelerGKLWahlService           der Service für den Zugriff auf die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen
+	 * @param gostZulassungSimulationService       der Service für den Zugriff auf die Simulation der Abiturzulassung
 	 * @param gostJahrgangFachwahlService          der Service für den Zugriff auf die aggregierten Fachwahlen aus den Laufbahnplanungen eines Abiturjahrgangs
 	 * @param gostLaufbahnplanungImportV1Service   der Service für den Import mit dem Export-Format in Version 1 für die Laufbahnplanung
 	 * @param gostLaufbahnplanungExportV2Service   der Service für den Export mit dem Export-Format in Version 2 für die Laufbahnplanung
@@ -94,6 +100,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 			final GostFachwahlService gostFachwahlService,
 			final GostSchuelerService gostSchuelerService,
 			final GostSchuelerGKLWahlService gostSchuelerGKLWahlService,
+			final GostZulassungSimulationService gostZulassungSimulationService,
 			final GostJahrgangFachwahlService gostJahrgangFachwahlService,
 			final GostLaufbahnplanungImportV1Service gostLaufbahnplanungImportV1Service,
 			final GostLaufbahnplanungExportV2Service gostLaufbahnplanungExportV2Service,
@@ -103,6 +110,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 		this.gostFachwahlService = gostFachwahlService;
 		this.gostSchuelerService = gostSchuelerService;
 		this.gostSchuelerGKLWahlService = gostSchuelerGKLWahlService;
+		this.gostZulassungSimulationService = gostZulassungSimulationService;
 		this.gostJahrgangFachwahlService = gostJahrgangFachwahlService;
 		this.gostLaufbahnplanungImportV1Service = gostLaufbahnplanungImportV1Service;
 		this.gostLaufbahnplanungExportV2Service = gostLaufbahnplanungExportV2Service;
@@ -223,6 +231,36 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	@Override
 	public Response putGKLWahl(final GostSchuelerGKLWahl wahl) {
 		gostSchuelerGKLWahlService.put(wahl);
+		return Responses.noContent();
+	}
+
+
+	/**
+	 * Gibt den Stand der Simulation der Abiturzulassung des angegebenen Schülers zurück.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return die Response mit dem Stand der Simulation
+	 */
+	@Override
+	public Response getZulassungSimulation(final long idSchueler) {
+		benutzerKompetenzService.pruefeKompetenzLaufbahnplanung(gostSchuelerService.getAbiturjahrgaenge(idSchueler));
+		return Responses.ok(gostZulassungSimulationService.get(idSchueler));
+	}
+
+
+	/**
+	 * Setzt den Stand der Simulation der Abiturzulassung des angegebenen Schülers.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 * @param simulation   der neue Stand der Simulation
+	 *
+	 * @return die Response
+	 */
+	@Override
+	public Response putZulassungSimulation(final long idSchueler, final GostZulassungSimulation simulation) {
+		benutzerKompetenzService.pruefeKompetenzLaufbahnplanung(gostSchuelerService.getAbiturjahrgaenge(idSchueler));
+		gostZulassungSimulationService.put(idSchueler, simulation);
 		return Responses.noContent();
 	}
 

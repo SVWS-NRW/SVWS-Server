@@ -25,6 +25,7 @@ import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.gost.GostSchuelerWiederholung;
+import de.svws_nrw.core.data.gost.GostZulassungSimulation;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
@@ -1218,6 +1219,113 @@ public class APIGost {
 			@Context final HttpServletRequest request) {
 		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request, ServerMode.DEV)
 				.getGostLaufbahnplanungControllerAktuellePlanung().putGKLWahl(wahl);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Auslesen des Standes der Simulation der Abiturzulassung.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return der Stand der Simulation
+	 */
+	@GET
+	@Path("/schueler/{schuelerid : \\d+}/zulassungsimulation")
+	@Operation(summary = "Liest den Stand der Simulation der Abiturzulassung aus.",
+			description = "Liest den Stand der Simulation der Abiturzulassung für den angegebenen Schüler aus. Bei einer Wiederholung im folgenden Abiturjahrgang gilt der Stand der Wiederholung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Stand der Simulation",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostZulassungSimulation.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stand auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response getGostSchuelerZulassungSimulation(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungController().getZulassungSimulation(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Setzen des Standes der Simulation der Abiturzulassung.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param simulation    der neue Stand der Simulation
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PUT
+	@Path("/schueler/{schuelerid : \\d+}/zulassungsimulation")
+	@Operation(summary = "Setzt den Stand der Simulation der Abiturzulassung.",
+			description = "Setzt den Stand der Simulation der Abiturzulassung für den angegebenen Schüler. Bei einer Wiederholung im folgenden Abiturjahrgang gilt der Stand der Wiederholung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Stand wurde erfolgreich übernommen.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stand zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response putGostSchuelerZulassungSimulation(
+			@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@RequestBody(description = "Der neue Stand der Simulation", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = GostZulassungSimulation.class))) final GostZulassungSimulation simulation,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungController().putZulassungSimulation(schueler_id, simulation);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Auslesen des Standes der Simulation der Abiturzulassung der aktuellen Planung.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return der Stand der Simulation
+	 */
+	@GET
+	@Path("/schueler/{schuelerid : \\d+}/aktuelleplanung/zulassungsimulation")
+	@Operation(summary = "Liest den Stand der Simulation der Abiturzulassung der aktuellen Planung aus.",
+			description = "Liest den Stand der Simulation der Abiturzulassung der aktuellen Planung für den angegebenen Schüler aus. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Stand der Simulation",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostZulassungSimulation.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stand auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response getGostSchuelerZulassungSimulationAktuellePlanung(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().getZulassungSimulation(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Setzen des Standes der Simulation der Abiturzulassung der aktuellen Planung.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param simulation    der neue Stand der Simulation
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PUT
+	@Path("/schueler/{schuelerid : \\d+}/aktuelleplanung/zulassungsimulation")
+	@Operation(summary = "Setzt den Stand der Simulation der Abiturzulassung der aktuellen Planung.",
+			description = "Setzt den Stand der Simulation der Abiturzulassung der aktuellen Planung für den angegebenen Schüler. Eine Wiederholung im folgenden Abiturjahrgang bleibt dabei unberücksichtigt. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Stand wurde erfolgreich übernommen.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stand zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Wechsel in den Jahrgang der Wiederholung ist bereits vollzogen.")
+	public Response putGostSchuelerZulassungSimulationAktuellePlanung(
+			@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@RequestBody(description = "Der neue Stand der Simulation", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = GostZulassungSimulation.class))) final GostZulassungSimulation simulation,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request, ServerMode.DEV)
+				.getGostLaufbahnplanungControllerAktuellePlanung().putZulassungSimulation(schueler_id, simulation);
 	}
 
 

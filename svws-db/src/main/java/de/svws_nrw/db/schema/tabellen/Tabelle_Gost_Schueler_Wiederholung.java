@@ -55,6 +55,11 @@ public class Tabelle_Gost_Schueler_Wiederholung extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_GKL_Q_AF3_Klausurvorgabe_ID = add("GKL_Q_AF3_Klausurvorgabe_ID", SchemaDatentypen.BIGINT, false)
 			.setJavaComment("Gymnasiale Oberstufe - Wiederholung: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der Q-Phase in Aufgabenfeld 3");
 
+	/** Die Definition der Tabellenspalte ZulassungSimulation */
+	public final SchemaTabelleSpalte col_ZulassungSimulation = add("ZulassungSimulation", SchemaDatentypen.TEXT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Wiederholung: Die Eingaben der Simulation der Abiturzulassung als JSON-Text")
+			.setRevision(SchemaRevisionen.REV_83);
+
 
 	/** Die Definition des Fremdschlüssels Gost_Schueler_Wiederholung_Schueler_ID_FK */
 	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_Wiederholung_Schueler_ID_FK = addForeignKey(

@@ -28,7 +28,7 @@ import de.svws_nrw.csv.converter.current.gost.GOStHalbjahrConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Schueler_Wiederholung")
-@JsonPropertyOrder({"Schueler_ID", "Abi_Jahrgang", "Halbjahr", "GKL_EF_AF1_Klausurvorgabe_ID", "GKL_EF_AF2_Klausurvorgabe_ID", "GKL_EF_AF3_Klausurvorgabe_ID", "GKL_Q_AF1_Klausurvorgabe_ID", "GKL_Q_AF2_Klausurvorgabe_ID", "GKL_Q_AF3_Klausurvorgabe_ID"})
+@JsonPropertyOrder({"Schueler_ID", "Abi_Jahrgang", "Halbjahr", "GKL_EF_AF1_Klausurvorgabe_ID", "GKL_EF_AF2_Klausurvorgabe_ID", "GKL_EF_AF3_Klausurvorgabe_ID", "GKL_Q_AF1_Klausurvorgabe_ID", "GKL_Q_AF2_Klausurvorgabe_ID", "GKL_Q_AF3_Klausurvorgabe_ID", "ZulassungSimulation"})
 public final class DTOGostSchuelerWiederholung {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -97,6 +97,12 @@ public final class DTOGostSchuelerWiederholung {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GKL_Q_AF3_Klausurvorgabe_ID */
 	public static final String QUERY_LIST_BY_GKL_Q_AF3_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchuelerWiederholung e WHERE e.GKL_Q_AF3_Klausurvorgabe_ID IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZulassungSimulation */
+	public static final String QUERY_BY_ZULASSUNGSIMULATION = "SELECT e FROM DTOGostSchuelerWiederholung e WHERE e.ZulassungSimulation = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZulassungSimulation */
+	public static final String QUERY_LIST_BY_ZULASSUNGSIMULATION = "SELECT e FROM DTOGostSchuelerWiederholung e WHERE e.ZulassungSimulation IN ?1";
+
 	/** Gymnasiale Oberstufe - Wiederholung: Die ID des Schülers in der Schülertabelle */
 	@Id
 	@Column(name = "Schueler_ID")
@@ -145,6 +151,11 @@ public final class DTOGostSchuelerWiederholung {
 	@Column(name = "GKL_Q_AF3_Klausurvorgabe_ID")
 	@JsonProperty
 	public Long GKL_Q_AF3_Klausurvorgabe_ID;
+
+	/** Gymnasiale Oberstufe - Wiederholung: Die Eingaben der Simulation der Abiturzulassung als JSON-Text */
+	@Column(name = "ZulassungSimulation")
+	@JsonProperty
+	public String ZulassungSimulation;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostSchuelerWiederholung ohne eine Initialisierung der Attribute.
@@ -197,7 +208,7 @@ public final class DTOGostSchuelerWiederholung {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostSchuelerWiederholung(Schueler_ID=" + this.Schueler_ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", GKL_EF_AF1_Klausurvorgabe_ID=" + this.GKL_EF_AF1_Klausurvorgabe_ID + ", GKL_EF_AF2_Klausurvorgabe_ID=" + this.GKL_EF_AF2_Klausurvorgabe_ID + ", GKL_EF_AF3_Klausurvorgabe_ID=" + this.GKL_EF_AF3_Klausurvorgabe_ID + ", GKL_Q_AF1_Klausurvorgabe_ID=" + this.GKL_Q_AF1_Klausurvorgabe_ID + ", GKL_Q_AF2_Klausurvorgabe_ID=" + this.GKL_Q_AF2_Klausurvorgabe_ID + ", GKL_Q_AF3_Klausurvorgabe_ID=" + this.GKL_Q_AF3_Klausurvorgabe_ID + ")";
+		return "DTOGostSchuelerWiederholung(Schueler_ID=" + this.Schueler_ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", GKL_EF_AF1_Klausurvorgabe_ID=" + this.GKL_EF_AF1_Klausurvorgabe_ID + ", GKL_EF_AF2_Klausurvorgabe_ID=" + this.GKL_EF_AF2_Klausurvorgabe_ID + ", GKL_EF_AF3_Klausurvorgabe_ID=" + this.GKL_EF_AF3_Klausurvorgabe_ID + ", GKL_Q_AF1_Klausurvorgabe_ID=" + this.GKL_Q_AF1_Klausurvorgabe_ID + ", GKL_Q_AF2_Klausurvorgabe_ID=" + this.GKL_Q_AF2_Klausurvorgabe_ID + ", GKL_Q_AF3_Klausurvorgabe_ID=" + this.GKL_Q_AF3_Klausurvorgabe_ID + ", ZulassungSimulation=" + this.ZulassungSimulation + ")";
 	}
 
 }

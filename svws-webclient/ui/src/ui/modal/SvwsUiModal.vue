@@ -16,6 +16,7 @@
 						'modal--sm': size === 'small',
 						'modal--md': size === 'medium',
 						'modal--lg': size === 'big',
+						'modal--fit': size === 'fit',
 						'modal--help': size === 'help',
 						'modal--danger': type === 'danger',
 					}">
@@ -67,7 +68,7 @@
 
 	const props = withDefaults(defineProps<{
 		show: boolean;
-		size?: Extract<Size, 'small' | 'medium' | 'big'> | 'help';
+		size?: Extract<Size, 'small' | 'medium' | 'big'> | 'help' | 'fit';
 		type?: 'default' | 'danger';
 		autoClose?: boolean;
 		closeInTitle?: boolean;

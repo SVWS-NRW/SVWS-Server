@@ -12,7 +12,7 @@ let idTC_div: string;
 
 const defaultProps: Partial<{
 	show: boolean;
-	size?: Extract<Size, 'small' | 'medium' | 'big'> | 'help';
+	size?: Extract<Size, 'small' | 'medium' | 'big'> | 'help' | 'fit';
 	type?: 'default' | 'danger';
 	autoClose?: boolean;
 	closeInTitle?: boolean;
@@ -60,10 +60,11 @@ describe("Tests für die CSS-Props", () => {
 		['medium', 'modal--md'],
 		['big', 'modal--lg'],
 		['help', 'modal--help'],
+		['fit', 'modal--fit'],
 	])('wendet die Klasse %s an, wenn size="%s"', async (s, expectedClass) => {
 		document.body.innerHTML = '';
 		const wrapper: VueWrapper<any> = mount(SvwsUiModal, {
-			props: { show: true, size: s as "small" | "medium" | "big" | "help" | undefined },
+			props: { show: true, size: s as "small" | "medium" | "big" | "help" | "fit" | undefined },
 			slots: { modalTitle: 'Test-Titel', modalActions: '<button>test</button>' },
 			global: {
 				components: { Dialog, DialogTitle, DialogDescription, TransitionRoot, TransitionChild },

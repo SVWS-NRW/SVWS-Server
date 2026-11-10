@@ -7,6 +7,7 @@ import java.util.List;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
+import de.svws_nrw.core.data.gost.GostZulassungSimulation;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v2.GostLaufbahnplanungExportV2;
 import jakarta.ws.rs.core.Response;
@@ -121,6 +122,25 @@ public interface GostLaufbahnplanungController {
 	 * @return die Response
 	 */
 	Response putGKLWahl(GostSchuelerGKLWahl wahl);
+
+	/**
+	 * Gibt den Stand der Simulation der Abiturzulassung des angegebenen Schülers zurück.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return die Response mit dem Stand der Simulation
+	 */
+	Response getZulassungSimulation(long idSchueler);
+
+	/**
+	 * Setzt den Stand der Simulation der Abiturzulassung des angegebenen Schülers.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 * @param simulation   der neue Stand der Simulation
+	 *
+	 * @return die Response
+	 */
+	Response putZulassungSimulation(long idSchueler, GostZulassungSimulation simulation);
 
 	/**
 	 * Setzt die Fachwahlen für den angegebenen Schüler zurück.

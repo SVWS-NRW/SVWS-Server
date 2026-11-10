@@ -9,6 +9,7 @@ import type { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/Gos
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
 import type { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
 import type { GostSchuelerWiederholung } from "@core/core/data/gost/GostSchuelerWiederholung";
+import type { GostZulassungSimulation } from "@core/core/data/gost/GostZulassungSimulation";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -165,6 +166,25 @@ export interface GostLaufbahnplanungState {
 	 * @param data   die Daten für den Patch
 	 */
 	patchBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>): Promise<void>;
+
+	/**
+	 * Gibt zurück, ob die Simulation der Abiturzulassung zur Verfügung steht.
+	 */
+	get hatZulassungSimulation(): boolean;
+
+	/**
+	 * Lädt den gespeicherten Stand der Simulation der Abiturzulassung für die angezeigte Planung.
+	 *
+	 * @returns der gespeicherte Stand
+	 */
+	getZulassungSimulation(): Promise<GostZulassungSimulation>;
+
+	/**
+	 * Speichert den Stand der Simulation der Abiturzulassung für die angezeigte Planung.
+	 *
+	 * @param simulation   der zu speichernde Stand
+	 */
+	setZulassungSimulation(simulation: GostZulassungSimulation): Promise<void>;
 
 	/**
 	 * Gibt die geltende Wiederholung des Schülers im folgenden Abiturjahrgang zurück.

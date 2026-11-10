@@ -652,7 +652,7 @@ public class GostSchuelerService {
 	 *
 	 * @param idSchueler   die ID des Schülers
 	 */
-	private void uebertrageWiederholung(final long idSchueler) {
+	public void uebertrageWiederholung(final long idSchueler) {
 		final DTOGostSchuelerWiederholung wiederholung = gostSchuelerWiederholungRepository.findById(idSchueler).orElse(null);
 		if (wiederholung == null) {
 			return;
@@ -673,6 +673,7 @@ public class GostSchuelerService {
 		gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID = wiederholung.GKL_Q_AF1_Klausurvorgabe_ID;
 		gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID = wiederholung.GKL_Q_AF2_Klausurvorgabe_ID;
 		gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID = wiederholung.GKL_Q_AF3_Klausurvorgabe_ID;
+		gostSchueler.ZulassungSimulation = wiederholung.ZulassungSimulation;
 		gostSchuelerRepository.update(gostSchueler);
 		gostSchuelerFachbelegungenRepository.flush();
 		entferneWiederholung(idSchueler);

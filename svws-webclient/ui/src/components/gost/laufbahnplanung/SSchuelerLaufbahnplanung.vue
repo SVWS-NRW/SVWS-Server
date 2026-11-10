@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-flex-row max-w-480">
-		<Teleport v-if="hatUpdateKompetenz || hatWiederholung" defer to=".svws-sub-nav-target">
+		<Teleport v-if="hatUpdateKompetenz || hatWiederholung || zeigeSimulation" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>
 				<template v-if="hatUpdateKompetenz">
 					<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
@@ -15,6 +15,10 @@
 					<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
 				</template>
 				<s-laufbahnplanung-wiederholung v-if="visible && gostLaufbahnplanungState.valid && serverState.hasDev" :hat-update-kompetenz />
+				<template v-if="zeigeSimulation">
+					<svws-ui-button type="transparent" @click="showSimulation = true"><span class="icon-sm i-ri-calculator-line" /> Zulassung simulieren…</svws-ui-button>
+					<s-laufbahnplanung-zulassung-simulation-modal v-if="showSimulation" v-model:show="showSimulation" :hat-update-kompetenz />
+				</template>
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport defer to=".svws-ui-header--actions">
@@ -93,6 +97,10 @@
 		&& (gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang !== null));
 
 	const show = ref<boolean>(false);
+
+	const showSimulation = ref<boolean>(false);
+
+	const zeigeSimulation = computed<boolean>(() => visible.value && gostLaufbahnplanungState.valid && gostLaufbahnplanungState.hatZulassungSimulation);
 
 	const updated = ref<boolean>(false);
 	const curId = ref<number | undefined>();

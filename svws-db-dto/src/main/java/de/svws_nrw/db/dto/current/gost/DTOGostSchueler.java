@@ -29,7 +29,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Schueler")
-@JsonPropertyOrder({"Schueler_ID", "DatumBeratung", "DatumRuecklauf", "HatSportattest", "Kommentar", "Beratungslehrer_ID", "PruefPhase", "BesondereLernleistung_Art", "BesondereLernleistung_Punkte", "GKL_EF_AF1_Klausurvorgabe_ID", "GKL_EF_AF2_Klausurvorgabe_ID", "GKL_EF_AF3_Klausurvorgabe_ID", "GKL_Q_AF1_Klausurvorgabe_ID", "GKL_Q_AF2_Klausurvorgabe_ID", "GKL_Q_AF3_Klausurvorgabe_ID"})
+@JsonPropertyOrder({"Schueler_ID", "DatumBeratung", "DatumRuecklauf", "HatSportattest", "Kommentar", "Beratungslehrer_ID", "PruefPhase", "BesondereLernleistung_Art", "BesondereLernleistung_Punkte", "GKL_EF_AF1_Klausurvorgabe_ID", "GKL_EF_AF2_Klausurvorgabe_ID", "GKL_EF_AF3_Klausurvorgabe_ID", "GKL_Q_AF1_Klausurvorgabe_ID", "GKL_Q_AF2_Klausurvorgabe_ID", "GKL_Q_AF3_Klausurvorgabe_ID", "ZulassungSimulation"})
 public final class DTOGostSchueler {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -134,6 +134,12 @@ public final class DTOGostSchueler {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GKL_Q_AF3_Klausurvorgabe_ID */
 	public static final String QUERY_LIST_BY_GKL_Q_AF3_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_Q_AF3_Klausurvorgabe_ID IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ZulassungSimulation */
+	public static final String QUERY_BY_ZULASSUNGSIMULATION = "SELECT e FROM DTOGostSchueler e WHERE e.ZulassungSimulation = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ZulassungSimulation */
+	public static final String QUERY_LIST_BY_ZULASSUNGSIMULATION = "SELECT e FROM DTOGostSchueler e WHERE e.ZulassungSimulation IN ?1";
+
 	/** Gymnasiale Oberstufe - Schülerdaten: Die ID des Schülers in der Schülertabelle */
 	@Id
 	@Column(name = "Schueler_ID")
@@ -219,6 +225,11 @@ public final class DTOGostSchueler {
 	@JsonProperty
 	public Long GKL_Q_AF3_Klausurvorgabe_ID;
 
+	/** Gymnasiale Oberstufe - Schülerdaten: Die Eingaben der Simulation der Abiturzulassung als JSON-Text */
+	@Column(name = "ZulassungSimulation")
+	@JsonProperty
+	public String ZulassungSimulation;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostSchueler ohne eine Initialisierung der Attribute.
 	 */
@@ -268,7 +279,7 @@ public final class DTOGostSchueler {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostSchueler(Schueler_ID=" + this.Schueler_ID + ", DatumBeratung=" + this.DatumBeratung + ", DatumRuecklauf=" + this.DatumRuecklauf + ", HatSportattest=" + this.HatSportattest + ", Kommentar=" + this.Kommentar + ", Beratungslehrer_ID=" + this.Beratungslehrer_ID + ", PruefPhase=" + this.PruefPhase + ", BesondereLernleistung_Art=" + this.BesondereLernleistung_Art + ", BesondereLernleistung_Punkte=" + this.BesondereLernleistung_Punkte + ", GKL_EF_AF1_Klausurvorgabe_ID=" + this.GKL_EF_AF1_Klausurvorgabe_ID + ", GKL_EF_AF2_Klausurvorgabe_ID=" + this.GKL_EF_AF2_Klausurvorgabe_ID + ", GKL_EF_AF3_Klausurvorgabe_ID=" + this.GKL_EF_AF3_Klausurvorgabe_ID + ", GKL_Q_AF1_Klausurvorgabe_ID=" + this.GKL_Q_AF1_Klausurvorgabe_ID + ", GKL_Q_AF2_Klausurvorgabe_ID=" + this.GKL_Q_AF2_Klausurvorgabe_ID + ", GKL_Q_AF3_Klausurvorgabe_ID=" + this.GKL_Q_AF3_Klausurvorgabe_ID + ")";
+		return "DTOGostSchueler(Schueler_ID=" + this.Schueler_ID + ", DatumBeratung=" + this.DatumBeratung + ", DatumRuecklauf=" + this.DatumRuecklauf + ", HatSportattest=" + this.HatSportattest + ", Kommentar=" + this.Kommentar + ", Beratungslehrer_ID=" + this.Beratungslehrer_ID + ", PruefPhase=" + this.PruefPhase + ", BesondereLernleistung_Art=" + this.BesondereLernleistung_Art + ", BesondereLernleistung_Punkte=" + this.BesondereLernleistung_Punkte + ", GKL_EF_AF1_Klausurvorgabe_ID=" + this.GKL_EF_AF1_Klausurvorgabe_ID + ", GKL_EF_AF2_Klausurvorgabe_ID=" + this.GKL_EF_AF2_Klausurvorgabe_ID + ", GKL_EF_AF3_Klausurvorgabe_ID=" + this.GKL_EF_AF3_Klausurvorgabe_ID + ", GKL_Q_AF1_Klausurvorgabe_ID=" + this.GKL_Q_AF1_Klausurvorgabe_ID + ", GKL_Q_AF2_Klausurvorgabe_ID=" + this.GKL_Q_AF2_Klausurvorgabe_ID + ", GKL_Q_AF3_Klausurvorgabe_ID=" + this.GKL_Q_AF3_Klausurvorgabe_ID + ", ZulassungSimulation=" + this.ZulassungSimulation + ")";
 	}
 
 }
