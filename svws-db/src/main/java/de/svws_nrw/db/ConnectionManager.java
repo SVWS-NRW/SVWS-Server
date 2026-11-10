@@ -117,6 +117,10 @@ public final class ConnectionManager {
 					factory.close();
 					throw new DBException("Fehler beim Aufbau der Verbindung. Überprüfen Sie Benutzername und Kennwort.", ae);
 				}
+				if (DBConnectionException.istVerbindungsfehler(pe)) {
+					factory.close();
+					throw new DBConnectionException("Fehler beim Aufbau der Verbindung. Die Datenbank ist nicht erreichbar. Überprüfen Sie die Verbindungsparameter.", pe);
+				}
 				if (pe.getCause() instanceof DatabaseException) {
 					factory.close();
 					throw new DBException("Fehler beim Aufbau der Verbindung. Überprüfen Sie die Verbindungsparameter.");

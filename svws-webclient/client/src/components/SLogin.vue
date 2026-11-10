@@ -190,7 +190,7 @@
 			}
 		} catch (e) {
 			if (e instanceof UserNotificationException) {
-				error.value = e;
+				error.value = { name: "Anmeldung nicht möglich", message: e.message };
 			}
 		}
 		authenticating.value = false;
