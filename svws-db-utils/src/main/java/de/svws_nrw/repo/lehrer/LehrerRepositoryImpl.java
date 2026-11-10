@@ -1,6 +1,10 @@
 package de.svws_nrw.repo.lehrer;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
@@ -10,6 +14,8 @@ import de.svws_nrw.repo.RepositoryImpl;
  * Diese Repository-Klasse dient dem Datenbank-Zugriff auf Lehrerdaten.
  */
 public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implements LehrerRepository {
+
+	private static final String QUERY_IDS_BY_IDS = "SELECT e.ID FROM DTOLehrer e WHERE e.ID IN ?1";
 
 	/**
 	 * Erstellt ein neues Repository.
@@ -34,6 +40,15 @@ public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implem
 	@Override
 	public boolean existsById(final Long idLehrer) {
 		return conn.existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, idLehrer);
+	}
+
+	@Override
+	public Set<Long> existsByIds(final Collection<Long> ids) {
+		if ((ids == null) || ids.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		return new HashSet<>(conn.queryList(QUERY_IDS_BY_IDS, Long.class, ids));
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package de.svws_nrw.service.schueler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,18 +13,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.repo.DbConnectionProvider;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
 import de.svws_nrw.repo.gost.GostSchuelerWiederholungRepository;
 import de.svws_nrw.repo.kurse.KursSchuelerRepository;
+import de.svws_nrw.repo.kurse.KurseRepository;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.einwilligung.SchuelerEinwilligungRepository;
 import de.svws_nrw.repo.schueler.lernplattform.SchuelerLernplattformRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformCredentialRepository;
@@ -32,6 +39,7 @@ import de.svws_nrw.service.klassen.KlassenService;
 import de.svws_nrw.service.klassen.KlassenServiceFactory;
 import de.svws_nrw.service.kurse.KursService;
 import de.svws_nrw.service.kurse.KursServiceFactory;
+import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenService;
 import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
@@ -188,6 +196,38 @@ class SchuelerServiceFactoryTest {
 		verify(katalogServiceFactory).getJahrgangService();
 		verify(gostRepositoryFactory).getGostJahrgangsdatenRepository();
 		verify(gostRepositoryFactory).getGostJahrgangsinformationenRepository();
+	}
+
+	@Test
+	@DisplayName("getSchuelerLeistungsdatenService | Erstellt den Service und ruft alle benötigten Repositories und Services ab")
+	void getSchuelerLeistungsdatenService_success() {
+		final var leistungsdatenRepository = mock(SchuelerLeistungsdatenRepository.class);
+		final var lernabschnittRepository = mock(SchuelerLernabschnittRepository.class);
+		final var schuljahresabschnitteRepository = mock(SchuljahresabschnitteRepository.class);
+		final var fachRepository = mock(FachRepository.class);
+		final var kurseRepository = mock(KurseRepository.class);
+		final var eigeneSchuleService = mock(EigeneSchuleService.class);
+		final var conn = mock(DBEntityManager.class);
+		when(schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository()).thenReturn(leistungsdatenRepository);
+		when(schuelerRepositoryFactory.getSchuelerLernabschnittRepository()).thenReturn(lernabschnittRepository);
+		when(eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository()).thenReturn(schuljahresabschnitteRepository);
+		when(katalogRepositoryFactory.getFachRepository()).thenReturn(fachRepository);
+		when(kurseRepositoryFactory.getKurseRepository()).thenReturn(kurseRepository);
+		when(eigeneSchuleServiceFactory.getSchuleService()).thenReturn(eigeneSchuleService);
+
+		try (var dbConnectionProvider = mockStatic(DbConnectionProvider.class)) {
+			dbConnectionProvider.when(DbConnectionProvider::getConnection).thenReturn(conn);
+
+			final var service = factory.getSchuelerLeistungsdatenService();
+
+			assertThat(service).isInstanceOf(SchuelerLeistungsdatenService.class);
+		}
+		verify(schuelerRepositoryFactory).getSchuelerLeistungsdatenRepository();
+		verify(schuelerRepositoryFactory).getSchuelerLernabschnittRepository();
+		verify(eigeneSchuleRepositoryFactory).getSchuljahresabschnitteRepository();
+		verify(katalogRepositoryFactory).getFachRepository();
+		verify(kurseRepositoryFactory).getKurseRepository();
+		verify(eigeneSchuleServiceFactory).getSchuleService();
 	}
 
 }

@@ -20,7 +20,6 @@ import de.svws_nrw.core.adt.map.ListMap4DLongKeys;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerTelefon;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
-import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
@@ -520,7 +519,9 @@ public class ReportingRepositorySchueler {
 		}
 		final List<SchuelerLeistungsdaten> schuelerLeistungsdaten;
 		try {
-			schuelerLeistungsdaten = new DataSchuelerLeistungsdaten(this.reportingContext.conn()).getByLernabschnitten(idsLernabschnitte);
+			schuelerLeistungsdaten = SchuelerServiceFactory.getNewInstance()
+					.getSchuelerLeistungsdatenService()
+					.getListByLernabschnitte(idsLernabschnitte);
 		} catch (final Exception e) {
 			// Der Zugriff gilt allen Lernabschnitten des Schuljahresabschnitts und nicht einem einzelnen Datensatz; der Schlüssel führt deshalb keine ID.
 			// Hingenommen wird nur der Fehler des Datenzugriffs; die Verarbeitung der geladenen Daten steht außerhalb des try.

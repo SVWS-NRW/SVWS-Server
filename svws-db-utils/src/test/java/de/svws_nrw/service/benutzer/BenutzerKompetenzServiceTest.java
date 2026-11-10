@@ -91,4 +91,82 @@ class BenutzerKompetenzServiceTest {
 			when(benutzer.getKlassenIDs()).thenReturn(klassenIDs);
 		}
 	}
+
+	// -------------------------------------------------------------------------
+	// pruefeKompetenzLeistungsdatenAendern
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("pruefeKompetenzLeistungsdatenAendern")
+	class PruefeKompetenzLeistungsdatenAendern {
+
+		private static final long ID_FACHLEHRER = 12L;
+
+		@Test
+		@DisplayName("Fachlehrer-Regel anwendbar und Benutzer ist der Fachlehrer - keine Prüfung der Klassen")
+		void fachlehrerRegel() {
+			when(benutzer.getIdLehrer()).thenReturn(ID_FACHLEHRER);
+
+			assertThatCode(() -> service.checkKompetenzLeistungsdatenAendern(ID_FACHLEHRER, true, 59L)).doesNotThrowAnyException();
+			verify(benutzer, never()).getKlassenIDs();
+		}
+
+		@Test
+		@DisplayName("Fachlehrer-Regel anwendbar, aber Benutzer ist ein anderer Lehrer - Prüfung der Klassen - FORBIDDEN")
+		void anderesLehrerKeineKlasse() {
+			when(benutzer.getIdLehrer()).thenReturn(99L);
+			stubNurFunktionsbezogen(Set.of(46L));
+
+			assertThatThrownBy(() -> service.checkKompetenzLeistungsdatenAendern(ID_FACHLEHRER, true, 59L))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
+		}
+
+		@Test
+		@DisplayName("Fachlehrer-Regel anwendbar, aber Benutzer ist kein Lehrer - Prüfung der Klassen - FORBIDDEN")
+		void keinLehrer() {
+			when(benutzer.getIdLehrer()).thenReturn(null);
+			stubNurFunktionsbezogen(Set.of(46L));
+
+			assertThatThrownBy(() -> service.checkKompetenzLeistungsdatenAendern(ID_FACHLEHRER, true, 59L))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
+		}
+
+		@Test
+		@DisplayName("Fachlehrer-Regel anwendbar, aber kein Fachlehrer eingetragen - Prüfung der Klassen - FORBIDDEN")
+		void keinFachlehrerEingetragen() {
+			when(benutzer.getIdLehrer()).thenReturn(ID_FACHLEHRER);
+			stubNurFunktionsbezogen(Set.of(46L));
+
+			assertThatThrownBy(() -> service.checkKompetenzLeistungsdatenAendern(null, true, 59L))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
+		}
+
+		@Test
+		@DisplayName("Fachlehrer-Regel nicht anwendbar - Prüfung der Klassen - FORBIDDEN bei fremder Klasse")
+		void regelNichtAnwendbar() {
+			stubNurFunktionsbezogen(Set.of(46L));
+
+			assertThatThrownBy(() -> service.checkKompetenzLeistungsdatenAendern(ID_FACHLEHRER, false, 59L))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
+			verify(benutzer, never()).getIdLehrer();
+		}
+
+		@Test
+		@DisplayName("Fachlehrer-Regel nicht anwendbar - Prüfung der Klassen - eigene Klasse ist erlaubt")
+		void regelNichtAnwendbarEigeneKlasse() {
+			stubNurFunktionsbezogen(Set.of(46L));
+
+			assertThatCode(() -> service.checkKompetenzLeistungsdatenAendern(ID_FACHLEHRER, false, 46L)).doesNotThrowAnyException();
+		}
+
+		private void stubNurFunktionsbezogen(final Set<Long> klassenIDs) {
+			when(benutzer.hatVerwendeteKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)).thenReturn(false);
+			when(benutzer.hatVerwendeteKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)).thenReturn(true);
+			when(benutzer.getKlassenIDs()).thenReturn(klassenIDs);
+		}
+	}
 }

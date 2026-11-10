@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.lehrer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -166,6 +167,33 @@ class LehrerRepositoryImplTest {
 
 		assertFalse(result);
 		verify(conn).existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, id);
+	}
+
+	@Test
+	@DisplayName("existsByIds | liefert nur die IDs vorhandener Lehrer")
+	void testExistsByIds_teilweiseVorhanden() {
+		final var ids = List.of(42L, 43L, 999L);
+		when(conn.queryList("SELECT e.ID FROM DTOLehrer e WHERE e.ID IN ?1", Long.class, ids)).thenReturn(List.of(42L, 43L));
+
+		assertThat(repository.existsByIds(ids)).containsExactlyInAnyOrder(42L, 43L);
+	}
+
+	@Test
+	@DisplayName("existsByIds | leeres Ergebnis ohne Treffer")
+	void testExistsByIds_keinTreffer() {
+		final var ids = List.of(999L);
+		when(conn.queryList("SELECT e.ID FROM DTOLehrer e WHERE e.ID IN ?1", Long.class, ids)).thenReturn(List.of());
+
+		assertThat(repository.existsByIds(ids)).isEmpty();
+	}
+
+	@Test
+	@DisplayName("existsByIds | null und leere Liste führen zu keiner Abfrage")
+	void testExistsByIds_nullOderLeer() {
+		assertThat(repository.existsByIds(null)).isEmpty();
+		assertThat(repository.existsByIds(List.of())).isEmpty();
+
+		verifyNoInteractions(conn);
 	}
 
 	@Test

@@ -2,6 +2,7 @@ package de.svws_nrw.controller.schueler;
 
 import de.svws_nrw.controller.schueler.create.SchuelerCreateController;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
+import de.svws_nrw.controller.schueler.leistungsdaten.SchuelerLeistungsdatenController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
 import de.svws_nrw.controller.schueler.liste.SchuelerListeController;
@@ -205,6 +206,16 @@ class SchuelerControllerFactoryTest {
 		assertNotNull(factory);
 
 		final SchuelerLernabschnittController controller = factory.getSchuelerLernabschnittController();
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("withLeistungsdatenReadAccess | getSchuelerLeistungsdatenController gibt einen Controller zurück")
+	void getSchuelerLeistungsdatenController() {
+		final var factory = SchuelerControllerFactory.withLeistungsdatenReadAccess(request);
+		assertNotNull(factory);
+
+		final SchuelerLeistungsdatenController controller = factory.getSchuelerLeistungsdatenController();
 		assertNotNull(controller);
 	}
 

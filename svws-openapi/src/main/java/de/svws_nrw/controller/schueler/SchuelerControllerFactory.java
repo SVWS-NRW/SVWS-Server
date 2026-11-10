@@ -4,6 +4,8 @@ import de.svws_nrw.controller.schueler.create.SchuelerCreateController;
 import de.svws_nrw.controller.schueler.create.SchuelerCreateControllerImpl;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungControllerImpl;
+import de.svws_nrw.controller.schueler.leistungsdaten.SchuelerLeistungsdatenController;
+import de.svws_nrw.controller.schueler.leistungsdaten.SchuelerLeistungsdatenControllerImpl;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittControllerImpl;
 import de.svws_nrw.controller.schueler.liste.SchuelerListeEintragController;
@@ -177,6 +179,15 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerLernabschnittController getSchuelerLernabschnittController() {
 		return new SchuelerLernabschnittControllerImpl(schuelerServiceFactory.getSchuelerLernabschnittService());
+	}
+
+	/**
+	 * Erstellt eine neue SchuelerLeistungsdatenController-Instanz.
+	 *
+	 * @return ein neuer SchuelerLeistungsdatenController mit dem konfigurierten SchuelerLeistungsdatenService
+	 */
+	public SchuelerLeistungsdatenController getSchuelerLeistungsdatenController() {
+		return new SchuelerLeistungsdatenControllerImpl(schuelerServiceFactory.getSchuelerLeistungsdatenService());
 	}
 
 	/**

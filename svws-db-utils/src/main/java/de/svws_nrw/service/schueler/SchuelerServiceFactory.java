@@ -30,6 +30,8 @@ import de.svws_nrw.service.kurse.KursServiceFactory;
 import de.svws_nrw.service.schueler.create.SchuelerCreateService;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
+import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenRepositories;
+import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenService;
 import de.svws_nrw.service.schueler.liste.SchuelerListeEintragService;
 import de.svws_nrw.service.schueler.liste.SchuelerListeService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
@@ -265,6 +267,29 @@ public final class SchuelerServiceFactory {
 				SchuelerLernabschnittsdatenMapper.INSTANCE,
 				SchuelerLeistungsdatenMapper.INSTANCE,
 				SchuelerLernabschnittBemerkungenMapper.INSTANCE,
+				eigeneSchuleServiceFactory.getSchuleService(),
+				BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory).getBenutzerKompetenzService()
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerLeistungsdatenService}.
+	 *
+	 * @return ein neuer {@code SchuelerLeistungsdatenService} mit allen erforderlichen Abhängigkeiten
+	 */
+	public SchuelerLeistungsdatenService getSchuelerLeistungsdatenService() {
+		final var repos = new SchuelerLeistungsdatenRepositories(
+				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
+				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				katalogRepositoryFactory.getFachRepository(),
+				kurseRepositoryFactory.getKurseRepository(),
+				LehrerRepositoryFactory.getNewInstance().getLehrerRepository()
+		);
+
+		return new SchuelerLeistungsdatenService(
+				repos,
+				SchuelerLeistungsdatenMapper.INSTANCE,
 				eigeneSchuleServiceFactory.getSchuleService(),
 				BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory).getBenutzerKompetenzService()
 		);

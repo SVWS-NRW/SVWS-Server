@@ -14896,53 +14896,30 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchSchuelerLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/{id : \d+}
 	 *
-	 * Passt die Schülerleistungsdaten mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerleistungsdaten besitzt.
+	 * Passt die Schülerleistungsdaten mit der angegebenen ID an und liefert die aktualisierten Leistungsdaten zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerleistungsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 200: Der Patch wurde erfolgreich integriert. Die aktualisierten Leistungsdaten werden zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerLeistungsdaten
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine nicht vorhandene ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<SchuelerLeistungsdaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert. Die aktualisierten Leistungsdaten werden zurückgegeben.
 	 */
-	public async patchSchuelerLeistungsdaten(data: Partial<SchuelerLeistungsdaten>, schema: string, id: number): Promise<void> {
+	public async patchSchuelerLeistungsdaten(data: Partial<SchuelerLeistungsdaten>, schema: string, id: number): Promise<SchuelerLeistungsdaten> {
 		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = SchuelerLeistungsdaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteSchuelerLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/{id : \d+}
-	 *
-	 * Entfernt Leistungsdaten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Leistungsdaten wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerLeistungsdaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Leistungsdaten zu entfernen.
-	 *   Code 404: Die Leistungsdaten sind nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Leistungsdaten wurde erfolgreich entfernt.
-	 */
-	public async deleteSchuelerLeistungsdaten(schema: string, id: number): Promise<SchuelerLeistungsdaten> {
-		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result: string = await super.deleteJSON(path, null);
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
 		return SchuelerLeistungsdaten.transpilerFromJSON(text);
 	}
@@ -14957,8 +14934,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 201: Die Leistungsdaten wurden erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SchuelerLeistungsdaten
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten hinzuzufügen.
-	 *   Code 404: Daten für die Leistungsdaten (z.B. Fächer) wurden nicht gefunden und konnten nicht zugeordnet werden
+	 *   Code 409: Daten für die Leistungsdaten (z.B. Fächer) wurden nicht gefunden und konnten nicht zugeordnet werden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<SchuelerLeistungsdaten>} data - der Request-Body für die HTTP-Methode
@@ -14977,67 +14955,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addSchuelerLeistungsdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/create/multiple
-	 *
-	 * Erstellt mehrere Leistungsdaten und gibt die zugehörigen Objekte zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum zum Hinzufügen von Leistungsdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Die Leistungsdaten wurden erfolgreich hinzugefügt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerLeistungsdaten>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten hinzuzufügen.
-	 *   Code 404: Daten für die Leistungsdaten (z.B. Fächer) wurden nicht gefunden und konnten nicht zugeordnet werden
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<Partial<SchuelerLeistungsdaten>>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Leistungsdaten wurden erfolgreich hinzugefügt.
-	 */
-	public async addSchuelerLeistungsdatenMultiple(data: List<Partial<SchuelerLeistungsdaten>>, schema: string): Promise<List<SchuelerLeistungsdaten>> {
-		const path = "/db/{schema}/schueler/leistungsdaten/create/multiple"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = "[" + (data.toArray() as Array<SchuelerLeistungsdaten>).map(d => SchuelerLeistungsdaten.transpilerToJSONPatch(d)).join() + "]";
-		const result: string = await super.postJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerLeistungsdaten>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(SchuelerLeistungsdaten.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der DELETE-Methode deleteSchuelerLeistungsdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/delete/multiple
 	 *
-	 * Entfernt mehrere Leistungsdaten.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.
+	 * Entfernt mehrere Leistungsdaten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Leistungsdaten wurden erfolgreich entfernt.
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerLeistungsdaten>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Leistungsdaten zu entfernen.
-	 *   Code 404: Die Leistungsdaten sind zumindest nicht alle vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten zu entfernen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Leistungsdaten wurden erfolgreich entfernt.
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteSchuelerLeistungsdatenMultiple(data: List<number>, schema: string): Promise<List<SchuelerLeistungsdaten>> {
+	public async deleteSchuelerLeistungsdatenMultiple(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/leistungsdaten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerLeistungsdaten>();
+		const ret = new ArrayList<SimpleOperationResponse>();
 		obj.forEach((elem: any) => {
 			const text: string = JSON.stringify(elem);
-			ret.add(SchuelerLeistungsdaten.transpilerFromJSON(text));
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
 		});
 		return ret;
 	}

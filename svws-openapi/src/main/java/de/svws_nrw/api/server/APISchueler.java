@@ -41,7 +41,6 @@ import de.svws_nrw.data.schueler.DataKatalogHerkunftsarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerFoerderempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
-import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
@@ -50,6 +49,8 @@ import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.service.schueler.create.SchuelerCreateRequest;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungPatchRequest;
+import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenCreateRequest;
+import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenPatchRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
@@ -825,9 +826,9 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schülerleistungsdaten-Eintrag mit der angegebenen ID gefunden")
 	public Response getSchuelerLeistungsdatenByID(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
+		return SchuelerControllerFactory.withLeistungsdatenReadAccess(request)
+				.getSchuelerLeistungsdatenController()
+				.get(id);
 	}
 
 
@@ -836,31 +837,31 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der Schülerleistungsdaten
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param dto       die zu ändernden Felder der Schülerleistungsdaten
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return das Ergebnis der Patch-Operation
+	 * @return die aktualisierten Schülerleistungsdaten
 	 */
 	@PATCH
 	@Path("/leistungsdaten/{id : \\d+}")
 	@Operation(summary = "Passt die Schülerleistungsdaten mit der angegebenen ID an.",
-			description = "Passt die Schülerleistungsdaten mit der angegebenen ID an. "
+			description = "Passt die Schülerleistungsdaten mit der angegebenen ID an und liefert die aktualisierten Leistungsdaten zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerleistungsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert. Die aktualisierten Leistungsdaten werden zurückgegeben.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerLeistungsdaten.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
+			+ " (z.B. eine nicht vorhandene ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchSchuelerLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Schülerleistungsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerLeistungsdaten.class))) final InputStream is,
+					schema = @Schema(implementation = SchuelerLeistungsdaten.class))) final SchuelerLeistungsdatenPatchRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+		return SchuelerControllerFactory.withLeistungsdatenWriteAccess(request)
+				.getSchuelerLeistungsdatenController()
+				.patch(id, dto);
 	}
 
 
@@ -868,7 +869,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Hinzufügen von Leistungsdaten.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der Input-Stream mit den Daten der Leistungsdaten
+	 * @param dto       die Daten der neuen Leistungsdaten
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit den neuen Leistungsdaten
@@ -880,77 +881,18 @@ public class APISchueler {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen von Leistungsdaten besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Leistungsdaten wurden erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerLeistungsdaten.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten hinzuzufügen.")
-	@ApiResponse(responseCode = "404", description = "Daten für die Leistungsdaten (z.B. Fächer) wurden nicht gefunden und konnten nicht zugeordnet werden")
+	@ApiResponse(responseCode = "409", description = "Daten für die Leistungsdaten (z.B. Fächer) wurden nicht gefunden und konnten nicht zugeordnet werden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addSchuelerLeistungsdaten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden Leistungsdaten ohne ID, welche automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerLeistungsdaten.class))) final InputStream is,
+							schema = @Schema(implementation = SchuelerLeistungsdaten.class))) final SchuelerLeistungsdatenCreateRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).addAsResponse(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Hinzufügen mehrerer Leistungsdaten.
-	 *
-	 * @param schema    das Datenbankschema
-	 * @param is        der Input-Stream mit den Daten der Räume
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit der Liste der neuen Leistungsdaten
-	 */
-	@POST
-	@Path("/leistungsdaten/create/multiple")
-	@Operation(summary = "Erstellt mehrere Leistungsdaten und gibt die zugehörigen Objekte zurück.",
-			description = "Erstellt mehrere Leistungsdaten und gibt die zugehörigen Objekte zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum zum Hinzufügen von Leistungsdaten besitzt.")
-	@ApiResponse(responseCode = "201", description = "Die Leistungsdaten wurden erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten hinzuzufügen.")
-	@ApiResponse(responseCode = "404", description = "Daten für die Leistungsdaten (z.B. Fächer) wurden nicht gefunden und konnten nicht zugeordnet werden")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addSchuelerLeistungsdatenMultiple(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Daten der zu erstellenden Leistungsdaten ohne IDs, welche automatisch generiert werden", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class)))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).addMultipleAsResponse(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen von Leistungsdaten.
-	 *
-	 * @param schema    das Datenbankschema
-	 * @param id        die ID der Leistungsdaten
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Leistungsdaten
-	 */
-	@DELETE
-	@Path("/leistungsdaten/{id : \\d+}")
-	@Operation(summary = "Entfernt Leistungsdaten.",
-			description = "Entfernt Leistungsdaten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.")
-	@ApiResponse(responseCode = "200", description = "Die Leistungsdaten wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerLeistungsdaten.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Leistungsdaten zu entfernen.")
-	@ApiResponse(responseCode = "404", description = "Die Leistungsdaten sind nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteSchuelerLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+		return SchuelerControllerFactory.withLeistungsdatenWriteAccess(request)
+				.getSchuelerLeistungsdatenController()
+				.create(dto);
 	}
 
 
@@ -958,30 +900,27 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Leistungsdaten.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        die IDs der Leistungsdaten
+	 * @param ids       die IDs der Leistungsdaten
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Leistungsdaten
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
 	 */
 	@DELETE
 	@Path("/leistungsdaten/delete/multiple")
 	@Operation(summary = "Entfernt mehrere Leistungsdaten.",
-			description = "Entfernt mehrere Leistungsdaten."
+			description = "Entfernt mehrere Leistungsdaten. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.")
-	@ApiResponse(responseCode = "200", description = "Die Leistungsdaten wurden erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Leistungsdaten zu entfernen.")
-	@ApiResponse(responseCode = "404", description = "Die Leistungsdaten sind zumindest nicht alle vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten zu entfernen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchuelerLeistungsdatenMultiple(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Leistungsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+		return SchuelerControllerFactory.withLeistungsdatenWriteAccess(request)
+				.getSchuelerLeistungsdatenController()
+				.deleteMultiple(ids);
 	}
 
 

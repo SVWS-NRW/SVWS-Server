@@ -213,6 +213,30 @@ public class BenutzerKompetenzService {
 	}
 
 	/**
+	 * Prüft, ob der Benutzer Leistungsdaten ändern darf, bei denen er ggf. als Fachlehrer eingetragen ist. Ist der Benutzer
+	 * der Fachlehrer und ist die Fachlehrer-Regel anwendbar, so genügt die funktionsbezogene Kompetenz ohne Prüfung der Klassen.
+	 * Andernfalls wird wie bei {@link #pruefeKompetenzLeistungsdatenAendernKlassen(Long...)} geprüft, ob der Benutzer für die
+	 * Klassen zuständig ist.
+	 *
+	 * @param idFachlehrer             die ID des Fachlehrers der Leistungsdaten oder null, wenn keiner eingetragen ist
+	 * @param fachlehrerRegelAnwendbar gibt an, ob die Änderung im aktuellen Schuljahresabschnitt erfolgt und nur Attribute betrifft,
+	 *                                 die ein Fachlehrer ändern darf
+	 * @param idsKlassen               die IDs der Klassen, für welche die Kompetenz geprüft werden soll, wenn die Fachlehrer-Regel nicht greift
+	 */
+	public void checkKompetenzLeistungsdatenAendern(final Long idFachlehrer, final boolean fachlehrerRegelAnwendbar, final Long... idsKlassen) {
+		if (fachlehrerRegelAnwendbar && istBenutzerLehrer(idFachlehrer)) {
+			return;
+		}
+		pruefeKompetenzLeistungsdatenAendernKlassen(idsKlassen);
+	}
+
+	private boolean istBenutzerLehrer(final Long idLehrer) {
+		final Long idLehrerBenutzer = benutzerRepository.getAktuellerBenutzer().getIdLehrer();
+
+		return (idLehrerBenutzer != null) && idLehrerBenutzer.equals(idLehrer);
+	}
+
+	/**
 	 * Prüft, ob der aktuelle Benutzer die übergebene Kompetenz hat.
 	 *
 	 * @param kompetenz die zu prüfende Kompetenz
