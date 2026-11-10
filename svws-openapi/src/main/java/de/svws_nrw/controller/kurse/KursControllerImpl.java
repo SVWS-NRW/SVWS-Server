@@ -1,7 +1,12 @@
 package de.svws_nrw.controller.kurse;
 
+import java.util.List;
+
 import de.svws_nrw.data.Responses;
+import de.svws_nrw.service.kurse.KursCreateRequest;
+import de.svws_nrw.service.kurse.KursPatchRequest;
 import de.svws_nrw.service.kurse.KursService;
+import de.svws_nrw.validation.BeanValidator;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -28,6 +33,23 @@ public final class KursControllerImpl implements KursController {
 	@Override
 	public Response getListBySchuljahresabschnitt(final Long idSchuljahresabschnitt) {
 		return Responses.ok(service.getListBySchuljahresabschnitt(idSchuljahresabschnitt, true));
+	}
+
+	@Override
+	public Response create(final KursCreateRequest request) {
+		BeanValidator.validate(request);
+		return Responses.created(service.create(request));
+	}
+
+	@Override
+	public Response patch(final long id, final KursPatchRequest request) {
+		BeanValidator.validate(request);
+		return Responses.ok(service.patch(id, request));
+	}
+
+	@Override
+	public Response delete(final List<Long> ids) {
+		return Responses.ok(service.delete(ids));
 	}
 
 }

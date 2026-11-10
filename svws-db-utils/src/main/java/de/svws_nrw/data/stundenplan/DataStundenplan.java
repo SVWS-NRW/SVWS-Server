@@ -23,7 +23,6 @@ import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
@@ -35,6 +34,8 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenStundenplanHookRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.service.kurse.KursService;
+import de.svws_nrw.service.kurse.KursServiceFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.ws.rs.core.MediaType;
@@ -247,7 +248,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	public Stundenplan add(final Map<String, Object> initAttributes) {
 		final Stundenplan stundenplan = super.add(initAttributes);
 		// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(stundenplan.idSchuljahresabschnitt, false);
+		final List<KursDaten> kurse = getKursService().getListBySchuljahresabschnitt(stundenplan.idSchuljahresabschnitt, false);
 		DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.id, kurse);
 		return stundenplan;
 	}
@@ -360,6 +361,10 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 			return neu.idSchuljahresabschnitt;
 		}
 		return null;
+	}
+
+	private static KursService getKursService() {
+		return KursServiceFactory.getNewInstance().getKursService();
 	}
 
 }

@@ -20,10 +20,14 @@ import de.svws_nrw.asd.data.kurse.KursLehrer;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import de.svws_nrw.service.kurse.KursCreateRequest;
+import de.svws_nrw.service.kurse.KursPatchRequest;
 
 /**
  * MapStruct-Mapper für die Konvertierung eines {@link DTOKurs} in das Core-DTO {@link KursDaten} und eines
- * {@link DTOKursLehrer} in das Core-DTO {@link KursLehrer} (Lesen).
+ * {@link DTOKursLehrer} in das Core-DTO {@link KursLehrer} (Lesen). Außerdem überträgt er die Daten eines
+ * {@link KursCreateRequest} bzw. {@link KursPatchRequest} auf ein {@link DTOKurs}, ohne selbst auf die Datenbank zuzugreifen.
  * <p>
  * Die Schüler und die weiteren Lehrer eines Kurses werden nicht von diesem Mapper bestimmt. Der aufrufende
  * Service lädt diese Daten gebündelt und ergänzt sie im {@link KursDaten}.
@@ -38,7 +42,13 @@ public interface KursMapper {
 	int WOCHENSTUNDEN_DEFAULT = 0;
 
 	/** Das Muster, dem ein Eintrag in der kommagetrennten Jahrgangsliste entsprechen muss, um übernommen zu werden. */
-	Pattern PATTERN_ZAHL = Pattern.compile("^\\d+$");
+	Pattern PATTERN_JAHRGANG_ZAHL = Pattern.compile("^\\d+$");
+
+	/** Die Wochenstunden eines neu angelegten Kurses, wenn keine angegeben sind. */
+	int WOCHENSTUNDEN_NEUER_KURS = 3;
+
+	/** Die Wochenstunden des Lehrers, wenn sie im Patch auf null gesetzt werden. */
+	double WOCHENSTUNDEN_LEHRER_DEFAULT = 0.0;
 
 	/** Die Wochenstunden einer Zusatzkraft, wenn kein Anteil gesetzt ist. */
 	double ANTEIL_DEFAULT = 0.0;
@@ -74,7 +84,7 @@ public interface KursMapper {
 	@Mapping(source = "ZeugnisBez", target = "bezeichnungZeugnis", qualifiedByName = "mapBezeichnungZeugnis")
 	@Mapping(target = "schueler", ignore = true)
 	@Mapping(target = "weitereLehrer", ignore = true)
-	KursDaten toKursDaten(DTOKurs dto);
+	KursDaten toApi(DTOKurs dto);
 
 	/**
 	 * Konvertiert ein {@link DTOKursLehrer} in ein {@link KursLehrer}. Ist kein Anteil gesetzt,
@@ -87,7 +97,7 @@ public interface KursMapper {
 	@Mapping(source = "Kurs_ID", target = "idKurs")
 	@Mapping(source = "Lehrer_ID", target = "idLehrer")
 	@Mapping(source = "Anteil", target = "wochenstundenLehrer", qualifiedByName = "mapAnteil")
-	KursLehrer toKursLehrer(DTOKursLehrer dto);
+	KursLehrer toApi(DTOKursLehrer dto);
 
 	/**
 	 * Bestimmt die IDs der Jahrgänge eines Kurses aus der ID des Jahrgangs und der kommagetrennten Liste
@@ -101,7 +111,7 @@ public interface KursMapper {
 	default List<Long> mapIdJahrgaenge(final DTOKurs dto) {
 		final var idJahrgang = Stream.ofNullable(dto.Jahrgang_ID);
 		final var idsJahrgaenge = splitListe(dto.Jahrgaenge)
-				.filter(eintrag -> PATTERN_ZAHL.matcher(eintrag).matches())
+				.filter(eintrag -> PATTERN_JAHRGANG_ZAHL.matcher(eintrag).matches())
 				.map(Long::parseLong);
 		return Stream.concat(idJahrgang, idsJahrgaenge).collect(Collectors.toCollection(ArrayList::new));
 	}
@@ -120,6 +130,110 @@ public interface KursMapper {
 				.map(String::trim)
 				.flatMap(eintrag -> parseInteger(eintrag).stream())
 				.collect(Collectors.toCollection(ArrayList::new));
+	}
+
+	/**
+	 * Erstellt aus den Daten zum Anlegen einen neuen Kurs. Nicht angegebene optionale Felder erhalten die
+	 * Standardwerte. Die ID wird erst beim Speichern vergeben.
+	 *
+	 * @param request       die Daten des neuen Kurses
+	 * @param jahrgaenge    die Jahrgänge des Kurses in der gewünschten Reihenfolge, leer wenn keine angegeben sind
+	 *
+	 * @return der neue Kurs
+	 */
+	default DTOKurs toDomain(final KursCreateRequest request, final List<DTOJahrgang> jahrgaenge) {
+		final var kurs = new DTOKurs(0L, request.idSchuljahresabschnitt, request.kuerzel, request.idFach);
+		kurs.KursartAllg = request.kursartAllg;
+		kurs.Lehrer_ID = request.idLehrer;
+		kurs.Sortierung = Optional.ofNullable(request.sortierung).orElse(SORTIERUNG_DEFAULT);
+		kurs.Sichtbar = Optional.ofNullable(request.istSichtbar).orElse(true);
+		kurs.WochenStd = Optional.ofNullable(request.wochenstunden).orElse(WOCHENSTUNDEN_NEUER_KURS);
+		kurs.WochenstdKL = request.wochenstundenLehrer;
+		kurs.Fortschreibungsart = Optional.ofNullable(request.idKursFortschreibungsart)
+				.map(KursFortschreibungsart::fromID)
+				.orElse(KursFortschreibungsart.KEINE);
+		kurs.SchulNr = request.schulnummer;
+		kurs.EpochU = Optional.ofNullable(request.istEpochalunterricht).orElse(false);
+		kurs.ZeugnisBez = request.bezeichnungZeugnis;
+		Optional.ofNullable(request.schienen).ifPresent(schienen -> applySchienen(kurs, schienen));
+		applyJahrgaenge(kurs, jahrgaenge);
+		return kurs;
+	}
+
+	/**
+	 * Überträgt die im Patch gesetzten Attribute auf den Kurs. Jahrgänge und Schienen werden nur geändert,
+	 * wenn sich die Liste unterscheidet. Ein null bei den Wochenstunden des Lehrers wird zu 0.0.
+	 *
+	 * @param request       die zu ändernden Attribute
+	 * @param dto           der Kurs, der geändert wird
+	 * @param jahrgaenge    die Jahrgänge zu den IDs im Patch in der gewünschten Reihenfolge, wird nur bei gesetzten IDs verwendet
+	 */
+	default void patch(final KursPatchRequest request, final DTOKurs dto, final List<DTOJahrgang> jahrgaenge) {
+		request.kuerzel.ifPresent(kuerzel -> dto.KurzBez = kuerzel);
+		request.kursartAllg.ifPresent(kursart -> dto.KursartAllg = kursart);
+		request.idFach.ifPresent(idFach -> dto.Fach_ID = idFach);
+		request.idLehrer.ifPresent(idLehrer -> dto.Lehrer_ID = idLehrer);
+		request.sortierung.ifPresent(sortierung -> dto.Sortierung = sortierung);
+		request.istSichtbar.ifPresent(sichtbar -> dto.Sichtbar = sichtbar);
+		request.wochenstunden.ifPresent(wochenstunden -> dto.WochenStd = wochenstunden);
+		request.wochenstundenLehrer.ifPresent(wochenstunden -> dto.WochenstdKL = Optional.ofNullable(wochenstunden).orElse(WOCHENSTUNDEN_LEHRER_DEFAULT));
+		request.istEpochalunterricht.ifPresent(epochal -> dto.EpochU = epochal);
+		request.bezeichnungZeugnis.ifPresent(bezeichnung -> dto.ZeugnisBez = bezeichnung);
+		request.idKursFortschreibungsart.ifPresent(id -> dto.Fortschreibungsart = KursFortschreibungsart.fromID(id));
+		request.schulnummer.ifPresent(schulnummer -> dto.SchulNr = schulnummer);
+		request.schienen.ifPresent(schienen -> applySchienenIfChanged(dto, schienen));
+		if (request.idJahrgaenge.isPresent()) {
+			applyJahrgaengeIfChanged(dto, jahrgaenge);
+		}
+	}
+
+	private void applySchienenIfChanged(final DTOKurs dto, final List<Integer> schienen) {
+		if (!hasSameElements(mapSchienen(dto.Schienen), schienen)) {
+			applySchienen(dto, schienen);
+		}
+	}
+
+	private void applyJahrgaengeIfChanged(final DTOKurs dto, final List<DTOJahrgang> jahrgaenge) {
+		final var idsNeu = jahrgaenge.stream()
+				.map(j -> j.ID)
+				.toList();
+		if (!hasSameElements(mapIdJahrgaenge(dto), idsNeu)) {
+			applyJahrgaenge(dto, jahrgaenge);
+		}
+	}
+
+	private <T> boolean hasSameElements(final List<T> vorher, final List<T> neu) {
+		return (vorher.size() == neu.size()) && vorher.containsAll(neu);
+	}
+
+	/**
+	 * Überträgt die Jahrgänge auf den Kurs. Ein Jahrgang wird in Jahrgang_ID und ASDJahrgang gespeichert, mehrere
+	 * Jahrgänge nur in der kommagetrennten Spalte Jahrgaenge. Bei einer leeren Liste werden alle drei Spalten geleert.
+	 *
+	 * @param dto           der Kurs, der geändert wird
+	 * @param jahrgaenge    die Jahrgänge in der gewünschten Reihenfolge
+	 */
+	default void applyJahrgaenge(final DTOKurs dto, final List<DTOJahrgang> jahrgaenge) {
+		final var einJahrgang = (jahrgaenge.size() == 1);
+		dto.Jahrgang_ID = einJahrgang ? jahrgaenge.getFirst().ID : null;
+		dto.ASDJahrgang = einJahrgang ? jahrgaenge.getFirst().ASDJahrgang : null;
+		dto.Jahrgaenge = (jahrgaenge.size() > 1)
+				? jahrgaenge.stream()
+						.map(j -> String.valueOf(j.ID))
+						.collect(Collectors.joining(TRENNZEICHEN))
+				: null;
+	}
+
+	/**
+	 * Überträgt die Schienen als kommagetrennten Text auf den Kurs.
+	 *
+	 * @param dto        der Kurs, der geändert wird
+	 * @param schienen   die Nummern der Schienen
+	 */
+	default void applySchienen(final DTOKurs dto, final List<Integer> schienen) {
+		dto.Schienen = schienen.stream()
+				.map(String::valueOf)
+				.collect(Collectors.joining(TRENNZEICHEN));
 	}
 
 	/**

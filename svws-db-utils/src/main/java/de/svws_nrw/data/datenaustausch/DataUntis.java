@@ -81,7 +81,6 @@ import de.svws_nrw.data.faecher.DataFaecher;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
-import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
@@ -118,6 +117,8 @@ import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepositoryImpl;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
+import de.svws_nrw.service.kurse.KursService;
+import de.svws_nrw.service.kurse.KursServiceFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -156,7 +157,7 @@ public final class DataUntis {
 		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, schuljahresabschnitt.id);
 		final Map<String, DTOKlassen> mapKlassenByKuerzel = klassen.stream().collect(Collectors.toMap(k -> k.Klasse, k -> k));
 		// Bestimme die Kurse des Schuljahresabschnitts
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(idSchuljahresabschnitt, false);
+		final List<KursDaten> kurse = getKursService().getListBySchuljahresabschnitt(idSchuljahresabschnitt, false);
 		final HashMap2D<String, Long, KursDaten> mapKurseByKuerzelUndJahrgang = new HashMap2D<>();
 		for (final KursDaten kurs : kurse) {
 			for (final long idJahrgang : kurs.idJahrgaenge) {
@@ -1402,7 +1403,7 @@ public final class DataUntis {
 		// Bestimme zunächst die Kurse für den Schuljahresabschnitt und hole dabei auch die Schülerzuordnungen
 		final String strSchuljahresabschnitt = "Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt);
 		logger.logLn("-> für den " + strSchuljahresabschnitt);
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(idSchuljahresabschnitt, true);
+		final List<KursDaten> kurse = getKursService().getListBySchuljahresabschnitt(idSchuljahresabschnitt, true);
 		if (kurse.isEmpty()) {
 			final String error = "Keine Kurse in dem %s gefunden.".formatted(strSchuljahresabschnitt);
 			logger.logLn("-> " + error);
@@ -1854,7 +1855,7 @@ public final class DataUntis {
 		}
 		final String strSchuljahresabschnitt = "Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt);
 		logger.logLn("-> für den " + strSchuljahresabschnitt);
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(idSchuljahresabschnitt, false);
+		final List<KursDaten> kurse = getKursService().getListBySchuljahresabschnitt(idSchuljahresabschnitt, false);
 		if (kurse.isEmpty()) {
 			final String error = "Keine Kurse in dem %s gefunden.".formatted(strSchuljahresabschnitt);
 			logger.logLn("-> " + error);
@@ -2145,6 +2146,10 @@ public final class DataUntis {
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Unerwarteter Fehler beim Serialisieren der GPU-Dateien.");
 		}
+	}
+
+	private static KursService getKursService() {
+		return KursServiceFactory.getNewInstance().getKursService();
 	}
 
 }

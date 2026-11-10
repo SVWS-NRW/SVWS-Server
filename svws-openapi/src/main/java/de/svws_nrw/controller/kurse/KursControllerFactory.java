@@ -18,8 +18,9 @@ public final class KursControllerFactory {
 		this.kursServiceFactory = kursServiceFactory;
 	}
 
-	private static KursControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, benutzerKompetenz);
+	private static KursControllerFactory getNewInstance(final HttpServletRequest request, final ServerMode serverMode,
+			final BenutzerKompetenz benutzerKompetenz) {
+		DBBenutzerUtils.getDBConnection(request, serverMode, benutzerKompetenz);
 		return new KursControllerFactory(KursServiceFactory.getNewInstance());
 	}
 
@@ -33,8 +34,8 @@ public final class KursControllerFactory {
 	 *
 	 * @return eine KursControllerFactory-Instanz mit Leseberechtigung
 	 */
-	public static KursControllerFactory withReadAccess(final HttpServletRequest request) {
-		return getNewInstance(request, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
+	public static KursControllerFactory withReadAccessStable(final HttpServletRequest request) {
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
 	}
 
 	/**
@@ -45,7 +46,35 @@ public final class KursControllerFactory {
 	 * @return eine KursControllerFactory-Instanz ohne zusätzliche Berechtigungsanforderung
 	 */
 	public static KursControllerFactory withNoAccess(final HttpServletRequest request) {
-		return getNewInstance(request, BenutzerKompetenz.KEINE);
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Erstellt eine Factory-Instanz mit Schreibberechtigung.
+	 * <p>
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN}.
+	 * </p>
+	 *
+	 * @param request   die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 *
+	 * @return eine KursControllerFactory-Instanz mit Schreibberechtigung
+	 */
+	public static KursControllerFactory withWriteAccessStable(final HttpServletRequest request) {
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+	}
+
+	/**
+	 * Erstellt eine Factory-Instanz mit Löschberechtigung. Das Löschen ist nur im Server-Modus DEV erlaubt.
+	 * <p>
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN}.
+	 * </p>
+	 *
+	 * @param request   die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 *
+	 * @return eine KursControllerFactory-Instanz mit Löschberechtigung
+	 */
+	public static KursControllerFactory withDeleteAccessDev(final HttpServletRequest request) {
+		return getNewInstance(request, ServerMode.DEV, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 	/**

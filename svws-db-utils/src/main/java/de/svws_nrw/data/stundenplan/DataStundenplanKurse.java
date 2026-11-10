@@ -10,7 +10,6 @@ import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.data.DataManager;
-import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
@@ -18,6 +17,8 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanSchienen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.kurse.KursService;
+import de.svws_nrw.service.kurse.KursServiceFactory;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -91,7 +92,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		}
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(stundenplan.Schuljahresabschnitts_ID, false);
+		final List<KursDaten> kurse = getKursService().getListBySchuljahresabschnitt(stundenplan.Schuljahresabschnitts_ID, false);
 		if (kurse.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -152,20 +153,17 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Kurs mit der ID null ist unzulässig.");
 		}
-		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(stundenplan.Schuljahresabschnitts_ID, false);
+		final List<KursDaten> kurse = getKursService().getListBySchuljahresabschnitt(stundenplan.Schuljahresabschnitts_ID, false);
 		if (kurse.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden keine Kurse in dem Schuljahresabschnitt mit der ID %d gefunden.".formatted(stundenplan.Schuljahresabschnitts_ID));
 		}
-		final KursDaten kurs = DataKurse.getKursdaten(id);
-		if (kurs == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Kurs mit der ID %d gefunden.".formatted(id));
-		}
-		if (kurs.idSchuljahresabschnitt != stundenplan.Schuljahresabschnitts_ID) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Der Schuljahresabschnitt %d des Kurses mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein."
-							.formatted(kurs.idSchuljahresabschnitt, kurs.id, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
-		}
+		final KursDaten kurs = kurse.stream()
+				.filter(k -> k.id == id)
+				.findFirst()
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND,
+						"Es wurde kein Kurs mit der ID %d im Schuljahresabschnitt %d des Stundenplans mit der ID %d gefunden."
+								.formatted(id, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID)));
 		// Map für Schienen-IDs bestimmen
 		DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.ID, kurse);
 		conn.transactionFlush();
@@ -190,6 +188,10 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
+	}
+
+	private static KursService getKursService() {
+		return KursServiceFactory.getNewInstance().getKursService();
 	}
 
 }

@@ -1,6 +1,7 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.kurse.KursLehrer;
@@ -13,7 +14,8 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.kurse.DataKatalogKursarten;
 import de.svws_nrw.data.kurse.DataKursLehrer;
-import de.svws_nrw.data.kurse.DataKurse;
+import de.svws_nrw.service.kurse.KursCreateRequest;
+import de.svws_nrw.service.kurse.KursPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -68,7 +70,7 @@ public class APIKurse {
 	@ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
 	public Response getKurse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return KursControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getKursController()
 				.getListBySchuljahresabschnitt(null);
 	}
@@ -125,7 +127,7 @@ public class APIKurse {
 	public Response getKurs(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return KursControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getKursController()
 				.get(id);
 	}
@@ -136,17 +138,18 @@ public class APIKurse {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation des Kurses
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     die zu ändernden Attribute des Kurses
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return das Ergebnis der Patch-Operation
+	 * @return die HTTP-Antwort mit den Daten des geänderten Kurses
 	 */
 	@PATCH
 	@Path("/{id : \\d+}")
 	@Operation(summary = "Passt die Daten des Kurses mit der angebenen ID an.",
 			description = "Passt die Daten des Kurses mit der angebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Kursdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert. Die Antwort enthält die Daten des geänderten Kurses.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = KursDaten.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
@@ -155,10 +158,12 @@ public class APIKurse {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchKurs(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Daten des Kurses", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursDaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursDaten.class))) final KursPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKurse(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return KursControllerFactory
+				.withWriteAccessStable(request)
+				.getKursController()
+				.patch(id, patch);
 	}
 
 
@@ -166,7 +171,7 @@ public class APIKurse {
 	 * Die OpenAPI-Methode für das Erstellen eines neuen Kurses mit den angegebenen Kursdaten.
 	 *
 	 * @param schema                   das Datenbankschema
-	 * @param is                       der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param input                    die Daten des neuen Kurses
 	 * @param request                  die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit den Daten des Kurses
@@ -182,10 +187,12 @@ public class APIKurse {
 	@ApiResponse(responseCode = "404", description = "Der Schuljahresabschnitt, das Fach oder der Lehrer wurde nicht gefunden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addKurs(@PathParam("schema") final String schema, @RequestBody(description = "Die Daten des Kurses", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursDaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursDaten.class))) final KursCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKurse(conn).addAsResponse(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return KursControllerFactory
+				.withWriteAccessStable(request)
+				.getKursController()
+				.create(input);
 	}
 
 
@@ -193,7 +200,7 @@ public class APIKurse {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Kurse.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste von zu löschenden IDs
+	 * @param ids       die IDs der zu löschenden Kurse
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -208,12 +215,12 @@ public class APIKurse {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKurse(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Kurse", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataKurse(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return KursControllerFactory
+				.withDeleteAccessDev(request)
+				.getKursController()
+				.delete(ids);
 	}
 
 

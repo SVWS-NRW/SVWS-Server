@@ -11,53 +11,73 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schueler.Schueler;
+import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.kurse.KursMapper;
 import de.svws_nrw.mapper.schueler.SchuelerMapper;
 import de.svws_nrw.repo.kurse.KursSchuelerRepository;
 import de.svws_nrw.repo.kurse.KurseRepository;
 import de.svws_nrw.repo.kurse.KurslehrerRepository;
+import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
+import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
+import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
+import de.svws_nrw.repo.schule.kataloge.schule.SchuleRepository;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Ein Service für den lesenden Zugriff auf Kurse mit den Core-DTOs {@link KursDaten}.
+ * Ein Service für den Zugriff auf Kurse mit den Core-DTOs {@link KursDaten}. Er liest, legt an, ändert und löscht Kurse.
  */
 public final class KursService {
 
 	private static final String KEIN_KURS_GEFUNDEN = "Kein Kurs mit der ID %d gefunden.";
+	private static final String KEIN_ABSCHNITT_GEFUNDEN = "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden.";
+	private static final String FACH_FEHLT = "Die ID des Faches darf nicht null sein.";
+	private static final String KEIN_FACH_GEFUNDEN = "Es konnte kein Fach mit der ID %d gefunden werden.";
+	private static final String KEIN_LEHRER_GEFUNDEN = "Es konnte kein Lehrer mit der angegebenen ID %d gefunden werden.";
+	private static final String KEINE_SCHULE_GEFUNDEN = "Für die Schulnummer %d konnte keine passende Schule gefunden werden.";
+	private static final String JAHRGANG_NICHT_GEFUNDEN = "Mindestens einer der angegebenen Jahrgang-IDs existiert nicht in der SVWS-Datenbank";
+	private static final String ENTITAET_KURS = "Kurs";
 
 	private final KurseRepository kurseRepository;
 	private final KursSchuelerRepository kursSchuelerRepository;
 	private final KurslehrerRepository kurslehrerRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final JahrgangRepository jahrgangRepository;
+	private final FachRepository fachRepository;
+	private final LehrerRepository lehrerRepository;
+	private final SchuleRepository schuleRepository;
+	private final SchuljahresabschnitteRepository schuljahresabschnitteRepository;
+	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
+	private final KursMapper kursMapper;
 
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param kurseRepository            das Repository für den Zugriff auf die Kurse
-	 * @param kursSchuelerRepository     das Repository für den Zugriff auf die Kurs-Schüler-Zuordnung
-	 * @param kurslehrerRepository       das Repository für den Zugriff auf die Zusatzkräfte der Kurse
-	 * @param schuelerRepository         das Repository für den Zugriff auf die Schüler
-	 * @param jahrgangRepository         das Repository für den Zugriff auf die Jahrgänge
+	 * @param repositories   die Repositories, die der Service benötigt
+	 * @param kursMapper     der Mapper für die Konvertierung der Kurse
 	 */
-	public KursService(
-			final KurseRepository kurseRepository,
-			final KursSchuelerRepository kursSchuelerRepository,
-			final KurslehrerRepository kurslehrerRepository,
-			final SchuelerRepository schuelerRepository,
-			final JahrgangRepository jahrgangRepository) {
-		this.kurseRepository = kurseRepository;
-		this.kursSchuelerRepository = kursSchuelerRepository;
-		this.kurslehrerRepository = kurslehrerRepository;
-		this.schuelerRepository = schuelerRepository;
-		this.jahrgangRepository = jahrgangRepository;
+	public KursService(final KursRepositories repositories, final KursMapper kursMapper) {
+		this.kurseRepository = repositories.kurseRepository();
+		this.kursSchuelerRepository = repositories.kursSchuelerRepository();
+		this.kurslehrerRepository = repositories.kurslehrerRepository();
+		this.schuelerRepository = repositories.schuelerRepository();
+		this.jahrgangRepository = repositories.jahrgangRepository();
+		this.fachRepository = repositories.fachRepository();
+		this.lehrerRepository = repositories.lehrerRepository();
+		this.schuleRepository = repositories.schuleRepository();
+		this.schuljahresabschnitteRepository = repositories.schuljahresabschnitteRepository();
+		this.schuelerLeistungsdatenRepository = repositories.schuelerLeistungsdatenRepository();
+		this.kursMapper = kursMapper;
 	}
 
 	/**
@@ -68,8 +88,7 @@ public final class KursService {
 	 * @return die Daten des Kurses
 	 */
 	public KursDaten getById(final long id) {
-		final var kurs = kurseRepository.findById(id)
-				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, KEIN_KURS_GEFUNDEN.formatted(id)));
+		final var kurs = loadKurs(id);
 		return mapKurse(List.of(kurs), true).getFirst();
 	}
 
@@ -106,6 +125,142 @@ public final class KursService {
 		return mapKurse(kurseRepository.findListByIds(ids), mitSchueler);
 	}
 
+	/**
+	 * Legt einen neuen Kurs an. Nicht angegebene optionale Felder werden mit den Standardwerten belegt.
+	 * Die Operation läuft in einer Transaktion.
+	 *
+	 * @param request   die Daten des neuen Kurses
+	 *
+	 * @return die Daten des angelegten Kurses ohne Schüler
+	 */
+	public KursDaten create(final KursCreateRequest request) {
+		return TransactionSupport.transactional(() -> {
+			validateCreate(request);
+			final var jahrgaenge = loadJahrgaenge(request.idJahrgaenge);
+			final var kurs = kursMapper.toDomain(request, jahrgaenge);
+			return mapKurse(List.of(kurseRepository.create(kurs)), false).getFirst();
+		});
+	}
+
+	/**
+	 * Ändert die im Request gesetzten Attribute des Kurses mit der angegebenen ID. Wird der Lehrer geändert, so
+	 * wird er auch bei den Leistungsdaten des Kurses als Fachlehrer übernommen. Die Operation läuft in einer Transaktion.
+	 *
+	 * @param id        die ID des Kurses
+	 * @param request   die zu ändernden Attribute
+	 *
+	 * @return die Daten des geänderten Kurses einschließlich der Schüler
+	 */
+	public KursDaten patch(final long id, final KursPatchRequest request) {
+		return TransactionSupport.transactional(() -> {
+			final var kurs = loadKurs(id);
+			validatePatch(request);
+			applyPatch(request, kurs);
+			kurseRepository.update(kurs);
+			updateFachlehrerIfLehrerPatched(request, kurs);
+			return mapKurse(List.of(kurs), true).getFirst();
+		});
+	}
+
+	/**
+	 * Löscht die Kurse mit den angegebenen IDs. Abhängige Daten werden von der Datenbank mit gelöscht bzw. auf null gesetzt.
+	 * Die Operation läuft in einer Transaktion.
+	 *
+	 * @param ids   die IDs der zu löschenden Kurse
+	 *
+	 * @return je ID das Ergebnis der Löschoperation, aufsteigend nach ID sortiert
+	 */
+	public List<SimpleOperationResponse> delete(final List<Long> ids) {
+		return TransactionSupport.transactional(() -> BulkDeleteUtils.delete(ids, kurseRepository, k -> k.ID, ENTITAET_KURS));
+	}
+
+	private DTOKurs loadKurs(final long id) {
+		return kurseRepository.findById(id)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, KEIN_KURS_GEFUNDEN.formatted(id)));
+	}
+
+	private void validateCreate(final KursCreateRequest request) {
+		validateSchuljahresabschnitt(request.idSchuljahresabschnitt);
+		validateFach(request.idFach);
+		validateLehrer(request.idLehrer);
+		validateSchulnummer(request.schulnummer);
+	}
+
+	private void validatePatch(final KursPatchRequest request) {
+		request.idFach.ifPresent(this::validateFach);
+		request.idLehrer.ifPresent(this::validateLehrer);
+		request.schulnummer.ifPresent(this::validateSchulnummer);
+	}
+
+	private void validateSchuljahresabschnitt(final Long idSchuljahresabschnitt) {
+		if (!schuljahresabschnitteRepository.existsById(idSchuljahresabschnitt)) {
+			throw new ApiOperationException(Status.NOT_FOUND, KEIN_ABSCHNITT_GEFUNDEN.formatted(idSchuljahresabschnitt));
+		}
+	}
+
+	private void validateFach(final Long idFach) {
+		if (idFach == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, FACH_FEHLT);
+		}
+		if (fachRepository.findById(idFach).isEmpty()) {
+			throw new ApiOperationException(Status.NOT_FOUND, KEIN_FACH_GEFUNDEN.formatted(idFach));
+		}
+	}
+
+	private void validateLehrer(final Long idLehrer) {
+		if ((idLehrer != null) && !lehrerRepository.existsById(idLehrer)) {
+			throw new ApiOperationException(Status.NOT_FOUND, KEIN_LEHRER_GEFUNDEN.formatted(idLehrer));
+		}
+	}
+
+	private void validateSchulnummer(final Integer schulnummer) {
+		if ((schulnummer != null) && !schuleRepository.existsBySchulnummer(String.valueOf(schulnummer))) {
+			throw new ApiOperationException(Status.NOT_FOUND, KEINE_SCHULE_GEFUNDEN.formatted(schulnummer));
+		}
+	}
+
+	private List<DTOJahrgang> loadJahrgaenge(final List<Long> idsJahrgaenge) {
+		if (idsJahrgaenge == null) {
+			return List.of();
+		}
+		final var jahrgaenge = jahrgangRepository.findMapByIds(idsJahrgaenge);
+		if (jahrgaenge.size() != idsJahrgaenge.size()) {
+			throw new ApiOperationException(Status.BAD_REQUEST, JAHRGANG_NICHT_GEFUNDEN);
+		}
+		return idsJahrgaenge.stream()
+				.map(jahrgaenge::get)
+				.toList();
+	}
+
+	private void applyPatch(final KursPatchRequest request, final DTOKurs kurs) {
+		final var jahrgaenge = request.idJahrgaenge.map(this::loadJahrgaenge).orElse(List.of());
+		kursMapper.patch(request, kurs, jahrgaenge);
+	}
+
+	/**
+	 * Übernimmt den geänderten Lehrer des Kurses als Fachlehrer in die Leistungsdaten der Schüler des Kurses.
+	 * Ohne geänderten Lehrer im Request passiert nichts.
+	 *
+	 * @param request   die zu ändernden Attribute
+	 * @param kurs      der bereits geänderte Kurs
+	 */
+	private void updateFachlehrerIfLehrerPatched(final KursPatchRequest request, final DTOKurs kurs) {
+		if (request.idLehrer.isPresent()) {
+			updateFachlehrer(kurs);
+		}
+	}
+
+	private void updateFachlehrer(final DTOKurs kurs) {
+		final var abweichend = schuelerLeistungsdatenRepository.findListByKurs(kurs.ID).stream()
+				.filter(l -> !Objects.equals(l.Fachlehrer_ID, kurs.Lehrer_ID))
+				.toList();
+		if (abweichend.isEmpty()) {
+			return;
+		}
+		abweichend.forEach(l -> l.Fachlehrer_ID = kurs.Lehrer_ID);
+		schuelerLeistungsdatenRepository.update(abweichend);
+	}
+
 	private List<DTOKurs> loadKurse(final Long idSchuljahresabschnitt) {
 		return (idSchuljahresabschnitt == null)
 				? kurseRepository.getAll()
@@ -132,10 +287,10 @@ public final class KursService {
 	}
 
 	private KursDaten mapKurs(final DTOKurs dtoKurs, final List<DTOKursLehrer> zusatzkraefte, final List<Schueler> schueler) {
-		final var kurs = KursMapper.INSTANCE.toKursDaten(dtoKurs);
+		final var kurs = kursMapper.toApi(dtoKurs);
 
 		zusatzkraefte.stream()
-				.map(KursMapper.INSTANCE::toKursLehrer)
+				.map(kursMapper::toApi)
 				.forEach(kurs.weitereLehrer::add);
 		kurs.schueler.addAll(schueler);
 

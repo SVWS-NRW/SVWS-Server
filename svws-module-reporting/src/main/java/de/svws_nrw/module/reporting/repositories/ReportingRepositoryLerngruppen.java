@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
@@ -24,6 +23,8 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.service.klassen.KlassenService;
 import de.svws_nrw.service.klassen.KlassenServiceFactory;
+import de.svws_nrw.service.kurse.KursService;
+import de.svws_nrw.service.kurse.KursServiceFactory;
 
 /**
  * Domänen-Repository für Klassen und Kurse.
@@ -201,6 +202,16 @@ public class ReportingRepositoryLerngruppen {
 		return KlassenServiceFactory.getNewInstance().getKlassenService();
 	}
 
+	/**
+	 * Erstellt den Service für den Zugriff auf Kurse. Die Datenbank-Verbindung kommt nicht aus dem {@link ReportingContext},
+	 * sondern wird von der Factory anhand des aktuellen Requests bestimmt.
+	 *
+	 * @return der Service
+	 */
+	private static KursService getKursService() {
+		return KursServiceFactory.getNewInstance().getKursService();
+	}
+
 
 	// ##### Kurse #####
 
@@ -312,7 +323,7 @@ public class ReportingRepositoryLerngruppen {
 				this.reportingContext.filterService().getFilter(ReportingKurs.class.getSimpleName()), null);
 
 		return ReportingRepositoryUtils.waehleAus(idsKurse, mapKursDaten, mapKurse,
-				fehlendeIds -> new DataKurse(this.reportingContext.conn()).getListByIDs(fehlendeIds, false),
+				fehlendeIds -> getKursService().getListByIds(fehlendeIds, false),
 				key -> {
 					final KursDaten daten = mapKursDaten.get(key);
 					/* Der Aufruf 'kurs' über den Schuljahresabschnitt ruft durch Überladung folgende Methode auf:
@@ -357,7 +368,7 @@ public class ReportingRepositoryLerngruppen {
 	public List<KursDaten> kurseBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
 		return mapKursDatenBySchuljahresabschnitt.computeIfAbsent(idSchuljahresabschnitt, id -> {
 			try {
-				return new DataKurse(this.reportingContext.conn()).getListBySchuljahresabschnittID(id, true);
+				return getKursService().getListBySchuljahresabschnitt(id, true);
 			} catch (final Exception e) {
 				// Der Zugriff gilt allen Kursen des Schuljahresabschnitts und nicht einem einzelnen Datensatz; der Schlüssel führt deshalb keine ID.
 				ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(ReportingKurs.class),

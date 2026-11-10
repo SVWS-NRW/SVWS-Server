@@ -10,7 +10,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 
 /**
@@ -27,12 +29,19 @@ class KursServiceFactoryTest {
 	private SchuelerRepositoryFactory schuelerRepositoryFactory;
 
 	@Mock
+	private LehrerRepositoryFactory lehrerRepositoryFactory;
+
+	@Mock
+	private EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory;
+
+	@Mock
 	private KatalogRepositoryFactory katalogRepositoryFactory;
 
 	@Test
 	@DisplayName("getKursService: Der Service wird mit den Repositories der übergebenen Factories erstellt")
 	void getKursService_nutztRepositoriesDerFactories() {
-		final var factory = KursServiceFactory.getNewInstance(kurseRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory);
+		final var factory = KursServiceFactory.getNewInstance(kurseRepositoryFactory, schuelerRepositoryFactory, lehrerRepositoryFactory,
+				eigeneSchuleRepositoryFactory, katalogRepositoryFactory);
 
 		assertThat(factory.getKursService()).isNotNull();
 
@@ -41,6 +50,11 @@ class KursServiceFactoryTest {
 		verify(kurseRepositoryFactory).getKurslehrerRepository();
 		verify(schuelerRepositoryFactory).getSchuelerRepository();
 		verify(katalogRepositoryFactory).getJahrgangRepository();
+		verify(katalogRepositoryFactory).getFachRepository();
+		verify(katalogRepositoryFactory).getSchuleRepository();
+		verify(lehrerRepositoryFactory).getLehrerRepository();
+		verify(eigeneSchuleRepositoryFactory).getSchuljahresabschnitteRepository();
+		verify(schuelerRepositoryFactory).getSchuelerLeistungsdatenRepository();
 	}
 
 }

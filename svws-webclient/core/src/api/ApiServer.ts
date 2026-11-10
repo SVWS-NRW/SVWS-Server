@@ -9676,7 +9676,9 @@ export class ApiServer extends BaseApi {
 	 * Passt die Daten des Kurses mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Kursdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 200: Der Patch wurde erfolgreich integriert. Die Antwort enthält die Daten des geänderten Kurses.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KursDaten
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
@@ -9686,13 +9688,17 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<KursDaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert. Die Antwort enthält die Daten des geänderten Kurses.
 	 */
-	public async patchKurs(data: Partial<KursDaten>, schema: string, id: number): Promise<void> {
+	public async patchKurs(data: Partial<KursDaten>, schema: string, id: number): Promise<KursDaten> {
 		const path = "/db/{schema}/kurse/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = KursDaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return KursDaten.transpilerFromJSON(text);
 	}
 
 

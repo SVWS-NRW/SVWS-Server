@@ -52,12 +52,32 @@ class KursControllerFactoryTest {
 	}
 
 	@Test
-	@DisplayName("withReadAccess | Die DB-Verbindung wird mit UNTERRICHTSVERTEILUNG_ANSEHEN aufgebaut")
-	void withReadAccess() {
-		final var factory = KursControllerFactory.withReadAccess(request);
+	@DisplayName("withReadAccessStable | Die DB-Verbindung wird mit UNTERRICHTSVERTEILUNG_ANSEHEN aufgebaut")
+	void withReadAccessStable() {
+		final var factory = KursControllerFactory.withReadAccessStable(request);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
 				eq(request), eq(ServerMode.STABLE), eq(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN)), times(1));
+		assertThat(factory).isNotNull();
+	}
+
+	@Test
+	@DisplayName("withWriteAccessStable | Die DB-Verbindung wird im Modus STABLE mit UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN aufgebaut")
+	void withWriteAccessStable() {
+		final var factory = KursControllerFactory.withWriteAccessStable(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), eq(ServerMode.STABLE), eq(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN)), times(1));
+		assertThat(factory).isNotNull();
+	}
+
+	@Test
+	@DisplayName("withDeleteAccessDev | Die DB-Verbindung wird im Modus DEV mit UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN aufgebaut")
+	void withDeleteAccessDev() {
+		final var factory = KursControllerFactory.withDeleteAccessDev(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN)), times(1));
 		assertThat(factory).isNotNull();
 	}
 
@@ -74,7 +94,7 @@ class KursControllerFactoryTest {
 	@Test
 	@DisplayName("getKursController | Es wird ein KursControllerImpl erstellt")
 	void getKursController() {
-		assertThat(KursControllerFactory.withReadAccess(request).getKursController()).isInstanceOf(KursControllerImpl.class);
+		assertThat(KursControllerFactory.withReadAccessStable(request).getKursController()).isInstanceOf(KursControllerImpl.class);
 	}
 
 }

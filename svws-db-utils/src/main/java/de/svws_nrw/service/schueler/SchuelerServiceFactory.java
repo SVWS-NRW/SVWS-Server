@@ -124,7 +124,11 @@ public final class SchuelerServiceFactory {
 	public static SchuelerServiceFactory getNewInstance(final SchuelerFactories factories) {
 		final var klassenServiceFactory = KlassenServiceFactory.getNewInstance(KlassenRepositoryFactory.getNewInstance(),
 				factories.schuelerRepositoryFactory(), factories.eigeneSchuleServiceFactory());
-		final var kursServiceFactory = KursServiceFactory.getNewInstance(factories.kurseRepositoryFactory(), factories.schuelerRepositoryFactory(),
+		final var kursServiceFactory = KursServiceFactory.getNewInstance(
+				factories.kurseRepositoryFactory(),
+				factories.schuelerRepositoryFactory(),
+				LehrerRepositoryFactory.getNewInstance(),
+				factories.eigeneSchuleRepositoryFactory(),
 				factories.katalogRepositoryFactory());
 		return new SchuelerServiceFactory(factories, klassenServiceFactory, kursServiceFactory);
 	}
