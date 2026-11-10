@@ -1,0 +1,52 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "KEIN_INTERNAT",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 1,
+			"schluessel": "0",
+			"kuerzel": "0",
+			"text": "kein Internat",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "INTERNAT_JUNGEN",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2,
+			"schluessel": "1",
+			"kuerzel": "1",
+			"text": "Internat nur für Jungen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "INTERNAT_MAEDCHEN",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 3,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "Internat nur für Mädchen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "INTERNAT_NEUTRAL",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 4,
+			"schluessel": "3",
+			"kuerzel": "3",
+			"text": "Internat für Jungen und Mädchen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
+}

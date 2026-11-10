@@ -100,7 +100,8 @@ public final class ResourceCoreTypeJson {
 			Map.entry("Orte", "de/svws_nrw/asd/types/schule/Orte.json"),
 			Map.entry("Hochschulabschluss", "de/svws_nrw/asd/types/schueler/Hochschulabschluss.json"),
 			Map.entry("FormGebundenerGanztag", "de/svws_nrw/asd/types/schule/FormGebundenerGanztag.json"),
-			Map.entry("Talentschule", "de/svws_nrw/asd/types/schule/Talentschule.json")
+			Map.entry("Talentschule", "de/svws_nrw/asd/types/schule/Talentschule.json"),
+			Map.entry("InternatArt", "de/svws_nrw/asd/types/schule/InternatArt.json")
 	);
 
 

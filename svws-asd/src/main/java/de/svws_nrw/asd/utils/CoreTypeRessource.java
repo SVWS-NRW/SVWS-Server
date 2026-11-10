@@ -67,6 +67,7 @@ import de.svws_nrw.asd.data.schule.FormBilingualerUnterrichtKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FormGebundenerGanztagKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag;
 import de.svws_nrw.asd.data.schule.HerkunftsschulnummerKatalogEintrag;
+import de.svws_nrw.asd.data.schule.InternatArtKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.asd.data.schule.LaenderKatalogEintrag;
 import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
@@ -144,6 +145,7 @@ import de.svws_nrw.asd.types.schule.FormBilingualerUnterricht;
 import de.svws_nrw.asd.types.schule.FormGebundenerGanztag;
 import de.svws_nrw.asd.types.schule.FormOffenerGanztag;
 import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
+import de.svws_nrw.asd.types.schule.InternatArt;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.Laender;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
@@ -538,6 +540,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schule/FormGebundenerGanztag.json");
 		add(Talentschule.class, TalentschuleKatalogEintrag.class, Talentschule.values(),
 				"de/svws_nrw/asd/types/schule/Talentschule.json");
+		add(InternatArt.class, InternatArtKatalogEintrag.class, InternatArt.values(),
+				"de/svws_nrw/asd/types/schule/InternatArt.json");
 		addSimple(Einschulungsart.class, EinschulungsartKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 		addSimple(LehrerAnrechnungsgrund.class, LehrerAnrechnungsgrundKatalogEintrag.class,

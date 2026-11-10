@@ -151,6 +151,8 @@ import { FormGebundenerGanztagKatalogEintrag } from "../data/schule/FormGebunden
 import { FormGebundenerGanztag } from "../types/schule/FormGebundenerGanztag";
 import { Talentschule } from "../types/schule/Talentschule";
 import { TalentschuleKatalogEintrag } from "../data/schule/TalentschuleKatalogEintrag";
+import { InternatArtKatalogEintrag } from "../data/schule/InternatArtKatalogEintrag";
+import { InternatArt } from "../types/schule/InternatArt";
 
 /**
  * Die Klasse dient dem Einlesen der Daten für Core-Types und der Fehlerart-Kontexte von Validatoren.
@@ -239,6 +241,7 @@ export class JsonCoreTypeReader {
 		{ key: "Hochschulabschluss", entry: HochschulabschlussKatalogEintrag, type: Hochschulabschluss },
 		{ key: "FormGebundenerGanztag", entry: FormGebundenerGanztagKatalogEintrag, type: FormGebundenerGanztag },
 		{ key: "Talentschule", entry: TalentschuleKatalogEintrag, type: Talentschule },
+		{ key: "InternatArt", entry: InternatArtKatalogEintrag, type: InternatArt },
 	];
 
 	/**
