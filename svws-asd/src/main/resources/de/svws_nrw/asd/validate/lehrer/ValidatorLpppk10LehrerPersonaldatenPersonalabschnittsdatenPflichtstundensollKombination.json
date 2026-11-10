@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpppk10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensollKombination",
+    "historie" : [ {
+    "praefix" : "LPPPK10",
+    "altes_kuerzel" : "BI6",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Pflichtstundensoll-Kombination",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Feld 'Pflichtstundensoll'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG", "BK", "SB"],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "text" : "Pflichtstundensoll des Lehrers: Bei einer Lehrkraft mit 'Pflichtstundensoll' = 0.00 muss der Einsatzstatus 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder die Beschäftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' bzw. 'Beamte auf Widerruf (LAA) in Teilzeit' lauten.",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonalabschnittsdaten.pflichtstundensoll = 0.00 ∧ (LehrerPersonalabschnittsdaten.idEinsatzstatus ≠ Bezeichner 'A' in LehrerEinsatzstatus.json ∧ LehrerPersonalabschnittsdaten.idBeschaeftiungsart ≠ Bezeichner 'WT', 'WV' in LehrerBeschaeftigungsart.json)",
+    "gueltigVon" : null,
+    "gueltigBis" : null
+    } ]
+    }
