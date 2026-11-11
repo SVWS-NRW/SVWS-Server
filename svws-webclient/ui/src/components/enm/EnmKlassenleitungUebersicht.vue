@@ -85,6 +85,7 @@
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 2),
 							'contentFocusField': gridManager.isFocusLast(2, index),
+							'enm-fs-active': popoverKey === `FS_${pair.a.id}_${pair.b.id}`,
 						}" />
 					<td v-else>{{ pair.b.lernabschnitt.fehlstundenGesamt ?? "-" }}</td>
 				</template>
@@ -95,6 +96,7 @@
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 3),
 							'contentFocusField': gridManager.isFocusLast(3, index),
+							'enm-fs-active': popoverKey === `FSU_${pair.a.id}_${pair.b.id}`,
 						}" />
 					<td v-else>{{ pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt ?? "-" }}</td>
 				</template>
@@ -177,7 +179,7 @@
 			</template>
 		</ui-table-grid>
 		<div id="popover_fs_eingabe" ref="popoverFS" popover :style="`position-anchor: ${popoverAnchor}; position-area: right; position-try-fallbacks: flip-block;`">
-			<grid-popover-fehlstunden :model-value="popoverFs" @update:model-value="updateFs" @close="popoverFSRef?.hidePopover()" />
+			<grid-popover-fehlstunden :model-value="popoverFs" @update:model-value="updateFs" @close="closePopoverFS" />
 		</div>
 	</div>
 </template>
@@ -194,7 +196,7 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import type { GridInput } from '@ui/ui/controls/tablegrid/GridInput';
-	import type { GridInputIntegerDiv } from '@ui/ui/controls/tablegrid/GridInputIntegerDiv';
+	import { GridInputIntegerDiv } from '@ui/ui/controls/tablegrid/GridInputIntegerDiv';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	import type { EnmKlassenleitungUebersichtProps } from './EnmKlassenleitungUebersichtProps';
@@ -206,6 +208,35 @@
 	const popoverAnchor = ref<string | null>(null);
 	const popoverKey = ref<string | null>(null);
 	const popoverMax = ref<number | null>(null);
+
+	function closePopoverFS() {
+		const key = popoverKey.value;
+		const input = (key === null) ? null : gridManager.getInputByKey(key) as GridInputIntegerDiv<string> | null;
+		if (input === null) {
+			popoverFSRef.value?.hidePopover();
+			popoverKey.value = null;
+			popoverAnchor.value = null;
+			popoverMax.value = null;
+			return;
+		}
+		for (let row = input.row + 1; row < gridManager.daten.size(); row++) {
+			const next = gridManager.getInputByPosition(row, input.col);
+			if (!(next instanceof GridInputIntegerDiv)) {
+				continue;
+			}
+			const pair = gridManager.daten.get(row);
+			popoverKey.value = next.key;
+			popoverAnchor.value = `--anchor_${next.key}`;
+			popoverMax.value = next.key.startsWith('FSU_') ? pair.b.lernabschnitt.fehlstundenGesamt : 999;
+			popoverFs.value = next.key.startsWith('FSU_') ? pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt : pair.b.lernabschnitt.fehlstundenGesamt;
+			gridManager.doFocusByKey(next.key);
+			return;
+		}
+		popoverFSRef.value?.hidePopover();
+		popoverKey.value = null;
+		popoverAnchor.value = null;
+		popoverMax.value = null;
+	}
 
 	function showPopoverFS(key: string, val: number | null, max?: number | null) {
 		if (popoverFSRef.value === null) {
