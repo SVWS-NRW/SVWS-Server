@@ -22,7 +22,6 @@
 
 	import { computed, ref } from 'vue';
 
-	import { ENMLehrerFunktion } from '@core/core/data/enm/ENMLehrerFunktion';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
 	import type { ENMv2Teilleistungsart } from '@core/core/data/enm/v2/ENMv2Teilleistungsart';
@@ -49,8 +48,13 @@
 	const auswahlSchueler = ref<SchuelerEintrag | null>(null);
 
 	const berechtigt = computed(() => {
-		const funktion = props.enmManager().lehrerFunktion;
-		return funktion === ENMLehrerFunktion.KLASSENLEITUNG;
+		const manager = props.enmManager();
+		for (const klasse of manager.listKlassenKlassenlehrer) {
+			if (manager.klasseIstKlassenleitung(klasse.id)) {
+				return true;
+			}
+		}
+		return false;
 	});
 
 	const schuelerListe = computed((): SchuelerEintrag[] => {
@@ -157,7 +161,7 @@
 	});
 
 	function istKlasseZugaenglich(klasse: ENMv2Klasse, manager: EnmManager): boolean {
-		return (manager.lehrerFunktion === ENMLehrerFunktion.KLASSENLEITUNG) && manager.klasseIstKlassenleitung(klasse.id);
+		return manager.klasseIstKlassenleitung(klasse.id);
 	}
 
 	function schuelerAnzeige(eintrag: SchuelerEintrag): string {
