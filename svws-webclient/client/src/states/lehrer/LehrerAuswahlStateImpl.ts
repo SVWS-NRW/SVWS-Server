@@ -1,83 +1,125 @@
-import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
-import type { LehrerFunktion } from "@core/asd/data/lehrer/LehrerFunktion";
-import type { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
-import type { LehrerLehrbefaehigungEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungEintrag";
 import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
-import type { LehrerPersonalabschnittsdatenAnrechnungsstunden } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden";
-import type { LehrerPersonaldaten } from "@core/asd/data/lehrer/LehrerPersonaldaten";
 import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
-import type { Schulleitung } from "@core/asd/data/schule/Schulleitung";
-import type { FachDaten } from "@core/core/data/fach/FachDaten";
-import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
-import type { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { LehrerUtils } from "@core/core/utils/lehrer/LehrerUtils";
 import { ArrayList } from "@core/java/util/ArrayList";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
 import { useAbschnittState } from "@ui/states/AbschnittState";
 import { useBenutzerState } from "@ui/states/BenutzerState";
 import { useConfigState } from "@ui/states/ConfigState";
-import { useSchuleState } from "@ui/states/SchuleState";
-import { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
-import { ViewType } from "@ui/ui/nav/ViewType";
-import type { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
+import { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 
 import type { GenericAuswahlReactiveState } from "../GenericAuswahlStateImpl";
 import { GenericAuswahlStateImpl } from "../GenericAuswahlStateImpl";
+import { StundenplaeneListeState } from "../StundenplaeneListeState";
 import { api } from "~/router/Api";
 
+import { LehrerAuswahlFilter } from "./LehrerAuswahlFilter";
 import type { LehrerAuswahlState } from "./LehrerAuswahlState";
 import { lehrerAuswahlStateRoutingAdapter } from "./LehrerAuswahlStateRoutingAdapter";
+import { LehrerGruppenprozessState } from "./LehrerGruppenprozessState";
+import { LehrerPersonaldatenState } from "./LehrerPersonaldatenState";
+import { LehrerStammdatenState } from "./LehrerStammdatenState";
 
-interface LehrerAuswahlReactiveState extends GenericAuswahlReactiveState<LehrerListeManager> {
-	mapStundenplaene: Map<number, StundenplanListeEintrag>;
-	mapSchulen: Map<string, SchulEintrag>;
-	mapFaecher: Map<number, FachDaten>;
-	lehrerUnterrichtsfaecher: List<LehrerUnterrichtsfach>;
-	listLeitungsfunktionen: List<Schulleitung>;
+interface LehrerAuswahlReactiveState extends GenericAuswahlReactiveState<LehrerListeEintrag> {
 }
 
 /**
  * Der State für die Auswahlliste der Lehrer
  */
-export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeManager, LehrerAuswahlReactiveState> implements LehrerAuswahlState {
+export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeEintrag, LehrerStammdaten, LehrerAuswahlReactiveState> implements LehrerAuswahlState {
+
+	/** Der Teil-State für die Stundenpläne des Schuljahresabschnittes */
+	private readonly _stundenplaene = new StundenplaeneListeState();
+
+	/** Der State für die Stammdaten */
+	private readonly _stammdaten = new LehrerStammdatenState(this);
+
+	/** Der State für die Stammdaten der Mehrfachauswahl */
+	private readonly _gruppenprozesse = new LehrerGruppenprozessState(this);
+
+	/** Der State für die Personaldaten */
+	private readonly _personaldaten = new LehrerPersonaldatenState(this, () => this.idSchuljahresabschnitt);
+
+	/** Der Filter der Auswahlliste */
+	private readonly _filter = new LehrerAuswahlFilter(
+		() => this._state.value.liste?.list() ?? new ArrayList<LehrerListeEintrag>(),
+		() => this.idSelected
+	);
 
 	public constructor() {
 		super({
 			idSchuljahresabschnitt: -1,
-			manager: undefined,
-			activeViewType: ViewType.DEFAULT,
-			mapStundenplaene: new Map(),
-			mapSchulen: new Map(),
-			mapFaecher: new Map(),
-			lehrerUnterrichtsfaecher: new ArrayList(),
-			listLeitungsfunktionen: new ArrayList(),
+			liste: undefined,
+			idSelected: null,
 		}, lehrerAuswahlStateRoutingAdapter);
+		this._filter.onChanged = () => {
+			// Die Schalter "Nur Sichtbare" und "Nur Statistik-Relevante" werden in der Konfiguration des Benutzers gespeichert
+			if (this._filter.values.nurSichtbar !== this.filterNurSichtbar) {
+				void this.setFilterNurSichtbar(this._filter.values.nurSichtbar);
+			}
+			if (this._filter.values.nurStatistikrelevant !== this.filterNurStatistikrelevant) {
+				void this.setFilterNurStatistikrelevant(this._filter.values.nurStatistikrelevant);
+			}
+			void this.setFilter();
+		};
 	}
 
 	/**
-	 * Initialisiert den State für den ausgewählten Schuljahresabschnitt. Es werden die Daten für diesen Abschnitt geladen.
+	 * Gibt den Filter der Auswahlliste zurück.
 	 *
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * @param force                    gibt an, ob das Laden der Daten auch erzwungen werden soll, wenn die ID des
-	 *                                 Schuljahresabschnittes bereits gesetzt ist (z.B. beim Betreten einer Route)
-	 *
-	 * @returns ein Promise mit der ID der Auswahl oder null
+	 * @returns der Filter
 	 */
-	public async init(idSchuljahresabschnitt: number, force: boolean): Promise<number | null> {
-		return await super.setSchuljahresabschnitt(idSchuljahresabschnitt, force);
+	public get filter(): LehrerAuswahlFilter {
+		return this._filter;
+	}
+
+	public get stammdaten(): LehrerStammdatenState {
+		return this._stammdaten;
+	}
+
+	public get gruppenprozesse(): LehrerGruppenprozessState {
+		return this._gruppenprozesse;
+	}
+
+	public get personaldaten(): LehrerPersonaldatenState {
+		return this._personaldaten;
+	}
+
+	public commit(): void {
+		super.commit();
+		this._filter.refresh();
+	}
+
+	protected getListFiltered(): List<LehrerListeEintrag> {
+		return this._filter.filtered;
 	}
 
 	/**
-	 * Gibt die ID des aktuell gewählten Schuljahresabschnittes zurück
-	 *
-	 * @returns die ID des aktuell gewählten Schuljahresabschnittes
+	 * Setzt den State und den Teil-State für die Stundenpläne in den Default-State zurück.
 	 */
-	public get idSchuljahresabschnitt(): number {
-		return this._state.value.idSchuljahresabschnitt;
+	public reset(): void {
+		super.reset();
+		this._stundenplaene.reset();
+		this._stammdaten.reset();
+		this._gruppenprozesse.reset();
+		this._personaldaten.reset();
+		this._filter.reset();
+	}
+
+	/**
+	 * Gibt eine Map mit den Stundenplänen des Schuljahresabschnittes zugeordnet zu deren ID zurück.
+	 *
+	 * @returns die Map mit den Stundenplänen
+	 */
+	public get mapStundenplaene(): Map<number, StundenplanListeEintrag> {
+		return this._stundenplaene.mapStundenplaene;
 	}
 
 	public get filterNurSichtbar(): boolean {
@@ -101,31 +143,14 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 	};
 
 	/**
-	 * Gibt eine Map mit den Stundenplänen des Schuljahresabschnittes zugeordnet zu deren ID zurück.
-	 *
-	 * @returns die Map mit den Stundenplänen
-	 */
-	public get mapStundenplaene(): Map<number, StundenplanListeEintrag> {
-		return this._state.value.mapStundenplaene;
-	}
-
-	public get mapSchulen(): Map<string, SchulEintrag> {
-		return this._state.value.mapSchulen;
-	}
-
-	public get mapFaecher(): Map<number, FachDaten> {
-		return this._state.value.mapFaecher;
-	}
-
-	/**
-	 * Erstellt einen neunen Auswahl-Manager für den angegebenen Schuljahresabschnitt. Die Daten dafür werden
+	 * Erstellt die Auswahlliste für den angegebenen Schuljahresabschnitt. Die Daten dafür werden
 	 * über die API abgefragt.
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
 	 *
-	 * @returns Eine Promise mit den Anpassungen für den Manager und dessen Daten reaktiven State
+	 * @returns Eine Promise mit den Anpassungen für die Auswahlliste und deren Daten im reaktiven State
 	 */
-	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<LehrerAuswahlReactiveState>> {
+	protected async createListe(idSchuljahresabschnitt: number): Promise<Partial<LehrerAuswahlReactiveState>> {
 		const abschnittState = useAbschnittState();
 		const schuljahresabschnitt = abschnittState.getOrNull(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
@@ -135,103 +160,39 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		// Lade die Daten von der API
 		const listLehrer = await api.server.getLehrer(api.schema);
 
-		// Erstelle den Lehrer-Liste-Manager
-		const schuleState = useSchuleState();
-		const manager = new LehrerListeManager(
-			idSchuljahresabschnitt,
-			schuleState.abschnitt.id,
-			abschnittState.alle,
-			schuleState.schulform,
-			listLehrer);
+		// Erstelle die Auswahlliste
+		const liste = new ListeMitAuswahl(listLehrer, e => e.id, LehrerUtils.comparator, null);
 
-		// Übernehme den Filter von dem vorigen Manager oder initialisiere ihn neu, falls kein voriger Manager vorhanden ist
-		if (this._state.value.manager === undefined) {
-			manager.setFilterAuswahlPermitted(true);
-			manager.setFilterNurSichtbar(this.filterNurSichtbar);
-			manager.setFilterNurStatistikRelevant(this.filterNurStatistikrelevant);
-		} else {
-			manager.useFilter(this._state.value.manager);
+		// Beim ersten Laden werden die Schalter aus der Konfiguration übernommen, ansonsten bleibt der Filter erhalten
+		if (this._state.value.liste === undefined) {
+			this._filter.setValueSilent("nurSichtbar", this.filterNurSichtbar);
+			this._filter.setValueSilent("nurStatistikrelevant", this.filterNurStatistikrelevant);
 		}
-
-		return { manager };
+		// Die Stundenpläne gehören zum Schuljahresabschnitt und werden bei dessen Wechsel verworfen
+		this._stundenplaene.reset();
+		return { liste };
 	}
 
 	/**
-	 * Lädt die Daten für den übergebenen Listeneintrag eines Lehrers
+	 * Gibt die IDs der Lehrer der Mehrfachauswahl zurück, die in anderen Datenbanktabellen referenziert werden.
 	 *
-	 * @param auswahl   der ausgewählte Listeneintrag eines Lehrers
-	 * @param state   	der LehrerAuswahlReactiveState
-	 *
-	 * @returns eine Promise mit den Daten zu dem Lehrer
+	 * @returns die Menge der IDs der referenzierten Lehrer
 	 */
-	public async ladeDaten(auswahl: LehrerListeEintrag | null, state: Partial<LehrerAuswahlReactiveState>): Promise<LehrerStammdaten | null> {
-		if (auswahl === null) {
-			return null;
-		}
-
-		if (this.manager.hasPersonalDaten()) {
-			state.lehrerUnterrichtsfaecher = await api.server.getLehrerUnterrichtsfaecher(api.schema, auswahl.id);
-		}
-
-		const [stammdaten, listLeitungsfunktionen] = await Promise.all([
-			api.server.getLehrerStammdaten(api.schema, auswahl.id),
-			api.server.getAllSchulleitungenByLehrer(api.schema, auswahl.id),
-		]);
-
-		state.listLeitungsfunktionen = listLeitungsfunktionen;
-		return stammdaten;
-	}
-
-	public async ladeDatenMultiple(auswahlList: List<LehrerListeEintrag>, state: Partial<LehrerAuswahlReactiveState>): Promise<List<LehrerStammdaten> | null> {
-		if (auswahlList.isEmpty()) {
-			return null;
-		}
-
-		const ids: List<number> = new ArrayList();
-		for (const eintrag of auswahlList) {
-			ids.add(eintrag.id);
-		}
-		return await api.server.getLehrerStammdatenMultiple(ids, api.schema);
-	}
-
-	/**
-	 * Führt einen Patch auf den Lehrerstammdaten über die API aus.
-	 *
-	 * @param data   die Daten des Patches
-	 * @param id     die ID des zu patchenden Lehrers
-	 *
-	 * @returns eine Promise, die bei Erfolg true zurückgibt
-	 */
-	protected async doPatch(data: Partial<LehrerStammdaten>, id: number): Promise<boolean> {
-		await api.server.patchLehrerStammdaten(data, api.schema, id);
-		return true;
-	}
-
-	public async patchMultiple(pendingStateManager: PendingStateManager<any>): Promise<void> {
-		api.status.start();
-
-		const partialsToPatch = pendingStateManager.partials;
-		// TODO einbauen
-		// await api.server.patchLehrerStammdatenMultiple(partialsToPatch, api.schema);
-
-		// Übernehme nur geänderte LehrerStammdaten Objekte in den AuswahlManager, damit nicht alle Stammdaten neugeladen werden müssen
-		for (const partialToPatch of partialsToPatch) {
-			if (partialToPatch.id !== undefined) {
-				const patchId = (partialToPatch as Record<string, any>)[pendingStateManager.idFieldName];
-				const currentStammdaten = this._state.value.manager?.getListeDaten().get(patchId);
-				this._state.value.manager?.getListeDaten().put(patchId, Object.assign(Object.assign({}, currentStammdaten), partialToPatch));
+	private getIdsReferenzierterLehrer(): JavaSet<number> {
+		const result = new HashSet<number>();
+		for (const lehrer of this.liste.auswahl()) {
+			if (lehrer.referenziertInAnderenTabellen === true) {
+				result.add(lehrer.id);
 			}
 		}
-
-		pendingStateManager.resetPendingState();
-		this.commit();
-		api.status.stop();
-	};
+		return result;
+	}
 
 	protected filterOnDelete(ids: List<number>): List<number> {
 		const list = new ArrayList<number>();
+		const idsReferenziert = this.getIdsReferenzierterLehrer();
 		for (const id of ids) {
-			if (!this.manager.getIdsReferenzierterLehrer().contains(id)) {
+			if (!idsReferenziert.contains(id)) {
 				list.add(id);
 			}
 		}
@@ -260,8 +221,8 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lehrern vor.');
 		}
 
-		for (const id of this.manager.getIdsReferenzierterLehrer()) {
-			const lehrer = this.manager.liste.get(id);
+		for (const id of this.getIdsReferenzierterLehrer()) {
+			const lehrer = this.liste.get(id);
 			if (lehrer) {
 				errorLog.add(`Die Lehrkraft ${lehrer.vorname} ${lehrer.nachname} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
 			}
@@ -271,15 +232,7 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 	};
 
 	public async updateMapStundenplaene(): Promise<void> {
-		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
-		const benutzerState = useBenutzerState();
-		if (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
-			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
-			for (const l of listStundenplaene) {
-				mapStundenplaene.set(l.id, l);
-			}
-		}
-		this.setPatchedState({ mapStundenplaene });
+		await this._stundenplaene.update(this.idSchuljahresabschnitt);
 	}
 
 	private async createPersonalabschnittsdaten(idLehrer: number): Promise<LehrerPersonalabschnittsdaten> {
@@ -291,390 +244,24 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		const result = await api.server.addLehrerStammdaten(data, api.schema);
 		await this.createPersonalabschnittsdaten(result.id);
 		await this.setSchuljahresabschnitt(this.idSchuljahresabschnitt, true);
-		await this.gotoDefaultView(result.id);
+		await this.navigator.select(result.id);
 		return result;
 	};
 
 
 
-	/**
-	 * Aktualisiere beim Manager bei den neuen Daten ggf. auch die Personaldaten
-	 *
-	 * @param daten   die neuen Daten des Lehrers
-	 */
-	protected async updateDaten(daten: LehrerStammdaten | null) {
-		const hattePersonaldaten = this.manager.hasPersonalDaten();
-		this.manager.setDaten(daten);
-		const personaldaten = (this.manager.hasDaten() && hattePersonaldaten)
-			? await api.server.getLehrerPersonaldaten(api.schema, this.manager.auswahl().id)
-			: null;
-		this.manager.setPersonalDaten(personaldaten);
-	}
-
-	protected async updateManager(manager: LehrerListeManager, managerAlt: LehrerListeManager, daten: LehrerStammdaten) {
-		if (managerAlt.hasPersonalDaten()) {
-			manager.setPersonalDaten(await api.server.getLehrerPersonaldaten(api.schema, daten.id));
-		}
-	}
-
 	public async loadPersonaldaten(): Promise<void> {
-		if (!this.manager.hasDaten()) {
+		if (!this.stammdaten.hasDaten) {
 			return;
 		}
-		const listSchulen = await api.server.getSchulenMitKuerzel(api.schema);
-		const mapSchulen = new Map<string, SchulEintrag>();
-		for (const s of listSchulen) {
-			if (s.schulnummerStatistik !== null) {
-				mapSchulen.set(s.schulnummerStatistik, s);
-			}
-		}
-		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, this.manager.auswahl().id);
-		if (personaldaten.abschnittsdaten.isEmpty()) {
-			const result = await this.createPersonalabschnittsdaten(personaldaten.id);
-			personaldaten.abschnittsdaten.add(result);
-		}
-		this.manager.setPersonalDaten(personaldaten);
-		const faecher = await api.server.getFaecher(api.schema);
-		const mapFaecher = new Map<number, FachDaten>();
-		for (const f of faecher) {
-			mapFaecher.set(f.id, f);
-		}
-		const lehrerUnterrichtsfaecher = await api.server.getLehrerUnterrichtsfaecher(api.schema, this.manager.auswahl().id);
-		this.setPatchedState({ mapSchulen, mapFaecher, lehrerUnterrichtsfaecher });
+		const id = this.selected.id;
+		await this._personaldaten.activate(id);
 	}
 
 	public async unloadPersonaldaten(): Promise<void> {
-		this.manager.setPersonalDaten(null);
-		this._state.value.lehrerUnterrichtsfaecher = new ArrayList();
+		this._personaldaten.deactivate();
 		this.commit();
 	}
-
-
-	public async patchPersonaldaten(data: Partial<LehrerPersonaldaten>): Promise<boolean> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		}
-		const personaldaten = this.manager.personalDaten();
-		await api.server.patchLehrerPersonaldaten(data, api.schema, personaldaten.id);
-		Object.assign(personaldaten, data);
-		this.manager.setPersonalDaten(personaldaten);
-		this.commit();
-		return true;
-	};
-
-
-	private getAbschnitt(id: number): LehrerPersonalabschnittsdaten {
-		const abschnitt = this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt);
-		if (abschnitt === null) {
-			throw new DeveloperNotificationException("Es konnten keine gültigen Lehrerabschnittsdaten mit der ID " + id.toString() + " geladen werden.");
-		}
-		return abschnitt;
-	};
-
-
-	public async patchPersonalAbschnittsdaten(data: Partial<LehrerPersonalabschnittsdaten>, id: number): Promise<void> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		}
-		const abschnittsdaten = this.manager.getAbschnittById(id);
-		if (abschnittsdaten === null) {
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id.toString() + " geladen.");
-		}
-		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
-		Object.assign(abschnittsdaten, data);
-		this.commit();
-	};
-
-	/**
-	 * Übernimmt die gepatchten Werte in das lokale DTO mit der übergebenen ID, damit die Daten
-	 * nach einem erfolgreichen Patch dem Stand auf dem Server entsprechen.
-	 * Wird verwendet, um Änderungen in Anrechnungen, Mehrleistungen und Minderleistungen zu übernehmen.
-	 *
-	 * @param liste   die Liste mit den lokalen DTOs
-	 * @param data    die gepatchten Werte
-	 * @param id      die ID des DTOs
-	 */
-	private applyAnrechnungsstunden(liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden>, data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): void {
-		for (const eintrag of liste) {
-			if (eintrag.id === id) {
-				Object.assign(eintrag, data);
-				return;
-			}
-		}
-	}
-
-	public async addMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>): Promise<void> {
-		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
-		const result = await api.server.addLehrerPersonalabschnittsdatenMehrleistung(data, api.schema);
-		abschnitt.mehrleistung.add(result);
-		this.commit();
-	};
-
-	public async patchMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<boolean> {
-		await api.server.patchLehrerPersonalabschnittsdatenMehrleistung(data, api.schema, id);
-		this.applyAnrechnungsstunden(this.getAbschnitt(this.idSchuljahresabschnitt).mehrleistung, data, id);
-		this.commit();
-		return true;
-	};
-
-	public async removeMehrleistung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void> {
-		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
-		await api.server.deleteLehrerPersonalabschnittsdatenMehrleistung(api.schema, data.id);
-		abschnitt.mehrleistung.remove(data);
-		this.commit();
-	};
-
-	public async addMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>): Promise<void> {
-		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
-		const result = await api.server.addLehrerPersonalabschnittsdatenMinderleistung(data, api.schema);
-		abschnitt.minderleistung.add(result);
-		this.commit();
-	};
-
-	public async patchMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<boolean> {
-		await api.server.patchLehrerPersonalabschnittsdatenMinderleistung(data, api.schema, id);
-		this.applyAnrechnungsstunden(this.getAbschnitt(this.idSchuljahresabschnitt).minderleistung, data, id);
-		this.commit();
-		return true;
-	};
-
-	public async removeMinderleistung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void> {
-		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
-		await api.server.deleteLehrerPersonalabschnittsdatenMinderleistung(api.schema, data.id);
-		abschnitt.minderleistung.remove(data);
-		this.commit();
-	};
-
-	public async addAnrechnung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>): Promise<void> {
-		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
-		const result = await api.server.addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data, api.schema);
-		abschnitt.anrechnungen.add(result);
-		this.commit();
-	};
-
-	public async patchAnrechnungen(data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>): Promise<boolean> {
-		await api.server.patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen(data, api.schema);
-		const anrechnungen = this.getAbschnitt(this.idSchuljahresabschnitt).anrechnungen;
-		for (const patch of data) {
-			if (patch.id !== undefined) {
-				this.applyAnrechnungsstunden(anrechnungen, patch, patch.id);
-			}
-		}
-		this.commit();
-		return true;
-	};
-
-	public async removeAnrechnung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void> {
-		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
-		await api.server.deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(api.schema, data.id);
-		abschnitt.anrechnungen.remove(data);
-		this.commit();
-	};
-
-	public async addFunktionen(data: List<Partial<LehrerFunktion>>): Promise<void> {
-		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
-		const result = await api.server.createLehrerFunktionen(data, api.schema);
-		abschnitt.funktionen.addAll(result);
-		this.commit();
-	};
-
-	public async removeFunktion(data: LehrerFunktion): Promise<void> {
-		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
-		await api.server.deleteLehrerFunktion(api.schema, data.id);
-		abschnitt.funktionen.remove(data);
-		this.commit();
-	};
-
-	public async addLehramt(eintrag: Partial<LehrerLehramtEintrag>): Promise<void> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Lehrämter können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		}
-		const result = await api.server.addLehrerLehramt(eintrag, api.schema);
-		this.manager.personalDaten().lehraemter.add(result);
-		this.commit();
-	};
-
-	public async removeLehraemter(eintraege: List<LehrerLehramtEintrag>): Promise<void> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
-		}
-		const ids: List<number> = new ArrayList();
-		for (const eintrag of eintraege) {
-			ids.add(eintrag.id);
-		}
-		await api.server.deleteLehrerLehraemter(ids, api.schema);
-
-		this.manager.personalDaten().lehraemter.removeAll(eintraege);
-		this.commit();
-	};
-
-	public async patchLehramt(eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>): Promise<boolean> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		}
-		await api.server.patchLehrerLehramt(patch, api.schema, eintrag.id);
-		Object.assign(eintrag, patch);
-		this.commit();
-		return true;
-	};
-
-	public async addLehrbefaehigung(eintrag: Partial<LehrerLehrbefaehigungEintrag>): Promise<void> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Lehrbefähigungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		}
-		if (eintrag.idLehramt === undefined) {
-			throw new DeveloperNotificationException("Lehrbefähigungen können nur mit einer Lehramts-ID hinzugefügt werden.");
-		}
-		const result = await api.server.addLehrerLehrbefaehigung(eintrag, api.schema);
-		for (const lehramt of this.manager.personalDaten().lehraemter) {
-			if (lehramt.id === eintrag.idLehramt) {
-				lehramt.lehrbefaehigungen.add(result);
-			}
-		}
-		this.commit();
-	};
-
-	public async removeLehrbefaehigungen(eintraege: List<LehrerLehrbefaehigungEintrag>): Promise<void> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Lehrbefähigungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
-		}
-
-		const ids: List<number> = new ArrayList();
-		for (const eintrag of eintraege) {
-			ids.add(eintrag.id);
-		}
-		await api.server.deleteLehrerLehrbefaehigungen(ids, api.schema);
-		for (const lehramt of this.manager.personalDaten().lehraemter) {
-			lehramt.lehrbefaehigungen.removeAll(eintraege);
-		}
-		this.commit();
-	};
-
-	public async patchLehrbefaehigung(eintrag: LehrerLehrbefaehigungEintrag, patch: Partial<LehrerLehrbefaehigungEintrag>): Promise<boolean> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		}
-		await api.server.patchLehrerLehrbefaehigung(patch, api.schema, eintrag.id);
-		Object.assign(eintrag, patch);
-		this.commit();
-		return true;
-	};
-
-	public async addFachrichtung(eintrag: Partial<LehrerFachrichtungEintrag>): Promise<void> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Fachrichtungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		}
-		if (eintrag.idLehramt === undefined) {
-			throw new DeveloperNotificationException("Fachrichtungen können nur mit einer Lehramts-ID hinzugefügt werden.");
-		}
-		const result = await api.server.addLehrerFachrichtung(eintrag, api.schema);
-		for (const lehramt of this.manager.personalDaten().lehraemter) {
-			if (lehramt.id === eintrag.idLehramt) {
-				lehramt.fachrichtungen.add(result);
-			}
-		}
-		this.commit();
-	};
-
-	public async removeFachrichtungen(eintraege: List<LehrerFachrichtungEintrag>): Promise<void> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Fachrichtungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
-		}
-		const ids: List<number> = new ArrayList();
-		for (const eintrag of eintraege) {
-			ids.add(eintrag.id);
-		}
-		await api.server.deleteLehrerFachrichtungen(ids, api.schema);
-		for (const lehramt of this.manager.personalDaten().lehraemter) {
-			lehramt.fachrichtungen.removeAll(eintraege);
-		}
-		this.commit();
-	};
-
-	public async patchFachrichtung(eintrag: LehrerFachrichtungEintrag, patch: Partial<LehrerFachrichtungEintrag>): Promise<boolean> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		}
-		await api.server.patchLehrerFachrichtung(patch, api.schema, eintrag.id);
-		Object.assign(eintrag, patch);
-		this.commit();
-		return true;
-	};
-
-
-	public get lehrerUnterrichtsfaecher(): List<LehrerUnterrichtsfach> {
-		return this._state.value.lehrerUnterrichtsfaecher;
-	}
-
-	public async addLehrerUnterrichtsfach(eintrag: Partial<LehrerUnterrichtsfach>): Promise<boolean> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Unterrichtsfächer können nur hinzugefügt werden, wenn gültige Personaldaten geladen sind.");
-		}
-		const result = await api.server.addLehrerUnterrichtsfach({ ...eintrag, idLehrer: this.manager.auswahl().id }, api.schema);
-		this._state.value.lehrerUnterrichtsfaecher.add(result);
-		this.commit();
-		return true;
-	};
-
-	public async patchLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>): Promise<boolean> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		}
-		await api.server.patchLehrerUnterrichtsfach(patch, api.schema, eintrag.id);
-		Object.assign(eintrag, patch);
-		this.commit();
-		return true;
-	};
-
-	public async removeLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach): Promise<void> {
-		if (!this.manager.hasPersonalDaten()) {
-			throw new DeveloperNotificationException("Unterrichtsfächer können nur entfernt werden, wenn gültige Personaldaten geladen sind.");
-		}
-		await api.server.deleteLehrerUnterrichtsfach(api.schema, eintrag.id);
-		this._state.value.lehrerUnterrichtsfaecher.remove(eintrag);
-		this.commit();
-	};
-
-
-
-	public get leitungsfunktionen(): List<Schulleitung> {
-		const list = new ArrayList<Schulleitung>();
-		list.addAll(this._state.value.listLeitungsfunktionen);
-		return list;
-	}
-
-	public async addLeitungsfunktion(data: Partial<Schulleitung>, idLehrer: number): Promise<void> {
-		const eintrag = await api.server.addSchulleitung({ ...data, idLehrer }, api.schema);
-		const listLeitungsfunktionen = this.leitungsfunktionen;
-		listLeitungsfunktionen.add(eintrag);
-		this.setPatchedState({ listLeitungsfunktionen });
-	};
-
-	public async patchLeitungsfunktion(data: Partial<Schulleitung>, idEintrag: number): Promise<void> {
-		await api.server.patchSchulleitung(data, api.schema, idEintrag);
-		const listLeitungsfunktionen = this.leitungsfunktionen;
-		for (const l of listLeitungsfunktionen) {
-			if (l.id === idEintrag) {
-				Object.assign(l, data);
-				break;
-			}
-		}
-		this.setPatchedState({ listLeitungsfunktionen });
-	};
-
-	public async deleteLeitungsfunktionen(idsEintraege: List<number>): Promise<void> {
-		await api.server.deleteSchulleitungen(idsEintraege, api.schema);
-		const listLeitungsfunktionen = this.leitungsfunktionen;
-		for (const id of idsEintraege) {
-			for (let i = 0; i < listLeitungsfunktionen.size(); i++) {
-				if (listLeitungsfunktionen.get(i).id === id) {
-					listLeitungsfunktionen.removeElementAt(i);
-					break;
-				}
-			}
-		}
-		this.setPatchedState({ listLeitungsfunktionen });
-	};
 
 }
 

@@ -36,8 +36,8 @@
 				</template>
 			</template>
 		</ui-table-grid>
-		<div v-if="statistikState.klassenListeManager.auswahlID() !== null" class="flex min-w-0 flex-1 flex-col">
-			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoKlasse(statistikState.klassenListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.klassenListeManager.auswahl().kuerzel }}</div>
+		<div v-if="klassenState.idSelected !== null" class="flex min-w-0 flex-1 flex-col">
+			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoKlasse(klassenState.selected)"><span class="icon cursor-pointer i-ri-link" /> {{ klassenState.selected.kuerzel }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<klassen-daten v-if="tabManager.tab.name === 'K'" />
 			</svws-ui-tab-bar>
@@ -60,12 +60,15 @@
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 	import { TabManager } from '@ui/ui/nav/TabManager';
 
+	import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
+
 	import type { StatistikKlassenProps } from './StatistikKlassenProps';
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const props = defineProps<StatistikKlassenProps>();
 	const statistikState = useStatistikState();
+	const klassenState = useKlassenAuswahlState();
 
 	function getIconClass(fehler: ValidatorFehlerart) {
 		return {

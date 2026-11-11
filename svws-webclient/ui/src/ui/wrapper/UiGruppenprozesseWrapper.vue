@@ -57,7 +57,7 @@
 	// Erzeugt ein Record mit den Werten und der Anzahl wie häufig dieser Wert gesetzt wurde
 	const actualValuesWithAmount = computed(() => {
 		const keyAmounts: JavaMap<any, number> = new HashMap();
-		for (const obj of props.pendingStateManager().auswahlManager.getListeDaten().values()) {
+		for (const obj of props.pendingStateManager().listeDaten.values()) {
 			const key = ((obj[props.attributeName] === null) || (obj[props.attributeName] === undefined)) ? 'Keine Daten' : obj[props.attributeName];
 			const keyAmount = keyAmounts.get(key);
 			keyAmounts.put(key, (keyAmount === null) ? 1 : keyAmount + 1);
@@ -125,7 +125,7 @@
 		if (!props.nullable || !showClearButton.value) {
 			return;
 		}
-		props.pendingStateManager().setPendingState(props.attributeName, null, props.pendingStateManager().auswahlManager.liste.auswahlKeyList());
+		props.pendingStateManager().setPendingState(props.attributeName, null, props.pendingStateManager().liste.auswahlKeyList());
 	}
 
 </script>

@@ -31,7 +31,7 @@ export class RouteDataLehrer extends RouteData<RouteStateDataLehrer> {
 		if (this._state.value.pendingStateManager === undefined) {
 			const lehrerAuswahlState = useLehrerAuswahlState();
 			this._state.value.pendingStateManager = new PendingStateManagerLehrerIndividualdaten('id',
-				() => lehrerAuswahlState.manager);
+				() => lehrerAuswahlState.liste, () => lehrerAuswahlState.gruppenprozesse.listeDaten);
 			routeLehrer.data.pendingStateManagerRegistry.addPendingStateManager(this._state.value.pendingStateManager);
 		}
 		return this._state.value.pendingStateManager;

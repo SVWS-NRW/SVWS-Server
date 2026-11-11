@@ -1,69 +1,179 @@
+
 import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
 import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
 import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { LehrerUtils } from "@core/core/utils/lehrer/LehrerUtils";
+import { SchuelerUtils } from "@core/core/utils/schueler/SchuelerUtils";
 import { ArrayList } from "@core/java/util/ArrayList";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
-import { ViewType } from "@ui/ui/nav/ViewType";
+import { useAbschnittState } from "@ui/states/AbschnittState";
+import { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
+import { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 
 import { abschnittStateImpl } from "../AbschnittStateImpl";
-import { benutzerStateImpl } from "../BenutzerStateImpl";
+import { AuswahlKatalog } from "../AuswahlKatalog";
 import type { GenericAuswahlReactiveState } from "../GenericAuswahlStateImpl";
 import { GenericAuswahlStateImpl } from "../GenericAuswahlStateImpl";
+import { SchuelerStatusFilter } from "../SchuelerStatusFilter";
 import { schuleStateImpl } from "../SchuleStateImpl";
+import { StundenplaeneListeState } from "../StundenplaeneListeState";
 import { api } from "~/router/Api";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteManager } from "~/router/RouteManager";
 
+import { comparatorKlassenListeEintrag, KlassenAuswahlFilter } from "./KlassenAuswahlFilter";
 import type { KlassenAuswahlState } from "./KlassenAuswahlState";
 import { klassenAuswahlStateRoutingAdapter } from "./KlassenAuswahlStateRoutingAdapter";
-import { KlassenListeManager } from "./KlassenListeManager";
+import { KlassenGruppenprozessState } from "./KlassenGruppenprozessState";
+import { KlassenStammdatenState } from "./KlassenStammdatenState";
 
-interface KlassenAuswahlReactiveState extends GenericAuswahlReactiveState<KlassenListeManager> {
-	mapStundenplaene: Map<number, StundenplanListeEintrag>;
-}
+type KlassenAuswahlReactiveState = GenericAuswahlReactiveState<KlassenListeEintrag>;
 
 /**
  * Der State für die Auswahlliste der Klassen
  */
-export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenListeManager, KlassenAuswahlReactiveState> implements KlassenAuswahlState {
+export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenListeEintrag, KlassenDaten, KlassenAuswahlReactiveState> implements KlassenAuswahlState {
+
+	/** Der Katalog der Jahrgänge */
+	private readonly _jahrgaenge = new AuswahlKatalog<JahrgangsDaten>(j => j.id, JahrgaengeListeManager.comparator);
+
+	/** Der Katalog der Schüler des Schuljahresabschnittes */
+	private readonly _schueler = new AuswahlKatalog<SchuelerListeEintrag>(s => s.id, SchuelerUtils.comparator);
+
+	/** Der Katalog der Klassen des vorigen Schuljahresabschnittes in der Reihenfolge der Server-Antwort */
+	private readonly _klassenByIdVorabschnitt = new AuswahlKatalog<KlassenDatenMinimal>(k => k.id, { compare: () => 0 });
+
+	/** Der Katalog der Klassen des folgenden Schuljahresabschnittes in der Reihenfolge der Server-Antwort */
+	private readonly _klassenByIdFolgeAbschnitt = new AuswahlKatalog<KlassenDatenMinimal>(k => k.id, { compare: () => 0 });
+
+	/** Der Teil-State für die Stundenpläne des Schuljahresabschnittes */
+	private readonly _stundenplaene = new StundenplaeneListeState();
+
+	/** Der Filter nach dem Schüler-Status für die Schülerliste in den Daten */
+	private readonly _schuelerstatus = new SchuelerStatusFilter([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.NEUAUFNAHME, SchuelerStatus.WARTELISTE]);
+
+	/** Der State für die Lehrer des Schuljahresabschnittes */
+	private readonly _lehrer = new AuswahlKatalog<LehrerListeEintrag>(l => l.id, LehrerUtils.comparator);
+
+	/** Der State für die Stammdaten */
+	private readonly _stammdaten = new KlassenStammdatenState(this);
+
+	/** Der State für die Stammdaten der Mehrfachauswahl */
+	private readonly _gruppenprozesse = new KlassenGruppenprozessState(this);
+
+	/** Der Filter der Auswahlliste */
+	private readonly _filter = new KlassenAuswahlFilter(
+		() => this._state.value.liste?.list() ?? new ArrayList<KlassenListeEintrag>(),
+		() => this.idSelected,
+		{ schule: schuleStateImpl, jahrgaenge: this._jahrgaenge, lehrer: this._lehrer }
+	);
 
 	public constructor() {
 		super({
 			idSchuljahresabschnitt: -1,
-			manager: undefined,
-			mapStundenplaene: new Map(),
-			activeViewType: ViewType.DEFAULT,
+			liste: undefined,
+			idSelected: null,
 		}, klassenAuswahlStateRoutingAdapter);
+		this._filter.onChanged = () => void this.setFilter();
 	}
 
 	/**
-	 * Initialisiert den State für den ausgewählten Schuljahresabschnitt. Es werden die Daten für diesen Abschnitt geladen.
+	 * Gibt den Filter der Auswahlliste zurück.
 	 *
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * @param force                    gibt an, ob das Laden der Daten auch erzwungen werden soll, wenn die ID des
-	 *                                 Schuljahresabschnittes bereits gesetzt ist (z.B. beim Betreten einer Route)
-	 *
-	 * @returns ein Promise mit der ID der Auswahl oder null
+	 * @returns der Filter
 	 */
-	public async init(idSchuljahresabschnitt: number, force: boolean): Promise<number | null> {
-		return await super.setSchuljahresabschnitt(idSchuljahresabschnitt, force);
+	public get filter(): KlassenAuswahlFilter {
+		return this._filter;
+	}
+
+	public get schuljahresabschnitt(): Schuljahresabschnitt {
+		return useAbschnittState().get(this.selected.idSchuljahresabschnitt);
+	}
+
+	public get jahrgaenge(): AuswahlKatalog<JahrgangsDaten> {
+		return this._jahrgaenge;
+	}
+
+	public get klassenByIdVorabschnitt(): AuswahlKatalog<KlassenDatenMinimal> {
+		return this._klassenByIdVorabschnitt;
+	}
+
+	public get klassenByIdFolgeAbschnitt(): AuswahlKatalog<KlassenDatenMinimal> {
+		return this._klassenByIdFolgeAbschnitt;
+	}
+
+	public getKlassenIDsMitSchuelern(): JavaSet<number> {
+		const result = new HashSet<number>();
+		for (const klasse of this.liste.auswahl()) {
+			if (klasse.anzahlZugeordneteSchueler !== 0) {
+				result.add(klasse.id);
+			}
+		}
+		return result;
+	}
+
+	public getSchuelerIDsDerAuswahl(): List<number> {
+		const result = new ArrayList<number>();
+		for (const s of this._schueler.list()) {
+			if (this.liste.has(s.idKlasse) && this.liste.auswahlHasKey(s.idKlasse)) {
+				result.add(s.id);
+			}
+		}
+		return result;
+	}
+
+	public get stammdaten(): KlassenStammdatenState {
+		return this._stammdaten;
+	}
+
+	public get gruppenprozesse(): KlassenGruppenprozessState {
+		return this._gruppenprozesse;
+	}
+
+	public get schuelerstatus(): SchuelerStatusFilter {
+		return this._schuelerstatus;
+	}
+
+	public get lehrer(): AuswahlKatalog<LehrerListeEintrag> {
+		return this._lehrer;
+	}
+
+	public commit(): void {
+		super.commit();
+		this._filter.refresh();
+	}
+
+	protected getListFiltered(): List<KlassenListeEintrag> {
+		return this._filter.filtered;
 	}
 
 	/**
-	 * Gibt die ID des aktuell gewählten Schuljahresabschnittes zurück
-	 *
-	 * @returns die ID des aktuell gewählten Schuljahresabschnittes
+	 * Setzt den State und den Teil-State für die Stundenpläne in den Default-State zurück.
 	 */
-	get idSchuljahresabschnitt(): number {
-		return this._state.value.idSchuljahresabschnitt;
+	public reset(): void {
+		super.reset();
+		this._stundenplaene.reset();
+		this._stammdaten.reset();
+		this._gruppenprozesse.reset();
+		this._lehrer.reset();
+		this._jahrgaenge.reset();
+		this._schueler.reset();
+		this._klassenByIdVorabschnitt.reset();
+		this._klassenByIdFolgeAbschnitt.reset();
+		this._schuelerstatus.reset();
+		this._filter.reset();
 	}
 
 	/**
@@ -72,23 +182,23 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 	 * @returns die Map mit den Stundenplänen
 	 */
 	public get mapStundenplaene(): Map<number, StundenplanListeEintrag> {
-		return this._state.value.mapStundenplaene;
+		return this._stundenplaene.mapStundenplaene;
 	}
 
 	/**
-	 * Erstellt einen neunen Auswahl-Manager für den angegebenen Schuljahresabschnitt. Die Daten dafür werden
+	 * Erstellt die Auswahlliste für den angegebenen Schuljahresabschnitt. Die Daten dafür werden
 	 * über die API abgefragt.
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
 	 *
-	 * @returns Eine Promise mit den Anpassungen für den Manager und dessen Daten im KlassenState
+	 * @returns Eine Promise mit den Anpassungen für die Auswahlliste und deren Daten im KlassenState
 	 */
-	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<KlassenAuswahlReactiveState>> {
+	protected async createListe(idSchuljahresabschnitt: number): Promise<Partial<KlassenAuswahlReactiveState>> {
 		const schuljahresabschnitt = abschnittStateImpl.getOrNull(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
-		// Lade die Kataloge und erstelle den Manager
+		// Lade die Kataloge und erstelle die Auswahlliste
 
 		const [klassen, klassenVorabschnitt, klassenFolgeabschnitt, schueler, lehrer, jahrgaenge] = await Promise.all([
 			api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt),
@@ -99,25 +209,16 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 			api.server.getJahrgaenge(api.schema),
 		])
 		;
-		const manager = new KlassenListeManager(
-			idSchuljahresabschnitt,
-			schuleStateImpl.abschnitt.id,
-			schuleStateImpl.schulform,
-			{
-				schuljahresabschnitte: abschnittStateImpl.alle,
-				klassenAktAbschnitt: klassen,
-				klassenVorabschnitt: klassenVorabschnitt,
-				klassenFolgeabschnitt: klassenFolgeabschnitt,
-				schueler: schueler,
-				jahrgaenge: jahrgaenge,
-				lehrer: lehrer,
-			});
-		if (this._state.value.manager === undefined) {
-			manager.setFilterAuswahlPermitted(true);
-		} else {
-			manager.useFilter(this._state.value.manager);
-		}
-		return { manager };
+		const liste = new ListeMitAuswahl(klassen, e => e.id, comparatorKlassenListeEintrag, null);
+		this._lehrer.set(lehrer);
+		this._jahrgaenge.set(jahrgaenge);
+		this._schueler.set(schueler);
+		this._klassenByIdVorabschnitt.set(klassenVorabschnitt);
+		this._klassenByIdFolgeAbschnitt.set(klassenFolgeabschnitt);
+		this._filter.pruneValues();
+		// Die Stundenpläne gehören zum Schuljahresabschnitt und werden bei dessen Wechsel verworfen
+		this._stundenplaene.reset();
+		return { liste };
 	}
 
 	/**
@@ -147,44 +248,6 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 	}
 
 	/**
-	 * Lädt die Daten für den übergebenen Listeneintrag einer Klasse
-	 *
-	 * @param auswahl   der ausgewählte Listeneintrag einer Klasse
-	 *
-	 * @returns eine Promise mit den Daten zu der Klasse
-	 */
-	public async ladeDaten(auswahl: KlassenListeEintrag | null): Promise<KlassenDaten | null> {
-		if (auswahl === null) {
-			return null;
-		}
-		return await api.server.getKlasse(api.schema, auswahl.id);
-	}
-
-	public async ladeDatenMultiple(auswahlList: List<KlassenListeEintrag>, state: Partial<KlassenAuswahlReactiveState>): Promise<List<KlassenDaten> | null> {
-		if (auswahlList.isEmpty()) {
-			return null;
-		}
-		const ids: List<number> = new ArrayList();
-		for (const auswahl of auswahlList) {
-			ids.add(auswahl.id);
-		}
-		return await api.server.getKlassenMultiple(ids, api.schema);
-	}
-
-	/**
-	 * Führt einen Patch auf den Klassendaten über die API aus.
-	 *
-	 * @param data   die Daten des Patches
-	 * @param id     die der zu patchenden Klasse
-	 *
-	 * @returns eine Promise, die bei Erfolg true zurückgibt
-	 */
-	protected async doPatch(data: Partial<KlassenDaten>, id: number): Promise<boolean> {
-		await api.server.patchKlasse(data, api.schema, id);
-		return true;
-	}
-
-	/**
 	 * Führt eine LöscheOperation auf dem Server für die Klassen mit den übergebenen IDs aus.
 	 *
 	 * @param ids   die IDs der Klassen
@@ -197,7 +260,7 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 
 	protected filterOnDelete(ids: List<number>): List<number> {
 		const neueIDs = new ArrayList<number>();
-		const set = this.manager.getKlassenIDsMitSchuelern();
+		const set = this.getKlassenIDsMitSchuelern();
 		for (const id of ids) {
 			if (!set.contains(id)) {
 				neueIDs.add(id);
@@ -206,92 +269,26 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 		return neueIDs;
 	}
 
-	protected deleteMessage(id: number, klasse: KlassenDaten | null): string {
+	protected deleteMessage(id: number, klasse: KlassenListeEintrag | null): string {
 		return `Klasse ${klasse?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
 	public async updateMapStundenplaene(): Promise<void> {
-		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
-		if (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
-			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
-			for (const l of listStundenplaene) {
-				mapStundenplaene.set(l.id, l);
-			}
-		}
-		this.setPatchedState({ mapStundenplaene });
+		await this._stundenplaene.update(this.idSchuljahresabschnitt);
 	}
-
-	public async addKlassenleitung(idLehrer: number, idKlasse: number): Promise<void> {
-		// Prüfe zunächst, ob die Lehrer-ID bereits in der Liste der Klassenleitungen vorkommt
-		if (this.manager.daten().klassenLeitungen.contains(idLehrer)) {
-			throw new DeveloperNotificationException("Die Klassenleitung mit der Lehrer-ID " + idLehrer + " kommt bereits in der Klasse mit der ID " + idKlasse + "vor.");
-		}
-
-		// Erstelle die neue Klassenliste durch anhängen der neuen Lehrer-ID
-		const listKlassenleitungenNeu = new ArrayList<number>(this.manager.daten().klassenLeitungen);
-		listKlassenleitungenNeu.add(idLehrer);
-
-		// Führe den API-Aufruf durch
-		const requestBody: Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
-		await api.server.patchKlasse(requestBody, api.schema, idKlasse);
-
-		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
-		this.manager.daten().klassenLeitungen.add(idLehrer);
-		this.commit();
-	};
-
-	public async removeKlassenleitung(eintrag: LehrerListeEintrag): Promise<void> {
-		// Bestimme die Position der Klassenleitung in der zugehörigen Liste
-		const listKlassenleitungenNeu = new ArrayList<number>(this.manager.daten().klassenLeitungen);
-		const lehrerIndex: number = listKlassenleitungenNeu.indexOf(eintrag.id);
-		listKlassenleitungenNeu.removeElementAt(lehrerIndex);
-
-		// Führe den API-Aufruf durch
-		const requestBody: Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
-		const klassenId: number | null = this.manager.auswahlID();
-		if (klassenId === null) {
-			throw new DeveloperNotificationException("Keine Klasse ausgewählt, Klassenleitung kann nicht entfernt werden");
-		}
-		await api.server.patchKlasse(requestBody, api.schema, klassenId);
-
-		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
-		this.manager.daten().klassenLeitungen = listKlassenleitungenNeu;
-		this.commit();
-	};
-
-	public async updateReihenfolgeKlassenleitung(idLehrer: number, erhoehe: boolean): Promise<void> {
-		const idKlasse: number | null = this.manager.auswahlID();
-		if (idKlasse === null) {
-			throw new DeveloperNotificationException("Für das Anpassen der Reihenfolge von Klassenlehrern muss eine Klasse ausgewählt sein.");
-		}
-
-		// Erstelle eine Kopie der Liste der Klassenleitungen und führe an dieser die Änderungen durch
-		const listKlassenleitungenNeu = new ArrayList<number>(this.manager.daten().klassenLeitungen);
-		if (!KlassenListeManager.updateReihenfolgeKlassenleitung(listKlassenleitungenNeu, idLehrer, erhoehe)) {
-			return;
-		}
-
-		// Führe den API-Aufruf durch
-		const requestBody: Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
-		await api.server.patchKlasse(requestBody, api.schema, idKlasse);
-
-		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
-		this.manager.daten().klassenLeitungen = listKlassenleitungenNeu;
-		this.commit();
-	};
 
 	public async setzeDefaultSortierung(): Promise<void> {
 		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
-		const auswahl_id = this.manager.auswahl().id;
+		const auswahl_id = this.selected.id;
 		await api.server.setKlassenSortierungFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		await this.setSchuljahresabschnitt(idSchuljahresabschnitt, true);
-		await this.setDaten(this.manager.liste.get(auswahl_id));
+		await this.setDaten(this.liste.get(auswahl_id));
 	};
 
 	public async add(partialKlasse: Partial<KlassenDaten>): Promise<void> {
 		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: abschnittStateImpl.auswahl.id }, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
-		await this.gotoDefaultView(neueKlasse.id);
+		await this.navigator.select(neueKlasse.id);
 	};
 
 	public async gotoSchueler(eintrag: Schueler): Promise<void> {

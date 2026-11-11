@@ -1,13 +1,13 @@
 <template>
-	<template v-if="(kurseAuswahlState.manager.hasDaten() && (kurseAuswahlState.activeViewType === ViewType.DEFAULT)) || (kurseAuswahlState.activeViewType !== ViewType.DEFAULT)">
+	<template v-if="(kurseAuswahlState.stammdaten.hasDaten && (kurseAuswahlState.navigator.activeViewType === ViewType.DEFAULT)) || (kurseAuswahlState.navigator.activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<template v-if="kurseAuswahlState.activeViewType === ViewType.DEFAULT">
+				<template v-if="kurseAuswahlState.navigator.activeViewType === ViewType.DEFAULT">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
-							<span>{{ kurseAuswahlState.manager.daten().kuerzel }}</span>
+							<span>{{ kurseAuswahlState.stammdaten.datenOrException().kuerzel }}</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID: {{ kurseAuswahlState.manager.daten().id }}
+								ID: {{ kurseAuswahlState.stammdaten.datenOrException().id }}
 							</svws-ui-badge>
 						</h2>
 						<span class="svws-subline">
@@ -15,12 +15,12 @@
 						</span>
 					</div>
 				</template>
-				<template v-else-if="kurseAuswahlState.activeViewType === ViewType.HINZUFUEGEN">
+				<template v-else-if="kurseAuswahlState.navigator.activeViewType === ViewType.HINZUFUEGEN">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">Anlegen eines neuen Kurses...</h2>
 					</div>
 				</template>
-				<template v-else-if="kurseAuswahlState.activeViewType === ViewType.GRUPPENPROZESSE">
+				<template v-else-if="kurseAuswahlState.navigator.activeViewType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">Gruppenprozesse</h2>
 						<span class="svws-subline">{{ kurseSubline }}</span>
@@ -29,7 +29,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-tab-bar :tab-manager="() => tabManager(kurseAuswahlState.activeViewType)" :focus-switching-enabled :focus-help-visible>
+		<svws-ui-tab-bar :tab-manager="() => tabManager(kurseAuswahlState.navigator.activeViewType)" :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -59,13 +59,13 @@
 
 	const lehrerkuerzel = computed<string>(() => {
 		let s = '';
-		if (kurseAuswahlState.manager.hasDaten()) {
-			const idLehrer = kurseAuswahlState.manager.daten().idLehrer;
-			const lehrer = idLehrer === null ? null : kurseAuswahlState.manager.lehrer.get(idLehrer);
+		if (kurseAuswahlState.stammdaten.hasDaten) {
+			const idLehrer = kurseAuswahlState.stammdaten.datenOrException().idLehrer;
+			const lehrer = idLehrer === null ? null : kurseAuswahlState.lehrer.get(idLehrer);
 			s = (lehrer === null) ? " " : lehrer.kuerzel;
 			// TODO Zusatzkräfte
-			// for (const idZusatzkraft of kurseAuswahlState.manager.daten().zusatzkraefte) {
-			// 	const zusatzkraft = kurseAuswahlState.manager.lehrer.get(idZusatzkraft);
+			// for (const idZusatzkraft of kurseAuswahlState.stammdaten.datenOrException().zusatzkraefte) {
+			// 	const zusatzkraft = kurseAuswahlState.lehrer.get(idZusatzkraft);
 			// 	if (zusatzkraft !== null) {
 			// 		if (s.length)
 			// 			s += `, ${lehrer.kuerzel}`;
@@ -77,7 +77,7 @@
 	});
 
 	const kurseSubline = computed(() => {
-		const auswahlKurseList = kurseAuswahlState.manager.liste.auswahlSorted();
+		const auswahlKurseList = kurseAuswahlState.liste.auswahlSorted();
 		if (auswahlKurseList.size() > 5) {
 			return `${auswahlKurseList.size()} Kurse ausgewählt`;
 		}

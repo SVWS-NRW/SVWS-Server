@@ -31,7 +31,8 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		const pendingStateManager =
 			new PendingStateManagerSchuelerIndividualdaten(
 				'id',
-				() => schuelerAuswahlState.manager
+				() => schuelerAuswahlState.liste,
+				() => schuelerAuswahlState.gruppenprozesse.listeDaten
 			);
 
 		this._state.value.pendingStateManager = pendingStateManager;

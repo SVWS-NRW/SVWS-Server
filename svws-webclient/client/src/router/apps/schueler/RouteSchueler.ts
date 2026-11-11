@@ -1,7 +1,7 @@
 import type { RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
@@ -23,6 +23,7 @@ import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 import { routeError } from "~/router/error/RouteError";
+import { updateAuswahlRoute } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
@@ -95,40 +96,16 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 		}
 
 		try {
-			const { idSchuljahresabschnitt, id: paramId } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
-			if (idSchuljahresabschnitt === undefined) {
-				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			}
-			let id = paramId;
-			if ((paramId === undefined) && isEntering) {
-				const lastId = Number.parseInt(configStateImpl.nonPersistentConfig.getValue(`${this.name}.auswahl.id`));
-				if (!Number.isNaN(lastId)) {
-					id = lastId;
-				}
-			}
-			if (isEntering && to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN, ViewType.NEU])) {
-				return this.getRouteView(this.data.view, { id: id ?? '' });
-			}
-			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
-			const schuelerAuswahlState = useSchuelerAuswahlState();
-			const idNeu = await schuelerAuswahlState.init(idSchuljahresabschnitt, isEntering);
-			if ((idNeu !== null) && (idNeu !== id) && (id === undefined)) {
-				return this.data.defaultView.getRoute({ id: idNeu });
-			}
-
-			// Wenn einer der folgenden Routen Types aufgerufen wird, wird hier ein Redirect initiiert, sobald eine ID in der URL enthalten ist.
-			if (to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]) && (id !== undefined)) {
-				return this.getRouteView(to, { id: '' });
-			}
-
-			if (to.hasType(ViewType.GRUPPENPROZESSE)) {
-				await schuelerAuswahlState.gotoGruppenprozessView(false);
-			} else if (to.hasType(ViewType.HINZUFUEGEN)) {
-				await schuelerAuswahlState.gotoHinzufuegenView(false);
-			} else if (to.hasType(ViewType.NEU)) {
-				await schuelerAuswahlState.gotoSchnelleingabeView(false);
-			} else {
-				await schuelerAuswahlState.gotoDefaultView(id);
+			const redirect = await updateAuswahlRoute({
+				route: this,
+				state: useSchuelerAuswahlState(),
+				to,
+				ids: RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]),
+				isEntering,
+				redirectOnlyWithoutId: true,
+			});
+			if (redirect !== undefined) {
+				return redirect;
 			}
 
 			if (to.name === this.name) {
@@ -171,7 +148,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
 		const schuelerAuswahlState = useSchuelerAuswahlState();
-		if (schuelerAuswahlState.activeViewType !== ViewType.DEFAULT) {
+		if (schuelerAuswahlState.navigator.activeViewType !== ViewType.DEFAULT) {
 			this._selectedChild.value = undefined;
 		}
 		this.data.reset();
@@ -192,7 +169,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 		if (!schuelerAuswahlState.isAvailable) {
 			return params;
 		}
-		const id = schuelerAuswahlState.manager.auswahlID();
+		const id = schuelerAuswahlState.idSelected;
 		if (id !== null) {
 			params.id = id;
 		}
@@ -202,7 +179,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 
 	protected doUpdateIfTarget = async (from: RouteNode<any, any> | undefined) => {
 		const schuelerAuswahlState = useSchuelerAuswahlState();
-		if (!schuelerAuswahlState.manager.hasDaten()) {
+		if (!schuelerAuswahlState.stammdaten.hasDaten) {
 			return;
 		}
 		if ((from !== undefined) && (/(\.|^)stundenplan/).test(from.name)) {

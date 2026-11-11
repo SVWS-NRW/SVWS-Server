@@ -77,7 +77,7 @@
 					</template>
 					<template #footer v-if="hatKompetenzUpdate">
 						<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
-							<div v-if="klassenState.manager.getAuswahlKlassenLeitung() !== null" class="w-6 me-1">
+							<div v-if="klassenleitungClicked !== null" class="w-6 me-1">
 								<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge">
 									<span class="icon i-ri-arrow-up-line" />
 								</svws-ui-button>
@@ -96,9 +96,9 @@
 			</svws-ui-content-card>
 		</div>
 		<svws-ui-content-card title="Klassenliste">
-			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="klassenState.manager.schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
+			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="klassenState.schuelerstatus.options" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
 			<svws-ui-spacing />
-			<svws-ui-table :columns="colsSchueler" :items="klassenState.manager.getSchuelerListe()" count>
+			<svws-ui-table :columns="colsSchueler" :items="klassenState.schuelerstatus.filter(klassenState.stammdaten.datenOrException().schueler)" count>
 				<template #cell(status)="{ value } : { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr)?.text ?? "—" }}</span>
 				</template>
@@ -146,15 +146,15 @@
 
 	const listAndereKlassen = computed(() => {
 		const arr = [];
-		for (const k of klassenState.manager.liste.list()) {
-			if (k.id !== klassenState.manager.auswahlID()) {
+		for (const k of klassenState.liste.list()) {
+			if (k.id !== klassenState.idSelected) {
 				arr.push(k);
 			}
 		}
 		return arr;
 	});
 
-	const dataNotPatched = () => klassenState.manager.daten();
+	const dataNotPatched = () => klassenState.stammdaten.datenOrException();
 	const listOfAutopatchProps: Iterable<keyof KlassenDaten> = ["idJahrgang", "parallelitaet", "idVorgaengerklasse",
 		"idFolgeklasse", "idSchulgliederung", "idKlassenart", "idBerufsbildendOrganisationsform", "idAllgemeinbildendOrganisationsform",
 		"idWeiterbildungOrganisationsform", "noteneingabeGesperrt", "verwendungAnkreuzkompetenzen", "beginnSommersemester",
@@ -162,12 +162,11 @@
 	const modelProxy = new KlassenDatenModelProxy(
 		() => dataNotPatched(),
 		() => listAndereKlassen.value,
-		() => klassenState.manager,
 		listOfAutopatchProps,
-		(p) => klassenState.patch(p)
+		(p) => klassenState.stammdaten.patch(p)
 	);
 
-	watch(() => klassenState.manager.daten().klassenLeitungen, () => {
+	watch(() => klassenState.stammdaten.datenOrException().klassenLeitungen, () => {
 		klassenleitungClicked.value = null;
 	});
 
@@ -201,7 +200,6 @@
 	const klassenleitungClicked = ref<LehrerListeEintrag | null>(null);
 
 	function setKlassenleitungClicked(value: LehrerListeEintrag | null) {
-		klassenState.manager.setAuswahlKlassenLeitung(value);
 		klassenleitungClicked.value = value;
 	}
 
@@ -278,7 +276,7 @@
 	}
 
 	async function removeKlassenleitungHandler(rowData: LehrerListeEintrag): Promise<void> {
-		await klassenState.removeKlassenleitung(rowData);
+		await klassenState.stammdaten.removeKlassenleitung(rowData.id);
 		if ((klassenleitungClicked.value !== null) && (klassenleitungClicked.value.id === rowData.id)) {
 			klassenleitungClicked.value = null;
 		}
@@ -288,31 +286,25 @@
 		if (!klassenleitungClicked.value) {
 			return;
 		}
-		await klassenState.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, true);
+		await klassenState.stammdaten.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, true);
 	}
 
 	async function reduziereReihenfolge(): Promise<void> {
 		if (!klassenleitungClicked.value) {
 			return;
 		}
-		await klassenState.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, false);
+		await klassenState.stammdaten.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, false);
 	}
 
 	const filterSchuelerStatus = computed<SchuelerStatus[]>({
-		get: () => [...klassenState.manager.schuelerstatus.auswahl()],
-		set: (value) => {
-			klassenState.manager.schuelerstatus.auswahlClear();
-			for (const v of value) {
-				klassenState.manager.schuelerstatus.auswahlAdd(v);
-			}
-			void klassenState.setFilter();
-		},
+		get: () => [...klassenState.schuelerstatus.values],
+		set: (value) => klassenState.schuelerstatus.setValues(value),
 	});
 
 	const listeKlassenlehrer = computed<LehrerListeEintrag[]>(() => {
 		const a: LehrerListeEintrag[] = [];
-		for (const klassenLeitung of klassenState.manager.daten().klassenLeitungen) {
-			const lehrer: LehrerListeEintrag | null = klassenState.manager.lehrer.get(klassenLeitung);
+		for (const klassenLeitung of klassenState.stammdaten.datenOrException().klassenLeitungen) {
+			const lehrer: LehrerListeEintrag | null = klassenState.lehrer.get(klassenLeitung);
 			if (lehrer !== null) {
 				a.push(lehrer);
 			}

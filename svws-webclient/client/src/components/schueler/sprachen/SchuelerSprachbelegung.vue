@@ -183,10 +183,10 @@
 	const schuleState = useSchuleState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 
-	const schuljahr = computed<number>(() => schuelerAuswahlState.manager.schuelerGetSchuljahrOrException());
+	const schuljahr = computed<number>(() => schuelerAuswahlState.schuljahresabschnitt.schuljahr);
 	const auswahl = ref(new Array<Sprachbelegung>());
 	const selectSprachen = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
-	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByIDOrNull(schuelerAuswahlState.manager.auswahl().idSchulgliederung));
+	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByIDOrNull(schuelerAuswahlState.selected.idSchulgliederung));
 	const hatSpalteNachweis = computed<boolean>(() => schuleState.schulform === Schulform.WB);
 	const hatSpaltenZeitraum = computed(() => {
 		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(schuleState.schulform);
@@ -209,7 +209,7 @@
 				await props.patchSprachbelegung(proxy, sprachbelegung.sprache);
 				return true;
 			};
-			const modelProxy = new SchuelerSprachbelegungModelProxy(() => sprachbelegung, () => schuelerAuswahlState.manager, patchMethod);
+			const modelProxy = new SchuelerSprachbelegungModelProxy(() => sprachbelegung, () => schuelerAuswahlState.schuljahresabschnitt.schuljahr, patchMethod);
 			list.add(modelProxy);
 		}
 		return list;
@@ -314,7 +314,7 @@
 		data.reihenfolge = gridManager.daten.size() + 1;
 		const schulform = schuleState.schulform;
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
-			data.belegungVonJahrgang = Jahrgaenge.data().getEintragByID(schuelerAuswahlState.manager.auswahl().idJahrgang)?.kuerzel;
+			data.belegungVonJahrgang = Jahrgaenge.data().getEintragByID(schuelerAuswahlState.selected.idJahrgang)?.kuerzel;
 		}
 		await props.addSprachbelegung(data);
 		selectSprachen.value.reset();

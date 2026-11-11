@@ -16,7 +16,7 @@
 					</div>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="klassenState.manager.getKlassenIDsMitSchuelern().size() === klassenState.manager.liste.auswahlSize() || loading"
+					<svws-ui-button :disabled="klassenState.getKlassenIDsMitSchuelern().size() === klassenState.liste.auswahlSize() || loading"
 						:title="leereKlassenVorhanden ? 'Leere Klassen löschen' : 'Löschen'" @click="entferneKlassen" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
@@ -60,9 +60,9 @@
 
 	/** Die Klassen liefern Klassen-IDs und für schülerbezogene Vorlagen die IDs der Schüler aus den gewählten Klassen. */
 	const idsJeDatenContext = new Map<ReportingReportvorlageDatenContext, () => List<number>>([
-		[ReportingReportvorlageDatenContext.KLASSEN, () => klassenState.manager.liste.auswahlKeyList()],
-		[ReportingReportvorlageDatenContext.STUNDENPLANUNG_KLASSEN, () => klassenState.manager.liste.auswahlKeyList()],
-		[ReportingReportvorlageDatenContext.SCHUELER, () => klassenState.manager.getSchuelerIDsDerAuswahl()],
+		[ReportingReportvorlageDatenContext.KLASSEN, () => klassenState.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.STUNDENPLANUNG_KLASSEN, () => klassenState.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.SCHUELER, () => klassenState.getSchuelerIDsDerAuswahl()],
 	]);
 
 	const stundenplaene = computed(() => [...klassenState.mapStundenplaene.values()]);
@@ -73,20 +73,20 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	const alleKlassenLeer = computed(() => (currentAction.value === 'delete') && klassenState.manager.getKlassenIDsMitSchuelern().isEmpty());
+	const alleKlassenLeer = computed(() => (currentAction.value === 'delete') && klassenState.getKlassenIDsMitSchuelern().isEmpty());
 
 	const nichtAlleKlassenLeer = computed(() => {
 		const errorLog: List<string> = new ArrayList<string>();
 		if (!alleKlassenLeer.value) {
-			for (const klasse of klassenState.manager.getKlassenIDsMitSchuelern()) {
-				errorLog.add(`Klasse ${klassenState.manager.liste.get(klasse)?.kuerzel ?? '???'} (ID: ${klasse}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
+			for (const klasse of klassenState.getKlassenIDsMitSchuelern()) {
+				errorLog.add(`Klasse ${klassenState.liste.get(klasse)?.kuerzel ?? '???'} (ID: ${klasse}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
 			}
 		}
 		return errorLog;
 	});
 
 	const leereKlassenVorhanden = computed(() =>
-		!alleKlassenLeer.value && (klassenState.manager.getKlassenIDsMitSchuelern().size() !== klassenState.manager.liste.auswahlSize()));
+		!alleKlassenLeer.value && (klassenState.getKlassenIDsMitSchuelern().size() !== klassenState.liste.auswahlSize()));
 
 	function clearLog() {
 		loading.value = false;

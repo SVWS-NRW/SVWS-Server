@@ -13,12 +13,13 @@ import { ValidatorLsvLehrerStammdatenVorname } from "@core/asd/validate/lehrer/V
 import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
 import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import { PersonalTyp } from "@core/core/types/PersonalTyp";
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+import type { List } from "@core/java/util/List";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { OrteState } from "@ui/states/kataloge/OrteState";
 import { useOrteState } from "@ui/states/kataloge/OrteState";
-import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
@@ -36,30 +37,30 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 	private readonly _orteState: OrteState = useOrteState();
 
 	protected readonly schuljahr: number;
-	protected readonly manager: () => LehrerListeManager;
+	protected readonly liste: () => List<LehrerListeEintrag>;
 
 	/**
 	 * Erstellt einen ModelProxy für das Core-DTO LehrerStammdaten.
 	 *
 	 * @param data               ein Lambda für den Zugriff auf die "Original"-Daten
 	 * @param validatorKontext   der Validator-Kontext für die Nutzung in den ASD-Validatoren
-	 * @param manager
+	 * @param liste               ein Lambda für den Zugriff auf die Einträge der Lehrerliste, z.B. für die Prüfung des Kürzels
 	 * @param patch              ggf. die Methode zum Patchen der einzelnen Attribute, sofern das automatische Patchen
 	 *                           bei Änderungen gewünscht ist
 	 */
 	constructor(data: () => LehrerStammdaten,
 		validatorKontext: () => ValidatorKontext,
-		manager: () => LehrerListeManager,
+		liste: () => List<LehrerListeEintrag>,
 		patch?: (data: Partial<LehrerStammdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof LehrerStammdaten> =
 			["istSichtbar", "istRelevantFuerStatistik", "personalTyp", "geschlecht", "idStaatsangehoerigkeit", "wohnortID", "ortsteilID"];
 		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = validatorKontext().getSchuljahr();
-		this.manager = manager;
+		this.liste = liste;
 
 		// Kürzel
-		this.addBlockingValidator(new ValidatorLehrerIndividualdatenKuerzel(() => this.proxy, () => this.manager().liste.list()), "kuerzel");
+		this.addBlockingValidator(new ValidatorLehrerIndividualdatenKuerzel(() => this.proxy, () => this.liste()), "kuerzel");
 		this.addValidator(new ValidatorLskLehrerStammdatenKuerzel({ get: () => this.proxy.kuerzel }, validatorKontext()), "kuerzel");
 
 		// Personal-Typ

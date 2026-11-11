@@ -34,7 +34,7 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			}
 			try {
 				const schuelerAuswahlState = useSchuelerAuswahlState();
-				await this.data.auswahlSchueler(schuelerAuswahlState.manager.liste.get(id));
+				await this.data.auswahlSchueler(schuelerAuswahlState.liste.get(id));
 			} catch {
 				return routeSchueler.getRouteDefaultChild({ id });
 			}

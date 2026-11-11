@@ -1,31 +1,100 @@
 import { type InjectionKey } from "vue";
 
 import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
+import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
-import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
 import { AppContext } from "@ui/AppContext";
 
+import type { AuswahlKatalog } from "../AuswahlKatalog";
+import type { AuswahlStateMitStundenplaenen } from "../AuswahlStateMitStundenplaenen";
 import type { GenericAuswahlState } from "../GenericAuswahlState";
+import type { SchuelerStatusFilter } from "../SchuelerStatusFilter";
 
-import type { KlassenListeManager } from "./KlassenListeManager";
+import type { KlassenAuswahlFilter } from "./KlassenAuswahlFilter";
+import type { KlassenStammdatenState } from "./KlassenStammdatenState";
 
 /**
  * Das Interface für den State für die Auswahlliste der Klassen
  */
-export interface KlassenAuswahlState extends GenericAuswahlState<KlassenListeManager> {
+export interface KlassenAuswahlState extends GenericAuswahlState<KlassenListeEintrag, KlassenDaten>, AuswahlStateMitStundenplaenen {
 
 	/**
-	 * Initialisiert den State für den ausgewählten Schuljahresabschnitt. Es werden die Daten für diesen Abschnitt geladen.
+	 * Gibt den Filter der Auswahlliste zurück.
 	 *
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * @param force                    gibt an, ob das Laden der Daten auch erzwungen werden soll, wenn die ID des
-	 *                                 Schuljahresabschnittes bereits gesetzt ist (z.B. beim Betreten einer Route)
-	 *
-	 * @returns ein Promise mit der ID der Auswahl oder null
+	 * @returns der Filter
 	 */
-	init(idSchuljahresabschnitt: number, force: boolean): Promise<number | null>;
+	get filter(): KlassenAuswahlFilter;
+
+	/**
+	 * Gibt die Jahrgänge zurück.
+	 *
+	 * @returns die Liste der Jahrgänge
+	 */
+	get jahrgaenge(): AuswahlKatalog<JahrgangsDaten>;
+
+	/**
+	 * Gibt die Klassen des Vorabschnittes zugeordnet zu deren ID zurück.
+	 *
+	 * @returns die Map mit den Klassen des Vorabschnittes
+	 */
+	get klassenByIdVorabschnitt(): AuswahlKatalog<KlassenDatenMinimal>;
+
+	/**
+	 * Gibt die Klassen des Folgeabschnittes zugeordnet zu deren ID zurück.
+	 *
+	 * @returns die Map mit den Klassen des Folgeabschnittes
+	 */
+	get klassenByIdFolgeAbschnitt(): AuswahlKatalog<KlassenDatenMinimal>;
+
+	/**
+	 * Gibt die IDs der Klassen der Mehrfachauswahl zurück, denen Schüler zugeordnet sind.
+	 *
+	 * @returns die Menge der IDs der Klassen mit Schülern
+	 */
+	getKlassenIDsMitSchuelern(): JavaSet<number>;
+
+	/**
+	 * Gibt die IDs der Schüler zurück, die den Klassen der Mehrfachauswahl zugeordnet sind. Eine Filterung nach
+	 * dem Schüler-Status erfolgt hier nicht, diese übernimmt ggf. das Reporting.
+	 *
+	 * @returns die Liste der IDs der Schüler
+	 */
+	getSchuelerIDsDerAuswahl(): List<number>;
+
+	/**
+	 * Gibt den Schuljahresabschnitt der gewählten Klasse zurück. Dieser kann vom Schuljahresabschnitt der Auswahlliste abweichen.
+	 *
+	 * @throws DeveloperNotificationException   wenn keine Klasse gewählt ist oder der Schuljahresabschnitt fehlt
+	 */
+	get schuljahresabschnitt(): Schuljahresabschnitt;
+
+	/**
+	 * Gibt den State für die Stammdaten der Klassen zurück.
+	 *
+	 * @returns der State für die Stammdaten
+	 */
+	get stammdaten(): KlassenStammdatenState;
+
+	/**
+	 * Gibt den State für die Lehrer des Schuljahresabschnittes zurück.
+	 *
+	 * @returns der State für die Lehrer
+	 */
+	get lehrer(): AuswahlKatalog<LehrerListeEintrag>;
+
+	/**
+	 * Gibt den Filter nach dem Schüler-Status für die Schülerliste in den Daten zurück.
+	 *
+	 * @returns der Filter
+	 */
+	get schuelerstatus(): SchuelerStatusFilter;
 
 	/**
 	 * Setzt bei der Klassenliste die default-Sortierung
@@ -61,49 +130,6 @@ export interface KlassenAuswahlState extends GenericAuswahlState<KlassenListeMan
 	 */
 	gotoLehrer(eintrag: LehrerListeEintrag): Promise<void>;
 
-	/**
-	 * Fügt einen Datensatz für eine Klassenleitung hinzu
-	 *
-	 * @param idLehrer   die ID der Klassenleitung (Lehrer)
-	 * @param idKlasse   die ID der Klasse, wo der Lehrer die Klassenleitung übernimmt.
-	 *
-	 * @returns eine leere Promise
-	 */
-	addKlassenleitung(idLehrer: number, idKlasse: number): Promise<void>;
-
-	/**
-	 * Entfernt einen Datensatz für eine Klassenleitung bei der aktuell ausgewählten Klasse
-	 *
-	 * @param eintrag   der Lehrer, welcher auch der Klassenleitung herausgenommen wird
-	 *
-	 * @returns eine leere Promise
-	 */
-	removeKlassenleitung(eintrag: LehrerListeEintrag): Promise<void>;
-
-	/**
-	 * Aktualisiert die Reihenfolge bei der Klassenleitung, in dem der Lehrer-Eintrag
-	 * um eine Position nach oben oder unten verschoben wird.
-	 *
-	 * @param idLehrer   die ID des Klassenleitung, deren Position angepasst werden soll
-	 * @param erhoehe    true, wenn nach oben verschoben werden soll, und false, wenn nach unten verschoben werden soll
-	 *
-	 * @returns eine leere Promise
-	 */
-	updateReihenfolgeKlassenleitung(idLehrer: number, erhoehe: boolean): Promise<void>;
-
-	/**
-	 * Aktualisiert die Map für die Stundenpläne über eine Abfrage bei der API
-	 *
-	 * @returns eine leere Promise
-	 */
-	updateMapStundenplaene(): Promise<void>;
-
-	/**
-	 * Gibt die Map der Stundenpläne für den aktuellen Schuljahresabschnitt zurück.
-	 *
-	 * @returns die Map mit den Stundenplänen.
-	 */
-	get mapStundenplaene(): Map<number, StundenplanListeEintrag>;
 }
 
 export const KlassenAuswahlStateKey: InjectionKey<KlassenAuswahlState> = Symbol('KlassenAuswahlState');

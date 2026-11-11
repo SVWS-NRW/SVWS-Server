@@ -5,11 +5,7 @@ import type { ValidatorGesamt } from "@core/asd/validate/ValidatorGesamt";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { AppContext } from "@ui/AppContext";
-import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 
-import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
-import type { KursListeManager } from "~/states/kurse/KursListeManager";
-import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 
 /**
@@ -25,14 +21,6 @@ export interface StatistikState {
 	get statistikGesamt(): StatistikGesamt;
 
 	get validatorGesamt(): ValidatorGesamt;
-
-	get lehrerListeManager(): LehrerListeManager;
-
-	get schuelerListeManager(): SchuelerListeManager;
-
-	get kursListeManager(): KursListeManager;
-
-	get klassenListeManager(): KlassenListeManager;
 
 	setLehrer: (id: number) => Promise<void>;
 

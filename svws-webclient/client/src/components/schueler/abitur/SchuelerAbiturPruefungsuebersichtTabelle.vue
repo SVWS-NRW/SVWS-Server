@@ -130,7 +130,7 @@
 	const props = defineProps<SchuelerAbiturPruefungsuebersichtTabelleProps>();
 
 	const schueler = computed<SchuelerListeEintrag>(() => {
-		return schuelerAuswahlState.manager.auswahl();
+		return schuelerAuswahlState.selected;
 	});
 
 	const abiBelegungen = computed<JavaMap<number, AbiturFachbelegung>>(() => {

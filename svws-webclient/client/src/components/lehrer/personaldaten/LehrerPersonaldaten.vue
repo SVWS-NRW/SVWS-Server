@@ -137,27 +137,26 @@
 	const eigeneSchulnummer = computed<string>(() => `${schuleState.validatorKontext.getSchulnummer()}`);
 
 	async function patchMethodLehrerPersonalabschnittsdaten(data: Partial<LehrerPersonalabschnittsdaten>): Promise<boolean> {
-		const id = lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id)?.id ?? null;
+		const id = lehrerAuswahlState.personaldaten.abschnittBySchuljahresabschnitt(abschnittState.auswahl.id)?.id ?? null;
 		if (id !== null) {
-			await lehrerAuswahlState.patchPersonalAbschnittsdaten(data, id);
+			await lehrerAuswahlState.personaldaten.patchAbschnitt(data, id);
 		}
 		return true;
 	}
 	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(
-		() => lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id),
+		() => lehrerAuswahlState.personaldaten.abschnittBySchuljahresabschnitt(abschnittState.auswahl.id),
 		() => schuleState.validatorKontext,
-		() => lehrerAuswahlState.manager,
+		() => lehrerAuswahlState.stammdaten.datenOrException(),
 		patchMethodLehrerPersonalabschnittsdaten
 	);
 	const personaldatenModelProxy = new LehrerPersonaldatenModelProxy(
-		() => lehrerAuswahlState.manager.hasPersonalDaten() ? lehrerAuswahlState.manager.personalDaten() : new LehrerPersonaldaten(),
-		() => lehrerAuswahlState.manager,
-		(data) => lehrerAuswahlState.patchPersonaldaten(data)
+		() => lehrerAuswahlState.personaldaten.daten ?? new LehrerPersonaldaten(),
+		(data) => lehrerAuswahlState.personaldaten.patch(data)
 	);
 	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
 		const result = new HashSet<string>();
-		for (const schule of lehrerAuswahlState.mapSchulen.values()) {
+		for (const schule of lehrerAuswahlState.personaldaten.mapSchulen.values()) {
 			if (schule.schulnummerStatistik !== null) {
 				result.add(schule.schulnummerStatistik);
 			}
@@ -165,7 +164,7 @@
 		// Ergänze die eigene Schule, sofern diese nicht bereits im Katalog enthalten ist
 		result.add(eigeneSchulnummer.value);
 		// Ergänze ggf. noch den Eintrag aus der Datenbank
-		const daten = lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id);
+		const daten = lehrerAuswahlState.personaldaten.abschnittBySchuljahresabschnitt(abschnittState.auswahl.id);
 		if ((daten === null) || (daten.stammschulnummer === null)) {
 			return result;
 		}
@@ -221,7 +220,7 @@
 	// --- util ---
 
 	function getSchulnummerText(schulnummer: string): string {
-		const eintrag = lehrerAuswahlState.mapSchulen.get(schulnummer);
+		const eintrag = lehrerAuswahlState.personaldaten.mapSchulen.get(schulnummer);
 
 		const schulePrefix = (eigeneSchulnummer.value === schulnummer) ? 'Eigene Schule - ' : '';
 		const kuerzel = eintrag ? eintrag.kuerzel + ' - ' : '';

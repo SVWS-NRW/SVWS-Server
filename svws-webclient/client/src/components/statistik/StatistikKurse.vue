@@ -36,10 +36,10 @@
 				</template>
 			</template>
 		</ui-table-grid>
-		<div v-if="statistikState.kursListeManager.auswahlID() !== null" class="flex min-w-0 flex-1 flex-col">
-			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoKurs(statistikState.kursListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.kursListeManager.auswahl().kuerzel }}</div>
+		<div v-if="kurseAuswahlState.idSelected !== null" class="flex min-w-0 flex-1 flex-col">
+			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoKurs(kurseAuswahlState.selected)"><span class="icon cursor-pointer i-ri-link" /> {{ kurseAuswahlState.selected.kuerzel }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
-				<s-kurs-daten v-bind="$props" v-if="tabManager.tab.name === 'UF'" :manager="() => statistikState.kursListeManager" />
+				<s-kurs-daten v-bind="$props" v-if="tabManager.tab.name === 'UF'" />
 			</svws-ui-tab-bar>
 		</div>
 	</div>
@@ -60,12 +60,15 @@
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 	import { TabManager } from '@ui/ui/nav/TabManager';
 
+	import { useKurseAuswahlState } from "~/states/kurse/KurseAuswahlState";
+
 	import type { StatistikKurseProps } from './StatistikKurseProps';
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const props = defineProps<StatistikKurseProps>();
 	const statistikState = useStatistikState();
+	const kurseAuswahlState = useKurseAuswahlState();
 
 	function getIconClass(fehler: ValidatorFehlerart) {
 		return {

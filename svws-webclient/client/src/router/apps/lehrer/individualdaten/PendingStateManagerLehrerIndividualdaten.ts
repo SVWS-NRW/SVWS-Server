@@ -1,5 +1,6 @@
 import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
-import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 import { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
 
 /**
@@ -13,10 +14,11 @@ export class PendingStateManagerLehrerIndividualdaten extends PendingStateManage
 	 * Konstruktor, der einen neuen PendingState für LehrerStammdaten erstellt.
 	 *
 	 * @param idFieldName Der Name des Attributs, welches Änderungen hält.
-	 * @param auswahlManager Funktion, die einen AuswahlManager bereitstellt.
+	 * @param liste Funktion, die die Auswahlliste mit der Mehrfachauswahl bereitstellt.
+	 * @param listeDaten Funktion, die die geladenen Daten der Mehrfachauswahl bereitstellt.
 	 */
-	public constructor(idFieldName: any, auswahlManager: () => AuswahlManager<any, any, LehrerStammdaten>) {
-		super(idFieldName, auswahlManager);
+	public constructor(idFieldName: any, liste: () => ListeMitAuswahl<number, any>, listeDaten: () => JavaMap<number, LehrerStammdaten>) {
+		super(idFieldName, liste, listeDaten);
 		this.initializeAttributeDisplayMappers();
 	}
 

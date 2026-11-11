@@ -23,7 +23,7 @@
 
 	const readonly = computed<boolean>(() => !(benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)
 		|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)
-			&& benutzerState.kompetenzenKlasse.has(schuelerAuswahlState.manager.auswahl().idKlasse))
+			&& benutzerState.kompetenzenKlasse.has(schuelerAuswahlState.selected.idKlasse))
 	));
 
 </script>

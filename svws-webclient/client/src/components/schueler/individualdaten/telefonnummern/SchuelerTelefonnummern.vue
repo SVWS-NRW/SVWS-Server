@@ -76,7 +76,7 @@
 		model.value = new SchuelerTelefonnummerModelProxy(
 			() => telefonnummer,
 			() => telefonartenState.telefonarten,
-			(data) => schuelerAuswahlState.patchTelefoneintrag(data, telefonnummer.id)
+			(data) => schuelerAuswahlState.stammdaten.telefon.patch(data, telefonnummer.id)
 		);
 		setTelefonnummernMode(Mode.PATCH);
 		openModalTelefonnummer();
@@ -88,7 +88,7 @@
 		}
 		if (currentTelefonnummernMode.value === Mode.ADD) {
 			const { id, idSchueler, ...data } = model.value.proxy;
-			await schuelerAuswahlState.addTelefoneintrag(data, props.idSchueler);
+			await schuelerAuswahlState.stammdaten.telefon.add(data, props.idSchueler);
 		}
 
 		if (currentTelefonnummernMode.value === Mode.PATCH) {
@@ -107,7 +107,7 @@
 			ids.add(telefonnummer.id);
 		}
 
-		await schuelerAuswahlState.deleteTelefoneintrage(ids);
+		await schuelerAuswahlState.stammdaten.telefon.remove(ids);
 	}
 
 </script>

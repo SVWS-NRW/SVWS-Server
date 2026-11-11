@@ -66,7 +66,7 @@
 
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 
-	watch(() => schuelerAuswahlState.listTelefoneintraege.size(), async (neueAnzahl, alteAnzahl) => {
+	watch(() => schuelerAuswahlState.stammdaten.telefon.entries.size(), async (neueAnzahl, alteAnzahl) => {
 		if (neueAnzahl > alteAnzahl) {
 			await scrollToLastElement();
 		}
@@ -78,7 +78,7 @@
 	const scrollTargetElement = ref<HTMLElement | null>(null);
 
 	const gridManager = computed(() => new GridManager<number, SchuelerTelefon, List<SchuelerTelefon>>({
-		daten: computed(() => schuelerAuswahlState.listTelefoneintraege),
+		daten: computed(() => schuelerAuswahlState.stammdaten.telefon.entries),
 		getRowKey: telefonnummer => telefonnummer.id,
 		columns: [
 			...(props.readonly ? [] : [{ kuerzel: "Auswahl", name: "Auswahl", width: "2rem", hideable: false }]),
@@ -91,7 +91,7 @@
 	}));
 
 	// Gleicht die Selektion mit der aktuellen Liste ab (gelöschte Einträge entfernen, geänderte Objekte ersetzen)
-	watch(() => schuelerAuswahlState.listTelefoneintraege, (liste) => {
+	watch(() => schuelerAuswahlState.stammdaten.telefon.entries, (liste) => {
 		const ids = new Set(selectedTelefonnummern.value.map(t => t.id));
 		selectedTelefonnummern.value = [...liste].filter(t => ids.has(t.id));
 	}, { deep: true });
@@ -156,7 +156,7 @@
 	}
 
 	async function scrollToLastElement(): Promise<void> {
-		const letzteTelefonnummer = schuelerAuswahlState.listTelefoneintraege.getLast();
+		const letzteTelefonnummer = schuelerAuswahlState.stammdaten.telefon.entries.getLast();
 		scrollTargetId.value = letzteTelefonnummer.id;
 		await nextTick();
 		scrollTargetElement.value?.scrollIntoView({ block: "nearest" });

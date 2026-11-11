@@ -1,35 +1,56 @@
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
-import { HashMap } from "@core/java/util/HashMap";
-import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
-import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import type { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import { StateManager } from "@ui/ui/StateManager";
 
-import { RoutingStatus } from "~/router/RoutingStatus";
-
-import type { GenericAuswahlState } from "./GenericAuswahlState";
+import { GenericAuswahlNavigator } from "./GenericAuswahlNavigator";
+import type { GenericAuswahlMultiSelectCallback, GenericAuswahlSelectCallback, GenericAuswahlState } from "./GenericAuswahlState";
 import type { GenericAuswahlStateRoutingAdapter } from "./GenericAuswahlStateRoutingAdapter";
+import type { GenericDatenState } from "./GenericDatenState";
+import type { GenericGruppenprozessState } from "./GenericGruppenprozessState";
 
-export interface GenericAuswahlReactiveState<TAuswahlManager extends AuswahlManager<number, TAuswahl, TDaten>, TAuswahl = any, TDaten = any> {
+export interface GenericAuswahlReactiveState<TAuswahl> {
 	idSchuljahresabschnitt: number;
-	manager: TAuswahlManager | undefined;
-	activeViewType: ViewType;
+	liste: ListeMitAuswahl<number, TAuswahl> | undefined;
+	/** Die ID des Eintrags der Einzelauswahl oder null, falls keiner gewählt ist */
+	idSelected: number | null;
 }
 
 
 /**
  * Die abstrakte Basisklasse für generische States für Auswahllisten
  */
-export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlManager<number, TAuswahl, TDaten>,
-	R extends GenericAuswahlReactiveState<TAuswahlManager, TAuswahl, TDaten>, TAuswahl = any, TDaten = any>
-	extends StateManager<R> implements GenericAuswahlState<TAuswahlManager> {
+export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, TDaten, R extends GenericAuswahlReactiveState<TAuswahl>>
+	extends StateManager<R> implements GenericAuswahlState<TAuswahl, TDaten> {
 
-	/** Die Route für Gruppenprozesse */
-	private readonly _routingAdapter: GenericAuswahlStateRoutingAdapter;
+	/** Der Navigator mit der aktiven Ansicht und dem Routing zu den Ansichten */
+	private readonly _navigator: GenericAuswahlNavigator;
 
+	/** Die Callbacks, die bei einer neuen Auswahl aufgerufen werden */
+	private readonly _selectCallbacks = new Set<GenericAuswahlSelectCallback>();
+
+	/** Die Callbacks, die bei einer Änderung der Mehrfachauswahl aufgerufen werden */
+	private readonly _multiSelectCallbacks = new Set<GenericAuswahlMultiSelectCallback>();
+
+
+	/**
+	 * Gibt den State für die Stammdaten der Auswahl zurück. Dieser lädt und patcht die Stammdaten der Einzel- und
+	 * Mehrfachauswahl und hält sie.
+	 *
+	 * @returns der State für die Stammdaten
+	 */
+	public abstract get stammdaten(): GenericDatenState<TDaten>;
+
+	/**
+	 * Gibt den State für die Stammdaten der Mehrfachauswahl zurück. Dieser hält die Stammdaten der Einträge der
+	 * Mehrfachauswahl, die selbst in diesem Auswahl-State liegt.
+	 *
+	 * @returns der State für die Stammdaten der Mehrfachauswahl
+	 */
+	public abstract get gruppenprozesse(): GenericGruppenprozessState<TDaten>;
 
 	/**
 	 * Erzeugt einen neuen Auswahl-State mit dem übergebenen reaktiven State.
@@ -41,7 +62,108 @@ export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlMan
 	 */
 	public constructor(reactiveState: R, routingAdapter: GenericAuswahlStateRoutingAdapter) {
 		super(reactiveState);
-		this._routingAdapter = routingAdapter;
+		this._navigator = new GenericAuswahlNavigator(routingAdapter, {
+			hasEntry: id => this.liste.has(id),
+			getFirstFilteredId: () => {
+				const filtered = this.getListFiltered();
+				return filtered.isEmpty() ? null : filtered.getFirst().id;
+			},
+			setEntry: async id => await this.setDaten(this.getEintragOrDefault(id)),
+			clearSelection: () => this.liste.auswahlClear(),
+			loadMultiple: async () => await this.ladeMultiAuswahl(),
+			commit: () => this.commit(),
+		});
+	}
+
+	/**
+	 * Gibt den Navigator zurück. Dieser hält die aktive Ansicht und wechselt die Ansicht und die Auswahl.
+	 *
+	 * @returns der Navigator
+	 */
+	public get navigator(): GenericAuswahlNavigator {
+		return this._navigator;
+	}
+
+	public onSelect(callback: GenericAuswahlSelectCallback): () => void {
+		this._selectCallbacks.add(callback);
+		return () => this.removeOnSelect(callback);
+	}
+
+	public removeOnSelect(callback: GenericAuswahlSelectCallback): void {
+		this._selectCallbacks.delete(callback);
+	}
+
+	/**
+	 * Ruft die hinterlegten Callbacks parallel auf und liefert eine Funktion, welche die geladenen Daten übernimmt.
+	 *
+	 * @param idAuswahl   die ID des gewählten Eintrags oder null
+	 *
+	 * @returns eine Promise mit der Funktion, welche die geladenen Daten aller Callbacks übernimmt
+	 */
+	private async ladeCallbacks(idAuswahl: number | null): Promise<() => void> {
+		const applies = await Promise.all(this._selectCallbacks.values().map(callback => callback(idAuswahl)));
+		return () => applies.forEach(apply => apply());
+	}
+
+	public onMultiSelect(callback: GenericAuswahlMultiSelectCallback): () => void {
+		this._multiSelectCallbacks.add(callback);
+		return () => this.removeOnMultiSelect(callback);
+	}
+
+	public removeOnMultiSelect(callback: GenericAuswahlMultiSelectCallback): void {
+		this._multiSelectCallbacks.delete(callback);
+	}
+
+	public async setMultiSelection(items: Iterable<TAuswahl>): Promise<void> {
+		this.liste.auswahlClear();
+		for (const item of items) {
+			if (this.liste.hasValue(item)) {
+				this.liste.auswahlAdd(item);
+			}
+		}
+		await this.ladeMultiAuswahl();
+		this.commit();
+	}
+
+	/**
+	 * Ruft die hinterlegten Callbacks für die Mehrfachauswahl parallel auf und liefert eine Funktion, welche die
+	 * geladenen Daten übernimmt.
+	 *
+	 * @param idsAuswahl   die IDs der Einträge der Mehrfachauswahl
+	 *
+	 * @returns eine Promise mit der Funktion, welche die geladenen Daten aller Callbacks übernimmt
+	 */
+	private async ladeMultiCallbacks(idsAuswahl: List<number>): Promise<() => void> {
+		const applies = await Promise.all(this._multiSelectCallbacks.values().map(callback => callback(idsAuswahl)));
+		return () => applies.forEach(apply => apply());
+	}
+
+	/**
+	 * Lädt die Daten zu der aktuellen Mehrfachauswahl über die hinterlegten Callbacks und übernimmt sie.
+	 */
+	private async ladeMultiAuswahl(): Promise<void> {
+		const ids = new ArrayList<number>();
+		for (const eintrag of this.liste.auswahl()) {
+			ids.add(eintrag.id);
+		}
+		(await this.ladeMultiCallbacks(ids))();
+	}
+
+	public getEntry(id: number): TAuswahl | null {
+		return this.liste.get(id);
+	}
+
+	public updateEntry(id: number, update: (entry: TAuswahl) => void): void {
+		update(this.liste.getOrException(id));
+		this.commit();
+	}
+
+	/**
+	 * Setzt den State und die aktive Ansicht in den Default-State zurück.
+	 */
+	public reset(): void {
+		super.reset();
+		this._navigator.reset();
 	}
 
 
@@ -56,29 +178,58 @@ export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlMan
 	 * Gibt zurück, ob der State aktuell mit einer gültigen initialisiert und verfügbar ist.
 	 */
 	public get isAvailable(): boolean {
-		return (this._state.value.manager !== undefined);
+		return (this._state.value.liste !== undefined);
 	}
 
 	/**
-	 * Gibt den Auswahl-Manager zurück.
+	 * Gibt die ID des aktuell gewählten Schuljahresabschnittes zurück
 	 *
-	 * @throws DeveloperNotificationException wenn der State aktuell nicht initialisiert ist
+	 * @returns die ID des aktuell gewählten Schuljahresabschnittes
 	 */
-	public get manager(): TAuswahlManager {
-		if (this._state.value.manager === undefined) {
-			throw new DeveloperNotificationException("Abfrage des Managers ohne vorige Initialisierung");
+	public get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
+	/**
+	 * Initialisiert den State für den ausgewählten Schuljahresabschnitt. Es werden die Daten für diesen Abschnitt geladen.
+	 *
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param force                    gibt an, ob das Laden der Daten auch erzwungen werden soll, wenn die ID des
+	 *                                 Schuljahresabschnittes bereits gesetzt ist (z.B. beim Betreten einer Route)
+	 *
+	 * @returns ein Promise mit der ID der Auswahl oder null
+	 */
+	public async init(idSchuljahresabschnitt: number, force: boolean): Promise<number | null> {
+		return await this.setSchuljahresabschnitt(idSchuljahresabschnitt, force);
+	}
+
+	public get idSelected(): number | null {
+		return this._state.value.idSelected;
+	}
+
+	public get selected(): TAuswahl {
+		const id = this.idSelected;
+		if (id === null) {
+			throw new DeveloperNotificationException("Es ist kein Eintrag der Auswahlliste gewählt");
 		}
-		return this._state.value.manager;
+		return this.liste.getOrException(id);
+	}
+
+	public get liste(): ListeMitAuswahl<number, TAuswahl> {
+		if (this._state.value.liste === undefined) {
+			throw new DeveloperNotificationException("Abfrage der Auswahlliste ohne vorige Initialisierung");
+		}
+		return this._state.value.liste;
 	}
 
 
 	/**
-	 * Die Methode muss überschrieben werden und erzeugt dann einen neuen Auswahl-Manager
+	 * Die Methode muss überschrieben werden und erzeugt dann die Auswahlliste mit den Einträgen
 	 * für den angegebenen Schuljahresabschnitt.
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
-	protected abstract createManager(idSchuljahresabschnitt: number): Promise<Partial<R>>;
+	protected abstract createListe(idSchuljahresabschnitt: number): Promise<Partial<R>>;
 
 
 	/**
@@ -89,7 +240,7 @@ export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlMan
 	 *                                 Schuljahresabschnittes bereits gesetzt ist (z.B. beim Betreten einer Route)
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number, force: boolean): Promise<number | null> {
-		// Wenn die ID des Schuljahresabschnittes bereits gesetzt ist, dann muss der Manager für den Schuljahresabschnitt nicht neu initialisiert werden
+		// Wenn die ID des Schuljahresabschnittes bereits gesetzt ist, dann muss die Auswahlliste für den Schuljahresabschnitt nicht neu erstellt werden
 		if (!force && (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)) {
 			return null;
 		}
@@ -98,168 +249,126 @@ export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlMan
 	}
 
 	/**
-	 * Diese Methode kann überschrieben werden, wenn weitere Aktualisierungen beim Ersetzen des
-	 * Managers bei einem Wechsel des Schuljahresabschnittes durchgeführt werden sollen und eine
-	 * vorige Auswahl bestand.
-	 *
-	 * @param manager      der neue Manager
-	 * @param managerAlt   der alte Manager
-	 * @param daten        die neuen Daten
-	 */
-	protected async updateManager(manager: TAuswahlManager, managerAlt: TAuswahlManager, daten: TDaten): Promise<void> {
-		// nichts zu tun
-	}
-
-
-	/**
-	 * Lädt die Daten zum ausgewählten Schuljahresabschnitt und setzt die Default-Werte für den Manager.
+	 * Lädt die Daten zum ausgewählten Schuljahresabschnitt und setzt die Default-Werte für die Auswahlliste.
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 *
 	 * @returns ein Promise mit der ID der Auswahl oder null
 	 */
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt: number): Promise<number | null> {
-		const newState = await this.createManager(idSchuljahresabschnitt);
-		const manager = newState.manager;
-		if (manager === undefined) {
-			throw new DeveloperNotificationException('Die Methode createManager muss einen gültigen State mit einem initialisierten Manager liefern');
+		const newState = await this.createListe(idSchuljahresabschnitt);
+		const liste = newState.liste;
+		if (liste === undefined) {
+			throw new DeveloperNotificationException('Die Methode createListe muss einen gültigen State mit einer initialisierten Auswahlliste liefern');
 		}
 		newState.idSchuljahresabschnitt = idSchuljahresabschnitt;
 
-		// Lade und setze Daten falls eine Auswahl bestand und diese im neuen Manager vorhanden ist
-		const vorherigeAuswahl = ((this._state.value.manager !== undefined) && this.manager.hasDaten()) ? this.manager.auswahl() : null;
-		if (vorherigeAuswahl !== null) {
-			const auswahl = manager.liste.get(this.manager.getIdByEintrag(vorherigeAuswahl));
-			let daten = await this.ladeDaten(auswahl, newState);
-			if ((daten === null) && (!manager.liste.list().isEmpty())) {
-				daten = await this.ladeDaten(manager.liste.list().getFirst(), newState);
-			}
-			manager.setDaten(daten);
-			if (daten !== null) {
-				await this.updateManager(manager, this.manager, daten);
-			}
+		const stammdaten = this.stammdaten;
+
+		// Bestimme den Eintrag der vorherigen Auswahl in der neuen Auswahlliste, ansonsten wird der erste Eintrag gewählt
+		const idVorherige = ((this._state.value.liste !== undefined) && (this.idSelected !== null)) ? this.idSelected : null;
+		let idNeu: number | null = null;
+		if (idVorherige !== null) {
+			const eintrag = liste.get(idVorherige) ?? (liste.list().isEmpty() ? null : liste.list().getFirst());
+			idNeu = (eintrag === null) ? null : eintrag.id;
 		}
 
-		// stellt die ursprünglich gefilterte Liste wieder her
-		manager.filtered();
+		// Lade die Daten zu der Auswahl über die hinterlegten Callbacks, ohne Auswahl werden die Daten verworfen
+		const applyDaten = await this.ladeCallbacks(idNeu);
 
-		if (manager.hasDaten()) {
-			newState.activeViewType = this.activeViewType;
-		} else {
-			newState.activeViewType = ViewType.DEFAULT;
-			this._routingAdapter.setDefaultView(ViewType.DEFAULT);
+		// Die Mehrfachauswahl wird mit der neuen Auswahlliste verworfen
+		const applyMulti = await this.ladeMultiCallbacks(new ArrayList<number>());
+
+		// Ohne vorherige Auswahl wird die Default-Ansicht angezeigt
+		if (idNeu === null) {
+			this._navigator.resetView();
 		}
 
+		// Die Callbacks setzen die Daten erst, wenn die neue Auswahlliste aktiv ist
+		newState.idSelected = idNeu;
 		this.setPatchedDefaultState(newState);
-		return this.manager.auswahlID();
+		stammdaten.reset();
+		applyDaten();
+		applyMulti();
+		return this.idSelected;
 	}
 
 
 	/**
-	 * Die Methode muss überschrieben werden und kümmert sich um das Nachladen von Daten, wenn in der
-	 * Auswahl ein neuer Eintrag ausgewählt wird.
+	 * Setzt die Einzelauswahl direkt mit den übergebenen Stammdaten, ohne diese oder die Daten der hinterlegten
+	 * Callbacks zu laden (z.B. nach dem Anlegen eines Eintrags, dessen Daten bereits vorliegen).
 	 *
-	 * @param auswahl   die neu Auswahl oder null
-	 * @param state     der State, bei welchem die Daten angepasst werden
-	 *
-	 * @returns die geladenen Daten oder null
+	 * @param daten   die Stammdaten des gewählten Eintrags
 	 */
-	public abstract ladeDaten(auswahl: TAuswahl | null, state: Partial<R>): Promise<TDaten | null>;
-
-
-	/**
-	 * Die Methode kann überschrieben werden und kümmert sich um das Nachladen von Daten, wenn in der
-	 * Auswahl mehrere Eintrag gleichzeitig ausgewählt werden.
-	 *
-	 * @param auswahlList   die neue Auswahl
-	 * @param state     der State, bei welchem die Daten angepasst werden
-	 *
-	 * @returns die geladenen Daten oder null
-	 * @throws DeveloperNotificationException wenn Methode aufgerufen aber nicht überschrieben wurde
-	 */
-	public async ladeDatenMultiple(auswahlList: List<TAuswahl>, state: Partial<R>): Promise<List<TDaten> | null> {
-		throw new DeveloperNotificationException("Die Methode ladeDatenMultiple() ist nicht implementiert.");
-	}
-
-
-	/**
-	 * Diese Methode kann überschrieben werden. Sie aktualisiert die Daten im Manager.
-	 *
-	 * @param daten   die im Manager zu aktualisierenden Daten
-	 */
-	protected async updateDaten(daten: TDaten | null) {
-		this.manager.setDaten(daten);
+	public setDatenDirekt(daten: TDaten): void {
+		this.stammdaten.setDaten(daten);
+		this.setPatchedState({ idSelected: this.stammdaten.id } as Partial<R>);
 	}
 
 	/**
-	 * Setzt die Auswahl in der Liste und lädt die Daten zu der Auswahl in den Manager.
+	 * Setzt die Auswahl in der Liste und lädt die Daten zu der Auswahl.
 	 *
 	 * @param auswahl   die Auswahl
 	 */
 	public async setDaten(auswahl: TAuswahl | null): Promise<void> {
-		const hatteDaten = this.manager.hasDaten();
-		if ((auswahl === null) && (!hatteDaten)) {
+		const hatteAuswahl = this.idSelected !== null;
+		if ((auswahl === null) && (!hatteAuswahl)) {
 			return;
 		}
 
-		if ((auswahl === null)/* || (this.manager.liste.list().isEmpty())*/) {
-			this.manager.setDaten(null);
-			this.commit();
-			return;
+		if (auswahl !== null) {
+			const id = auswahl.id;
+			if (hatteAuswahl && (id === this.idSelected)) {
+				return;
+			}
 		}
 
-		const id = this.manager.getIdByEintrag(auswahl);
-		if (hatteDaten && (id === this.manager.getIdByEintrag(this.manager.auswahl()))) {
-			return;
-		}
-
-		const eintrag = this.manager.getEintragOrDefault(id);
-		const daten = await this.ladeDaten(eintrag, this._state.value);
-		await this.updateDaten(daten);
+		const eintrag = (auswahl === null) ? null : this.getEintragOrDefault(auswahl.id);
+		const idNeu = (eintrag === null) ? null : eintrag.id;
+		const applyDaten = await this.ladeCallbacks(idNeu);
+		this.setPatchedState({ idSelected: idNeu } as Partial<R>);
+		applyDaten();
 		this.commit();
 	}
 
+
+	/**
+	 * Gibt den Eintrag zu der ID zurück. Ist dieser nicht vorhanden, so wird als Default der erste Eintrag
+	 * der gefilterten Liste zurückgegeben. Ist diese leer, so wird null zurückgegeben.
+	 *
+	 * @param id   die ID des Eintrags
+	 *
+	 * @returns der Eintrag oder null
+	 */
+	private getEintragOrDefault(id: number): TAuswahl | null {
+		if (this.liste.has(id)) {
+			return this.liste.get(id);
+		}
+		const filtered = this.getListFiltered();
+		return filtered.isEmpty() ? null : filtered.getFirst();
+	}
+
+	/**
+	 * Gibt die gefilterte Liste der Auswahl zurück. Die Methode muss überschrieben werden und liefert die Liste
+	 * des Filters der Auswahl.
+	 *
+	 * @returns die gefilterte Liste
+	 */
+	protected abstract getListFiltered(): List<TAuswahl>;
 
 	/**
 	 * Setzt den Filter neu und lädt den ersten Eintrag aus der gefilterten Liste
 	 */
 	public async setFilter(): Promise<void> {
-		if (!this.manager.hasDaten() && (this.activeViewType === ViewType.DEFAULT)) {
-			const listFiltered = this.manager.filtered();
+		if ((this.idSelected === null) && (this._navigator.activeViewType === ViewType.DEFAULT)) {
+			const listFiltered = this.getListFiltered();
 			if (!listFiltered.isEmpty()) {
-				const id = this.manager.getIdByEintrag(listFiltered.getFirst());
-				await this.gotoDefaultView(id);
+				const id = listFiltered.getFirst().id;
+				await this._navigator.select(id);
 				return;
 			}
 		}
 		this.commit();
-	};
-
-
-	/**
-	 * Diese Methode muss implementiert werden, um den eigentlichen Patch über die API auszuführen.
-	 *
-	 * @param data   die Daten für den Patch
-	 * @param id     die ID der zu patchenden Daten
-	 */
-	protected abstract doPatch(data: Partial<TDaten>, id: number): Promise<boolean>;
-
-	/**
-	 * Führt einen Patch auf den aktuellen Eintrag mit den übergebenen Daten aus.
-	 *
-	 * @param data   die Daten für den Patch
-	 */
-	public async patch(data: Partial<TDaten>): Promise<boolean> {
-		if (!this.manager.hasDaten()) {
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		}
-		const id = this.manager.getIdByEintrag(this.manager.auswahl());
-		const daten = this.manager.daten();
-		await this.doPatch(data, id);
-		Object.assign(daten as object, data);
-		this.manager.setDaten(daten);
-		this.commit();
-		return true;
 	};
 
 
@@ -281,8 +390,8 @@ export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlMan
 
 	public async delete(): Promise<[boolean, List<string | null>]> {
 		const idsEntries = new ArrayList<number>();
-		for (const entry of this.manager.liste.auswahlSorted()) {
-			idsEntries.add(this.manager.getIdByEintrag(entry));
+		for (const entry of this.liste.auswahlSorted()) {
+			idsEntries.add(entry.id);
 		}
 
 		const filteredIds = this.filterOnDelete(idsEntries);
@@ -294,7 +403,7 @@ export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlMan
 		const logMessages = new ArrayList<string>();
 		for (const deleteResponse of deleteResponses) {
 			if (deleteResponse.success && (deleteResponse.id !== null)) {
-				const entry = this.manager.liste.get(deleteResponse.id);
+				const entry = this.liste.get(deleteResponse.id);
 				logMessages.add(this.deleteMessage(deleteResponse.id, entry));
 				anyEntryRemoved = true;
 			} else {
@@ -304,176 +413,11 @@ export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlMan
 		}
 
 		if (anyEntryRemoved) {
-			this.manager.liste.auswahlClear();
+			this.liste.auswahlClear();
 			await this.ladeSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
 		}
 
 		return [allEntriesRemoved, logMessages];
-	};
-
-
-	/**
-	 * Gibt die aktuelle Art der aktuellen View zurück (Default, Hinzufügen oder Gruppenprozess, Schnelleingabe).
-	 */
-	public get activeViewType(): ViewType {
-		return this._state.value.activeViewType;
-	}
-
-	/**
-	 * Setzt die aktuelle Art der View zurück (Default, Hinzufügen oder Gruppenprozess).
-	 *
-	 * @param value   die Art der View
-	 */
-	protected set activeViewType(value: ViewType) {
-		this._state.value.activeViewType = value;
-	}
-
-
-	/**
-	 * Lädt die Default-Ansicht - also nicht die Ansicht für das Hinzufügen oder die Gruppenprozesse.
-	 *
-	 * @param id   die zu setzende ID oder null
-	 */
-	public async gotoDefaultView(id?: number | null): Promise<void> {
-		if ((id !== null) && (id !== undefined) && this.manager.liste.has(id)) {
-			// Führe das Routing aus
-			const useDefaultRoute = this.activeViewType !== ViewType.DEFAULT;
-			const result = await this._routingAdapter.goto(id, useDefaultRoute);
-
-			// Wenn das Routing unterbrochen wurde, dann wird der Eintrag beim Manager gesetzt
-			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE) {
-				const eintrag = this.manager.getEintragOrDefault(id);
-				await this.setDaten(eintrag);
-			}
-
-			// Entferne ggf. eine Mehrfachauswahl, wenn von den Gruppenprozessen zur Einzelauswahl gewechselt wurde
-			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)) {
-				this.manager.liste.auswahlClear();
-				this.activeViewType = ViewType.DEFAULT;
-			}
-
-			this.commit();
-			return;
-		}
-
-		// Wenn keine ID übergeben wurde, so wird ein Default-Eintrag ausgewählt, sofern der aktuelle Filter ein nicht leeres Ergebnis liefert
-		const filtered = this.manager.filtered();
-		if (!filtered.isEmpty()) {
-			const eintrag = filtered.getFirst();
-
-			// Führe das Routing aus.
-			const idDefault = this.manager.getIdByEintrag(eintrag);
-			const result = await this._routingAdapter.goto(idDefault, true);
-
-			// Entferne ggf. eine Mehrfachauswahl, wenn von den Gruppenprozessen zur Einzelauswahl gewechselt wurde
-			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)) {
-				this.manager.liste.auswahlClear();
-				this.activeViewType = ViewType.DEFAULT;
-				this.commit();
-			}
-
-			// Wähle den neuen Eintrag aus
-			await this.setDaten(eintrag);
-		}
-	};
-
-	/**
-	 * Lädt die Gruppenprozess-Ansicht
-	 *
-	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
-	 */
-	public async gotoGruppenprozessView(navigate: boolean = true) {
-		// Prüfe, ob die Auswahl überhaupt Gruppenprozesse unterstützt
-		if (!this._routingAdapter.hatGruppenprozesse) {
-			throw new DeveloperNotificationException("Es wird keine Ansicht für Gruppenprozesse unterstützt. Daher darf diese Methode nicht aufgerufen werden.");
-		}
-
-		// Bilde die Differenz (deltaSelection) zwischen der aktuellen Auswahl (currentSelection) und der neuen Auswahl (new Selection)
-		const currentSelection: JavaMap<number, TDaten> = this.manager.getListeDaten();
-		const newSelection: JavaMap<number, TDaten> = new HashMap();
-		const deltaSelection: List<TAuswahl> = new ArrayList();
-		for (const eintrag of this.manager.liste.auswahl()) {
-			const id = this.manager.getIdByEintrag(eintrag);
-			const daten = currentSelection.get(id);
-			if (daten === null) {
-				deltaSelection.add(eintrag);
-			} else {
-				newSelection.put(id, daten);
-			}
-		}
-
-		// Wenn es ein delta gibt, so müssen die Datensätze nachgeladen werden
-		if (deltaSelection.size() > 0) {
-			const deltaDaten = await this.ladeDatenMultiple(deltaSelection, this._state.value);
-			if (deltaDaten === null) {
-				throw new DeveloperNotificationException("Fehler beim Laden der Daten. Es konnten keine Daten zu den ausgewählten Einträgen geladen werden.");
-			}
-
-			for (const datenObj of deltaDaten) {
-				newSelection.put(this.manager.getIdByDaten(datenObj), datenObj);
-			}
-		}
-
-		// Aktualisiere dann die aktuelle Auswahl
-		currentSelection.clear();
-		currentSelection.putAll(newSelection);
-
-		// Prüfe, ob die Ansicht gewechselt werden muss
-		if (this.activeViewType !== ViewType.GRUPPENPROZESSE) {
-			this.activeViewType = ViewType.GRUPPENPROZESSE;
-			if (navigate) {
-				await this._routingAdapter.gotoGruppenprozesse(true);
-			}
-		}
-		this.commit();
-	};
-
-	/**
-	 * Lädt die Ansicht für das Hinzufügen von Daten
-	 *
-	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
-	 */
-	public async gotoHinzufuegenView(navigate: boolean) {
-		// Prüfe, ob die Auswahl überhaupt das Hinzufügen unterstützt
-		if (!this._routingAdapter.hatHinzufuegen) {
-			throw new DeveloperNotificationException("Es wird keine Ansicht für das Hinzufügen von Daten unterstützt. Daher darf diese Methode nicht aufgerufen werden.");
-		}
-
-		// Führe ggf. einen Wechsel der Ansicht durch
-		if (this.activeViewType !== ViewType.HINZUFUEGEN) {
-			this.activeViewType = ViewType.HINZUFUEGEN;
-			if (navigate) {
-				const result = await this._routingAdapter.gotoHinzufuegen();
-				if (result === RoutingStatus.SUCCESS) {
-					this.manager.liste.auswahlClear();
-				}
-			} else {
-				this._routingAdapter.setViewHinzufuegen();
-			}
-			this.commit();
-		}
-	};
-
-	/**
-	 * Lädt die Ansicht für die Schnelleingabe von Daten
-	 *
-	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
-	 * @param id         die ID des Schülers, zu dessen Schnelleingabe navigiert werden soll
-	 */
-	public async gotoSchnelleingabeView(navigate: boolean, id?: number | null) {
-		// Prüfe, ob die Auswahl überhaupt eine Schnelleingabe unterstützt
-		if (!this._routingAdapter.hatSchnelleingabe) {
-			throw new DeveloperNotificationException("Es wird keine Ansicht für eine Schnelleingabe von Daten unterstützt. Daher darf diese Methode nicht aufgerufen werden.");
-		}
-
-		// Führe ggf. einen Wechsel der Ansicht durch
-		if (this.activeViewType !== ViewType.NEU) {
-			this.activeViewType = ViewType.NEU;
-			if (navigate && (id !== undefined) && (id !== null) && this.manager.liste.has(id)) {
-				await this._routingAdapter.gotoSchnelleingabe(id);
-			}
-			this.commit();
-		}
 	};
 
 }

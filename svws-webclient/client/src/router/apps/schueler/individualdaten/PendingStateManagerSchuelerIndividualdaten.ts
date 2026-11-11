@@ -11,11 +11,12 @@ import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import type { JavaMap } from "@core/java/util/JavaMap";
 import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
 import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
-import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import type { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 import { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
 
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
@@ -35,10 +36,11 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/**
 	 * Konstruktor, der einen neuen PendingState für Schülerstammdaten erstellt.
 	 * @param idFieldName Der Name des Attributs, welches Änderungen hält.
-	 * @param auswahlManager Funktion, die einen AuswahlManager bereitstellt.
+	 * @param liste Funktion, die die Auswahlliste mit der Mehrfachauswahl bereitstellt.
+	 * @param listeDaten Funktion, die die geladenen Daten der Mehrfachauswahl bereitstellt.
 	 */
-	public constructor(idFieldName: any, auswahlManager: () => AuswahlManager<any, any, SchuelerStammdaten>) {
-		super(idFieldName, auswahlManager);
+	public constructor(idFieldName: any, liste: () => ListeMitAuswahl<number, any>, listeDaten: () => JavaMap<number, SchuelerStammdaten>) {
+		super(idFieldName, liste, listeDaten);
 		this.initializeAttributeDisplayMappers();
 	}
 
@@ -125,7 +127,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/**
 	 * Gibt zurück, ob alle Schüler in der Auswahl den Status "Extern" haben.
 	 */
-	public alleExtern = computed<boolean>(() => [...this.auswahlManager.liste.auswahl()].every(s => s.status === SchuelerStatus.EXTERN.daten(schuleStateImpl.schuljahr)?.id));
+	public alleExtern = computed<boolean>(() => [...this.liste.auswahl()].every(s => s.status === SchuelerStatus.EXTERN.daten(schuleStateImpl.schuljahr)?.id));
 
 	/**
 	 * Erzeugt das Attribut stammschuleExtern als computed value.
@@ -142,7 +144,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 			this.setPendingState(
 				"externeSchulNr",
 				value?.schulnummerStatistik ?? null,
-				this.auswahlManager.liste.auswahlKeyList()
+				this.liste.auswahlKeyList()
 			);
 		},
 	});

@@ -2,9 +2,10 @@ import { computed } from 'vue';
 
 import { ArrayList } from "@core/java/util/ArrayList";
 import { Arrays } from "@core/java/util/Arrays";
+import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
 
-import type { AuswahlManager } from "../manager/AuswahlManager";
+import type { ListeMitAuswahl } from "../manager/ListeMitAuswahl";
 import { StateManager } from "../StateManager";
 
 /**
@@ -26,8 +27,11 @@ export class PendingStateManager<T> extends StateManager<PendingState<T>> {
 	/** Name des Attributes, welches als ID des Objektes agiert, standardmäßig wird das Attribut 'id' gesetzt. */
 	private readonly _idFieldName: string;
 
-	/** Funktion, die den zugehörigen AuswahlManager zurückgibt. */
-	protected readonly _auswahlManager: () => AuswahlManager<any, any, T>;
+	/** Funktion, die die zugehörige Auswahlliste mit der Mehrfachauswahl zurückgibt. */
+	protected readonly _liste: () => ListeMitAuswahl<number, any>;
+
+	/** Funktion, die die geladenen Daten der Mehrfachauswahl zurückgibt, zugeordnet zu deren ID. */
+	protected readonly _listeDaten: () => JavaMap<number, T>;
 
 	/** Eine Map mit Mappings für Attribute, die eine individuelle Aufbereitung in der UI benötigen. */
 	protected _attributeDisplayMappers: Map<keyof T, (value: any) => any> = new Map();
@@ -45,13 +49,14 @@ export class PendingStateManager<T> extends StateManager<PendingState<T>> {
 	/**
 	 * Konstruktor, der einen neue Instanz im Standardzustand erstellt.
 	 */
-	public constructor(idFieldName: any, auswahlManager: () => AuswahlManager<any, any, T>) {
+	public constructor(idFieldName: any, liste: () => ListeMitAuswahl<number, any>, listeDaten: () => JavaMap<number, T>) {
 		super({
 			pendingValues: {},
 			pendingIDs: new ArrayList<number>(),
 		});
 		this._idFieldName = idFieldName;
-		this._auswahlManager = auswahlManager;
+		this._liste = liste;
+		this._listeDaten = listeDaten;
 	}
 
 	/**
@@ -72,7 +77,7 @@ export class PendingStateManager<T> extends StateManager<PendingState<T>> {
 				return getMapper ? getMapper(value) : value as Type;
 			},
 			set: (value: Type) => {
-				this.setPendingState(attributeName, setMapper ? setMapper(value) : value, this._auswahlManager().liste.auswahlKeyList());
+				this.setPendingState(attributeName, setMapper ? setMapper(value) : value, this._liste().auswahlKeyList());
 			},
 		}
 		);
@@ -117,12 +122,21 @@ export class PendingStateManager<T> extends StateManager<PendingState<T>> {
 	}
 
 	/**
-	 * Gibt den zugehörigen AuswahlManager zurück.
+	 * Gibt die zugehörige Auswahlliste mit der Mehrfachauswahl zurück.
 	 *
-	 * @Return AuswahlManager
+	 * @Return die Auswahlliste
 	 */
-	get auswahlManager() {
-		return this._auswahlManager();
+	get liste() {
+		return this._liste();
+	}
+
+	/**
+	 * Gibt die geladenen Daten der Mehrfachauswahl zurück.
+	 *
+	 * @Return die Daten der Mehrfachauswahl, zugeordnet zu deren ID
+	 */
+	get listeDaten() {
+		return this._listeDaten();
 	}
 
 	/**

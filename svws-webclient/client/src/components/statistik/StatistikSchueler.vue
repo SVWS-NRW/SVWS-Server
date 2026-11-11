@@ -36,8 +36,8 @@
 				</template>
 			</template>
 		</ui-table-grid>
-		<div v-if="statistikState.schuelerListeManager.auswahlID() !== null" class="flex min-w-0 flex-1 flex-col">
-			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoSchueler(statistikState.schuelerListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.schuelerListeManager.auswahl().nachname }}, {{ statistikState.schuelerListeManager.auswahl().vorname }}</div>
+		<div v-if="schuelerAuswahlState.idSelected !== null" class="flex min-w-0 flex-1 flex-col">
+			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoSchueler(schuelerAuswahlState.selected)"><span class="icon cursor-pointer i-ri-link" /> {{ schuelerAuswahlState.selected.nachname }}, {{ schuelerAuswahlState.selected.vorname }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<schueler-individualdaten v-if="tabManager.tab.name === 'SS'"
 					:zeige-alles="false" />
@@ -63,6 +63,8 @@
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import { TabManager } from "@ui/ui/nav/TabManager";
 
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
+
 	import type { StatistikSchuelerProps } from "./StatistikSchuelerProps";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
@@ -82,6 +84,7 @@
 	}
 
 	const statistikState = useStatistikState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 	function getEintrag(id: number) {
 		const eintrag = statistikState.mapSchueler.get(id);

@@ -102,11 +102,11 @@
 	const createUnterrichtsfachModel = shallowRef<LehrerUnterrichtsfachModelProxy | null>(null);
 
 	const faecherModels = useModelProxyList(
-		() => lehrerAuswahlState.lehrerUnterrichtsfaecher,
+		() => lehrerAuswahlState.personaldaten.unterrichtsfaecher.entries,
 		(lehrerUnterrichtsfach) => lehrerUnterrichtsfach.id,
 		(lehrerUnterrichtsfach) => new LehrerUnterrichtsfachModelProxy(() => lehrerUnterrichtsfach,
-			lehrerAuswahlState.mapFaecher,
-			(data: Partial<LehrerUnterrichtsfach>) => lehrerAuswahlState.patchLehrerUnterrichtsfach(lehrerUnterrichtsfach, data)),
+			lehrerAuswahlState.personaldaten.mapFaecher,
+			(data: Partial<LehrerUnterrichtsfach>) => lehrerAuswahlState.personaldaten.unterrichtsfaecher.patch(lehrerUnterrichtsfach, data)),
 		{ deep: true }
 	);
 
@@ -124,7 +124,7 @@
 
 	const faecherVorhanden = computed(() => {
 		const vorhanden = new HashSet<number>();
-		for (const fach of lehrerAuswahlState.lehrerUnterrichtsfaecher) {
+		for (const fach of lehrerAuswahlState.personaldaten.unterrichtsfaecher.entries) {
 			vorhanden.add(fach.idFach);
 		}
 		return vorhanden;
@@ -132,7 +132,7 @@
 
 	const faecherVerfuegbar = computed<FachDaten[]>(() => {
 		const result: FachDaten[] = [];
-		for (const fach of lehrerAuswahlState.mapFaecher.values()) {
+		for (const fach of lehrerAuswahlState.personaldaten.mapFaecher.values()) {
 			if (!faecherVorhanden.value.contains(fach.id)) {
 				result.push(fach);
 			}
@@ -141,7 +141,7 @@
 	});
 
 	function rowActions(fachModel: LehrerUnterrichtsfachModelProxy): TableAction[] {
-		return [{ label: "Fach Löschen", action: () => lehrerAuswahlState.removeLehrerUnterrichtsfach(fachModel.data), trash: true }];
+		return [{ label: "Fach Löschen", action: () => lehrerAuswahlState.personaldaten.unterrichtsfaecher.remove(fachModel.data), trash: true }];
 	}
 
 	const footerActions = computed(() => {
@@ -159,14 +159,14 @@
 	});
 
 	function getFachText(eintrag: LehrerUnterrichtsfach): string {
-		const fach = lehrerAuswahlState.mapFaecher.get(eintrag.idFach);
+		const fach = lehrerAuswahlState.personaldaten.mapFaecher.get(eintrag.idFach);
 		return fach ? `${fach.kuerzel} - ${fach.bezeichnung}` : '—';
 	}
 
 	const showHinzufuegen = ref<boolean>(false);
 
 	function openHinzufuegen() {
-		createUnterrichtsfachModel.value = new LehrerUnterrichtsfachModelProxy(() => new LehrerUnterrichtsfach(), lehrerAuswahlState.mapFaecher);
+		createUnterrichtsfachModel.value = new LehrerUnterrichtsfachModelProxy(() => new LehrerUnterrichtsfach(), lehrerAuswahlState.personaldaten.mapFaecher);
 		showHinzufuegen.value = true;
 	}
 
@@ -175,7 +175,7 @@
 			return;
 		}
 		const { istSek1, istSek2, idFach, bemerkung } = createUnterrichtsfachModel.value.proxy;
-		await lehrerAuswahlState.addLehrerUnterrichtsfach({ istSek1, istSek2, idFach, bemerkung });
+		await lehrerAuswahlState.personaldaten.unterrichtsfaecher.add({ istSek1, istSek2, idFach, bemerkung });
 
 		showHinzufuegen.value = false;
 		createUnterrichtsfachModel.value = null;

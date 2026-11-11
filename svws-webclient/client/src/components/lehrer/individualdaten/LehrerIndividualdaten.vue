@@ -2,8 +2,8 @@
 	<Teleport v-if="zeigeAlles" to=".svws-ui-header--actions" defer>
 		<wiedervorlage-modal type="lehrkraft" mode="create"
 			:data="{
-				idPerson: lehrerAuswahlState.manager.daten().id,
-				namePerson: `${lehrerAuswahlState.manager.daten().vorname} ${lehrerAuswahlState.manager.daten().nachname}`
+				idPerson: lehrerAuswahlState.stammdaten.datenOrException().id,
+				namePerson: `${lehrerAuswahlState.stammdaten.datenOrException().vorname} ${lehrerAuswahlState.stammdaten.datenOrException().nachname}`
 			}">
 			<template #default="{openModal}">
 				<svws-ui-button @click="openModal" type="secondary">
@@ -136,7 +136,7 @@
 		<svws-ui-content-card title="Leitungsfunktionen" v-if="serverState.mode === ServerMode.DEV">
 			<svws-ui-table class="max-h-72! w-full"
 				v-model="selectedLeitungsfunktionen"
-				:items="lehrerAuswahlState.leitungsfunktionen"
+				:items="lehrerAuswahlState.stammdaten.leitungsfunktionen.entries"
 				:clicked="clickedLeitungsfunktion"
 				@update:clicked="lf => patchLeitungsfunktionModal(lf)"
 				:columns="leitungsfunktionenTableColumns"
@@ -234,12 +234,12 @@
 	const orteState = useOrteState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
 
-	const dataNotPatched = () => lehrerAuswahlState.manager.daten();
+	const dataNotPatched = () => lehrerAuswahlState.stammdaten.datenOrException();
 	const modelProxy = new LehrerIndividualdatenModelProxy(
 		dataNotPatched,
 		() => schuleState.validatorKontext,
-		() => lehrerAuswahlState.manager,
-		(data) => lehrerAuswahlState.patch(data)
+		() => lehrerAuswahlState.liste.list(),
+		(data) => lehrerAuswahlState.stammdaten.patch(data)
 	);
 
 	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
@@ -331,14 +331,14 @@
 		const { id, ...partialDataWithoutId } = leitungsfunktionEntry.value;
 
 		if (currentLeitungsfunktionMode.value === LeitungsfunktionMode.ADD) {
-			if (!lehrerAuswahlState.leitungsfunktionen.isEmpty()) {
-				clickedLeitungsfunktion.value = lehrerAuswahlState.leitungsfunktionen.getFirst();
+			if (!lehrerAuswahlState.stammdaten.leitungsfunktionen.entries.isEmpty()) {
+				clickedLeitungsfunktion.value = lehrerAuswahlState.stammdaten.leitungsfunktionen.entries.getFirst();
 			}
 
-			await lehrerAuswahlState.addLeitungsfunktion(partialDataWithoutId, dataNotPatched().id);
+			await lehrerAuswahlState.stammdaten.leitungsfunktionen.add(partialDataWithoutId, dataNotPatched().id);
 
-			if (!lehrerAuswahlState.leitungsfunktionen.isEmpty()) {
-				clickedLeitungsfunktion.value = lehrerAuswahlState.leitungsfunktionen.getLast();
+			if (!lehrerAuswahlState.stammdaten.leitungsfunktionen.entries.isEmpty()) {
+				clickedLeitungsfunktion.value = lehrerAuswahlState.stammdaten.leitungsfunktionen.entries.getLast();
 			}
 
 			closeModalLeitungsfunktion();
@@ -350,7 +350,7 @@
 				return;
 			}
 
-			await lehrerAuswahlState.patchLeitungsfunktion(partialDataWithoutId, leitungsfunktionEntry.value.id);
+			await lehrerAuswahlState.stammdaten.leitungsfunktionen.patch(partialDataWithoutId, leitungsfunktionEntry.value.id);
 			closeModalLeitungsfunktion();
 		}
 	}
@@ -365,7 +365,7 @@
 			ids.add(s.id);
 		}
 
-		await lehrerAuswahlState.deleteLeitungsfunktionen(ids);
+		await lehrerAuswahlState.stammdaten.leitungsfunktionen.remove(ids);
 		selectedLeitungsfunktionen.value = [];
 	}
 

@@ -36,11 +36,11 @@
 				</template>
 			</template>
 		</ui-table-grid>
-		<div v-if="statistikState.lehrerListeManager.auswahlID() !== null" class="flex min-w-0 flex-1 flex-col">
-			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoLehrer(statistikState.lehrerListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.lehrerListeManager.auswahl().nachname }}, {{ statistikState.lehrerListeManager.auswahl().vorname }}</div>
+		<div v-if="lehrerAuswahlState.idSelected !== null" class="flex min-w-0 flex-1 flex-col">
+			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoLehrer(lehrerAuswahlState.selected)"><span class="icon cursor-pointer i-ri-link" /> {{ lehrerAuswahlState.selected.nachname }}, {{ lehrerAuswahlState.selected.vorname }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<lehrer-individualdaten v-if="tabManager.tab.name === 'LS'" :zeige-alles="false" />
-				<lehrer-personaldaten v-if="tabManager.tab.name === 'LP'" :lehrer-liste-manager="() => statistikState.lehrerListeManager" />
+				<lehrer-personaldaten v-if="tabManager.tab.name === 'LP'" />
 			</svws-ui-tab-bar>
 		</div>
 	</div>
@@ -60,12 +60,15 @@
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 	import { TabManager } from '@ui/ui/nav/TabManager';
 
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
+
 	import type { StatistikLehrerProps } from './StatistikLehrerProps';
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const props = defineProps<StatistikLehrerProps>();
 	const statistikState = useStatistikState();
+	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	function getIconClass(fehler: ValidatorFehlerart) {
 		return {

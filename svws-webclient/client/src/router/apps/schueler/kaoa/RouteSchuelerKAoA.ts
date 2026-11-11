@@ -32,10 +32,10 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		try {
 			const { id } = RouteNode.getIntParams(params, ["id"]);
 			const schuelerAuswahlState = useSchuelerAuswahlState();
-			if (!schuelerAuswahlState.manager.hasDaten()) {
+			if (!schuelerAuswahlState.stammdaten.hasDaten) {
 				return routeSchueler.getRouteDefaultChild({ id });
 			}
-			const auswahl = schuelerAuswahlState.manager.auswahl();
+			const auswahl = schuelerAuswahlState.selected;
 			const schuljahr = schuleStateImpl.schuljahr;
 			if ((auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
 					|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id)
@@ -53,7 +53,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (id !== undefined) {
 				const schuelerAuswahlState = useSchuelerAuswahlState();
-				await this.data.ladeDaten(schuelerAuswahlState.manager.liste.get(id));
+				await this.data.ladeDaten(schuelerAuswahlState.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

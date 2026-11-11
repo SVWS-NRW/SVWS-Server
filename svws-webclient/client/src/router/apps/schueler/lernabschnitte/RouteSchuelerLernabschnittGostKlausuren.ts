@@ -40,9 +40,9 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
 			}
 			const schuelerAuswahlState = useSchuelerAuswahlState();
-			if (schuelerAuswahlState.manager.hasDaten()) {
-				const abiturjahr = schuelerAuswahlState.manager.auswahl().abiturjahrgang;
-				if (((abiturjahr !== null) && schuelerAuswahlState.manager.abiturjahrgaenge.get(abiturjahr))
+			if (schuelerAuswahlState.stammdaten.hasDaten) {
+				const abiturjahr = schuelerAuswahlState.selected.abiturjahrgang;
+				if (((abiturjahr !== null) && schuelerAuswahlState.abiturjahrgaenge.get(abiturjahr))
 				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
 					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
 					if (routeSchuelerLernabschnitte.data.hatGymOb) {

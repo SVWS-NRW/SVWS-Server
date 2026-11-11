@@ -211,7 +211,7 @@
 	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
 	const schulform = computed<Schulform>(() => schuleState.schulform);
 	const leistungen = computed<List<SchuelerLeistungsdaten>>(() => props.manager().leistungGetMengeAsListSortedByFach());
-	const istGymOb = computed<boolean>(() => Jahrgaenge.data().getWertBySchluessel(schuelerAuswahlState.manager.auswahl().jahrgang)?.istGymOb() ?? false);
+	const istGymOb = computed<boolean>(() => Jahrgaenge.data().getWertBySchluessel(schuelerAuswahlState.selected.jahrgang)?.istGymOb() ?? false);
 	const lernbereichsnote1Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote1Bezeichnung());
 	const lernbereichsnote2Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote2Bezeichnung());
 	const hatLernbereichsnote = computed<boolean>(() => (lernbereichsnote1Bezeichnung.value !== null) || (lernbereichsnote2Bezeichnung.value !== null));
@@ -315,7 +315,7 @@
 			return false;
 		}
 		// Wenn er keine funktionsbezogenen Rechte auf die Klasse hat, dann hat er keine allgemeine Update-Kompetenz
-		if (!benutzerState.kompetenzenKlasse.has(schuelerAuswahlState.manager.auswahl().idKlasse)) {
+		if (!benutzerState.kompetenzenKlasse.has(schuelerAuswahlState.selected.idKlasse)) {
 			return false;
 		}
 		// Wenn der Lernabschnitt nicht der aktuelle der Schule ist oder in der Zukunft liegt, dann hat er keine allgemeine Update-Kompetenz

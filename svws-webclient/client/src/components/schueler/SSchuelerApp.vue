@@ -1,25 +1,25 @@
 <template>
-	<template v-if="(schuelerAuswahlState.manager.hasDaten() && (schuelerAuswahlState.activeViewType === ViewType.DEFAULT)) || (schuelerAuswahlState.activeViewType !== ViewType.DEFAULT)">
+	<template v-if="(schuelerAuswahlState.stammdaten.hasDaten && (schuelerAuswahlState.navigator.activeViewType === ViewType.DEFAULT)) || (schuelerAuswahlState.navigator.activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<template v-if="((schuelerAuswahlState.activeViewType === ViewType.DEFAULT) || (schuelerAuswahlState.activeViewType === ViewType.NEU))">
+				<template v-if="((schuelerAuswahlState.navigator.activeViewType === ViewType.DEFAULT) || (schuelerAuswahlState.navigator.activeViewType === ViewType.NEU))">
 					<svws-ui-avatar :src="fotoSrc"
 						:alt="fotoSrcAlt"
-						@image:base64="foto => schuelerAuswahlState.patch({ foto })"
+						@image:base64="foto => schuelerAuswahlState.stammdaten.patch({ foto })"
 						:upload="!readonly"
 						:capture="!readonly"
 						:removable="!readonly" />
-					<div v-if="schuelerAuswahlState.manager.hasDaten()" class="svws-headline-wrapper">
+					<div v-if="schuelerAuswahlState.stammdaten.hasDaten" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>{{ vorname }} {{ nachname }}</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID: {{ schuelerAuswahlState.manager.daten().id }}
+								ID: {{ schuelerAuswahlState.stammdaten.datenOrException().id }}
 							</svws-ui-badge>
 						</h2>
 						<span v-if="klasse !== null" class="svws-subline">{{ klasse.kuerzel }}&nbsp;
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								<template v-for="l of klasse.klassenLeitungen">
-									{{ schuelerAuswahlState.manager.lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
+									{{ schuelerAuswahlState.lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
 								</template>
 							</svws-ui-badge>
 							<svws-ui-badge v-if="epJahre !== null" type="light" title="EP-Jahre" class="font-mono ml-2" size="small">
@@ -27,13 +27,13 @@
 							</svws-ui-badge>
 						</span>
 					</div>
-					<div v-if="schuelerAuswahlState.manager.daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
+					<div v-if="schuelerAuswahlState.stammdaten.datenOrException().keineAuskunftAnDritte" class="svws-headline-wrapper">
 						<span class="icon-xxl icon-ui-danger i-ri-alert-line" />
 						<span class="text-ui-danger content-center"> Keine Auskunft an Dritte </span>
 					</div>
 				</template>
 
-				<template v-else-if="schuelerAuswahlState.activeViewType === ViewType.HINZUFUEGEN">
+				<template v-else-if="schuelerAuswahlState.navigator.activeViewType === ViewType.HINZUFUEGEN">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>Neuen Schüler anlegen...</span>
@@ -41,11 +41,11 @@
 					</div>
 				</template>
 
-				<template v-else-if="schuelerAuswahlState.activeViewType === ViewType.GRUPPENPROZESSE">
+				<template v-else-if="schuelerAuswahlState.navigator.activeViewType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
 						<div class="flex flex-row gap-3">
 							<h2 class="svws-headline text-ui-brand">Mehrfachauswahl</h2>
-							<svws-ui-button v-if="schuelerAuswahlState.manager.liste.auswahlExists()" size="normal" type="danger" @click="resetSelection">
+							<svws-ui-button v-if="schuelerAuswahlState.liste.auswahlExists()" size="normal" type="danger" @click="resetSelection">
 								Auswahl aufheben
 							</svws-ui-button>
 						</div>
@@ -56,7 +56,7 @@
 			<div class="svws-ui-header--actions print:hidden!" />
 		</header>
 
-		<svws-ui-tab-bar :tab-manager="() => tabManager(schuelerAuswahlState.activeViewType)" :focus-switching-enabled :focus-help-visible>
+		<svws-ui-tab-bar :tab-manager="() => tabManager(schuelerAuswahlState.navigator.activeViewType)" :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -103,7 +103,7 @@
 		if (!primarstufe.value) {
 			return null;
 		}
-		const ep = schuelerAuswahlState.manager.auswahl().epJahre;
+		const ep = schuelerAuswahlState.selected.epJahre;
 		if (ep === null) {
 			return null;
 		}
@@ -111,7 +111,7 @@
 	});
 
 	const schuelerSubline = computed(() => {
-		const auswahlSchuelerList = schuelerAuswahlState.manager.liste.auswahlSorted();
+		const auswahlSchuelerList = schuelerAuswahlState.liste.auswahlSorted();
 		if (auswahlSchuelerList.isEmpty()) {
 			return 'Keine Schüler ausgewählt';
 		}
@@ -122,25 +122,25 @@
 	});
 
 	const fotoSrc = computed<string | undefined>(() => {
-		const base64Payload = schuelerAuswahlState.manager.daten().foto;
+		const base64Payload = schuelerAuswahlState.stammdaten.datenOrException().foto;
 		if (base64Payload !== null) {
 			return `data:image/png;base64, ${base64Payload}`;
 		}
 		return undefined;
 	});
 	const fotoSrcAlt = computed<string>(() => (fotoSrc.value !== undefined) ? `Foto von ${vorname.value} ${nachname.value}` : '');
-	const nachname = computed<string>(() => schuelerAuswahlState.manager.daten().nachname);
-	const vorname = computed<string>(() => schuelerAuswahlState.manager.daten().vorname);
+	const nachname = computed<string>(() => schuelerAuswahlState.stammdaten.datenOrException().nachname);
+	const vorname = computed<string>(() => schuelerAuswahlState.stammdaten.datenOrException().vorname);
 
 	const klasse = computed<KlassenDaten | null>(() => {
-		if (!schuelerAuswahlState.manager.hasDaten()) {
+		if (!schuelerAuswahlState.stammdaten.hasDaten) {
 			return null;
 		}
-		return schuelerAuswahlState.manager.klassen.get(schuelerAuswahlState.manager.auswahl().idKlasse);
+		return schuelerAuswahlState.klassen.get(schuelerAuswahlState.selected.idKlasse);
 	});
 
 	async function resetSelection() {
-		await schuelerAuswahlState.gotoDefaultView(schuelerAuswahlState.manager.getVorherigeAuswahl()?.id);
+		await schuelerAuswahlState.navigator.select(schuelerAuswahlState.stammdaten.vorherige?.id);
 	}
 
 </script>

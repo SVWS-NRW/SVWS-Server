@@ -9,7 +9,7 @@
 					:valid="fieldIsValid('kuerzel')" />
 				<svws-ui-select title="Lehrer" :disabled v-model="idLehrer" :items="lehrer"
 					:item-text="l => l.vorname + ' ' + l.nachname" removable statistics />
-				<svws-ui-select title="Fach" :disabled v-model="idFach" required :valid="fieldIsValid('idFach')" :items="kurseAuswahlState.manager.faecher.list()"
+				<svws-ui-select title="Fach" :disabled v-model="idFach" required :valid="fieldIsValid('idFach')" :items="kurseAuswahlState.faecher.list()"
 					:item-text="f => f.bezeichnung" statistics />
 				<svws-ui-select title="Kursart" :disabled removable statistics :items="kursarten.keys()" v-model="data.kursartAllg" required
 					:item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'" />
@@ -66,12 +66,12 @@
 	const isLoading = ref<boolean>(false);
 
 	const idLehrer = computed({
-		get: () => kurseAuswahlState.manager.lehrer.get(data.value.idLehrer ?? -1),
+		get: () => kurseAuswahlState.lehrer.get(data.value.idLehrer ?? -1),
 		set: (v: LehrerListeEintrag | null) => data.value.idLehrer = v?.id ?? null,
 	});
 
 	const idFach = computed({
-		get: () => kurseAuswahlState.manager.faecher.get(data.value.idFach),
+		get: () => kurseAuswahlState.faecher.get(data.value.idFach),
 		set: (v: FachDaten) => data.value.idFach = v.id,
 	});
 
@@ -79,7 +79,7 @@
 		get: () => {
 			const result = [];
 			for (const id of data.value.idJahrgaenge) {
-				const jahrgang = kurseAuswahlState.manager.jahrgaenge.get(id);
+				const jahrgang = kurseAuswahlState.jahrgaenge.get(id);
 				if (jahrgang !== null) {
 					result.push(jahrgang);
 				}
@@ -100,7 +100,7 @@
 
 	const lehrer = computed(() => {
 		const result = [];
-		for (const l of kurseAuswahlState.manager.lehrer.list()) {
+		for (const l of kurseAuswahlState.lehrer.list()) {
 			if ((l.istAktiv) && (l.istSichtbar)) {
 				result.push(l);
 			}
@@ -154,7 +154,7 @@
 
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of kurseAuswahlState.manager.jahrgaenge.list()) {
+		for (const jg of kurseAuswahlState.jahrgaenge.list()) {
 			result.add(jg);
 		}
 		return result;
@@ -181,7 +181,7 @@
 		if (JavaString.isBlank(data.value.kuerzel) || data.value.kuerzel.length > 20) {
 			return false;
 		}
-		for (const kurs of kurseAuswahlState.manager.liste.list()) {
+		for (const kurs of kurseAuswahlState.liste.list()) {
 			if (JavaString.equalsIgnoreCase(data.value.kuerzel, kurs.kuerzel)) {
 				return false;
 			}
@@ -220,7 +220,7 @@
 
 	function cancel() {
 		props.checkpoint.active = false;
-		void kurseAuswahlState.gotoDefaultView(null);
+		void kurseAuswahlState.navigator.select(null);
 	}
 
 	watch(() => data.value, async () => {

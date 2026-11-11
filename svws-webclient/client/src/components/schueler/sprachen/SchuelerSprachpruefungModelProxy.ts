@@ -7,24 +7,23 @@ import { Note } from "@core/asd/types/Note";
 import { Sprachpruefungniveau } from "@core/core/types/fach/Sprachpruefungniveau";
 import { ModelProxy } from "@ui/model/ModelProxy";
 
-import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 /**
  * Der spezielle ModelProxy für die Sprachbelegung
  */
 export class SchuelerSprachpruefungModelProxy extends ModelProxy<Sprachpruefung> {
 
-	private readonly _manager: () => SchuelerListeManager;
+	private readonly _schuljahr: () => number;
 	public readonly ersetzt = [{ key: '1. Pflichtfremdsprache' }, { key: '2. Pflichtfremdsprache' }, { key: 'Wahlpflichtfremdsprache' }] as const;
 
-	constructor(data: () => Sprachpruefung, manager: () => SchuelerListeManager, patch: (data: Partial<Sprachpruefung>) => Promise<boolean>) {
+	constructor(data: () => Sprachpruefung, schuljahr: () => number, patch: (data: Partial<Sprachpruefung>) => Promise<boolean>) {
 
 		const listOfAutopatchProps: Iterable<keyof Sprachpruefung> = [
 			"kannBelegungAlsFortgefuehrteSpracheErlauben", "jahrgang", "note", "referenzniveau", "anspruchsniveauId",
 		];
 		super({ data, patch, listOfAutopatchProps });
 
-		this._manager = manager;
+		this._schuljahr = schuljahr;
 
 		this.validate();
 	}
@@ -62,7 +61,7 @@ export class SchuelerSprachpruefungModelProxy extends ModelProxy<Sprachpruefung>
 				this.proxy.jahrgang = null;
 				return;
 			}
-			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
+			const jahrgang = value.daten(this._schuljahr());
 			this.proxy.jahrgang = jahrgang?.kuerzel ?? null;
 		},
 	});
@@ -80,7 +79,7 @@ export class SchuelerSprachpruefungModelProxy extends ModelProxy<Sprachpruefung>
 				this.proxy.referenzniveau = null;
 				return;
 			}
-			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
+			const jahrgang = value.daten(this._schuljahr());
 			this.proxy.referenzniveau = jahrgang?.schluessel ?? null;
 		},
 	});
@@ -92,6 +91,6 @@ export class SchuelerSprachpruefungModelProxy extends ModelProxy<Sprachpruefung>
 
 	note = computed<Note | null>({
 		get: () => Note.fromNoteSekI(this.proxy.note),
-		set: (value) => this.proxy.note = value?.getNoteSekI(this._manager().schuelerGetSchuljahrOrException()) ?? null,
+		set: (value) => this.proxy.note = value?.getNoteSekI(this._schuljahr()) ?? null,
 	});
 }

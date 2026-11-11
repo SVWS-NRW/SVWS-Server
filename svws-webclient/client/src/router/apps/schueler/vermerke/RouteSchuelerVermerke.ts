@@ -40,7 +40,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
 			}
 			const schuelerAuswahlState = useSchuelerAuswahlState();
-			return schuelerAuswahlState.manager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id });
+			return schuelerAuswahlState.stammdaten.hasDaten ? false : routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
@@ -56,7 +56,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 				await this.data.ladeDaten(null);
 			} else {
 				const schuelerAuswahlState = useSchuelerAuswahlState();
-				await this.data.ladeDaten(schuelerAuswahlState.manager.liste.get(id));
+				await this.data.ladeDaten(schuelerAuswahlState.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

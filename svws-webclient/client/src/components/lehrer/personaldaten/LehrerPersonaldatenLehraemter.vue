@@ -153,6 +153,7 @@
 	import type { JavaSet } from "@core/java/util/JavaSet";
 	import type { List } from "@core/java/util/List";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import type { TableAction } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
@@ -169,12 +170,13 @@
 		personaldatenModelProxy: () => LehrerPersonaldatenModelProxy,
 	}>();
 	const abschnittState = useAbschnittState();
+	const schuleState = useSchuleState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	const showLehramtHinzufuegen = ref<boolean>(false);
 	const anlegenDisabled = computed(() => auswahlFachrichtungenNeu.value.length === 0 && auswahlLehrbefaehigungenNeu.value.length === 0);
 	const lehraemterSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerLehramt.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: lehrerAuswahlState.manager.schulform(),
+		clazz: LehrerLehramt.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: schuleState.schulform,
 		filters: [{ key: 'vorhandene', apply: filterLehraemter }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));
@@ -183,7 +185,7 @@
 	const lehramtAnerkennungSelectManager = computed(() => new CoreTypeSelectManager({
 		clazz: LehrerLehramtAnerkennung.class,
 		schuljahr: abschnittState.auswahl.schuljahr,
-		schulformen: lehrerAuswahlState.manager.schulform(),
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	}));
@@ -218,7 +220,7 @@
 			return;
 		}
 		createLehramtModel.value.proxy.idLehrer = props.personaldatenModelProxy().proxy.id;
-		await lehrerAuswahlState.addLehramt(createLehramtModel.value.pending);
+		await lehrerAuswahlState.personaldaten.lehraemter.add(createLehramtModel.value.pending);
 		showLehramtHinzufuegen.value = false;
 		createLehramtModel.value = null;
 		props.personaldatenModelProxy().validate();
@@ -231,13 +233,13 @@
 	const auswahlFachrichtungenNeu = shallowRef<Array<LehrerFachrichtungKatalogEintrag>>([]);
 
 	const lehrbefaehigungenSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerLehrbefaehigung.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: lehrerAuswahlState.manager.schulform(),
+		clazz: LehrerLehrbefaehigung.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: schuleState.schulform,
 		filters: [{ key: 'vorhandene', apply: filterLehrbefaehigungen }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));
 
 	const fachrichtungenSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerFachrichtung.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: lehrerAuswahlState.manager.schulform(),
+		clazz: LehrerFachrichtung.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: schuleState.schulform,
 		filters: [{ key: 'vorhandene', apply: filterFachrichtungen }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));
@@ -245,7 +247,7 @@
 	const lehrbefaehigungAnerkennungSelectManager = computed(() => new CoreTypeSelectManager({
 		clazz: LehrerLehrbefaehigungAnerkennung.class,
 		schuljahr: abschnittState.auswahl.schuljahr,
-		schulformen: lehrerAuswahlState.manager.schulform(),
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	}));
@@ -253,7 +255,7 @@
 	const fachrichtungAnerkennungSelectManager = computed(() => new CoreTypeSelectManager({
 		clazz: LehrerFachrichtungAnerkennung.class,
 		schuljahr: abschnittState.auswahl.schuljahr,
-		schulformen: lehrerAuswahlState.manager.schulform(),
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	}));
@@ -314,12 +316,12 @@
 		if (lehramt !== null) {
 			for (const eintrag of auswahlLehrbefaehigungenNeu.value) {
 				if (!lehramt.lehrbefaehigungen.contains(eintrag)) {
-					await lehrerAuswahlState.addLehrbefaehigung({ idLehramt: lehramt.id, idLehrbefaehigung: eintrag.id, idAnerkennungsgrund: null });
+					await lehrerAuswahlState.personaldaten.lehrbefaehigungen.add({ idLehramt: lehramt.id, idLehrbefaehigung: eintrag.id, idAnerkennungsgrund: null });
 				}
 			}
 			for (const eintrag of auswahlFachrichtungenNeu.value) {
 				if (!lehramt.fachrichtungen.contains(eintrag)) {
-					await lehrerAuswahlState.addFachrichtung({ idLehramt: lehramt.id, idFachrichtung: eintrag.id, idAnerkennungsgrund: null });
+					await lehrerAuswahlState.personaldaten.fachrichtungen.add({ idLehramt: lehramt.id, idFachrichtung: eintrag.id, idAnerkennungsgrund: null });
 				}
 			}
 		}
@@ -343,17 +345,17 @@
 		const rowActions: TableAction[] = [];
 		let removeFn;
 		if (rowModel instanceof LehrerLehramtEintragModelProxy) {
-			removeFn = () => lehrerAuswahlState.removeLehraemter(Arrays.asList(rowModel.data));
+			removeFn = () => lehrerAuswahlState.personaldaten.lehraemter.remove(Arrays.asList(rowModel.data));
 			rowActions.push({ label: "Eintrag löschen", action: removeFn, trash: true }, {
 				label: "Lehrbefähigung oder Fachrichtung hinzufügen",
 				action: () => openLehrbefFachrHinzufuegen(rowModel.data),
 				iconClasses: "i-ri-add-line",
 			});
 		} else if (rowModel instanceof LehrerLehrbefaehigungEintragModelProxy) {
-			removeFn = () => lehrerAuswahlState.removeLehrbefaehigungen(Arrays.asList(rowModel.data));
+			removeFn = () => lehrerAuswahlState.personaldaten.lehrbefaehigungen.remove(Arrays.asList(rowModel.data));
 			rowActions.push({ label: "Eintrag löschen", action: removeFn, trash: true });
 		} else {
-			removeFn = () => lehrerAuswahlState.removeFachrichtungen(Arrays.asList(rowModel.data));
+			removeFn = () => lehrerAuswahlState.personaldaten.fachrichtungen.remove(Arrays.asList(rowModel.data));
 			rowActions.push({ label: "Eintrag löschen", action: removeFn, trash: true });
 		}
 		return rowActions;
@@ -370,16 +372,16 @@
 			const result = new ArrayList<GridDatenLehraemter>();
 			for (const lehramt of props.personaldatenModelProxy().data.lehraemter) {
 				const modelProxy = new LehrerLehramtEintragModelProxy(() => lehramt,
-					(lehramtPatch: Partial<LehrerLehramtEintrag>) => lehrerAuswahlState.patchLehramt(lehramt, lehramtPatch));
+					(lehramtPatch: Partial<LehrerLehramtEintrag>) => lehrerAuswahlState.personaldaten.lehraemter.patch(lehramt, lehramtPatch));
 				result.add(modelProxy);
 				for (const lehrbefaehigung of lehramt.lehrbefaehigungen) {
 					const modelProxy = new LehrerLehrbefaehigungEintragModelProxy(() => lehrbefaehigung,
-						(lehrbefaehigungPatch: Partial<LehrerLehrbefaehigungEintrag>) => lehrerAuswahlState.patchLehrbefaehigung(lehrbefaehigung, lehrbefaehigungPatch));
+						(lehrbefaehigungPatch: Partial<LehrerLehrbefaehigungEintrag>) => lehrerAuswahlState.personaldaten.lehrbefaehigungen.patch(lehrbefaehigung, lehrbefaehigungPatch));
 					result.add(modelProxy);
 				}
 				for (const fachrichtung of lehramt.fachrichtungen) {
 					const modelProxy = new LehrerFachrichtungEintragModelProxy(() => fachrichtung,
-						(fachrichtungPatch: Partial<LehrerFachrichtungEintrag>) => lehrerAuswahlState.patchFachrichtung(fachrichtung, fachrichtungPatch));
+						(fachrichtungPatch: Partial<LehrerFachrichtungEintrag>) => lehrerAuswahlState.personaldaten.fachrichtungen.patch(fachrichtung, fachrichtungPatch));
 					result.add(modelProxy);
 				}
 			}

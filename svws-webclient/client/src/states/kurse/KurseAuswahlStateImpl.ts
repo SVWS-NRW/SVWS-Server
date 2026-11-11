@@ -1,51 +1,163 @@
+
 import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
-import type { KursLehrer } from "@core/asd/data/kurse/KursLehrer";
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { KursUtils } from "@core/core/utils/kurse/KursUtils";
+import { LehrerUtils } from "@core/core/utils/lehrer/LehrerUtils";
+import { SchuelerUtils } from "@core/core/utils/schueler/SchuelerUtils";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashSet } from "@core/java/util/HashSet";
 import type { List } from "@core/java/util/List";
 import { useAbschnittState } from "@ui/states/AbschnittState";
 import { useConfigState } from "@ui/states/ConfigState";
-import { useSchuleState } from "@ui/states/SchuleState";
-import { ViewType } from "@ui/ui/nav/ViewType";
+import { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
+import { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 
+import { AuswahlKatalog } from "../AuswahlKatalog";
 import type { GenericAuswahlReactiveState } from "../GenericAuswahlStateImpl";
 import { GenericAuswahlStateImpl } from "../GenericAuswahlStateImpl";
+import { SchuelerStatusFilter } from "../SchuelerStatusFilter";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteManager } from "~/router/RouteManager";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
+import { KurseAuswahlFilter } from "./KurseAuswahlFilter";
 import type { KurseAuswahlState } from "./KurseAuswahlState";
 import { kurseAuswahlStateRoutingAdapter } from "./KurseAuswahlStateRoutingAdapter";
-import { KursListeManager } from "./KursListeManager";
+import { KurseGruppenprozessState } from "./KurseGruppenprozessState";
+import { KurseStammdatenState } from "./KurseStammdatenState";
 
-interface KurseAuswahlReactiveState extends GenericAuswahlReactiveState<KursListeManager> {
+/** Der Comparator für den Vergleich von Fächern in Fächerlisten */
+const comparatorFaecher: Comparator<FachDaten> = { compare: (a: FachDaten, b: FachDaten) => {
+	const cmp = a.sortierung - b.sortierung;
+	if (cmp !== 0) {
+		return cmp;
+	}
+	const cmpKuerzel = JavaString.compareTo(a.kuerzel, b.kuerzel);
+	return (cmpKuerzel === 0) ? JavaLong.compare(a.id, b.id) : cmpKuerzel;
+} };
+
+interface KurseAuswahlReactiveState extends GenericAuswahlReactiveState<KursDaten> {
 }
 
 /**
  * Der State für die Auswahlliste der Kurse
  */
-export class KurseAuswahlStateImpl extends GenericAuswahlStateImpl<KursListeManager, KurseAuswahlReactiveState> implements KurseAuswahlState {
+export class KurseAuswahlStateImpl extends GenericAuswahlStateImpl<KursDaten, KursDaten, KurseAuswahlReactiveState> implements KurseAuswahlState {
+
+	/** Der Katalog der Jahrgänge */
+	private readonly _jahrgaenge = new AuswahlKatalog<JahrgangsDaten>(j => j.id, JahrgaengeListeManager.comparator);
+
+	/** Der Katalog der Fächer, die sichtbar oder in einem Kurs des Schuljahresabschnittes verwendet sind */
+	private readonly _faecher = new AuswahlKatalog<FachDaten>(f => f.id, comparatorFaecher);
+
+	/** Der Katalog der Schüler des Schuljahresabschnittes */
+	private readonly _schueler = new AuswahlKatalog<SchuelerListeEintrag>(s => s.id, SchuelerUtils.comparator);
+
+	/** Der Filter nach dem Schüler-Status für die Schülerliste in den Daten */
+	private readonly _schuelerstatus = new SchuelerStatusFilter([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN]);
+
+	/** Der State für die Lehrer des Schuljahresabschnittes */
+	private readonly _lehrer = new AuswahlKatalog<LehrerListeEintrag>(l => l.id, LehrerUtils.comparatorKuerzel);
+
+	/** Der State für die Stammdaten */
+	private readonly _stammdaten = new KurseStammdatenState(this);
+
+	/** Der State für die Stammdaten der Mehrfachauswahl */
+	private readonly _gruppenprozesse = new KurseGruppenprozessState(this);
+
+	/** Der Filter der Auswahlliste */
+	private readonly _filter = new KurseAuswahlFilter(
+		() => this._state.value.liste?.list() ?? new ArrayList<KursDaten>(),
+		() => this.idSelected,
+		{ schule: schuleStateImpl, jahrgaenge: this._jahrgaenge, lehrer: this._lehrer, faecher: this._faecher, schueler: this._schueler }
+	);
 
 	public constructor() {
 		super({
 			idSchuljahresabschnitt: -1,
-			manager: undefined,
-			activeViewType: ViewType.DEFAULT,
+			liste: undefined,
+			idSelected: null,
 		}, kurseAuswahlStateRoutingAdapter);
+		this._filter.onChanged = () => {
+			// Der Schalter "Nur Sichtbare" wird in der Konfiguration des Benutzers gespeichert
+			if (this._filter.values.nurSichtbar !== this.filterNurSichtbar) {
+				void this.setFilterNurSichtbar(this._filter.values.nurSichtbar);
+			}
+			void this.setFilter();
+		};
 	}
 
 	/**
-	 * Initialisiert den State für den ausgewählten Schuljahresabschnitt. Es werden die Daten für diesen Abschnitt geladen.
+	 * Gibt den Filter der Auswahlliste zurück.
 	 *
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * @param force                    gibt an, ob das Laden der Daten auch erzwungen werden soll, wenn die ID des
-	 *                                 Schuljahresabschnittes bereits gesetzt ist (z.B. beim Betreten einer Route)
-	 *
-	 * @returns ein Promise mit der ID der Auswahl oder null
+	 * @returns der Filter
 	 */
-	public async init(idSchuljahresabschnitt: number, force: boolean): Promise<number | null> {
-		return await super.setSchuljahresabschnitt(idSchuljahresabschnitt, force);
+	public get filter(): KurseAuswahlFilter {
+		return this._filter;
+	}
+
+	public get schuelerstatus(): SchuelerStatusFilter {
+		return this._schuelerstatus;
+	}
+
+	public get lehrer(): AuswahlKatalog<LehrerListeEintrag> {
+		return this._lehrer;
+	}
+
+	public get schuljahresabschnitt(): Schuljahresabschnitt {
+		return useAbschnittState().get(this.selected.idSchuljahresabschnitt);
+	}
+
+	public get jahrgaenge(): AuswahlKatalog<JahrgangsDaten> {
+		return this._jahrgaenge;
+	}
+
+	public get faecher(): AuswahlKatalog<FachDaten> {
+		return this._faecher;
+	}
+
+	public get stammdaten(): KurseStammdatenState {
+		return this._stammdaten;
+	}
+
+	public get gruppenprozesse(): KurseGruppenprozessState {
+		return this._gruppenprozesse;
+	}
+
+	public commit(): void {
+		super.commit();
+		this._filter.refresh();
+	}
+
+	protected getListFiltered(): List<KursDaten> {
+		return this._filter.filtered;
+	}
+
+	/**
+	 * Setzt den State und den Filter in den Default-State zurück.
+	 */
+	public reset(): void {
+		super.reset();
+		this._stammdaten.reset();
+		this._gruppenprozesse.reset();
+		this._lehrer.reset();
+		this._jahrgaenge.reset();
+		this._faecher.reset();
+		this._schueler.reset();
+		this._schuelerstatus.reset();
+		this._filter.reset();
 	}
 
 	public get filterNurSichtbar(): boolean {
@@ -59,30 +171,21 @@ export class KurseAuswahlStateImpl extends GenericAuswahlStateImpl<KursListeMana
 	};
 
 	/**
-	 * Gibt die ID des aktuell gewählten Schuljahresabschnittes zurück
-	 *
-	 * @returns die ID des aktuell gewählten Schuljahresabschnittes
-	 */
-	get idSchuljahresabschnitt(): number {
-		return this._state.value.idSchuljahresabschnitt;
-	}
-
-	/**
-	 * Erstellt einen neunen Auswahl-Manager für den angegebenen Schuljahresabschnitt. Die Daten dafür werden
+	 * Erstellt die Auswahlliste für den angegebenen Schuljahresabschnitt. Die Daten dafür werden
 	 * über die API abgefragt.
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
 	 *
-	 * @returns Eine Promise mit den Anpassungen für den Manager und dessen Daten im KurseAuswahlState
+	 * @returns Eine Promise mit den Anpassungen für die Auswahlliste und deren Daten im KurseAuswahlState
 	 */
-	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<KurseAuswahlReactiveState>> {
+	protected async createListe(idSchuljahresabschnitt: number): Promise<Partial<KurseAuswahlReactiveState>> {
 		const abschnittState = useAbschnittState();
 		const schuljahresabschnitt = abschnittState.getOrNull(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
 
-		// Lade die Kataloge und erstelle den Manager
+		// Lade die Kataloge und erstelle die Auswahlliste
 		const [listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher] = await Promise.all([
 			api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt),
 			api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt),
@@ -91,54 +194,21 @@ export class KurseAuswahlStateImpl extends GenericAuswahlStateImpl<KursListeMana
 			api.server.getFaecher(api.schema),
 		]);
 
-		const schuleState = useSchuleState();
-		const manager = new KursListeManager(
-			idSchuljahresabschnitt,
-			schuleState.abschnitt.id,
-			abschnittState.alle,
-			schuleState.schulform,
-			listKurse,
-			listSchueler,
-			listJahrgaenge,
-			listLehrer,
-			listFaecher);
-		if (this._state.value.manager === undefined) {
-			manager.setFilterAuswahlPermitted(true);
-			manager.setFilterNurSichtbar(this.filterNurSichtbar);
-		} else {
-			manager.useFilter(this._state.value.manager);
+		const liste = new ListeMitAuswahl(listKurse, e => e.id, KursUtils.comparator, null);
+		// Beim ersten Laden wird der Schalter "Nur Sichtbare" aus der Konfiguration übernommen, ansonsten bleibt der Filter erhalten
+		if (this._state.value.liste === undefined) {
+			this._filter.setValueSilent("nurSichtbar", this.filterNurSichtbar);
 		}
-		return { manager };
-	}
-
-	/**
-	 * Lädt die Daten für den übergebenen Listeneintrag eines Kurses
-	 *
-	 * @param auswahl   der ausgewählte Listeneintrag eines Kurses
-	 *
-	 * @returns eine Promise mit den Daten zu der Kurses
-	 */
-	public async ladeDaten(auswahl: KursDaten | null): Promise<KursDaten | null> {
-		// Die Daten sind vollständig in der Liste enthalten, kein Aufruf der API notwendig
-		return auswahl;
-	}
-
-	public async ladeDatenMultiple(auswahlList: List<KursDaten>, state: Partial<KurseAuswahlReactiveState>): Promise<List<KursDaten> | null> {
-		// Die Daten sind vollständig in der Liste enthalten, kein Aufruf der API notwendig
-		return auswahlList;
-	}
-
-	/**
-	 * Führt einen Patch auf den Kursdaten über die API aus.
-	 *
-	 * @param data   die Daten des Patches
-	 * @param id     die ID des zu patchenden Kurses
-	 *
-	 * @returns eine Promise, die bei Erfolg true zurückgibt
-	 */
-	protected async doPatch(data: Partial<KursDaten>, id: number): Promise<boolean> {
-		await api.server.patchKurs(data, api.schema, id);
-		return true;
+		this._lehrer.set(listLehrer);
+		this._jahrgaenge.set(listJahrgaenge);
+		this._schueler.set(listSchueler);
+		const idsFaecherInKursen = new HashSet<number>();
+		for (const kurs of listKurse) {
+			idsFaecherInKursen.add(kurs.idFach);
+		}
+		this._faecher.set([...listFaecher].filter(fach => fach.istSichtbar || idsFaecherInKursen.contains(fach.id)));
+		this._filter.pruneValues();
+		return { liste };
 	}
 
 	/**
@@ -160,42 +230,11 @@ export class KurseAuswahlStateImpl extends GenericAuswahlStateImpl<KursListeMana
 		const abschnittState = useAbschnittState();
 		const neuerKurs = await api.server.addKurs({ ...partialKurs, idSchuljahresabschnitt: abschnittState.auswahl.id }, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
-		await this.gotoDefaultView(neuerKurs.id);
+		await this.navigator.select(neuerKurs.id);
 	};
 
 	public async gotoSchueler(eintrag: Schueler): Promise<void> {
 		await RouteManager.doRoute(routeSchueler.getRoute({ id: eintrag.id }));
-	};
-
-	public async addKursLehrer(data: Partial<KursLehrer>, idKurs: number): Promise<void> {
-		api.status.start();
-		const result = await api.server.addKursLehrer(data, api.schema, idKurs);
-		this.manager.daten().weitereLehrer.add(result);
-		this.commit();
-		api.status.stop();
-	};
-
-	public async patchKursLehrer(data: Partial<KursLehrer>, idKurs: number, idLehrer: number): Promise<void> {
-		api.status.start();
-		await api.server.patchKursLehrer(data, api.schema, idKurs, idLehrer);
-		for (const k of this.manager.daten().weitereLehrer) {
-			if (k.idLehrer === idLehrer) {
-				Object.assign(k, data);
-			}
-		}
-		this.commit();
-		api.status.stop();
-	};
-
-	public async deleteKursLehrer(lehrerIds: List<number>, idKurs: number): Promise<void> {
-		await api.server.deleteKursLehrer(lehrerIds, api.schema, idKurs);
-		const weitereLehrer = this.manager.daten().weitereLehrer;
-		for (let i = weitereLehrer.size() - 1; i >= 0; i--) {
-			if (lehrerIds.contains(weitereLehrer.get(i).idLehrer)) {
-				weitereLehrer.removeElementAt(i);
-			}
-		}
-		this.commit();
 	};
 
 }

@@ -112,10 +112,10 @@
 	const schuleState = useSchuleState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 
-	const schuljahr = computed<number>(() => schuelerAuswahlState.manager.schuelerGetSchuljahrOrException());
+	const schuljahr = computed<number>(() => schuelerAuswahlState.schuljahresabschnitt.schuljahr);
 	const auswahl = ref<Sprachpruefung[]>([]);
 	const selectSprachpruefung = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
-	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByIDOrNull(schuelerAuswahlState.manager.auswahl().idSchulgliederung));
+	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByIDOrNull(schuelerAuswahlState.selected.idSchulgliederung));
 	const hatSpaltenJahrgang = computed(() => {
 		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(schuleState.schulform);
 		const istSpezielleGliederung = (schulgliederung.value !== null) && [Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung.value);
@@ -130,7 +130,7 @@
 					await props.patchSprachpruefung(proxy, sprachpruefung.id);
 					return true;
 				};
-				const modelProxy = new SchuelerSprachpruefungModelProxy(() => sprachpruefung, () => schuelerAuswahlState.manager, patchMethod);
+				const modelProxy = new SchuelerSprachpruefungModelProxy(() => sprachpruefung, () => schuelerAuswahlState.schuljahresabschnitt.schuljahr, patchMethod);
 				list.add(modelProxy);
 			}
 		}
@@ -195,7 +195,7 @@
 	});
 
 	const sprachJahrgaenge = computed(() => {
-		const schulform = schuelerAuswahlState.manager.schulform();
+		const schulform = schuleState.schulform;
 		if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
 			return Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, Schulform.GE);
 		}
@@ -218,9 +218,9 @@
 		}
 		const data: Partial<Sprachpruefung> = {};
 		data.sprache = sprache;
-		const schulform = schuelerAuswahlState.manager.schulform();
+		const schulform = schuleState.schulform;
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
-			data.jahrgang = Jahrgaenge.data().getEintragByID(schuelerAuswahlState.manager.auswahl().idJahrgang)?.kuerzel;
+			data.jahrgang = Jahrgaenge.data().getEintragByID(schuelerAuswahlState.selected.idJahrgang)?.kuerzel;
 		}
 		data.istHSUPruefung = hsu;
 		data.istFeststellungspruefung = !hsu;

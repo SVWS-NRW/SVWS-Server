@@ -309,13 +309,13 @@
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 	const herkunftschulenState = useHerkunftschulenState();
 
-	const schuljahr = computed<number>(() => schuelerAuswahlState.manager.schuelerGetSchuljahrOrException());
+	const schuljahr = computed<number>(() => schuelerAuswahlState.schuljahresabschnitt.schuljahr);
 
 	const model = new SchuelerIndividualdatenModelProxy(
-		() => schuelerAuswahlState.manager.daten(),
+		() => schuelerAuswahlState.stammdaten.datenOrException(),
 		() => schuleState.validatorKontext,
 		() => schuljahr.value,
-		(data) => schuelerAuswahlState.patch(data)
+		(data) => schuelerAuswahlState.stammdaten.patch(data)
 	);
 	const benutzerState = useBenutzerState();
 	const haltestellenState = useHaltestellenState();
@@ -454,7 +454,7 @@
 	async function downloadPDF() {
 		const reportingParameter = ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getReportingParameter();
 		ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.setReportingParameterVorlageparameter(reportingParameter, "mitSchullogo", "true");
-		reportingParameter.idsHauptdaten.add(schuelerAuswahlState.manager.auswahlID());
+		reportingParameter.idsHauptdaten.add(schuelerAuswahlState.idSelected);
 		loading.value = true;
 		await reportingState.createPDFReport(reportingParameter);
 		loading.value = false;

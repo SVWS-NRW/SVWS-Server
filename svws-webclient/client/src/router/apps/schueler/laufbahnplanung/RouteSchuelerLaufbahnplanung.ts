@@ -3,6 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { HashSet } from "@core/java/util/HashSet";
 import type { SchuelerLaufbahnplanungProps } from "@ui/components/gost/laufbahnplanung/SSchuelerLaufbahnplanungProps";
 import { ConfigElement } from "@ui/utils/Config";
 
@@ -41,13 +42,13 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 		try {
 			const { id } = (params === undefined) ? { id: undefined } : RouteNode.getIntParams(params, ["id"]);
 			const schuelerAuswahlState = useSchuelerAuswahlState();
-			if (!schuelerAuswahlState.manager.hasDaten()) {
+			if (!schuelerAuswahlState.stammdaten.hasDaten) {
 				return false;
 			}
-			const abiturjahr = schuelerAuswahlState.manager.auswahl().abiturjahrgang;
+			const abiturjahr = schuelerAuswahlState.selected.abiturjahrgang;
 			// Bis zum Wechsel gehört ein Schüler mit Wiederholung zu beiden Jahrgängen, daher genügt die Kompetenz für einen davon
-			const abiturjahrWiederholung = schuelerAuswahlState.manager.auswahl().abiturjahrgangWiederholung;
-			if (((abiturjahr !== null) && schuelerAuswahlState.manager.abiturjahrgaenge.get(abiturjahr))
+			const abiturjahrWiederholung = schuelerAuswahlState.selected.abiturjahrgangWiederholung;
+			if (((abiturjahr !== null) && schuelerAuswahlState.abiturjahrgaenge.get(abiturjahr))
 				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
 						&& (benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr)
@@ -66,9 +67,11 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 			if (isEntering) {
 				// Wenn man in die Laufbahnplanung wechselt und von einer Gost-Route per Schülerlink kommt, dann im Filter direkt den Jahrgang wählen
 				if ((from !== undefined) && from.checkSuccessorOf('gost') !== false) {
-					for (const e of schuelerAuswahlState.manager.jahrgaenge.list()) {
-						if (e.id === schuelerAuswahlState.manager.auswahl().idJahrgang) {
-							schuelerAuswahlState.manager.jahrgaenge.auswahlAdd(e);
+					for (const e of schuelerAuswahlState.filter.options.jahrgaenge) {
+						if (e.id === schuelerAuswahlState.selected.idJahrgang) {
+							const jahrgaenge = new HashSet<number>(schuelerAuswahlState.filter.values.jahrgaenge);
+							jahrgaenge.add(e.id);
+							schuelerAuswahlState.filter.setValueSilent("jahrgaenge", jahrgaenge);
 							await schuelerAuswahlState.setFilter();
 							break;
 						}
@@ -81,7 +84,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 				return;
 			}
 			try {
-				await gostLaufbahnplanungStateImpl.ladeSchuelerDaten(schuelerAuswahlState.manager.liste.get(id));
+				await gostLaufbahnplanungStateImpl.ladeSchuelerDaten(schuelerAuswahlState.liste.get(id));
 			} catch {
 				return routeSchueler.getRoute({ id });
 			}

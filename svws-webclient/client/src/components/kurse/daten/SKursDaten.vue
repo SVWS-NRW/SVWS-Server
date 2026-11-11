@@ -1,27 +1,27 @@
 <template>
-	<div v-if="kurseAuswahlState.manager.hasDaten()" class="page page-grid-cards">
+	<div v-if="kurseAuswahlState.stammdaten.hasDaten" class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<template v-if="zeigeAlles" #actions>
 					<svws-ui-checkbox v-model="istSichtbar" :readonly focus-class-content> Ist sichtbar </svws-ui-checkbox>
 				</template>
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Kürzel" :readonly :model-value="data().kuerzel" @change="kuerzel => kurseAuswahlState.patch({ kuerzel: kuerzel ?? '' })" type="text" />
-					<svws-ui-select title="Fach" :readonly v-model="fach" :items="kurseAuswahlState.manager.faecher.list()"
+					<svws-ui-text-input placeholder="Kürzel" :readonly :model-value="data().kuerzel" @change="kuerzel => kurseAuswahlState.stammdaten.patch({ kuerzel: kuerzel ?? '' })" type="text" />
+					<svws-ui-select title="Fach" :readonly v-model="fach" :items="kurseAuswahlState.faecher.list()"
 						:item-text="f => `${f.kuerzel} ${!f.istSichtbar ? '(Fach unsichtbar!)' : ''} (${f.bezeichnung})`" statistics />
 					<svws-ui-select title="Kursart" :readonly :items="kursarten.keys()" :item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'"
-						:model-value="data().kursartAllg" @update:model-value="value => kurseAuswahlState.patch({ kursartAllg: value ?? '' })" statistics />
+						:model-value="data().kursartAllg" @update:model-value="value => kurseAuswahlState.stammdaten.patch({ kursartAllg: value ?? '' })" statistics />
 					<svws-ui-input-number placeholder="Wochenstunden des Kurses" :readonly :model-value="data().wochenstunden" statistics
-						@change="v => kurseAuswahlState.patch({ wochenstunden: ((v !== null) && (v >= 0)) ? v : data().wochenstunden })" :min="0" />
+						@change="v => kurseAuswahlState.stammdaten.patch({ wochenstunden: ((v !== null) && (v >= 0)) ? v : data().wochenstunden })" :min="0" />
 					<svws-ui-multi-select title="Jahrgänge" :readonly v-model="jahrgaenge" :items="jahrgangsListe"
 						:item-text="jg => jg?.kuerzel ?? ''" statistics />
-					<svws-ui-text-input placeholder="Zeugnisbezeichnung" :readonly :model-value="data().bezeichnungZeugnis" @change="b => kurseAuswahlState.patch({ bezeichnungZeugnis : b })" type="text" />
+					<svws-ui-text-input placeholder="Zeugnisbezeichnung" :readonly :model-value="data().bezeichnungZeugnis" @change="b => kurseAuswahlState.stammdaten.patch({ bezeichnungZeugnis : b })" type="text" />
 					<svws-ui-select title="Fortschreibungsart" :readonly :model-value="KursFortschreibungsart.fromID(data().idKursFortschreibungsart)"
-						@update:model-value="value => kurseAuswahlState.patch({ idKursFortschreibungsart: value?.id ?? 0 })"
+						@update:model-value="value => kurseAuswahlState.stammdaten.patch({ idKursFortschreibungsart: value?.id ?? 0 })"
 						:items="KursFortschreibungsart.values()" :item-text="f => f.beschreibung" />
 					<svws-ui-multi-select title="Schienen" :readonly v-model="schienen" :items="Array.from({length: 40}, (_, i) => i + 1)" :item-text="s => 'Schiene ' + s" />
 					<svws-ui-input-number placeholder="Sortierung" :readonly :model-value="data().sortierung" :min="0"
-						@change="sortierung=> sortierung && kurseAuswahlState.patch({ sortierung })" />
+						@change="sortierung=> sortierung && kurseAuswahlState.stammdaten.patch({ sortierung })" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Lehrkraft">
@@ -29,20 +29,20 @@
 					<svws-ui-select title="Lehrkraft" :readonly v-model="lehrer" :items="lehrerAktiv" :item-text="getLehrerText"
 						:empty-text="() => '---'" removable statistics />
 					<svws-ui-input-number placeholder="Wochenstunden der Lehrkraft" :readonly :model-value="data().wochenstundenLehrer" statistics :min="0"
-						@change="v => kurseAuswahlState.patch({ wochenstundenLehrer: ((v !== null) && (v >= 0)) ? v : data().wochenstundenLehrer })" />
+						@change="v => kurseAuswahlState.stammdaten.patch({ wochenstundenLehrer: ((v !== null) && (v >= 0)) ? v : data().wochenstundenLehrer })" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card v-if="serverState.hasDev" title="zusätzliche Lehrkräfte">
 				<svws-ui-table clickable @update:clicked="v => patchLehrer(v)" :columns="columnsKursLehrer" :items="weitereLehrer" :readonly
 					v-model="auswahlKursLehrer" :selectable="hatKompetenzUpdate">
 					<template #cell(kuerzel)="{ rowData: s }">
-						<span>{{ kurseAuswahlState.manager.lehrer.get(s.idLehrer ?? -1)?.kuerzel ?? "-" }}</span>
+						<span>{{ kurseAuswahlState.lehrer.get(s.idLehrer ?? -1)?.kuerzel ?? "-" }}</span>
 					</template>
 					<template #cell(vorname)="{ rowData: s }">
-						<span>{{ kurseAuswahlState.manager.lehrer.get(s.idLehrer ?? -1)?.vorname ?? "-" }}</span>
+						<span>{{ kurseAuswahlState.lehrer.get(s.idLehrer ?? -1)?.vorname ?? "-" }}</span>
 					</template>
 					<template #cell(nachname)="{ rowData: s }">
-						<span>{{ kurseAuswahlState.manager.lehrer.get(s.idLehrer ?? -1)?.nachname ?? "-" }}</span>
+						<span>{{ kurseAuswahlState.lehrer.get(s.idLehrer ?? -1)?.nachname ?? "-" }}</span>
 					</template>
 					<template #cell(wochenstunden)="{ rowData: s }">
 						<span>{{ s.wochenstundenLehrer }}</span>
@@ -60,7 +60,7 @@
 					<template #modalContent>
 						<svws-ui-select v-if="currentMode === Mode.ADD" title="Lehrkraft" :items="lehrerFiltered" :item-text="getLehrerText" removable
 							required @update:model-value="v => newEntryKursLehrer.idLehrer = v?.id ?? -1" statistics
-							:readonly :model-value="kurseAuswahlState.manager.lehrer.get(newEntryKursLehrer.idLehrer ?? -1)" />
+							:readonly :model-value="kurseAuswahlState.lehrer.get(newEntryKursLehrer.idLehrer ?? -1)" />
 						<svws-ui-input-number placeholder="Wochenstunden" :readonly v-model="newEntryKursLehrer.wochenstundenLehrer" statistics :min="0" />
 						<div class="mt-7 flex flex-row gap-4 justify end">
 							<svws-ui-button type="secondary" @click="closeModalKursLehrer">Abbrechen</svws-ui-button>
@@ -73,8 +73,8 @@
 			</svws-ui-content-card>
 		</div>
 		<svws-ui-content-card title="Kursliste">
-			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="kurseAuswahlState.manager.schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
-			<svws-ui-table :columns="colsSchueler" :items="kurseAuswahlState.manager.getSchuelerListe()">
+			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="kurseAuswahlState.schuelerstatus.options" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
+			<svws-ui-table :columns="colsSchueler" :items="kurseAuswahlState.schuelerstatus.filter(kurseAuswahlState.stammdaten.datenOrException().schueler)">
 				<template #cell(status)="{ value }: { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr)?.text || "—" }}</span>
 				</template>
@@ -132,20 +132,20 @@
 	// TODO auch UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN berücksichtigen in Bezug auf Abteilungsleitungen / Koordinationen (API muss dafür noch erweitert werden)
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
-	const data = () => kurseAuswahlState.manager.daten();
-	const idKurs = computed<number>(() => kurseAuswahlState.manager.daten().id);
+	const data = () => kurseAuswahlState.stammdaten.datenOrException();
+	const idKurs = computed<number>(() => kurseAuswahlState.stammdaten.datenOrException().id);
 
 	const lehrer = computed<LehrerListeEintrag | null>({
 		get: () => {
 			const idLehrer = data().idLehrer;
-			return (idLehrer === null) ? null : kurseAuswahlState.manager.lehrer.get(idLehrer);
+			return (idLehrer === null) ? null : kurseAuswahlState.lehrer.get(idLehrer);
 		},
-		set: (value) => void kurseAuswahlState.patch({ idLehrer: value?.id ?? null }),
+		set: (value) => void kurseAuswahlState.stammdaten.patch({ idLehrer: value?.id ?? null }),
 	});
 
 	const lehrerAktiv = computed<List<LehrerListeEintrag>>(() => {
 		const result = new ArrayList<LehrerListeEintrag>();
-		for (const l of kurseAuswahlState.manager.lehrer.list()) {
+		for (const l of kurseAuswahlState.lehrer.list()) {
 			if (l.istAktiv) {
 				result.add(l);
 			}
@@ -158,14 +158,14 @@
 	}
 
 	const fach = computed<FachDaten>({
-		get: () => kurseAuswahlState.manager.faecher.get(data().idFach) ?? new FachDaten(),
-		set: (value) => void kurseAuswahlState.patch({ idFach: value.id }),
+		get: () => kurseAuswahlState.faecher.get(data().idFach) ?? new FachDaten(),
+		set: (value) => void kurseAuswahlState.stammdaten.patch({ idFach: value.id }),
 	});
 
 
 	const jahrgangsListe = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of kurseAuswahlState.manager.jahrgaenge.list()) {
+		for (const jg of kurseAuswahlState.jahrgaenge.list()) {
 			result.add(jg);
 		}
 		return result;
@@ -176,7 +176,7 @@
 		get: () => {
 			const arr = [];
 			for (const id of data().idJahrgaenge) {
-				const e = kurseAuswahlState.manager.jahrgaenge.get(id);
+				const e = kurseAuswahlState.jahrgaenge.get(id);
 				if (e !== null) {
 					arr.push(e);
 				}
@@ -186,7 +186,7 @@
 		set: (value) => {
 			const result = new ArrayList<number>();
 			value.forEach(j => result.add(j.id));
-			void kurseAuswahlState.patch({ idJahrgaenge: result });
+			void kurseAuswahlState.stammdaten.patch({ idJahrgaenge: result });
 		},
 	});
 
@@ -207,7 +207,7 @@
 				changed = (data().schienen.size() !== result.size());
 			}
 			if (changed) {
-				void kurseAuswahlState.patch({ schienen: result });
+				void kurseAuswahlState.stammdaten.patch({ schienen: result });
 			}
 		},
 	});
@@ -236,7 +236,7 @@
 
 	const istSichtbar = computed<boolean>({
 		get: () => data().istSichtbar,
-		set: (value) => void kurseAuswahlState.patch({ istSichtbar: value }),
+		set: (value) => void kurseAuswahlState.stammdaten.patch({ istSichtbar: value }),
 	});
 
 	const colsSchueler: DataTableColumn[] = [
@@ -247,18 +247,12 @@
 	];
 
 	const filterSchuelerStatus = computed<SchuelerStatus[]>({
-		get: () => [...kurseAuswahlState.manager.schuelerstatus.auswahl()],
-		set: (value) => {
-			kurseAuswahlState.manager.schuelerstatus.auswahlClear();
-			for (const v of value) {
-				kurseAuswahlState.manager.schuelerstatus.auswahlAdd(v);
-			}
-			void kurseAuswahlState.setFilter();
-		},
+		get: () => [...kurseAuswahlState.schuelerstatus.values],
+		set: (value) => kurseAuswahlState.schuelerstatus.setValues(value),
 	});
 
 	// --- Tabelle Kurslehrer ---
-	const weitereLehrer = computed(() => [...kurseAuswahlState.manager.daten().weitereLehrer]);
+	const weitereLehrer = computed(() => [...kurseAuswahlState.stammdaten.datenOrException().weitereLehrer]);
 	const columnsKursLehrer: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true },
 		{ key: "vorname", label: "Rufname", sortable: true },
@@ -276,7 +270,7 @@
 		for (const k of auswahlKursLehrer.value) {
 			ids.add(k.idLehrer);
 		}
-		await kurseAuswahlState.deleteKursLehrer(ids, idKurs.value);
+		await kurseAuswahlState.stammdaten.removeLehrer(ids, idKurs.value);
 		auswahlKursLehrer.value = [];
 	}
 
@@ -289,7 +283,7 @@
 			idsAssignedLehrer.add(kl.idLehrer);
 		}
 		const result = [];
-		for (const l of kurseAuswahlState.manager.lehrer.list()) {
+		for (const l of kurseAuswahlState.lehrer.list()) {
 			if (!idsAssignedLehrer.has(l.id) && (l.istAktiv) && (l.istSichtbar)) {
 				result.push(l);
 			}
@@ -336,10 +330,10 @@
 			if (newEntryKursLehrer.value.wochenstundenLehrer < 0) {
 				newEntryKursLehrer.value.wochenstundenLehrer = 0;
 			}
-			await kurseAuswahlState.addKursLehrer(newEntryKursLehrer.value, idKurs.value);
+			await kurseAuswahlState.stammdaten.addLehrer(newEntryKursLehrer.value, idKurs.value);
 		}
 		if ((type === Mode.PATCH) && (newEntryKursLehrer.value.wochenstundenLehrer >= 0)) {
-			await kurseAuswahlState.patchKursLehrer({ wochenstundenLehrer: newEntryKursLehrer.value.wochenstundenLehrer }, idKurs.value, newEntryKursLehrer.value.idLehrer);
+			await kurseAuswahlState.stammdaten.patchLehrer({ wochenstundenLehrer: newEntryKursLehrer.value.wochenstundenLehrer }, idKurs.value, newEntryKursLehrer.value.idLehrer);
 		}
 		enterDefaultMode();
 	}

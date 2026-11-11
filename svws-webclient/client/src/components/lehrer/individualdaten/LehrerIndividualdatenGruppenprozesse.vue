@@ -44,8 +44,11 @@
 
 	async function patchPendingStates() {
 		loading.value = true;
-		await lehrerAuswahlState.patchMultiple(props.pendingStateManager());
-		loading.value = false;
+		try {
+			await lehrerAuswahlState.gruppenprozesse.patchMultiple(props.pendingStateManager());
+		} finally {
+			loading.value = false;
+		}
 	}
 
 	async function continueRoutingAfterCheckpointCustom() {

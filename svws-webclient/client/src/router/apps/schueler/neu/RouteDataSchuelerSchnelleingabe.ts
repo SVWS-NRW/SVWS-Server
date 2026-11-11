@@ -36,7 +36,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 
 	public async ladeDaten() {
 		const schuelerAuswahlState = useSchuelerAuswahlState();
-		const idSchueler = schuelerAuswahlState.manager.auswahlID() ?? -1;
+		const idSchueler = schuelerAuswahlState.idSelected ?? -1;
 		const manager = await this.createManager(idSchueler);
 		await this.createListen(idSchueler);
 		this.setPatchedState({ manager });
@@ -44,7 +44,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 
 	private async createManager(idSchueler: number) {
 		const schuelerAuswahlState = useSchuelerAuswahlState();
-		const idSchuljahresabschnitt = schuelerAuswahlState.manager.auswahl().idSchuljahresabschnitt;
+		const idSchuljahresabschnitt = schuelerAuswahlState.selected.idSchuljahresabschnitt;
 		const [stammdaten, schulbesuchsdaten, lernabschnitte, schuelerListe] =
 			await Promise.all([
 				api.server.getSchuelerStammdaten(api.schema, idSchueler),

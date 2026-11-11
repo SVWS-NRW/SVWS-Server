@@ -64,7 +64,7 @@
 	const hatIrgendwelcheKompetenzen = computed(() => hatReportCards.value || hatKompetenzLoeschen.value);
 
 	const idsJeDatenContext = new Map<ReportingReportvorlageDatenContext, () => List<number>>([
-		[ReportingReportvorlageDatenContext.KURSE, () => kurseAuswahlState.manager.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.KURSE, () => kurseAuswahlState.liste.auswahlKeyList()],
 	]);
 
 	const preConditionCheck = computed(() => {

@@ -6,7 +6,6 @@ import type { LehrerZugangsgrundKatalogEintrag } from "@core/asd/data/lehrer/Leh
 import { LehrerAbgangsgrund } from "@core/asd/types/lehrer/LehrerAbgangsgrund";
 import { LehrerZugangsgrund } from "@core/asd/types/lehrer/LehrerZugangsgrund";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
@@ -17,21 +16,17 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
  */
 export class LehrerPersonaldatenModelProxy extends ModelProxy<LehrerPersonaldaten> {
 
-	protected readonly manager: () => LehrerListeManager;
-
 	/**
 	 * Erstellt einen ModelProxy für das Core-DTO LehrerIndividualdaten.
 	 *
 	 * @param data               Zugriff auf die "Original"-Daten
 	 * @param validatorKontext   der Validator-Kontext für die Nutzung in den ASD-Validatoren
-	 * @param manager            Manager der Lehrerliste
 	 * @param patch              ggf. die Methode zum Patchen der einzelnen Attribute, sofern das automatische Patchen
 	 *                           bei Änderungen gewünscht ist
 	 */
-	constructor(data: () => LehrerPersonaldaten, manager: () => LehrerListeManager,
+	constructor(data: () => LehrerPersonaldaten,
 		patch?: (data: Partial<LehrerPersonaldaten>) => Promise<boolean>) {
 		super({ data, patch, listOfAutopatchProps: ["zugangsgrund", "abgangsgrund"] });
-		this.manager = manager;
 		this.addValidatoren();
 		this.validate();
 	}

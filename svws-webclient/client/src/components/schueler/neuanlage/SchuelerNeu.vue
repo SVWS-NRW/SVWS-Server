@@ -179,12 +179,12 @@
 		props.checkpoint.active = false;
 		const result = await schuelerAuswahlState.add(model.proxy);
 		isLoading.value = false;
-		await schuelerAuswahlState.gotoSchnelleingabeView(true, result.id);
+		await schuelerAuswahlState.navigator.gotoSchnelleingabe(true, result.id);
 	}
 
 	function cancel() {
 		props.checkpoint.active = false;
-		void schuelerAuswahlState.gotoDefaultView();
+		void schuelerAuswahlState.navigator.select();
 	}
 
 	watch(() => model.proxy, async () => {

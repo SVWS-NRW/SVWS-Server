@@ -37,8 +37,8 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 
 	private async createManager() {
 		const schuelerAuswahlState = useSchuelerAuswahlState();
-		const idSchueler = schuelerAuswahlState.manager.auswahlID() ?? -1;
-		const idSchuljahresabschnitt = schuelerAuswahlState.manager.auswahl().idSchuljahresabschnitt;
+		const idSchueler = schuelerAuswahlState.idSelected ?? -1;
+		const idSchuljahresabschnitt = schuelerAuswahlState.selected.idSchuljahresabschnitt;
 		const data: SchuelerSchulbesuchsdaten = await api.server.getSchuelerSchulbesuch(api.schema, idSchueler);
 		return new SchuelerSchulbesuchManager(
 			data,

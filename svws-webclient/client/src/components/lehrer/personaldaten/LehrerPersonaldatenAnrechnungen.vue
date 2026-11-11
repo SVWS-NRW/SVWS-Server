@@ -142,7 +142,7 @@
 		() => props.personalabschnittsdatenModelProxy().data.mehrleistung,
 		data => data.id,
 		(mehrleistung) => new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => mehrleistung,
-			(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => lehrerAuswahlState.patchMehrleistung(data, mehrleistung.id)),
+			(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => lehrerAuswahlState.personaldaten.mehrleistung.patch(data, mehrleistung.id)),
 		{ deep: true }
 	);
 
@@ -150,7 +150,7 @@
 		() => props.personalabschnittsdatenModelProxy().data.minderleistung,
 		data => data.id,
 		(minderleistung) => new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => minderleistung,
-			(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => lehrerAuswahlState.patchMinderleistung(data, minderleistung.id)),
+			(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => lehrerAuswahlState.personaldaten.minderleistung.patch(data, minderleistung.id)),
 		{ deep: true }
 	);
 
@@ -159,7 +159,7 @@
 		data => data.id,
 		(anrechnung) => new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => anrechnung,
 			(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) =>
-				lehrerAuswahlState.patchAnrechnungen(ArrayList.of({ ...data, id: anrechnung.id }))), { deep: true }
+				lehrerAuswahlState.personaldaten.anrechnungen.patch(ArrayList.of({ ...data, id: anrechnung.id }))), { deep: true }
 	);
 
 	const gridManager = new GridManager<string, Eintrag, List<Eintrag>>({
@@ -219,11 +219,11 @@
 
 	async function removeDaten(row: Eintrag): Promise<void> {
 		if (row.typ === 'mehrleistung') {
-			await lehrerAuswahlState.removeMehrleistung(row.data.data);
+			await lehrerAuswahlState.personaldaten.mehrleistung.remove(row.data.data);
 		} else if (row.typ === 'minderleistung') {
-			await lehrerAuswahlState.removeMinderleistung(row.data.data);
+			await lehrerAuswahlState.personaldaten.minderleistung.remove(row.data.data);
 		} else {
-			await lehrerAuswahlState.removeAnrechnung(row.data.data);
+			await lehrerAuswahlState.personaldaten.anrechnungen.remove(row.data.data);
 		}
 	}
 
@@ -343,19 +343,19 @@
 		for (const eintrag of auswahlMehrleistungenNeu.value) {
 			data.idGrund = eintrag.id;
 			if (!mehrleistungenVorhanden.value.contains(eintrag.id)) {
-				await lehrerAuswahlState.addMehrleistung(data);
+				await lehrerAuswahlState.personaldaten.mehrleistung.add(data);
 			}
 		}
 		for (const eintrag of auswahlMinderleistungenNeu.value) {
 			data.idGrund = eintrag.id;
 			if (!minderleistungenVorhanden.value.contains(eintrag.id)) {
-				await lehrerAuswahlState.addMinderleistung(data);
+				await lehrerAuswahlState.personaldaten.minderleistung.add(data);
 			}
 		}
 		for (const eintrag of auswahlAnrechnungenNeu.value) {
 			data.idGrund = eintrag.id;
 			if (!anrechnungenVorhanden.value.contains(eintrag.id)) {
-				await lehrerAuswahlState.addAnrechnung(data);
+				await lehrerAuswahlState.personaldaten.anrechnungen.add(data);
 			}
 		}
 		showHinzufuegen.value = false;

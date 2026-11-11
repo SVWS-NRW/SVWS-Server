@@ -57,16 +57,16 @@
 	const hatIrgendwelcheKompetenzen = computed(() => hatReportCards.value || hatKompetenzLoeschen.value);
 
 	const idsJeDatenContext = new Map<ReportingReportvorlageDatenContext, () => List<number>>([
-		[ReportingReportvorlageDatenContext.SCHUELER, () => schuelerAuswahlState.manager.liste.auswahlKeyList()],
-		[ReportingReportvorlageDatenContext.STUNDENPLANUNG_SCHUELER, () => schuelerAuswahlState.manager.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.SCHUELER, () => schuelerAuswahlState.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.STUNDENPLANUNG_SCHUELER, () => schuelerAuswahlState.liste.auswahlKeyList()],
 	]);
 
 	const stundenplaene = computed(() => [...schuelerAuswahlState.mapStundenplaene.values()]);
 
-	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !schuelerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
-	const deleteCheckErrors = computed<List<string>>(() => schuelerAuswahlState.deleteSchuelerCheck()[1]);
-	const selectedAllowedToDelete = computed(() => schuelerAuswahlState.deleteSchuelerCheck()[0]);
-	const isDeleteConditionSectionVisible = computed<boolean>(() => (schuelerAuswahlState.manager.liste.auswahlExists() || (statusAction.value === undefined)));
+	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !schuelerAuswahlState.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
+	const deleteCheckErrors = computed<List<string>>(() => schuelerAuswahlState.deleteCheck()[1]);
+	const selectedAllowedToDelete = computed(() => schuelerAuswahlState.deleteCheck()[0]);
+	const isDeleteConditionSectionVisible = computed<boolean>(() => (schuelerAuswahlState.liste.auswahlExists() || (statusAction.value === undefined)));
 
 	const { currentAction, setCurrentAction } = useCurrentAction();
 	const loading = ref<boolean>(false);

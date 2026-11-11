@@ -70,8 +70,7 @@
 
 	const modelProxy = new KlassenDatenModelProxy(
 		() => dataNotPatched.value,
-		() => klassenState.manager.liste.list(),
-		() => klassenState.manager
+		() => klassenState.liste.list()
 	);
 
 	onMounted(() => {
@@ -131,7 +130,7 @@
 
 	async function cancel() {
 		props.checkpoint().active = false;
-		await klassenState.gotoDefaultView(null);
+		await klassenState.navigator.select(null);
 	}
 
 	async function addKlasse() {

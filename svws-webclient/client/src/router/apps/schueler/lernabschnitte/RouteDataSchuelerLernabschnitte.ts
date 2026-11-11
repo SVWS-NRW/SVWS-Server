@@ -142,7 +142,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			]);
 		}
 		const schuelerAuswahlState = useSchuelerAuswahlState();
-		const schueler = schuelerAuswahlState.manager.auswahl();
+		const schueler = schuelerAuswahlState.selected;
 		const schuljahresabschnitt = abschnittStateImpl.getOrNull(daten.schuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException("Der Schülerlernabschnitt hat keinen gültigen Schuljahresabschnitt zugeordnet. Dies darf nicht vorkommen.");
@@ -158,7 +158,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			listLehrer
 		);
 		let klausurManager = undefined;
-		const abiturjahrgang = schuelerAuswahlState.manager.auswahl().abiturjahrgang;
+		const abiturjahrgang = schuelerAuswahlState.selected.abiturjahrgang;
 		if (routeSchuelerLernabschnittGostKlausuren.hatEineKompetenz() && abiturjahrgang !== null) {
 			const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahrgang, found.schuljahr, found.abschnitt);
 			if (halbjahr !== null) {

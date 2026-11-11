@@ -19,7 +19,8 @@ import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { ValidatorKlassenKuerzel } from "@ui/validation/ValidatorKlassenKuerzel";
 
-import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
+import type { KlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
+import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 /**
@@ -27,16 +28,14 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
  */
 export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 
-	protected manager: () => KlassenListeManager;
+	protected klassenState: KlassenAuswahlState = useKlassenAuswahlState();
 
 	constructor(
 		data: () => KlassenDaten,
 		vorhanden: () => Iterable<KlassenListeEintrag>,
-		manager: () => KlassenListeManager,
 		listOfAutopatchProps?: Iterable<keyof KlassenDaten>,
 		patch?: (data: Partial<KlassenDaten>) => Promise<boolean>) {
 		super({ data, patch, listOfAutopatchProps });
-		this.manager = manager;
 
 		this.addValidator(new ValidatorKlassenKuerzel(() => this.proxy.kuerzel ?? null, vorhanden), "kuerzel");
 		this.addValidator(new ValidatorStringLength(() => this.proxy.beschreibung, 1, 150), "beschreibung");
@@ -54,14 +53,14 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		get: () => (this.proxy.idSchulgliederung === -1) ? null : Schulgliederung.data().getWertByIDOrNull(this.proxy.idSchulgliederung),
 		set: (value) => this.proxy.idSchulgliederung = value?.daten(schuleStateImpl.schuljahr)?.id ?? -1,
 	});
-	schulgliederungen = computed(() => Schulgliederung.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, this.manager().schulform()));
+	schulgliederungen = computed(() => Schulgliederung.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, schuleStateImpl.schulform));
 
 	klassenart = computed<Klassenart | null>({
 		get: () => ((this.proxy.idKlassenart === null) || (this.proxy.idKlassenart === -1)) ? null : Klassenart.data().getWertByIDOrNull(this.proxy.idKlassenart),
 		set: (value) => this.proxy.idKlassenart = value?.daten(schuleStateImpl.schuljahr)?.id ?? -1,
 	});
 
-	klassenarten = computed(() => Klassenart.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, this.manager().schulform()));
+	klassenarten = computed(() => Klassenart.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, schuleStateImpl.schulform));
 
 	organisationsformAllgemeinbildend = computed<AllgemeinbildendOrganisationsformen | null>({
 		get: () => {
@@ -93,13 +92,13 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 	jahrgang = computed<JahrgangsDaten | null>({
 		get: () => {
 			const id = this.proxy.idJahrgang;
-			return (id === null) ? null : this.manager().jahrgaenge.get(id);
+			return (id === null) ? null : this.klassenState.jahrgaenge.get(id);
 		},
 		set: (value) => (this.proxy.idJahrgang = value?.id ?? null),
 	});
 	jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of this.manager().jahrgaenge.list()) {
+		for (const jg of this.klassenState.jahrgaenge.list()) {
 			if (jg.kuerzel !== "E3") { // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
 				result.add(jg);
 			}
@@ -110,7 +109,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 	vorgaengerklasse = computed<KlassenDatenMinimal | null>({
 		get: () => {
 			const id = this.proxy.idVorgaengerklasse;
-			return (id === null) ? null : this.manager().klassenByIdVorabschnitt.get(id) ?? null;
+			return (id === null) ? null : this.klassenState.klassenByIdVorabschnitt.get(id);
 		},
 		set: (value) => this.proxy.idVorgaengerklasse = value?.id ?? null,
 	});
@@ -118,7 +117,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 	folgeklasse = computed<KlassenDatenMinimal | null>({
 		get: () => {
 			const id = this.proxy.idFolgeklasse;
-			return (id === null) ? null : this.manager().klassenByIdFolgeAbschnitt.get(id) ?? null;
+			return (id === null) ? null : this.klassenState.klassenByIdFolgeAbschnitt.get(id);
 		},
 		set: (value) => this.proxy.idFolgeklasse = value?.id ?? null,
 	});
@@ -130,12 +129,12 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		const result = new ArrayList<KlassenDatenMinimal>();
 		const idJahrgang = this.proxy.idJahrgang;
 		if (idJahrgang === null) {
-			for (const kl of this.manager().klassenByIdFolgeAbschnitt.values()) {
+			for (const kl of this.klassenState.klassenByIdFolgeAbschnitt.list()) {
 				result.add(kl);
 			}
 			return result;
 		}
-		const jg = this.manager().jahrgaenge.get(idJahrgang);
+		const jg = this.klassenState.jahrgaenge.get(idJahrgang);
 		if (jg === null) {
 			return result;
 		}
@@ -145,20 +144,20 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		}
 		let schulgliederung: Schulgliederung | null;
 		if (jg.idSchulgliederung === null) {
-			schulgliederung = Schulgliederung.getDefault(this.manager().schulform());
+			schulgliederung = Schulgliederung.getDefault(schuleStateImpl.schulform);
 		} else {
 			schulgliederung = Schulgliederung.data().getWertByIDOrNull(jg.idSchulgliederung);
 		}
-		for (const kl of this.manager().klassenByIdFolgeAbschnitt.values()) {
+		for (const kl of this.klassenState.klassenByIdFolgeAbschnitt.list()) {
 			if (kl.idJahrgang === null) {
 				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
 			} else {
-				const jgKl = this.manager().jahrgaenge.get(kl.idJahrgang);
+				const jgKl = this.klassenState.jahrgaenge.get(kl.idJahrgang);
 				const tmpJgKl = (jgKl === null) || (jgKl.idJahrgangStatistik === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jgKl.idJahrgangStatistik);
 				if (tmpJgKl === null) {
 					continue;
 				}
-				if (tmpJgKl.isNachfolgerVon(schuleStateImpl.schuljahr, tmpJg, this.manager().schulform(), schulgliederung)) {
+				if (tmpJgKl.isNachfolgerVon(schuleStateImpl.schuljahr, tmpJg, schuleStateImpl.schulform, schulgliederung)) {
 					result.add(kl);
 				}
 			}
@@ -170,12 +169,12 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		const result = new ArrayList<KlassenDatenMinimal>();
 		const idJahrgang = this.proxy.idJahrgang;
 		if (idJahrgang === null) {
-			for (const kl of this.manager().klassenByIdVorabschnitt.values()) {
+			for (const kl of this.klassenState.klassenByIdVorabschnitt.list()) {
 				result.add(kl);
 			}
 			return result;
 		}
-		const jg = this.manager().jahrgaenge.get(idJahrgang);
+		const jg = this.klassenState.jahrgaenge.get(idJahrgang);
 		if (jg === null) {
 			return result;
 		}
@@ -185,20 +184,20 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		}
 		let schulgliederung: Schulgliederung | null;
 		if (jg.idSchulgliederung === null) {
-			schulgliederung = Schulgliederung.getDefault(this.manager().schulform());
+			schulgliederung = Schulgliederung.getDefault(schuleStateImpl.schulform);
 		} else {
 			schulgliederung = Schulgliederung.data().getWertByIDOrNull(jg.idSchulgliederung);
 		}
-		for (const kl of this.manager().klassenByIdVorabschnitt.values()) {
+		for (const kl of this.klassenState.klassenByIdVorabschnitt.list()) {
 			if (kl.idJahrgang === null) {
 				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
 			} else {
-				const jgKl = this.manager().jahrgaenge.get(kl.idJahrgang);
+				const jgKl = this.klassenState.jahrgaenge.get(kl.idJahrgang);
 				const tmpJgKl = (jgKl === null) || (jgKl.idJahrgangStatistik === null) ? null : Jahrgaenge.data().getWertByIDOrNull(jgKl.idJahrgangStatistik);
 				if (tmpJgKl === null) {
 					continue;
 				}
-				if (tmpJgKl.isVorgaengerVon(schuleStateImpl.schuljahr, tmpJg, this.manager().schulform(), schulgliederung)) {
+				if (tmpJgKl.isVorgaengerVon(schuleStateImpl.schuljahr, tmpJg, schuleStateImpl.schulform, schulgliederung)) {
 					result.add(kl);
 				}
 			}

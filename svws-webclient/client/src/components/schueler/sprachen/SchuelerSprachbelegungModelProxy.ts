@@ -5,15 +5,14 @@ import { Sprachreferenzniveau } from "@core/asd/types/fach/Sprachreferenzniveau"
 import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
 import { ModelProxy } from "@ui/model/ModelProxy";
 
-import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 /**
  * Der spezielle ModelProxy für die Sprachbelegung
  */
 export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung> {
 
-	private readonly _manager: () => SchuelerListeManager;
-	constructor(data: () => Sprachbelegung, manager: () => SchuelerListeManager, patch: (data: Partial<Sprachbelegung>) => Promise<boolean>) {
+	private readonly _schuljahr: () => number;
+	constructor(data: () => Sprachbelegung, schuljahr: () => number, patch: (data: Partial<Sprachbelegung>) => Promise<boolean>) {
 
 		const listOfAutopatchProps: Iterable<keyof Sprachbelegung> = [
 			"istNachweis",
@@ -23,7 +22,7 @@ export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung>
 		];
 		super({ data, patch, listOfAutopatchProps });
 
-		this._manager = manager;
+		this._schuljahr = schuljahr;
 
 		this.validate();
 	}
@@ -43,7 +42,7 @@ export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung>
 				return;
 			}
 
-			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
+			const jahrgang = value.daten(this._schuljahr());
 			if ((jahrgang?.kuerzel === this.proxy.belegungBisJahrgang) && (this.proxy.belegungBisAbschnitt === 1)) {
 				this.proxy.belegungVonAbschnitt = 1;
 				void this.patch().then(_ => {
@@ -70,7 +69,7 @@ export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung>
 				return;
 			}
 
-			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
+			const jahrgang = value.daten(this._schuljahr());
 			if ((this.proxy.belegungVonJahrgang === jahrgang?.kuerzel) && (this.proxy.belegungVonAbschnitt === 2)) {
 				this.proxy.belegungBisAbschnitt = 2;
 				void this.patch().then(_ => {
@@ -95,7 +94,7 @@ export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung>
 				this.proxy.referenzniveau = null;
 				return;
 			}
-			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
+			const jahrgang = value.daten(this._schuljahr());
 			this.proxy.referenzniveau = jahrgang?.schluessel ?? null;
 		},
 	});

@@ -1,23 +1,23 @@
 <template>
-	<template v-if="(klassenState.manager.hasDaten() && (klassenState.activeViewType === ViewType.DEFAULT)) || (klassenState.activeViewType !== ViewType.DEFAULT)">
+	<template v-if="(klassenState.stammdaten.hasDaten && (klassenState.navigator.activeViewType === ViewType.DEFAULT)) || (klassenState.navigator.activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
-					<template v-if="klassenState.activeViewType === ViewType.DEFAULT">
+					<template v-if="klassenState.navigator.activeViewType === ViewType.DEFAULT">
 						<h2 class="svws-headline">
-							{{ klassenState.manager.daten().kuerzel ? 'Klasse ' + klassenState.manager.daten().kuerzel : '—' }}
+							{{ klassenState.stammdaten.datenOrException().kuerzel ? 'Klasse ' + klassenState.stammdaten.datenOrException().kuerzel : '—' }}
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID: {{ klassenState.manager.daten().id }}
+								ID: {{ klassenState.stammdaten.datenOrException().id }}
 							</svws-ui-badge>
 						</h2>
 						<span class="svws-subline">
 							{{ lehrerkuerzel }}
 						</span>
 					</template>
-					<template v-else-if="klassenState.activeViewType === ViewType.HINZUFUEGEN">
+					<template v-else-if="klassenState.navigator.activeViewType === ViewType.HINZUFUEGEN">
 						<h2 class="svws-headline">Anlegen einer neuen Klasse...</h2>
 					</template>
-					<template v-else-if="klassenState.activeViewType === ViewType.GRUPPENPROZESSE">
+					<template v-else-if="klassenState.navigator.activeViewType === ViewType.GRUPPENPROZESSE">
 						<h2 class="svws-headline"> Gruppenprozesse </h2>
 						<span class="svws-subline">{{ klassenSubline }}</span>
 					</template>
@@ -26,7 +26,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 
-		<svws-ui-tab-bar :tab-manager="() => tabManager(klassenState.activeViewType)" :focus-switching-enabled :focus-help-visible>
+		<svws-ui-tab-bar :tab-manager="() => tabManager(klassenState.navigator.activeViewType)" :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -55,7 +55,7 @@
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const klassenSubline = computed(() => {
-		const auswahlKlassenList = klassenState.manager.liste.auswahlSorted();
+		const auswahlKlassenList = klassenState.liste.auswahlSorted();
 		if (auswahlKlassenList.size() > 5) {
 			return `${auswahlKlassenList.size()} Klassen ausgewählt`;
 		}
@@ -63,12 +63,12 @@
 	});
 
 	const lehrerkuerzel = computed<string>(() => {
-		if (!klassenState.manager.hasDaten()) {
+		if (!klassenState.stammdaten.hasDaten) {
 			return '';
 		}
 		let lehrerkuerzelStr = '';
-		for (const lehrerId of klassenState.manager.daten().klassenLeitungen) {
-			const lehrer = klassenState.manager.lehrer.get(lehrerId);
+		for (const lehrerId of klassenState.stammdaten.datenOrException().klassenLeitungen) {
+			const lehrer = klassenState.lehrer.get(lehrerId);
 			if (lehrer === null) {
 				continue;
 			}

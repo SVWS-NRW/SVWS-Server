@@ -4,16 +4,15 @@ import type { LehrerBeschaeftigungsartKatalogEintrag } from "@core/asd/data/lehr
 import type { LehrerEinsatzstatusKatalogEintrag } from "@core/asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag";
 import { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
 import type { LehrerRechtsverhaeltnisKatalogEintrag } from "@core/asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
+import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
 import { LehrerBeschaeftigungsart } from "@core/asd/types/lehrer/LehrerBeschaeftigungsart";
 import { LehrerEinsatzstatus } from "@core/asd/types/lehrer/LehrerEinsatzstatus";
 import { LehrerRechtsverhaeltnis } from "@core/asd/types/lehrer/LehrerRechtsverhaeltnis";
-import { DateManager } from "@core/asd/validate/DateManager";
 import { ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from "@core/asd/validate/lehrer/ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart";
 import { ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from "@core/asd/validate/lehrer/ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll";
 import { ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from "@core/asd/validate/lehrer/ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis";
 import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 
@@ -25,18 +24,18 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
  */
 export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPersonalabschnittsdaten> {
 
-	protected readonly manager: () => LehrerListeManager;
+	protected readonly stammdaten: () => LehrerStammdaten;
 
 	/**
 	 * Erstellt einen ModelProxy für das Core-DTO LehrerIndividualdaten.
 	 *
 	 * @param data               Zugriff auf die "Original"-Daten
 	 * @param validatorKontext   der Validator-Kontext für die Nutzung in den ASD-Validatoren
-	 * @param manager            Manager der Lehrerliste
+	 * @param stammdaten         Zugriff auf die Stammdaten des Lehrers, z.B. für das Geburtsdatum
 	 * @param patch              ggf. die Methode zum Patchen der einzelnen Attribute, sofern das automatische Patchen
 	 *                           bei Änderungen gewünscht ist
 	 */
-	constructor(data: () => LehrerPersonalabschnittsdaten | null, validatorKontext: () => ValidatorKontext, manager: () => LehrerListeManager,
+	constructor(data: () => LehrerPersonalabschnittsdaten | null, validatorKontext: () => ValidatorKontext, stammdaten: () => LehrerStammdaten,
 		patch?: (data: Partial<LehrerPersonalabschnittsdaten>) => Promise<boolean>) {
 		const daten = () => {
 			const tmp = data();
@@ -46,14 +45,14 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 			// Erstelle Pseudo-Daten, die für die Validierung genutzt werden
 			const pseudo = new LehrerPersonalabschnittsdaten();
 			pseudo.id = -1;
-			pseudo.idLehrer = manager().auswahl().id;
+			pseudo.idLehrer = stammdaten().id;
 			pseudo.idSchuljahresabschnitt = abschnittStateImpl.auswahl.id;
 			return pseudo;
 		};
 		const listOfAutopatchProps: Iterable<keyof LehrerPersonalabschnittsdaten> = ["idRechtsverhaeltnis", "idBeschaeftigungsart", "idEinsatzstatus", "stammschulnummer"];
 		super({ data: daten, patch, listOfAutopatchProps });
 
-		this.manager = manager;
+		this.stammdaten = stammdaten;
 		this.addValidatoren(validatorKontext);
 		this.validate();
 	}
@@ -63,9 +62,9 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idRechtsverhaeltnis), "idRechtsverhaeltnis");
 		this.addValidator(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			{ get: () => this.proxy.idSchuljahresabschnitt },
-			{ get: () => this.manager().daten().idStaatsangehoerigkeit },
+			{ get: () => this.stammdaten().idStaatsangehoerigkeit },
 			{ get: () => this.proxy.idRechtsverhaeltnis },
-			{ get: () => this.manager().daten().geburtsdatum },
+			{ get: () => this.stammdaten().geburtsdatum },
 			validatorKontext()), "idRechtsverhaeltnis", "pflichtstundensoll");
 
 		// Beschäftigungsart

@@ -34,7 +34,7 @@ export class RouteLehrerEinwilligungen extends RouteNode<RouteDataLehrerEinwilli
 				await this.data.ladeDaten(null);
 			} else {
 				const lehrerAuswahlState = useLehrerAuswahlState();
-				await this.data.ladeDaten(lehrerAuswahlState.manager.liste.get(id));
+				await this.data.ladeDaten(lehrerAuswahlState.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

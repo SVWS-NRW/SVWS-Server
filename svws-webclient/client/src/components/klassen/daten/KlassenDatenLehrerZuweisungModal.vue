@@ -37,11 +37,11 @@
 
 	const search = ref<string>("");
 
-	const klassenleitungen = computed<List<number>>(() => klassenState.manager.daten().klassenLeitungen);
+	const klassenleitungen = computed<List<number>>(() => klassenState.stammdaten.datenOrException().klassenLeitungen);
 
 	const rowsFiltered = computed<LehrerListeEintrag[]>(() => {
 		const arr = [];
-		for (const e of klassenState.manager.lehrer.list()) {
+		for (const e of klassenState.lehrer.list()) {
 			if (!e.istAktiv) {
 				continue;
 			}
@@ -70,8 +70,8 @@
 	}
 
 	async function add() {
-		const klassenId = klassenState.manager.auswahl().id;
-		await klassenState.addKlassenleitung(clickedRow.value!.id, klassenId);
+		const klassenId = klassenState.selected.id;
+		await klassenState.stammdaten.addKlassenleitung(clickedRow.value!.id, klassenId);
 		closeModal();
 	}
 

@@ -49,14 +49,14 @@
 
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_LOESCHEN));
 
-	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !lehrerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
+	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !lehrerAuswahlState.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
 	const deleteCheckErrors = computed<Iterable<string>>(() => lehrerAuswahlState.deleteCheck()[1]);
 	const selectedAllowedToDelete = computed<boolean>(() => lehrerAuswahlState.deleteCheck()[0]);
-	const isDeleteConditionSectionVisible = computed<boolean>(() => (lehrerAuswahlState.manager.liste.auswahlExists() || (statusAction.value === undefined)));
+	const isDeleteConditionSectionVisible = computed<boolean>(() => (lehrerAuswahlState.liste.auswahlExists() || (statusAction.value === undefined)));
 
 	const idsJeDatenContext = new Map<ReportingReportvorlageDatenContext, () => List<number>>([
-		[ReportingReportvorlageDatenContext.LEHRER, () => lehrerAuswahlState.manager.liste.auswahlKeyList()],
-		[ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER, () => lehrerAuswahlState.manager.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.LEHRER, () => lehrerAuswahlState.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER, () => lehrerAuswahlState.liste.auswahlKeyList()],
 	]);
 
 	const stundenplaene = computed(() => [...lehrerAuswahlState.mapStundenplaene.values()]);

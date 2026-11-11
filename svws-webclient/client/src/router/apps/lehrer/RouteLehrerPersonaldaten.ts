@@ -23,11 +23,11 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		const lehrerAuswahlState = useLehrerAuswahlState();
 		try {
-			if (!lehrerAuswahlState.manager.hasDaten()) {
+			if (!lehrerAuswahlState.stammdaten.hasDaten) {
 				return routeLehrer.getRoute();
 			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if ((!lehrerAuswahlState.manager.hasPersonalDaten()) || (id !== lehrerAuswahlState.manager.personalDaten().id)) {
+			if ((!lehrerAuswahlState.personaldaten.hasDaten) || (id !== lehrerAuswahlState.personaldaten.datenOrException().id)) {
 				await lehrerAuswahlState.loadPersonaldaten();
 			}
 		} catch (e) {

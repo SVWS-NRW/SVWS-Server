@@ -81,7 +81,7 @@
 
 	const gridManager = new GridManager<number, LehrerFunktion, List<LehrerFunktion>>({
 		daten: computed<List<LehrerFunktion>>(() => {
-			const funktionen = lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id)?.funktionen;
+			const funktionen = lehrerAuswahlState.personaldaten.abschnittBySchuljahresabschnitt(abschnittState.auswahl.id)?.funktionen;
 			// 'funktionen' wird in LehrerAuswahlStateImpl in-place mutiert (keine Änderung der Objektreferenz). Durch dem
 			// shallowRef (StateManager) gibt es daher in computed kein Update! Daher ist nötig, bei allen Änderungen
 			// eine Kopie von ArrayList zu erstellen
@@ -96,7 +96,7 @@
 	}
 
 	function rowActions(row: LehrerFunktion): TableAction[] {
-		return [{ label: "Funktion Löschen", action: () => lehrerAuswahlState.removeFunktion(row), trash: true }];
+		return [{ label: "Funktion Löschen", action: () => lehrerAuswahlState.personaldaten.funktionen.remove(row), trash: true }];
 	}
 	//# endregion
 
@@ -109,7 +109,7 @@
 
 	/** Liste an verfügbarer Funktionen - die noch nicht bereits hinzugefügt wurden */
 	const availableFunktionenToAdd = computed<SchulinterneFunktion[]>(() => {
-		const abschnitt = lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id);
+		const abschnitt = lehrerAuswahlState.personaldaten.abschnittBySchuljahresabschnitt(abschnittState.auswahl.id);
 		const assignedIds = new Set(abschnitt === null ? [] : [...abschnitt.funktionen].map(funktion => funktion.idFunktion));
 		return [...schulinterneFunktionenState.schulinterneFunktionen.list].filter(funktion => funktion.istSichtbar && !assignedIds.has(funktion.id));
 	});
@@ -136,7 +136,7 @@
 		if (funktionenToAdd.value.length === 0) {
 			return;
 		}
-		const idAbschnittsdaten = lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id)?.id;
+		const idAbschnittsdaten = lehrerAuswahlState.personaldaten.abschnittBySchuljahresabschnitt(abschnittState.auswahl.id)?.id;
 		if (idAbschnittsdaten === undefined) {
 			return;
 		}
@@ -144,7 +144,7 @@
 		for (const funktion of funktionenToAdd.value) {
 			data.add({ idAbschnittsdaten, idFunktion: funktion.id });
 		}
-		await lehrerAuswahlState.addFunktionen(data);
+		await lehrerAuswahlState.personaldaten.funktionen.add(data);
 		closeModal();
 	}
 	//# endregion

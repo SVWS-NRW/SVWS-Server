@@ -30,7 +30,7 @@ export class RouteSchuelerBetriebe extends RouteNode<RouteDataSchuelerBetriebe, 
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (id !== undefined) {
 				const schuelerAuswahlState = useSchuelerAuswahlState();
-				await this.data.ladeDaten(schuelerAuswahlState.manager.liste.get(id));
+				await this.data.ladeDaten(schuelerAuswahlState.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

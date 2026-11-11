@@ -159,7 +159,7 @@
 			} as Partial<LehrerStammdaten>
 		),
 		() => schuleState.validatorKontext,
-		() => lehrerAuswahlState.manager
+		() => lehrerAuswahlState.liste.list()
 	);
 
 	const personaltypManger = new SelectManager({
@@ -232,7 +232,7 @@
 
 	async function cancel() {
 		props.checkpoint.active = false;
-		await lehrerAuswahlState.gotoDefaultView(null);
+		await lehrerAuswahlState.navigator.select(null);
 	}
 
 	watch(() => model.pending, () => {

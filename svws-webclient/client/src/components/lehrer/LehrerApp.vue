@@ -1,34 +1,34 @@
 <template>
-	<template v-if="(lehrerAuswahlState.manager.hasDaten() && (lehrerAuswahlState.activeViewType === ViewType.DEFAULT)) || (lehrerAuswahlState.activeViewType !== ViewType.DEFAULT)">
+	<template v-if="(lehrerAuswahlState.stammdaten.hasDaten && (lehrerAuswahlState.navigator.activeViewType === ViewType.DEFAULT)) || (lehrerAuswahlState.navigator.activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<template v-if="lehrerAuswahlState.activeViewType === ViewType.DEFAULT">
+				<template v-if="lehrerAuswahlState.navigator.activeViewType === ViewType.DEFAULT">
 					<svws-ui-avatar :src="fotoSrc"
 						:alt="fotoSrcAlt"
-						@image:base64="foto => lehrerAuswahlState.patch({ foto })"
+						@image:base64="foto => lehrerAuswahlState.stammdaten.patch({ foto })"
 						:upload="!readonly"
 						:capture="!readonly"
 						:removable="!readonly" />
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
-							{{ lehrerAuswahlState.manager.daten().titel }} {{ lehrerAuswahlState.manager.daten().vorname }} {{ lehrerAuswahlState.manager.daten().nachname }}
+							{{ lehrerAuswahlState.stammdaten.datenOrException().titel }} {{ lehrerAuswahlState.stammdaten.datenOrException().vorname }} {{ lehrerAuswahlState.stammdaten.datenOrException().nachname }}
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID: {{ lehrerAuswahlState.manager.daten().id }}
+								ID: {{ lehrerAuswahlState.stammdaten.datenOrException().id }}
 							</svws-ui-badge>
 						</h2>
-						<span class="svws-subline">{{ lehrerAuswahlState.manager.daten().kuerzel }}</span>
+						<span class="svws-subline">{{ lehrerAuswahlState.stammdaten.datenOrException().kuerzel }}</span>
 					</div>
 				</template>
-				<template v-else-if="lehrerAuswahlState.activeViewType === ViewType.HINZUFUEGEN">
+				<template v-else-if="lehrerAuswahlState.navigator.activeViewType === ViewType.HINZUFUEGEN">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">Anlegen einer neuen Lehrkraft...</h2>
 					</div>
 				</template>
-				<template v-else-if="lehrerAuswahlState.activeViewType === ViewType.GRUPPENPROZESSE">
+				<template v-else-if="lehrerAuswahlState.navigator.activeViewType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
 						<div class="flex flex-row gap-3">
 							<h2 class="svws-headline text-ui-brand">Mehrfachauswahl</h2>
-							<svws-ui-button v-if="lehrerAuswahlState.manager.liste.auswahlExists()" size="normal" type="danger" @click="resetSelection">
+							<svws-ui-button v-if="lehrerAuswahlState.liste.auswahlExists()" size="normal" type="danger" @click="resetSelection">
 								Auswahl aufheben
 							</svws-ui-button>
 						</div>
@@ -39,7 +39,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 
-		<svws-ui-tab-bar :tab-manager="() => tabManager(lehrerAuswahlState.activeViewType)" :focus-switching-enabled :focus-help-visible>
+		<svws-ui-tab-bar :tab-manager="() => tabManager(lehrerAuswahlState.navigator.activeViewType)" :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -73,18 +73,18 @@
 
 	const readonly = computed<boolean>(() => !benutzerState.kompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN) || !benutzerState.kompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 	const fotoSrc = computed<string | undefined>(() => {
-		const base64Payload = lehrerAuswahlState.manager.daten().foto;
+		const base64Payload = lehrerAuswahlState.stammdaten.datenOrException().foto;
 		if (base64Payload !== null) {
 			return `data:image/png;base64, ${base64Payload}`;
 		}
 		return undefined;
 	});
 	const fotoSrcAlt = computed<string>(() => (fotoSrc.value !== undefined) ? `Foto von ${vorname.value} ${nachname.value}` : '');
-	const vorname = computed<string>(() => lehrerAuswahlState.manager.daten().vorname);
-	const nachname = computed<string>(() => lehrerAuswahlState.manager.daten().nachname);
+	const vorname = computed<string>(() => lehrerAuswahlState.stammdaten.datenOrException().vorname);
+	const nachname = computed<string>(() => lehrerAuswahlState.stammdaten.datenOrException().nachname);
 
 	const lehrerSubline = computed(() => {
-		const auswahlLehrerList = lehrerAuswahlState.manager.liste.auswahlSorted();
+		const auswahlLehrerList = lehrerAuswahlState.liste.auswahlSorted();
 		if (auswahlLehrerList.size() > 5) {
 			return `${auswahlLehrerList.size()} Lehrer ausgewählt`;
 		}
@@ -92,7 +92,7 @@
 	});
 
 	async function resetSelection() {
-		await lehrerAuswahlState.gotoDefaultView(lehrerAuswahlState.manager.getVorherigeAuswahl()?.id);
+		await lehrerAuswahlState.navigator.select(lehrerAuswahlState.stammdaten.vorherige?.id);
 	}
 
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<Teleport defer to=".svws-ui-header--actions">
 		<stundenplan-drucken-modal :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN" v-slot="{ openModal }" :map-stundenplaene
-			:ids-hauptdaten="[lehrerAuswahlState.manager.daten().id]" :api-status>
+			:ids-hauptdaten="[lehrerAuswahlState.stammdaten.datenOrException().id]" :api-status>
 			<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
 		</stundenplan-drucken-modal>
 		<svws-ui-modal-hilfe> <hilfe-lehrer-stundenplan /> </svws-ui-modal-hilfe>
@@ -16,7 +16,7 @@
 		<template v-else>
 			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp
 				:kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan autofocus />
-			<stundenplan-lehrer :id="lehrerAuswahlState.manager.daten().id" :ignore-empty :manager :wochentyp :kalenderwoche />
+			<stundenplan-lehrer :id="lehrerAuswahlState.stammdaten.datenOrException().id" :ignore-empty :manager :wochentyp :kalenderwoche />
 		</template>
 	</div>
 </template>

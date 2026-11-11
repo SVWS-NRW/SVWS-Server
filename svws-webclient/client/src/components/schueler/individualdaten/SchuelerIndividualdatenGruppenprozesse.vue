@@ -241,7 +241,7 @@
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
 	const schuljahr = computed(() => schuleState.schuljahr);
-	const schulform = computed(() => schuelerAuswahlState.manager.schulform());
+	const schulform = computed(() => schuleState.schulform);
 	const schulen = computed(() => herkunftschulenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.values());
 
 	watch(() => props.pendingStateManager().pendingStateExists(), (somethingPending: boolean) => {
@@ -345,7 +345,7 @@
 
 	async function patchPendingStates() {
 		loading.value = true;
-		await schuelerAuswahlState.patchMultiple(props.pendingStateManager());
+		await schuelerAuswahlState.gruppenprozesse.patchMultiple(props.pendingStateManager());
 		loading.value = false;
 	}
 

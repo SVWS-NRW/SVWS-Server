@@ -45,11 +45,11 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 		try {
 			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : { id: undefined };
 			const schuelerAuswahlState = useSchuelerAuswahlState();
-			if (!schuelerAuswahlState.manager.hasDaten()) {
+			if (!schuelerAuswahlState.stammdaten.hasDaten) {
 				return false;
 			}
-			const auswahl = schuelerAuswahlState.manager.auswahl();
-			if (((auswahl.abiturjahrgang !== null) && schuelerAuswahlState.manager.abiturjahrgaenge.get(auswahl.abiturjahrgang))
+			const auswahl = schuelerAuswahlState.selected;
+			if (((auswahl.abiturjahrgang !== null) && schuelerAuswahlState.abiturjahrgaenge.get(auswahl.abiturjahrgang))
 				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
 					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)
 						&& benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(auswahl.abiturjahrgang)))
@@ -69,7 +69,7 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 				throw new DeveloperNotificationException("Fehler: Keine Schüler-ID in der URL angegeben.");
 			}
 			const schuelerAuswahlState = useSchuelerAuswahlState();
-			const schueler = schuelerAuswahlState.manager.liste.get(id);
+			const schueler = schuelerAuswahlState.liste.get(id);
 			if (schueler === null) {
 				return routeSchueler.getRoute({ id });
 			}
