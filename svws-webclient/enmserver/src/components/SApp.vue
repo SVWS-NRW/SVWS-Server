@@ -30,7 +30,7 @@
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name !== 'einstellungen'">
-							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)" @keydown.enter="startSetApp(item)">
+							<svws-ui-menu-item :active="is_active(item)" :disabled="isAppDisabled(item)" @click="startSetApp(item)" @keydown.enter="startSetApp(item)">
 								<template #icon>
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'leistungen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'teilleistungen'" />
@@ -179,6 +179,10 @@
 		return true;
 	}
 
+	function isAppDisabled(item: TabData): boolean {
+		return (item.name === 'schuelerfaecher') && (props.auswahlAnsicht() !== ENMLehrerFunktion.KLASSENLEITUNG);
+	}
+
 	const hideAuswahlliste = new Set<string>(["statistik"]);
 
 	function showAuswahlliste(): boolean {
@@ -186,6 +190,9 @@
 	}
 
 	async function startSetApp(app: TabData) {
+		if (isAppDisabled(app)) {
+			return;
+		}
 		pendingSetApp.value = app.text;
 		await props.setApp(app);
 		pendingSetApp.value = '';
