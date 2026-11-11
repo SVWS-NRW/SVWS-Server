@@ -180,12 +180,21 @@
 	}
 
 	function isAppDisabled(item: TabData): boolean {
+		if (item.name === 'klassenleitung') {
+			const manager = props.enmManager();
+			for (const klasse of manager.listKlassenKlassenlehrer) {
+				if (manager.klasseIstKlassenleitung(klasse.id)) {
+					return false;
+				}
+			}
+			return true;
+		}
 		if (item.name !== 'schuelerfaecher') {
 			return false;
 		}
 		const manager = props.enmManager();
 		for (const klasse of manager.listKlassenKlassenlehrer) {
-			if (manager.klasseIstKlassenleitung(klasse.id)) {
+			if (manager.klasseIstKlassenleitung(klasse.id) || manager.klasseIstAbteilungsleitung(klasse.id)) {
 				return false;
 			}
 		}
