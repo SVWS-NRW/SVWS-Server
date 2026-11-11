@@ -162,10 +162,10 @@
 					lerngruppe: lerngruppe.bezeichnung ?? '',
 				};
 				for (const art of teilleistungsarten.value) {
-					eintrag[`teilleistung_${art.id}`] = '—';
+					eintrag[`teilleistung_${art.id}`] = '-';
 				}
 				for (const teilleistung of leistung.teilleistungen) {
-					eintrag[`teilleistung_${teilleistung.artID}`] = teilleistung.note ?? '—';
+					eintrag[`teilleistung_${teilleistung.artID}`] = teilleistung.note ?? '-';
 				}
 				faecher.push(eintrag);
 			}
