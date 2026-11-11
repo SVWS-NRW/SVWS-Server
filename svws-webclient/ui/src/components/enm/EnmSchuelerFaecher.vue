@@ -1,5 +1,11 @@
 <template>
-	<div v-if="berechtigt" class="page page-flex-col gap-4 p-4">
+	<div v-if="ladeFehler" class="page p-4">
+		<p>Die Daten der Klassenleitung konnten für die Notenübersicht nicht geladen werden.</p>
+	</div>
+	<div v-else-if="managerNotenuebersicht === null" class="page p-4">
+		<p>Die Notenübersicht wird geladen …</p>
+	</div>
+	<div v-else-if="berechtigt" class="page page-flex-col gap-4 p-4">
 		<div class="flex flex-wrap items-end justify-between gap-4">
 			<div>
 				<h1 class="text-headline-lg">Notenübersicht</h1>
@@ -14,13 +20,13 @@
 		<svws-ui-table :items="eintraegeGefiltert" :columns="spalten" :no-data-text="auswahlSchueler ? 'Für diesen Schüler sind keine Teilleistungen vorhanden.' : 'Keine Teilleistungen vorhanden.'" scroll />
 	</div>
 	<div v-else class="page p-4">
-		<p>Diese Übersicht ist nur in der Ansicht Klassenleitung verfügbar.</p>
+		<p>Für diese Übersicht ist eine Klassenleitungsberechtigung erforderlich.</p>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed, onMounted, ref, shallowRef } from 'vue';
 
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
@@ -44,11 +50,24 @@
 		[key: string]: string | number;
 	}
 
-	const props = defineProps<{ enmManager: () => EnmManager }>();
+	const props = defineProps<{ ladeManagerKlassenleitung: () => Promise<EnmManager> }>();
 	const auswahlSchueler = ref<SchuelerEintrag | null>(null);
+	const managerNotenuebersicht = shallowRef<EnmManager | null>(null);
+	const ladeFehler = ref(false);
+
+	onMounted(async () => {
+		try {
+			managerNotenuebersicht.value = await props.ladeManagerKlassenleitung();
+		} catch {
+			ladeFehler.value = true;
+		}
+	});
 
 	const berechtigt = computed(() => {
-		const manager = props.enmManager();
+		const manager = managerNotenuebersicht.value;
+		if (manager === null) {
+			return false;
+		}
 		for (const klasse of manager.listKlassenKlassenlehrer) {
 			if (manager.klasseIstKlassenleitung(klasse.id)) {
 				return true;
@@ -58,10 +77,10 @@
 	});
 
 	const schuelerListe = computed((): SchuelerEintrag[] => {
-		if (!berechtigt.value) {
+		const manager = managerNotenuebersicht.value;
+		if (!berechtigt.value || (manager === null)) {
 			return [];
 		}
-		const manager = props.enmManager();
 		const result: SchuelerEintrag[] = [];
 		for (const klasse of manager.listKlassenKlassenlehrer) {
 			if (!istKlasseZugaenglich(klasse, manager)) {
@@ -79,7 +98,10 @@
 	});
 
 	const teilleistungsarten = computed(() => {
-		const manager = props.enmManager();
+		const manager = managerNotenuebersicht.value;
+		if (manager === null) {
+			return [];
+		}
 		const ids = new Set<number>();
 		for (const { schueler } of schuelerListe.value) {
 			for (const leistung of schueler.leistungsdaten) {
@@ -112,10 +134,10 @@
 	});
 
 	const eintraege = computed((): FachEintrag[] => {
-		if (!berechtigt.value) {
+		const manager = managerNotenuebersicht.value;
+		if (!berechtigt.value || (manager === null)) {
 			return [];
 		}
-		const manager = props.enmManager();
 		const result: FachEintrag[] = [];
 		for (const { schueler, klasse } of schuelerListe.value) {
 			const faecher: FachEintrag[] = [];

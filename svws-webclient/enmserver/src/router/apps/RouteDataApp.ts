@@ -514,6 +514,15 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		await this.ladeDaten();
 	}
 
+	/** Lädt einen Manager mit dem vollständigen Datenumfang der Klassenleitung für die schreibgeschützte Notenübersicht. */
+	public async ladeManagerKlassenleitung(): Promise<EnmManager> {
+		if (this.manager.lehrerFunktion === ENMLehrerFunktion.KLASSENLEITUNG) {
+			return this.manager;
+		}
+		const daten = await authStateImpl.api.getLehrerENMDaten(ENMLehrerFunktion.KLASSENLEITUNG);
+		return new EnmManager(daten, ENMLehrerFunktion.KLASSENLEITUNG);
+	}
+
 	public get optionsAuswahlAnsicht(): Set<ENMLehrerFunktion> {
 		return this._state.value.optionsAuswahlAnsicht;
 	}
