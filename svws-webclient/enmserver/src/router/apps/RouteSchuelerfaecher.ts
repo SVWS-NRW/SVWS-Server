@@ -16,7 +16,7 @@ export class RouteSchuelerfaecher extends RouteNode<any, RouteApp> {
 	}
 
 	public getProps() {
-		return { enmManager: () => routeApp.data.manager };
+		return { ladeManagerKlassenleitung: () => routeApp.data.ladeManagerKlassenleitung() };
 	}
 
 }
