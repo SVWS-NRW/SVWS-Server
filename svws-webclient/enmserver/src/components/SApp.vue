@@ -180,7 +180,16 @@
 	}
 
 	function isAppDisabled(item: TabData): boolean {
-		return (item.name === 'schuelerfaecher') && (props.auswahlAnsicht() !== ENMLehrerFunktion.KLASSENLEITUNG);
+		if (item.name !== 'schuelerfaecher') {
+			return false;
+		}
+		const manager = props.enmManager();
+		for (const klasse of manager.listKlassenKlassenlehrer) {
+			if (manager.klasseIstKlassenleitung(klasse.id)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	const hideAuswahlliste = new Set<string>(["statistik"]);
