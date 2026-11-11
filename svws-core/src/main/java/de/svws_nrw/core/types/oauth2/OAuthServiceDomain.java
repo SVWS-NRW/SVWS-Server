@@ -1,5 +1,8 @@
 package de.svws_nrw.core.types.oauth2;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * Eine Liste der möglichen OAuth2-Domains
  */
@@ -20,7 +23,7 @@ public enum OAuthServiceDomain {
 	IT_NRW("IT_NRW");
 
 
-	private final String dbValue;
+	private final @NotNull String dbValue;
 
 
 	/**
@@ -28,7 +31,7 @@ public enum OAuthServiceDomain {
 	 *
 	 * @param dbValue der DB-Wert der OAuth-Domäne
 	 */
-	OAuthServiceDomain(final String dbValue) {
+	OAuthServiceDomain(final @NotNull String dbValue) {
 		this.dbValue = dbValue;
 	}
 
@@ -37,7 +40,7 @@ public enum OAuthServiceDomain {
 	 *
 	 * @return den DB-Wert
 	 */
-	public String getDbValue() {
+	public @NotNull String getDbValue() {
 		return this.dbValue;
 	}
 
@@ -48,12 +51,12 @@ public enum OAuthServiceDomain {
 	 * @param dbValue DB Wert der OAuth Domaine
 	 * @return die OAuth Domaine
 	 */
-	public static OAuthServiceDomain getByDbValue(final String dbValue) {
+	public static @NotNull OAuthServiceDomain getByDbValue(final @NotNull String dbValue) {
 		return switch (dbValue) {
 			case "WENOM" -> OAuthServiceDomain.WENOM;
 			case "SCHULBEWERBUNG" -> OAuthServiceDomain.SCHULBEWERBUNG;
 			case "IT_NRW" -> OAuthServiceDomain.IT_NRW;
-			default -> null;
+			default -> throw new DeveloperNotificationException("Die OAuth-Domäne mit dem DB-Wert " + dbValue + " existiert nicht.");
 		};
 	}
 

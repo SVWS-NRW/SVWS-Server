@@ -173,6 +173,8 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Notenmodul_Credentials;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Notenmodul_Konfiguration_Client;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Notenmodul_Konfiguration_Server;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Notenmodul_Verbindungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_OAuth_Resource_Server_Config;
+import de.svws_nrw.db.schema.tabellen.Tabelle_OAuth_Token_Server_Config;
 import de.svws_nrw.db.schema.tabellen.Tabelle_OrganisationsformenKatalog_Keys;
 import de.svws_nrw.db.schema.tabellen.Tabelle_PersonalTypen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Personengruppen;
@@ -698,6 +700,12 @@ public final class Schema {
 
 	/** Tabelle SchuleOAuthSecrets */
 	public static final Tabelle_SchuleOAuthSecrets tab_SchuleOAuthSecrets = add(new Tabelle_SchuleOAuthSecrets());
+
+	/** Tabelle OAuth_Resource_Server_Config */
+	public static final Tabelle_OAuth_Resource_Server_Config tab_OAuth_Resource_Server_Config = add(new Tabelle_OAuth_Resource_Server_Config());
+
+	/** Tabelle OAuth_Token_Server_Config */
+	public static final Tabelle_OAuth_Token_Server_Config tab_OAuth_Token_Server_Config = add(new Tabelle_OAuth_Token_Server_Config());
 
 	/** Tabelle Notenmodul_Verbindungen */
 	public static final Tabelle_Notenmodul_Verbindungen tab_Notenmodul_Verbindungen = add(new Tabelle_Notenmodul_Verbindungen());

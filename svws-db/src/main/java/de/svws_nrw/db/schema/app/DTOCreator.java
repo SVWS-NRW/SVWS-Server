@@ -441,6 +441,8 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.converter.current.GeschlechtConverterFromString</class>
                           <class>de.svws_nrw.db.converter.current.KursFortschreibungsartConverter</class>
                           <class>de.svws_nrw.db.converter.current.NationalitaetenConverter</class>
+                          <class>de.svws_nrw.db.converter.current.OAuthResourceTypeConverter</class>
+                          <class>de.svws_nrw.db.converter.current.OAuthServerModeConverter</class>
                           <class>de.svws_nrw.db.converter.current.OAuthServiceDomainConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonTypNullableConverter</class>

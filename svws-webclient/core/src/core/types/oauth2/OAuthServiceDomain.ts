@@ -1,5 +1,6 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { Class } from '../../../java/lang/Class';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 
 export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 
@@ -24,14 +25,14 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 */
 	public static readonly IT_NRW: OAuthServiceDomain = new OAuthServiceDomain("IT_NRW", 2, "IT_NRW");
 
-	private readonly dbValue: string | null;
+	private readonly dbValue: string;
 
 	/**
 	 * Erstellt eine neue OAuth Service Domäne
 	 *
 	 * @param dbValue der DB-Wert der OAuth-Domäne
 	 */
-	private constructor(name: string, ordinal: number, dbValue: string | null) {
+	private constructor(name: string, ordinal: number, dbValue: string) {
 		super(name, ordinal);
 		OAuthServiceDomain.all_values_by_ordinal.push(this);
 		OAuthServiceDomain.all_values_by_name.set(name, this);
@@ -43,7 +44,7 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 *
 	 * @return den DB-Wert
 	 */
-	public getDbValue(): string | null {
+	public getDbValue(): string {
 		return this.dbValue;
 	}
 
@@ -53,19 +54,19 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 * @param dbValue DB Wert der OAuth Domaine
 	 * @return die OAuth Domaine
 	 */
-	public static getByDbValue(dbValue: string | null): OAuthServiceDomain | null {
-		let _sevar_39850074;
-		const _seexpr_39850074 = (dbValue);
-		if (_seexpr_39850074 === "WENOM") {
-			_sevar_39850074 = OAuthServiceDomain.WENOM;
-		} else if (_seexpr_39850074 === "SCHULBEWERBUNG") {
-			_sevar_39850074 = OAuthServiceDomain.SCHULBEWERBUNG;
-		} else if (_seexpr_39850074 === "IT_NRW") {
-			_sevar_39850074 = OAuthServiceDomain.IT_NRW;
+	public static getByDbValue(dbValue: string): OAuthServiceDomain {
+		let _sevar_750910591;
+		const _seexpr_750910591 = (dbValue);
+		if (_seexpr_750910591 === "WENOM") {
+			_sevar_750910591 = OAuthServiceDomain.WENOM;
+		} else if (_seexpr_750910591 === "SCHULBEWERBUNG") {
+			_sevar_750910591 = OAuthServiceDomain.SCHULBEWERBUNG;
+		} else if (_seexpr_750910591 === "IT_NRW") {
+			_sevar_750910591 = OAuthServiceDomain.IT_NRW;
 		} else {
-			_sevar_39850074 = null;
+			throw new DeveloperNotificationException("Die OAuth-Domäne mit dem DB-Wert " + dbValue + " existiert nicht.");;
 		}
-		return _sevar_39850074;
+		return _sevar_750910591;
 	}
 
 	/**

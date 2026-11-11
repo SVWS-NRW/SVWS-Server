@@ -56,6 +56,7 @@ import de.svws_nrw.db.schema.revisionen.Revision72Updates;
 import de.svws_nrw.db.schema.revisionen.Revision74Updates;
 import de.svws_nrw.db.schema.revisionen.Revision77Updates;
 import de.svws_nrw.db.schema.revisionen.Revision80Updates;
+import de.svws_nrw.db.schema.revisionen.Revision84Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
 /**
@@ -388,21 +389,24 @@ public enum SchemaRevisionen {
 	REV_82(82, "2026-11-03"),
 
 	/** Tabellen Gost_Schueler und Gost_Schueler_Wiederholung um die Spalte ZulassungSimulation für die Simulation der Abiturzulassung ergänzt */
-	REV_83(83, "2026-11-06");
+	REV_83(83, "2026-11-06"),
+
+	/** Tabellen OAuth_Resource_Server_Config und OAuth_Token_Server_Config für die Konfiguration externer OAuth-Systeme hinzugefügt, Spalten AuthServer und RequestedScope in SchuleOAuthSecrets entfernt. Die Konfigurationstabellen werden mit den Werten der Demo-Systeme von schulbewerbung.de und des Signierdienstes von IT.NRW befüllt. */
+	REV_84(84, "2026-11-10");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_83;
+	public static final SchemaRevisionen maxRevision = REV_84;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_83;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_84;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -516,6 +520,7 @@ public enum SchemaRevisionen {
 				case REV_74 -> new Revision74Updates();
 				case REV_77 -> new Revision77Updates();
 				case REV_80 -> new Revision80Updates();
+				case REV_84 -> new Revision84Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

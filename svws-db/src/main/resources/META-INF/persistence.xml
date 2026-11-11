@@ -26,6 +26,8 @@
         <class>de.svws_nrw.db.converter.current.GeschlechtConverterFromString</class>
         <class>de.svws_nrw.db.converter.current.KursFortschreibungsartConverter</class>
         <class>de.svws_nrw.db.converter.current.NationalitaetenConverter</class>
+        <class>de.svws_nrw.db.converter.current.OAuthResourceTypeConverter</class>
+        <class>de.svws_nrw.db.converter.current.OAuthServerModeConverter</class>
         <class>de.svws_nrw.db.converter.current.OAuthServiceDomainConverter</class>
         <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
         <class>de.svws_nrw.db.converter.current.PersonTypNullableConverter</class>
@@ -442,6 +444,8 @@
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOCredentials</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen</class>
+        <class>de.svws_nrw.db.dto.current.svws.auth.DTOOAuthResourceServerConfig</class>
+        <class>de.svws_nrw.db.dto.current.svws.auth.DTOOAuthTokenServerConfig</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOSchuleCredentials</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessource</class>
