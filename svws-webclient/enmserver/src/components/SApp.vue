@@ -37,6 +37,7 @@
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'ankreuzkompetenzen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'klassenleitung'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'schuelerfaecher'" />
+									<span class="inline-block icon-lg i-ri-presentation-line" v-if="item.name === 'konferenzuebersicht'" />
 								</template>
 								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							</svws-ui-menu-item>
@@ -189,7 +190,7 @@
 			}
 			return true;
 		}
-		if (item.name !== 'schuelerfaecher') {
+		if (item.name !== 'schuelerfaecher' && item.name !== 'konferenzuebersicht') {
 			return false;
 		}
 		const manager = props.enmManager();

@@ -6,6 +6,10 @@
 		<p>Die Notenübersicht wird geladen …</p>
 	</div>
 	<div v-else-if="berechtigt" class="page page-flex-col gap-4 p-4">
+		<div v-if="punkteToggleSichtbar" class="flex items-center justify-end gap-2 text-black">
+			<span>Noten</span>
+			<svws-ui-checkbox v-model="punkteAnsicht" type="toggle">Punkte</svws-ui-checkbox>
+		</div>
 		<div class="flex flex-wrap items-end justify-between gap-4">
 			<div>
 				<h1 class="text-headline-lg">Notenübersicht</h1>
@@ -23,7 +27,7 @@
 					<div class="w-full text-center">
 						<svws-ui-badge v-if="getNotenBadge(column.key, rowData, value) !== null"
 							type="light"
-							class="!text-base"
+							class="!mx-auto !text-base"
 							:style="getNotenBadge(column.key, rowData, value) === 'gelb' ? badgeGelbStyle : badgeRotStyle">
 							{{ value }}
 						</svws-ui-badge>
@@ -48,6 +52,7 @@
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
 	import type { ENMv2Teilleistungsart } from '@core/core/data/enm/v2/ENMv2Teilleistungsart';
+	import type { DataTableColumn } from '@ui/types';
 
 	import type { EnmManager } from './EnmManager';
 
@@ -67,6 +72,7 @@
 		fach: string;
 		lerngruppe: string;
 		note: string;
+		noteOriginal: string;
 		[key: string]: string | number;
 	}
 
@@ -77,6 +83,7 @@
 		auswahlMehrfach: () => ENMv2Klasse[];
 	}>();
 	const auswahlSchueler = ref<SchuelerEintrag | null>(null);
+	const punkteAnsicht = ref(false);
 	const managerNotenuebersicht = shallowRef<EnmManager | null>(null);
 	const ladeFehler = ref(false);
 	const badgeGelbStyle = {
@@ -128,6 +135,19 @@
 		const einzel = props.auswahlEinzel();
 		return (einzel === null) ? null : new Set([einzel.id]);
 	});
+	const punkteToggleSichtbar = computed(() => {
+		const manager = managerNotenuebersicht.value;
+		if (manager === null) {
+			return false;
+		}
+		for (const klasse of manager.listKlassenKlassenlehrer) {
+			if (istKlasseZugaenglich(klasse, manager) && istKlasseAusgewählt(klasse)
+				&& !/^(05|06|07|08|09|10)/.test(klasse.kuerzel ?? klasse.kuerzelAnzeige ?? '')) {
+				return true;
+			}
+		}
+		return false;
+	});
 
 	const schuelerListe = computed((): SchuelerEintrag[] => {
 		const manager = managerNotenuebersicht.value;
@@ -170,14 +190,17 @@
 				result.push(art);
 			}
 		}
-		return result.sort((a, b) => ((a.sortierung ?? 0) - (b.sortierung ?? 0)) || (a.bezeichnung ?? '').localeCompare(b.bezeichnung ?? '', 'de'));
+		return result.sort((a, b) => {
+			const sortierung = (a.sortierung ?? 0) - (b.sortierung ?? 0);
+			return sortierung !== 0 ? sortierung : (a.bezeichnung ?? '').localeCompare(b.bezeichnung ?? '', 'de');
+		});
 	});
 
 	const spalten = computed(() => {
 		const maxNamenslaenge = schuelerListe.value.reduce((max, eintrag) =>
 			Math.max(max, `${eintrag.schueler.nachname ?? ''}, ${eintrag.schueler.vorname ?? ''}`.length), 'Schüler'.length);
-		const namensBreite = Math.max(9.5, Math.ceil((maxNamenslaenge * 0.58 + 3) * 2) / 2);
-		const result = [
+		const namensBreite = Math.max(9.5, Math.ceil(((maxNamenslaenge * 0.58) + 3) * 2) / 2);
+		const result: DataTableColumn[] = [
 			{ key: 'klasse', label: 'Klasse', fixedWidth: 6.5, sortable: true },
 			{ key: 'schueler', label: 'Schüler', fixedWidth: namensBreite, sortable: true },
 			{ key: 'fach', label: 'Fach', fixedWidth: 5.5, sortable: true },
@@ -185,7 +208,7 @@
 		];
 		for (const art of teilleistungsarten.value) {
 			const label = art.bezeichnung ?? `Teilleistung ${art.id}`;
-			const fixedWidth = Math.max(5.5, Math.ceil((label.length * 0.55 + 3) * 2) / 2);
+			const fixedWidth = Math.max(5.5, Math.ceil(((label.length * 0.55) + 3) * 2) / 2);
 			result.push({ key: `teilleistung_${art.id}`, label, fixedWidth, align: 'center', sortable: true });
 		}
 		result.push({ key: 'note', label: 'Note', fixedWidth: 5.5, align: 'center', sortable: true });
@@ -217,19 +240,25 @@
 					klassenkuerzel: klasse.kuerzel ?? klasse.kuerzelAnzeige ?? '',
 					schueler: `${schueler.nachname ?? ''}, ${schueler.vorname ?? ''}`,
 					jahrgang: getJahrgangKuerzel(klasse, manager),
-					fach: fach.kuerzelAnzeige || fach.kuerzel,
+					fach: fach.kuerzelAnzeige !== '' ? fach.kuerzelAnzeige : fach.kuerzel,
 					lerngruppe: lerngruppe.bezeichnung ?? '',
-					note: leistung.note ?? '-',
+					note: getAnzeigewert(leistung.note, klasse, manager) ?? '-',
+					noteOriginal: leistung.note ?? '-',
 				};
 				for (const art of teilleistungsarten.value) {
 					eintrag[`teilleistung_${art.id}`] = '-';
+					eintrag[`teilleistung_${art.id}_original`] = '-';
 				}
 				for (const teilleistung of leistung.teilleistungen) {
-					eintrag[`teilleistung_${teilleistung.artID}`] = teilleistung.note ?? '-';
+					eintrag[`teilleistung_${teilleistung.artID}`] = getAnzeigewert(teilleistung.note, klasse, manager) ?? '-';
+					eintrag[`teilleistung_${teilleistung.artID}_original`] = teilleistung.note ?? '-';
 				}
 				faecher.push(eintrag);
 			}
-			faecher.sort((a, b) => (a.fachSortierung - b.fachSortierung) || a.lerngruppe.localeCompare(b.lerngruppe, 'de'));
+			faecher.sort((a, b) => {
+				const sortierung = a.fachSortierung - b.fachSortierung;
+				return sortierung !== 0 ? sortierung : a.lerngruppe.localeCompare(b.lerngruppe, 'de');
+			});
 			result.push(...faecher);
 		}
 		return result;
@@ -267,7 +296,10 @@
 		if (!istNotenspalte(spalte)) {
 			return null;
 		}
-		const note = String(wert ?? '').trim().replace(/[−–]/g, '-');
+		const notenWert = punkteAnsicht.value && !/^(05|06|07|08|09|10)/.test(zeile.klassenkuerzel)
+			? (spalte === 'note' ? zeile.noteOriginal : zeile[`${spalte}_original`])
+			: wert;
+		const note = (typeof notenWert === 'string' || typeof notenWert === 'number' ? String(notenWert) : '').trim().replace(/[−–]/g, '-');
 		if (['EF', 'Q1', 'Q2'].includes(zeile.jahrgang)) {
 			return ['4-', '5+', '5', '5-', '6'].includes(note) ? 'orange' : null;
 		}
@@ -278,6 +310,19 @@
 			return 'gelb';
 		}
 		return ['5+', '5', '5-', '6'].includes(note) ? 'orange' : null;
+	}
+
+	function getAnzeigewert(wert: string | null, klasse: ENMv2Klasse, manager: EnmManager): string | null {
+		if ((wert === null) || (punkteAnsicht.value === false) || /^(05|06|07|08|09|10)/.test(klasse.kuerzel ?? klasse.kuerzelAnzeige ?? '')) {
+			return wert;
+		}
+		const kuerzel = wert.trim().replace(/[−–]/g, '-').toLocaleLowerCase();
+		for (const note of manager.daten.noten) {
+			if ((note.kuerzel ?? '').trim().replace(/[−–]/g, '-').toLocaleLowerCase() === kuerzel) {
+				return note.notenpunkte === null ? wert : String(note.notenpunkte);
+			}
+		}
+		return wert;
 	}
 
 	function istNotenspalte(spalte: string): boolean {
