@@ -14,7 +14,7 @@
 		<svws-ui-table :items="eintraegeGefiltert" :columns="spalten" :no-data-text="auswahlSchueler ? 'Für diesen Schüler sind keine Teilleistungen vorhanden.' : 'Keine Teilleistungen vorhanden.'" scroll />
 	</div>
 	<div v-else class="page p-4">
-		<p>Diese Übersicht ist nur in der Ansicht Klassenleitung oder Abteilungsleitung verfügbar.</p>
+		<p>Diese Übersicht ist nur in der Ansicht Klassenleitung verfügbar.</p>
 	</div>
 </template>
 
@@ -50,7 +50,7 @@
 
 	const berechtigt = computed(() => {
 		const funktion = props.enmManager().lehrerFunktion;
-		return (funktion === ENMLehrerFunktion.KLASSENLEITUNG) || (funktion === ENMLehrerFunktion.ABTEILUNGSLEITUNG);
+		return funktion === ENMLehrerFunktion.KLASSENLEITUNG;
 	});
 
 	const schuelerListe = computed((): SchuelerEintrag[] => {
@@ -157,13 +157,7 @@
 	});
 
 	function istKlasseZugaenglich(klasse: ENMv2Klasse, manager: EnmManager): boolean {
-		if (manager.lehrerFunktion === ENMLehrerFunktion.KLASSENLEITUNG) {
-			return manager.klasseIstKlassenleitung(klasse.id);
-		}
-		if (manager.lehrerFunktion === ENMLehrerFunktion.ABTEILUNGSLEITUNG) {
-			return manager.klasseIstAbteilungsleitung(klasse.id);
-		}
-		return false;
+		return (manager.lehrerFunktion === ENMLehrerFunktion.KLASSENLEITUNG) && manager.klasseIstKlassenleitung(klasse.id);
 	}
 
 	function schuelerAnzeige(eintrag: SchuelerEintrag): string {
