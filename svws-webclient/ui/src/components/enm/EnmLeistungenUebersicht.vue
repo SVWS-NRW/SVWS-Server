@@ -262,8 +262,8 @@
 			const pair = gridManager.daten.get(row);
 			popoverKey.value = next.key;
 			popoverAnchor.value = `--anchor_${next.key}`;
-			popoverMax.value = next.key.startsWith('FSU_') ? pair.a.fehlstundenFach : 999;
-			popoverFs.value = next.key.startsWith('FSU_') ? pair.a.fehlstundenUnentschuldigtFach : pair.a.fehlstundenFach;
+			popoverMax.value = String(next.key).startsWith('FSU_') ? pair.a.fehlstundenFach : 999;
+			popoverFs.value = String(next.key).startsWith('FSU_') ? pair.a.fehlstundenUnentschuldigtFach : pair.a.fehlstundenFach;
 			gridManager.doFocusByKey(next.key);
 			return;
 		}
@@ -317,7 +317,7 @@
 			const pair = gridManager.daten.get(row);
 			popoverKey.value = next.key;
 			popoverAnchor.value = `--anchor_${next.key}`;
-			popoverNote.value = Note.fromKuerzel(next.key.startsWith('Quartal_') ? pair.a.noteQuartal : pair.a.note);
+			popoverNote.value = Note.fromKuerzel(String(next.key).startsWith('Quartal_') ? pair.a.noteQuartal : pair.a.note);
 			gridManager.doFocusByKey(next.key);
 			return;
 		}

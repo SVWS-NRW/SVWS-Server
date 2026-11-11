@@ -92,10 +92,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	private getSelectedChild(): TabData {
-		const child = this.selectedChild ?? this.data.view ?? this.defaultChild;
-		if (child === undefined) {
-			return { name: this.name, text: this.text, hide: true };
-		}
+		const child = this.selectedChild!;
 		return { name: child.name, text: child.text, hide: false };
 	}
 

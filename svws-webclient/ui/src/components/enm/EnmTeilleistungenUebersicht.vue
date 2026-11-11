@@ -84,7 +84,7 @@
 									'bg-ui-selected': (gridManager.focusColumn === indexArt + 6),
 									'text-ui-danger': Note.fromKuerzel(teilleistung.note).istDefizitSekII(),
 									'contentFocusField': gridManager.isFocusLast((indexArt + 6), index),
-								'enm-note-active': popoverKey === `Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id}`,
+									'enm-note-active': popoverKey === `Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id}`,
 								}" />
 							<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(teilleistung.note).istDefizitSekII() }">{{ teilleistung.note ?? "-" }}</td>
 						</template>
@@ -183,9 +183,9 @@
 			const pair = gridManager.daten.get(row);
 			popoverKey.value = next.key;
 			popoverAnchor.value = `--anchor_${next.key}`;
-			if (next.key.startsWith('Quartal_')) {
+			if (String(next.key).startsWith('Quartal_')) {
 				popoverNote.value = Note.fromKuerzel(pair.a.noteQuartal);
-			} else if (next.key.startsWith('Note_')) {
+			} else if (String(next.key).startsWith('Note_')) {
 				popoverNote.value = Note.fromKuerzel(pair.a.note);
 			} else {
 				const idTeilleistung = Number(next.key.split('_')[1]);

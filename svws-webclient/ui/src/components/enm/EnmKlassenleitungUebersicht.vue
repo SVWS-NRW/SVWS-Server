@@ -227,8 +227,8 @@
 			const pair = gridManager.daten.get(row);
 			popoverKey.value = next.key;
 			popoverAnchor.value = `--anchor_${next.key}`;
-			popoverMax.value = next.key.startsWith('FSU_') ? pair.b.lernabschnitt.fehlstundenGesamt : 999;
-			popoverFs.value = next.key.startsWith('FSU_') ? pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt : pair.b.lernabschnitt.fehlstundenGesamt;
+			popoverMax.value = String(next.key).startsWith('FSU_') ? pair.b.lernabschnitt.fehlstundenGesamt : 999;
+			popoverFs.value = String(next.key).startsWith('FSU_') ? pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt : pair.b.lernabschnitt.fehlstundenGesamt;
 			gridManager.doFocusByKey(next.key);
 			return;
 		}

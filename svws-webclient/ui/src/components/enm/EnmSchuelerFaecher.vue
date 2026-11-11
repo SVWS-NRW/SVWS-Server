@@ -55,6 +55,7 @@
 	import type { DataTableColumn } from '@ui/types';
 
 	import type { EnmManager } from './EnmManager';
+	import { ermittleNotenWarnstufe } from './EnmNotenWarnstufe';
 
 	interface SchuelerEintrag {
 		schueler: ENMv2Schueler;
@@ -299,17 +300,9 @@
 		const notenWert = punkteAnsicht.value && !/^(05|06|07|08|09|10)/.test(zeile.klassenkuerzel)
 			? (spalte === 'note' ? zeile.noteOriginal : zeile[`${spalte}_original`])
 			: wert;
-		const note = (typeof notenWert === 'string' || typeof notenWert === 'number' ? String(notenWert) : '').trim().replace(/[−–]/g, '-');
-		if (['EF', 'Q1', 'Q2'].includes(zeile.jahrgang)) {
-			return ['4-', '5+', '5', '5-', '6'].includes(note) ? 'orange' : null;
-		}
-		if (!/^(05|06|07|08|09|10)/.test(zeile.klassenkuerzel)) {
-			return null;
-		}
-		if (['4+', '4', '4-'].includes(note)) {
-			return 'gelb';
-		}
-		return ['5+', '5', '5-', '6'].includes(note) ? 'orange' : null;
+		const note = typeof notenWert === 'string' || typeof notenWert === 'number' ? String(notenWert) : null;
+		const warnstufe = ermittleNotenWarnstufe(zeile.jahrgang, zeile.klassenkuerzel, note);
+		return warnstufe === 'rot' ? 'orange' : warnstufe;
 	}
 
 	function getAnzeigewert(wert: string | null, klasse: ENMv2Klasse, manager: EnmManager): string | null {

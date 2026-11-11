@@ -104,6 +104,7 @@
 	import type { ENMv2Teilleistungsart } from '@core/core/data/enm/v2/ENMv2Teilleistungsart';
 
 	import type { EnmManager } from './EnmManager';
+	import { ermittleNotenWarnstufe } from './EnmNotenWarnstufe';
 
 	interface SchuelerEintrag {
 		schueler: ENMv2Schueler;
@@ -395,19 +396,9 @@
 	}
 
 	function getNotenBadge(klasse: ENMv2Klasse, wert: string | null): 'gelb' | 'rot' | null {
-		const note = (wert ?? '').trim().replace(/[−–]/g, '-');
 		const jahrgang = klasse.idJahrgang === null ? '' : manager.value?.mapJahrgaenge.get(klasse.idJahrgang)?.kuerzel
 			?? manager.value?.mapJahrgaenge.get(klasse.idJahrgang)?.kuerzelAnzeige ?? klasse.kuerzel ?? klasse.kuerzelAnzeige ?? '';
-		if (['EF', 'Q1', 'Q2'].includes(jahrgang.toUpperCase())) {
-			return ['4-', '5+', '5', '5-', '6'].includes(note) ? 'rot' : null;
-		}
-		if (!/^(05|06|07|08|09|10)/.test(klasse.kuerzel ?? '')) {
-			return null;
-		}
-		if (['4+', '4', '4-'].includes(note)) {
-			return 'gelb';
-		}
-		return ['5+', '5', '5-', '6'].includes(note) ? 'rot' : null;
+		return ermittleNotenWarnstufe(jahrgang, klasse.kuerzel ?? '', wert);
 	}
 </script>
 
