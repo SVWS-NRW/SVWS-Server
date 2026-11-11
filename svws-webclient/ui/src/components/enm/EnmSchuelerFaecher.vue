@@ -122,13 +122,15 @@
 
 	const spalten = computed(() => {
 		const result = [
-			{ key: 'klasse', label: 'Klasse', fixedWidth: 4, sortable: true },
-			{ key: 'schueler', label: 'Schüler', fixedWidth: 16, sortable: true },
-			{ key: 'fach', label: 'Fach', fixedWidth: 4, sortable: true },
-			{ key: 'lerngruppe', label: 'Lerngruppe', fixedWidth: 6, sortable: true },
+			{ key: 'klasse', label: 'Klasse', fixedWidth: 6.5, sortable: true },
+			{ key: 'schueler', label: 'Schüler', fixedWidth: 9.5, sortable: true },
+			{ key: 'fach', label: 'Fach', fixedWidth: 5.5, sortable: true },
+			{ key: 'lerngruppe', label: 'Lerngruppe', fixedWidth: 9, sortable: true },
 		];
 		for (const art of teilleistungsarten.value) {
-			result.push({ key: `teilleistung_${art.id}`, label: art.bezeichnung ?? `Teilleistung ${art.id}`, fixedWidth: 4, align: 'center', sortable: true });
+			const label = art.bezeichnung ?? `Teilleistung ${art.id}`;
+			const fixedWidth = Math.max(5.5, Math.ceil((label.length * 0.55 + 3) * 2) / 2);
+			result.push({ key: `teilleistung_${art.id}`, label, fixedWidth, align: 'center', sortable: true });
 		}
 		return result;
 	});
