@@ -15,6 +15,7 @@ import type { TabData } from "@ui/ui/nav/TabData";
 
 import { routeAnkreuzkompetenzen } from "./RouteAnkreuzkompetenzen";
 import { routeKlassenleitung } from "./RouteKlassenleitung";
+import { routeSchuelerfaecher } from "./RouteSchuelerfaecher";
 import { routeTeilleistungen } from "./RouteTeilleistungen";
 
 
@@ -33,6 +34,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeTeilleistungen,
 			routeAnkreuzkompetenzen,
 			routeKlassenleitung,
+			routeSchuelerfaecher,
 		];
 		super.children = [
 			...this._menuMain,
@@ -87,7 +89,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	private getSelectedChild(): TabData {
-		const child = this.selectedChild!;
+		const child = this.selectedChild ?? this.data.view ?? this.defaultChild;
+		if (child === undefined) {
+			return { name: this.name, text: this.text, hide: true };
+		}
 		return { name: child.name, text: child.text, hide: false };
 	}
 

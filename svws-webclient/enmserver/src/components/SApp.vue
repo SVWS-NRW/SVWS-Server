@@ -36,6 +36,7 @@
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'teilleistungen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'ankreuzkompetenzen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'klassenleitung'" />
+									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'schuelerfaecher'" />
 								</template>
 								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							</svws-ui-menu-item>

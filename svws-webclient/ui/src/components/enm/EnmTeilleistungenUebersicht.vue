@@ -78,12 +78,13 @@
 						<template v-if="gridManager.isColVisible(enmManager().mapTeilleistungsarten.get(idArt)?.bezeichnung ?? '???') ?? true">
 							<td v-if="teilleistung === null" class="bg-ui-disabled" />
 							<td v-else-if="istErlaubtTeilleistung(pair, idArt)"
-								:style="`anchor-name: --anchor_Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id}`, teilleistung.note)"
+								:style="`anchor-name: --anchor_Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id};`" @click="popover(`Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id}`, teilleistung.note)"
 								:ref="inputNoteTeilleistung(pair, teilleistung, indexArt + 6, index)" class="ui-table-grid-input"
 								:class="{
 									'bg-ui-selected': (gridManager.focusColumn === indexArt + 6),
 									'text-ui-danger': Note.fromKuerzel(teilleistung.note).istDefizitSekII(),
 									'contentFocusField': gridManager.isFocusLast((indexArt + 6), index),
+								'enm-note-active': popoverKey === `Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id}`,
 								}" />
 							<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(teilleistung.note).istDefizitSekII() }">{{ teilleistung.note ?? "-" }}</td>
 						</template>
@@ -91,23 +92,25 @@
 				</template>
 				<template v-if="gridManager.isColVisible('Quartal') ?? true">
 					<td v-if="istErlaubt(pair, 'Quartal')"
-						:style="`anchor-name: --anchor_Quartal_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Quartal_${pair.a.id}_${pair.b.id}`, pair.a.noteQuartal)"
+						:style="`anchor-name: --anchor_Quartal_${pair.a.id}_${pair.b.id};`" @click="popover(`Quartal_${pair.a.id}_${pair.b.id}`, pair.a.noteQuartal)"
 						:ref="inputNoteQuartal(pair, listTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === listTeilleistungsarten.size() + 6),
 							'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
 							'contentFocusField': gridManager.isFocusLast((listTeilleistungsarten.size() + 6), index),
+							'enm-note-active': popoverKey === `Quartal_${pair.a.id}_${pair.b.id}`,
 						}" />
 					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('Note') ?? true">
 					<td v-if="istErlaubt(pair, 'Note')"
-						:style="`anchor-name: --anchor_Note_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Note_${pair.a.id}_${pair.b.id}`, pair.a.note)"
+						:style="`anchor-name: --anchor_Note_${pair.a.id}_${pair.b.id};`" @click="popover(`Note_${pair.a.id}_${pair.b.id}`, pair.a.note)"
 						:ref="inputNote(pair, listTeilleistungsarten.size() + 7, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === listTeilleistungsarten.size() + 7),
 							'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),
 							'contentFocusField': gridManager.isFocusLast((listTeilleistungsarten.size() + 7), index),
+							'enm-note-active': popoverKey === `Note_${pair.a.id}_${pair.b.id}`,
 						}" />
 					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
 				</template>
@@ -134,7 +137,7 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import { HashSet } from '@core/java/util/HashSet';
 	import type { List } from '@core/java/util/List';
-	import type { GridInputNote } from '@ui/ui/controls/tablegrid/GridInputNote';
+	import { GridInputNote } from '@ui/ui/controls/tablegrid/GridInputNote';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
@@ -172,6 +175,26 @@
 		}
 		input.update(val.getNoteKuerzel(props.enmManager().schuljahr));
 		input.commit();
+		for (let row = input.row + 1; row < gridManager.daten.size(); row++) {
+			const next = gridManager.getInputByPosition(row, input.col);
+			if (!(next instanceof GridInputNote)) {
+				continue;
+			}
+			const pair = gridManager.daten.get(row);
+			popoverKey.value = next.key;
+			popoverAnchor.value = `--anchor_${next.key}`;
+			if (next.key.startsWith('Quartal_')) {
+				popoverNote.value = Note.fromKuerzel(pair.a.noteQuartal);
+			} else if (next.key.startsWith('Note_')) {
+				popoverNote.value = Note.fromKuerzel(pair.a.note);
+			} else {
+				const idTeilleistung = Number(next.key.split('_')[1]);
+				const teilleistung = props.enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idTeilleistung);
+				popoverNote.value = Note.fromKuerzel(teilleistung?.note ?? null);
+			}
+			gridManager.doFocusByKey(next.key);
+			return;
+		}
 		popoverRef.value.hidePopover();
 		popoverKey.value = null;
 		popoverAnchor.value = null;
