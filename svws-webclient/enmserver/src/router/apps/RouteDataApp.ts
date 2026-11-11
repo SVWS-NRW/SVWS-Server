@@ -514,13 +514,19 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		await this.ladeDaten();
 	}
 
-	/** Lädt einen Manager mit dem vollständigen Datenumfang der Klassenleitung für die schreibgeschützte Notenübersicht. */
-	public async ladeManagerKlassenleitung(): Promise<EnmManager> {
-		if (this.manager.lehrerFunktion === ENMLehrerFunktion.KLASSENLEITUNG) {
+	/** Lädt den Datenumfang der aktuellen Leitungsansicht für die schreibgeschützte Notenübersicht. */
+	public async ladeManagerNotenuebersicht(): Promise<EnmManager> {
+		let funktion = this.auswahlAnsicht;
+		if ((funktion !== ENMLehrerFunktion.KLASSENLEITUNG) && (funktion !== ENMLehrerFunktion.ABTEILUNGSLEITUNG)) {
+			funktion = this.optionsAuswahlAnsicht.has(ENMLehrerFunktion.KLASSENLEITUNG)
+				? ENMLehrerFunktion.KLASSENLEITUNG
+				: ENMLehrerFunktion.ABTEILUNGSLEITUNG;
+		}
+		if (this.manager.lehrerFunktion === funktion) {
 			return this.manager;
 		}
-		const daten = await authStateImpl.api.getLehrerENMDaten(ENMLehrerFunktion.KLASSENLEITUNG);
-		return new EnmManager(daten, ENMLehrerFunktion.KLASSENLEITUNG);
+		const daten = await authStateImpl.api.getLehrerENMDaten(funktion);
+		return new EnmManager(daten, funktion);
 	}
 
 	public get optionsAuswahlAnsicht(): Set<ENMLehrerFunktion> {

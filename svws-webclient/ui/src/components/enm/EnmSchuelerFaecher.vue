@@ -1,6 +1,6 @@
 <template>
 	<div v-if="ladeFehler" class="page p-4">
-		<p>Die Daten der Klassenleitung konnten für die Notenübersicht nicht geladen werden.</p>
+		<p>Die Leitungsdaten konnten für die Notenübersicht nicht geladen werden.</p>
 	</div>
 	<div v-else-if="managerNotenuebersicht === null" class="page p-4">
 		<p>Die Notenübersicht wird geladen …</p>
@@ -17,17 +17,34 @@
 					@update:model-value="value => auswahlSchueler = value ?? null" />
 			</div>
 		</div>
-		<svws-ui-table :items="eintraegeGefiltert" :columns="spalten" :no-data-text="auswahlSchueler ? 'Für diesen Schüler sind keine Teilleistungen vorhanden.' : 'Keine Teilleistungen vorhanden.'" scroll />
+		<svws-ui-table :items="eintraegeGefiltert" :columns="spalten" :no-data-text="auswahlSchueler ? 'Für diesen Schüler sind keine Teilleistungen vorhanden.' : 'Keine Teilleistungen vorhanden.'" scroll>
+			<template #cell="{ value, column, rowData }">
+				<template v-if="istNotenspalte(column.key)">
+					<div class="w-full text-center">
+						<svws-ui-badge v-if="getNotenBadge(column.key, rowData, value) !== null"
+							type="light"
+							class="!text-base"
+							:style="getNotenBadge(column.key, rowData, value) === 'gelb' ? badgeGelbStyle : badgeRotStyle">
+							{{ value }}
+						</svws-ui-badge>
+						<template v-else>{{ value }}</template>
+					</div>
+				</template>
+				<span v-else-if="column.key === 'schueler'" class="whitespace-nowrap">{{ value }}</span>
+				<template v-else>{{ value }}</template>
+			</template>
+		</svws-ui-table>
 	</div>
 	<div v-else class="page p-4">
-		<p>Für diese Übersicht ist eine Klassenleitungsberechtigung erforderlich.</p>
+		<p>Für diese Übersicht ist eine Klassen- oder Abteilungsleitungsberechtigung erforderlich.</p>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, onMounted, ref, shallowRef } from 'vue';
+	import { computed, ref, shallowRef, watch } from 'vue';
 
+	import { ENMLehrerFunktion } from '@core/core/data/enm/ENMLehrerFunktion';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
 	import type { ENMv2Teilleistungsart } from '@core/core/data/enm/v2/ENMv2Teilleistungsart';
@@ -44,24 +61,51 @@
 		idSchueler: number;
 		fachSortierung: number;
 		klasse: string;
+		klassenkuerzel: string;
 		schueler: string;
+		jahrgang: string;
 		fach: string;
 		lerngruppe: string;
+		note: string;
 		[key: string]: string | number;
 	}
 
-	const props = defineProps<{ ladeManagerKlassenleitung: () => Promise<EnmManager> }>();
+	const props = defineProps<{
+		ladeManagerNotenuebersicht: () => Promise<EnmManager>;
+		auswahlAnsicht: () => ENMLehrerFunktion;
+		auswahlEinzel: () => ENMv2Klasse | null;
+		auswahlMehrfach: () => ENMv2Klasse[];
+	}>();
 	const auswahlSchueler = ref<SchuelerEintrag | null>(null);
 	const managerNotenuebersicht = shallowRef<EnmManager | null>(null);
 	const ladeFehler = ref(false);
+	const badgeGelbStyle = {
+		backgroundColor: '#FCD34D',
+		borderColor: '#FBBF24',
+		color: '#000000',
+	};
+	const badgeRotStyle = {
+		backgroundColor: '#EF4444',
+		borderColor: '#DC2626',
+		color: '#FFFFFF',
+	};
 
-	onMounted(async () => {
+	let ladeVersion = 0;
+	watch(() => props.auswahlAnsicht(), async () => {
+		const aktuelleLadeVersion = ++ladeVersion;
+		managerNotenuebersicht.value = null;
+		ladeFehler.value = false;
 		try {
-			managerNotenuebersicht.value = await props.ladeManagerKlassenleitung();
+			const manager = await props.ladeManagerNotenuebersicht();
+			if (aktuelleLadeVersion === ladeVersion) {
+				managerNotenuebersicht.value = manager;
+			}
 		} catch {
-			ladeFehler.value = true;
+			if (aktuelleLadeVersion === ladeVersion) {
+				ladeFehler.value = true;
+			}
 		}
-	});
+	}, { immediate: true });
 
 	const berechtigt = computed(() => {
 		const manager = managerNotenuebersicht.value;
@@ -69,11 +113,20 @@
 			return false;
 		}
 		for (const klasse of manager.listKlassenKlassenlehrer) {
-			if (manager.klasseIstKlassenleitung(klasse.id)) {
+			if (istKlasseZugaenglich(klasse, manager)) {
 				return true;
 			}
 		}
 		return false;
+	});
+
+	const ausgewählteKlassen = computed(() => {
+		const mehrfach = props.auswahlMehrfach();
+		if (mehrfach.length > 0) {
+			return new Set(mehrfach.map(klasse => klasse.id));
+		}
+		const einzel = props.auswahlEinzel();
+		return (einzel === null) ? null : new Set([einzel.id]);
 	});
 
 	const schuelerListe = computed((): SchuelerEintrag[] => {
@@ -83,7 +136,7 @@
 		}
 		const result: SchuelerEintrag[] = [];
 		for (const klasse of manager.listKlassenKlassenlehrer) {
-			if (!istKlasseZugaenglich(klasse, manager)) {
+			if (!istKlasseZugaenglich(klasse, manager) || !istKlasseAusgewählt(klasse)) {
 				continue;
 			}
 			const schueler = manager.mapKlassenSchueler.get(klasse.id);
@@ -121,9 +174,12 @@
 	});
 
 	const spalten = computed(() => {
+		const maxNamenslaenge = schuelerListe.value.reduce((max, eintrag) =>
+			Math.max(max, `${eintrag.schueler.nachname ?? ''}, ${eintrag.schueler.vorname ?? ''}`.length), 'Schüler'.length);
+		const namensBreite = Math.max(9.5, Math.ceil((maxNamenslaenge * 0.58 + 3) * 2) / 2);
 		const result = [
 			{ key: 'klasse', label: 'Klasse', fixedWidth: 6.5, sortable: true },
-			{ key: 'schueler', label: 'Schüler', fixedWidth: 9.5, sortable: true },
+			{ key: 'schueler', label: 'Schüler', fixedWidth: namensBreite, sortable: true },
 			{ key: 'fach', label: 'Fach', fixedWidth: 5.5, sortable: true },
 			{ key: 'lerngruppe', label: 'Lerngruppe', fixedWidth: 9, sortable: true },
 		];
@@ -132,6 +188,7 @@
 			const fixedWidth = Math.max(5.5, Math.ceil((label.length * 0.55 + 3) * 2) / 2);
 			result.push({ key: `teilleistung_${art.id}`, label, fixedWidth, align: 'center', sortable: true });
 		}
+		result.push({ key: 'note', label: 'Note', fixedWidth: 5.5, align: 'center', sortable: true });
 		return result;
 	});
 
@@ -157,9 +214,12 @@
 					idSchueler: schueler.id,
 					fachSortierung: fach.sortierung,
 					klasse: klasse.kuerzelAnzeige ?? klasse.kuerzel ?? '',
+					klassenkuerzel: klasse.kuerzel ?? klasse.kuerzelAnzeige ?? '',
 					schueler: `${schueler.nachname ?? ''}, ${schueler.vorname ?? ''}`,
+					jahrgang: getJahrgangKuerzel(klasse, manager),
 					fach: fach.kuerzelAnzeige || fach.kuerzel,
 					lerngruppe: lerngruppe.bezeichnung ?? '',
+					note: leistung.note ?? '-',
 				};
 				for (const art of teilleistungsarten.value) {
 					eintrag[`teilleistung_${art.id}`] = '-';
@@ -185,7 +245,43 @@
 	});
 
 	function istKlasseZugaenglich(klasse: ENMv2Klasse, manager: EnmManager): boolean {
-		return manager.klasseIstKlassenleitung(klasse.id);
+		if (manager.lehrerFunktion === ENMLehrerFunktion.KLASSENLEITUNG) {
+			return manager.klasseIstKlassenleitung(klasse.id);
+		}
+		if (manager.lehrerFunktion === ENMLehrerFunktion.ABTEILUNGSLEITUNG) {
+			return manager.klasseIstAbteilungsleitung(klasse.id);
+		}
+		return false;
+	}
+
+	function istKlasseAusgewählt(klasse: ENMv2Klasse): boolean {
+		return (ausgewählteKlassen.value === null) || ausgewählteKlassen.value.has(klasse.id);
+	}
+
+	function getJahrgangKuerzel(klasse: ENMv2Klasse, manager: EnmManager): string {
+		const jahrgang = (klasse.idJahrgang === null) ? null : manager.mapJahrgaenge.get(klasse.idJahrgang);
+		return (jahrgang?.kuerzel ?? jahrgang?.kuerzelAnzeige ?? klasse.kuerzel ?? klasse.kuerzelAnzeige ?? '').toUpperCase();
+	}
+
+	function getNotenBadge(spalte: string, zeile: FachEintrag, wert: unknown): 'gelb' | 'orange' | null {
+		if (!istNotenspalte(spalte)) {
+			return null;
+		}
+		const note = String(wert ?? '').trim().replace(/[−–]/g, '-');
+		if (['EF', 'Q1', 'Q2'].includes(zeile.jahrgang)) {
+			return ['4-', '5+', '5', '5-', '6'].includes(note) ? 'orange' : null;
+		}
+		if (!/^(05|06|07|08|09|10)/.test(zeile.klassenkuerzel)) {
+			return null;
+		}
+		if (['4+', '4', '4-'].includes(note)) {
+			return 'gelb';
+		}
+		return ['5+', '5', '5-', '6'].includes(note) ? 'orange' : null;
+	}
+
+	function istNotenspalte(spalte: string): boolean {
+		return (spalte === 'note') || spalte.startsWith('teilleistung_');
 	}
 
 	function schuelerAnzeige(eintrag: SchuelerEintrag): string {
