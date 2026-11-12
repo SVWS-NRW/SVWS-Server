@@ -8,6 +8,7 @@ import de.svws_nrw.controller.lehrer.funktion.LehrerFunktionController;
 import de.svws_nrw.controller.lehrer.lehramt.LehrerLehramtController;
 import de.svws_nrw.controller.lehrer.lehrbefaehigung.LehrerLehrbefaehigungController;
 import de.svws_nrw.controller.lehrer.lernplattform.LehrerLernplattformController;
+import de.svws_nrw.controller.lehrer.liste.LehrerListeController;
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungController;
 import de.svws_nrw.controller.lehrer.minderleistung.LehrerMinderleistungController;
 import de.svws_nrw.controller.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenController;
@@ -49,9 +50,9 @@ class LehrerControllerFactoryTest {
 	void setUp() {
 		dbBenutzerUtilsMock = mockStatic(DBBenutzerUtils.class);
 		dbConnectionProviderMock = mockStatic(DbConnectionProvider.class);
+		final var connMock = mock(DBEntityManager.class);
 
-		dbConnectionProviderMock.when(DbConnectionProvider::getConnection)
-				.thenReturn(mock(DBEntityManager.class));
+		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(connMock);
 	}
 
 	@AfterEach
@@ -263,4 +264,33 @@ class LehrerControllerFactoryTest {
 		assertNotNull(controller);
 	}
 
+	@Test
+	@DisplayName("withNoAccess | DBBenutzerUtils wird mit STABLE und KEINE aufgerufen")
+	void withNoAccess() {
+		final var factory = LehrerControllerFactory.withNoAccessStable(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), eq(ServerMode.STABLE), eq(BenutzerKompetenz.KEINE)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
+	@DisplayName("withDeleteAccessStable | DBBenutzerUtils wird mit STABLE und LEHRERDATEN_LOESCHEN aufgerufen")
+	void withDeleteAccessStable() {
+		final var factory = LehrerControllerFactory.withDeleteAccessStable(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), eq(ServerMode.STABLE), eq(BenutzerKompetenz.LEHRERDATEN_LOESCHEN)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
+	@DisplayName("getLehrerListeController | gibt einen Controller zurück")
+	void getLehrerListeController() {
+		final LehrerListeController controller = LehrerControllerFactory
+				.withNoAccessStable(request)
+				.getLehrerListeController();
+
+		assertNotNull(controller);
+	}
 }

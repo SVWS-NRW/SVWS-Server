@@ -10,7 +10,6 @@ import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.data.gost.DataGostJahrgangSchuelerliste;
-import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -19,6 +18,7 @@ import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenAllDataService;
 import de.svws_nrw.service.kurse.KursService;
 import de.svws_nrw.service.kurse.KursServiceFactory;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 
 /**
@@ -118,7 +118,7 @@ public final class GostKlausurenAllDataRepository {
 	 * @return die Lehrerliste
 	 */
 	public List<LehrerListeEintrag> getLehrer() {
-		return new DataLehrerliste(conn, null).getLehrerListe(false);
+		return LehrerServiceFactory.getNewInstance().getLehrerListeService().getList(false);
 	}
 
 	private static KursService getKursService() {

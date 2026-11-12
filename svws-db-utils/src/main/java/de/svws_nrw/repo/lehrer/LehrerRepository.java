@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Set;
 
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
-import de.svws_nrw.repo.Repository;
+import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
 
 /**
- * Das Interface für ein Repository zum Zugriff auf die Lehrer-Tabelle der SVWS-Datenbank
+ * Das Interface für ein Repository zum Zugriff auf die Lehrer-Tabelle der SVWS-Datenbank. Die Referenzprüfung
+ * für das Löschen von Lehrern erstreckt sich über die Tabellen, in denen Lehrer-IDs verwendet werden.
  */
-public interface LehrerRepository extends Repository<DTOLehrer> {
+public interface LehrerRepository extends ReferencedBulkDeletionRepository<DTOLehrer> {
 
 	/**
 	 * Gibt eine Liste aller Statistik-relevanten Lehrer zurück.

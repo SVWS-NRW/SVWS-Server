@@ -53,7 +53,6 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerMehrleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
-import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
 import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungPatchRequest;
@@ -138,15 +137,14 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Lehrer unter Angabe der ID, des Kürzels, "
 					+ "des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung "
 					+ "sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+					+ "Dafür ist keine besondere Berechtigung erforderlich. Sind keine Lehrer vorhanden, wird eine leere Liste zurückgegeben.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrer-Listen-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerListeEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
 	public Response getLehrer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn, null).getAllAsResponse(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return LehrerControllerFactory
+				.withNoAccessStable(request)
+				.getLehrerListeController()
+				.getList();
 	}
 
 
@@ -166,16 +164,16 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Lehrer eines Schuljahresabschnittes unter Angabe der ID, des Kürzels, "
 					+ "des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung "
 					+ "sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+					+ "Dafür ist keine besondere Berechtigung erforderlich. Sind keine Lehrer vorhanden, wird eine leere Liste zurückgegeben.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrer-Listen-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerListeEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
+	@ApiResponse(responseCode = "404", description = "Der Schuljahresabschnitt wurde nicht gefunden.")
 	public Response getLehrerFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn, abschnitt).getListAsResponse(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return LehrerControllerFactory
+				.withNoAccessStable(request)
+				.getLehrerListeController()
+				.getListBySchuljahresabschnitt(abschnitt);
 	}
 
 
@@ -200,10 +198,10 @@ public class APILehrer {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataLehrerliste(conn, null).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_LOESCHEN);
+		return LehrerControllerFactory
+				.withDeleteAccessStable(request)
+				.getLehrerListeController()
+				.delete(JSONMapper.toListOfLong(is));
 	}
 
 

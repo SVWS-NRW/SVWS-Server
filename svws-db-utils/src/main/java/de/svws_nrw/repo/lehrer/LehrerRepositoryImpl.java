@@ -17,8 +17,17 @@ public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implem
 
 	private static final String QUERY_ALL_IDS = "SELECT e.ID FROM DTOLehrer e ORDER BY e.ID";
 	private static final String QUERY_BY_KUERZEL_EXCLUDING_ID = "SELECT e FROM DTOLehrer e WHERE e.Kuerzel = ?1 AND e.ID <> ?2";
-
 	private static final String QUERY_IDS_BY_IDS = "SELECT e.ID FROM DTOLehrer e WHERE e.ID IN ?1";
+
+	/** Die Abfragen auf die Tabellen, in denen Lehrer-IDs referenziert werden. Jede Abfrage liefert die referenzierten Lehrer-IDs aus {@code :ids}. */
+	private static final List<String> QUERIES_REFERENCED_IDS = List.of(
+			"SELECT DISTINCT a.Lehrer_ID FROM DTOKurs a WHERE a.Lehrer_ID IN :ids",
+			"SELECT DISTINCT b.Fachlehrer_ID FROM DTOSchuelerLeistungsdaten b WHERE b.Fachlehrer_ID IN :ids",
+			"SELECT DISTINCT c.Tutor_ID FROM DTOSchuelerLernabschnittsdaten c WHERE c.Tutor_ID IN :ids",
+			"SELECT DISTINCT d.Lehrer_ID FROM DTOKlassenLeitung d WHERE d.Lehrer_ID IN :ids",
+			"SELECT DISTINCT e.Lehrer_ID FROM DTOKursLehrer e WHERE e.Lehrer_ID IN :ids",
+			"SELECT DISTINCT f.LehrerID FROM DTOSchulleitung f WHERE f.LehrerID IN :ids",
+			"SELECT DISTINCT g.idBetreuungslehrer FROM DTOSchuelerBetrieb g WHERE g.idBetreuungslehrer IN :ids");
 
 	/**
 	 * Erstellt ein neues Repository.
@@ -67,6 +76,24 @@ public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implem
 	@Override
 	public boolean existsByKuerzelExcludingId(final String kuerzel, final long idLehrer) {
 		return conn.existsBy(QUERY_BY_KUERZEL_EXCLUDING_ID, DTOLehrer.class, kuerzel, idLehrer);
+	}
+
+	@Override
+	public Set<Long> getReferencedIds(final List<Long> idsToCheck) {
+		if ((idsToCheck == null) || idsToCheck.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		final var query = buildUnionAllQuery(QUERIES_REFERENCED_IDS);
+		final var result = conn.query(query, Long.class)
+				.setParameter("ids", idsToCheck)
+				.getResultList();
+
+		return new HashSet<>(result);
+	}
+
+	private static String buildUnionAllQuery(final List<String> queries) {
+		return String.join("\nUNION ALL\n", queries);
 	}
 
 }

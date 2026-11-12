@@ -14,6 +14,8 @@ import de.svws_nrw.controller.lehrer.lehrbefaehigung.LehrerLehrbefaehigungContro
 import de.svws_nrw.controller.lehrer.lehrbefaehigung.LehrerLehrbefaehigungControllerImpl;
 import de.svws_nrw.controller.lehrer.lernplattform.LehrerLernplattformController;
 import de.svws_nrw.controller.lehrer.lernplattform.LehrerLernplattformControllerImpl;
+import de.svws_nrw.controller.lehrer.liste.LehrerListeController;
+import de.svws_nrw.controller.lehrer.liste.LehrerListeControllerImpl;
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungController;
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungControllerImpl;
 import de.svws_nrw.controller.lehrer.minderleistung.LehrerMinderleistungController;
@@ -33,10 +35,10 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachService;
-import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -54,6 +56,13 @@ public final class LehrerControllerFactory {
 		this.serviceFactory = LehrerServiceFactory.getNewInstance(lehrerRepositoryFactory, schuleRepositoryFactory, katalogRepoFactory);
 	}
 
+	private static LehrerControllerFactory getNewInstance(final HttpServletRequest request, final ServerMode serverMode,
+			final BenutzerKompetenz... kompetenzen) {
+		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
+		DBBenutzerUtils.getDBConnection(request, serverMode, kompetenzen);
+		return new LehrerControllerFactory();
+	}
+
 	/**
 	 * Diese statische Methode dient dem lesenden Zugriff auf die Personaldaten der Lehrer in der API-Schicht
 	 * im Stable-Modus. Sie erfordert die Kompetenz {@link BenutzerKompetenz#LEHRER_PERSONALDATEN_ANSEHEN}.
@@ -65,10 +74,9 @@ public final class LehrerControllerFactory {
 	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
 	 */
 	public static LehrerControllerFactory withPersonaldatenReadAccessStable(final HttpServletRequest request) {
-		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
-		return new LehrerControllerFactory();
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
 	}
+
 
 	/**
 	 * Diese statische Methode dient dem schreibenden Zugriff auf die Personaldaten der Lehrer in der API-Schicht
@@ -81,9 +89,7 @@ public final class LehrerControllerFactory {
 	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
 	 */
 	public static LehrerControllerFactory withPersonaldatenWriteAccessStable(final HttpServletRequest request) {
-		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
-		return new LehrerControllerFactory();
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
 	/**
@@ -95,9 +101,7 @@ public final class LehrerControllerFactory {
 	 * @return der spezielle Servlet-Controller
 	 */
 	public static LehrerControllerFactory withReadAccessStable(final HttpServletRequest request) {
-		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
-		return new LehrerControllerFactory();
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
 	/**
@@ -109,9 +113,32 @@ public final class LehrerControllerFactory {
 	 * @return der spezielle Servlet-Controller
 	 */
 	public static LehrerControllerFactory withWriteAccessStable(final HttpServletRequest request) {
-		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
-		return new LehrerControllerFactory();
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
+	}
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf Lehrerdaten in der API-Schicht im Stable-Modus, für den
+	 * bewusst keine Benutzerkompetenz ({@link BenutzerKompetenz#KEINE}) erforderlich ist. Dies gilt für die
+	 * Auswahlliste der Lehrer, die im Client für die Auswahl von Lehrern in allen Bereichen benötigt wird.
+	 *
+	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 *
+	 * @return der spezielle Servlet-Controller
+	 */
+	public static LehrerControllerFactory withNoAccessStable(final HttpServletRequest request) {
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Diese statische Methode dient dem Löschen von Lehrern in der API-Schicht im Stable-Modus.
+	 * Sie erfordert die Kompetenz {@link BenutzerKompetenz#LEHRERDATEN_LOESCHEN}.
+	 *
+	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 *
+	 * @return der spezielle Servlet-Controller
+	 */
+	public static LehrerControllerFactory withDeleteAccessStable(final HttpServletRequest request) {
+		return getNewInstance(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_LOESCHEN);
 	}
 
 	/**
@@ -125,9 +152,7 @@ public final class LehrerControllerFactory {
 	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
 	 */
 	public static LehrerControllerFactory withReadAccessDev(final HttpServletRequest request) {
-		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
-		return new LehrerControllerFactory();
+		return getNewInstance(request, ServerMode.DEV, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
 	/**
@@ -141,9 +166,7 @@ public final class LehrerControllerFactory {
 	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
 	 */
 	public static LehrerControllerFactory withWriteAccessDev(final HttpServletRequest request) {
-		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
-		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.LEHRERDATEN_AENDERN);
-		return new LehrerControllerFactory();
+		return getNewInstance(request, ServerMode.DEV, BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
 
 	/**
@@ -260,6 +283,15 @@ public final class LehrerControllerFactory {
 	 */
 	public LehrerStammdatenController getLehrerStammdatenController() {
 		return new LehrerStammdatenControllerImpl(serviceFactory.getLehrerStammdatenService());
+	}
+
+	/**
+	 * Erstellt einen Controller für die Liste der Lehrer und das Löschen mehrerer Lehrer
+	 *
+	 * @return der Controller
+	 */
+	public LehrerListeController getLehrerListeController() {
+		return new LehrerListeControllerImpl(serviceFactory.getLehrerListeService());
 	}
 
 }

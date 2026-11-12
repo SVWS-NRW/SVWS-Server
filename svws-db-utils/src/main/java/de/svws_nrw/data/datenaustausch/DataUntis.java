@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,7 +82,6 @@ import de.svws_nrw.data.faecher.DataFaecher;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
-import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
@@ -119,6 +119,7 @@ import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepositoryImpl;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
 import de.svws_nrw.service.kurse.KursService;
 import de.svws_nrw.service.kurse.KursServiceFactory;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -148,8 +149,10 @@ public final class DataUntis {
 			throw e;
 		}
 		// Bestimme die Lehrer
-		final Map<String, LehrerListeEintrag> mapLehrerByKuerzel = new DataLehrerliste(conn, null).getLehrerListe(false).stream()
-				.collect(Collectors.toMap(l -> l.kuerzel, l -> l));
+		final var mapLehrerByKuerzel = LehrerServiceFactory.getNewInstance()
+				.getLehrerListeService()
+				.getList(false).stream()
+				.collect(Collectors.toMap(l -> l.kuerzel, Function.identity()));
 		// Bestimme die Fächer
 		final Map<String, FachDaten> mapFaecherByKuerzel =
 				new DataFaecher(conn).getAll().stream().collect(Collectors.toMap(f -> f.kuerzel, f -> f));
@@ -964,8 +967,10 @@ public final class DataUntis {
 		// Lese die Lehrerdaten ein und gib die Untis-Datensätze für die zurück...
 		final List<Long> idsLehrer = lehrer.stream().map(kl -> kl.ID).toList();
 		logger.logLn("-> bestimme die zugehörigen Abschnittsdaten für die Lehrer...");
-		final Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitteByLehrerId =
-				new DataLehrerliste(conn, null).getDTOAbschnittsdatenByID(idsLehrer, idSchuljahresabschnitt);
+		final Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitteByLehrerId = LehrerRepositoryFactory.getNewInstance()
+				.getLehrerPersonalabschnittsdatenRepository()
+				.getListByLehrerIdsAndSchuljahresabschnitt(idsLehrer, idSchuljahresabschnitt).stream()
+				.collect(Collectors.toMap(a -> a.Lehrer_ID, a -> a));
 		return getGPU004(logger, lehrer, mapAbschnitteByLehrerId);
 	}
 

@@ -5,6 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -13,9 +17,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -225,4 +231,33 @@ class LehrerRepositoryImplTest {
 		assertFalse(repository.existsByKuerzelExcludingId("L01", 42L));
 	}
 
+	@Test
+	@SuppressWarnings("unchecked")
+	@DisplayName("getReferencedIds | liefert die referenzierten IDs aus einer einzigen Abfrage über alle sieben Tabellen")
+	void testGetReferencedIds() {
+		final var queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(42L, 42L, 43L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+
+		final var result = repository.getReferencedIds(List.of(42L, 43L, 44L));
+
+		assertThat(result).containsExactlyInAnyOrder(42L, 43L);
+		final var captorQuery = ArgumentCaptor.forClass(String.class);
+		verify(conn).query(captorQuery.capture(), eq(Long.class));
+		assertThat(captorQuery.getValue())
+				.contains("DTOKurs", "DTOSchuelerLeistungsdaten", "DTOSchuelerLernabschnittsdaten", "DTOKlassenLeitung", "DTOKursLehrer",
+						"DTOSchulleitung", "DTOSchuelerBetrieb")
+				.contains("UNION ALL");
+		verify(queryMock).setParameter("ids", List.of(42L, 43L, 44L));
+	}
+
+	@Test
+	@DisplayName("getReferencedIds | null und leere Liste führen zu keiner Abfrage")
+	void testGetReferencedIds_nullOderLeer() {
+		assertThat(repository.getReferencedIds(null)).isEmpty();
+		assertThat(repository.getReferencedIds(List.of())).isEmpty();
+
+		verifyNoInteractions(conn);
+	}
 }

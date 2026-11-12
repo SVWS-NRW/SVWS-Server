@@ -10053,14 +10053,12 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/
 	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhanden Lehrer unter Angabe der ID, des Kürzels, des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Lehrer unter Angabe der ID, des Kürzels, des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. Dafür ist keine besondere Berechtigung erforderlich. Sind keine Lehrer vorhanden, wird eine leere Liste zurückgegeben.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrer-Listen-Einträgen
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<LehrerListeEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
-	 *   Code 404: Keine Lehrer-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
@@ -10407,14 +10405,13 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getLehrerFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/abschnitt/{abschnitt : \d+}
 	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhanden Lehrer eines Schuljahresabschnittes unter Angabe der ID, des Kürzels, des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Lehrer eines Schuljahresabschnittes unter Angabe der ID, des Kürzels, des Vor- und Nachnamens, der sog. Personentyps, einer Sortierreihenfolge, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen sowie ob sie für die Schulstatistik relevant sein sollen. Dafür ist keine besondere Berechtigung erforderlich. Sind keine Lehrer vorhanden, wird eine leere Liste zurückgegeben.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrer-Listen-Einträgen
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<LehrerListeEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
-	 *   Code 404: Keine Lehrer-Einträge gefunden
+	 *   Code 404: Der Schuljahresabschnitt wurde nicht gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abschnitt - der Pfad-Parameter abschnitt

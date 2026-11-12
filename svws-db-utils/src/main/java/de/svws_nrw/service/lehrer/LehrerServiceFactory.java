@@ -8,6 +8,7 @@ import de.svws_nrw.mapper.lehrer.foto.LehrerFotoMapper;
 import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
 import de.svws_nrw.mapper.lehrer.lehramt.LehrerLehramtMapper;
 import de.svws_nrw.mapper.lehrer.lehrbefaehigung.LehrerLehrbefaehigungMapper;
+import de.svws_nrw.mapper.lehrer.liste.LehrerListeEintragMapper;
 import de.svws_nrw.mapper.lehrer.lernplattform.LehrerLernplattformMapper;
 import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import de.svws_nrw.mapper.lehrer.minderleistung.LehrerMinderleistungMapper;
@@ -28,6 +29,7 @@ import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
 import de.svws_nrw.service.lehrer.lehramt.LehrerLehramtService;
 import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import de.svws_nrw.service.lehrer.lernplattform.LehrerLernplattformService;
+import de.svws_nrw.service.lehrer.liste.LehrerListeService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungServiceKontext;
 import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungService;
@@ -38,6 +40,7 @@ import de.svws_nrw.service.lehrer.personaldaten.LehrerPersonaldatenService;
 import de.svws_nrw.service.lehrer.stammdaten.LehrerStammdatenRepositories;
 import de.svws_nrw.service.lehrer.stammdaten.LehrerStammdatenService;
 import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachService;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 
 /**
  * Eine Factory zum Erstellen der Lehrer-spezifischen Services
@@ -310,6 +313,19 @@ public final class LehrerServiceFactory {
 				this.getLehrerEinwilligungService(),
 				LehrerStammdatenMapper.INSTANCE,
 				SchulleitungMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt einen neuen {@link LehrerListeService}.
+	 *
+	 * @return ein neuer {@code LehrerListeService}
+	 */
+	public LehrerListeService getLehrerListeService() {
+		return new LehrerListeService(
+				lehrerRepositoryFactory.getLehrerRepository(),
+				EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory).getSchuljahresabschnittService(),
+				LehrerListeEintragMapper.INSTANCE
 		);
 	}
 

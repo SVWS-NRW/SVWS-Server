@@ -191,4 +191,14 @@ class LehrerServiceFactoryTest {
 		verify(repoSchuleFactory).getSchulleitungRepository();
 	}
 
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerListeService den Service korrekt erstellt")
+	void getLehrerListeService() {
+		final var service = serviceFactory.getLehrerListeService();
+		assertNotNull(service);
+
+		verify(repoLehrerFactory).getLehrerRepository();
+		verify(repoSchuleFactory).getSchuljahresabschnitteRepository();
+		verify(repoSchuleFactory).getSchuleRepository();
+	}
 }
