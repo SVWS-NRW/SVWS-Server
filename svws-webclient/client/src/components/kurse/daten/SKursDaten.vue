@@ -290,7 +290,8 @@
 		}
 		return result;
 	});
-	const newEntryKursLehrer = ref<KursLehrer>(createNewKursLehrerEntry());
+	// Erst beim Öffnen des Modals mit der Kurs-ID belegt, da beim Aufbau der Komponente noch kein Kurs geladen sein muss (z. B. Wechsel zu "Kurs hinzufügen")
+	const newEntryKursLehrer = ref<KursLehrer>(new KursLehrer());
 
 	function createNewKursLehrerEntry() {
 		return Object.assign(new KursLehrer(), { wochenstundenLehrer: 0, idKurs: idKurs.value });
