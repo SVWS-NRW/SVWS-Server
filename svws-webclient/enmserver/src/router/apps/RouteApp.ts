@@ -9,12 +9,15 @@ import { RoutingStatus } from "@wenom/router/RoutingStatus";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { TabData } from "@ui/ui/nav/TabData";
 
 import { routeAnkreuzkompetenzen } from "./RouteAnkreuzkompetenzen";
 import { routeKlassenleitung } from "./RouteKlassenleitung";
+import { routeKonferenzuebersicht } from "./RouteKonferenzuebersicht";
+import { routeSchuelerfaecher } from "./RouteSchuelerfaecher";
 import { routeTeilleistungen } from "./RouteTeilleistungen";
 
 
@@ -33,6 +36,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeTeilleistungen,
 			routeAnkreuzkompetenzen,
 			routeKlassenleitung,
+			routeSchuelerfaecher,
+			routeKonferenzuebersicht,
 		];
 		super.children = [
 			...this._menuMain,
@@ -106,6 +111,34 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	private readonly setApp = async (value: TabData) => {
+		if (value.name === routeKlassenleitung.name) {
+			if (!this.data.optionsAuswahlAnsicht.has(ENMLehrerFunktion.KLASSENLEITUNG)) {
+				return;
+			}
+			if (this.data.auswahlAnsicht !== ENMLehrerFunktion.KLASSENLEITUNG) {
+				await this.data.setAnsicht(ENMLehrerFunktion.KLASSENLEITUNG);
+			}
+		}
+		if ((value.name === routeSchuelerfaecher.name)
+			&& (this.data.auswahlAnsicht !== ENMLehrerFunktion.KLASSENLEITUNG)
+			&& (this.data.auswahlAnsicht !== ENMLehrerFunktion.ABTEILUNGSLEITUNG)) {
+			const zielAnsicht = this.data.optionsAuswahlAnsicht.has(ENMLehrerFunktion.KLASSENLEITUNG)
+				? ENMLehrerFunktion.KLASSENLEITUNG
+				: ENMLehrerFunktion.ABTEILUNGSLEITUNG;
+			if (this.data.optionsAuswahlAnsicht.has(zielAnsicht)) {
+				await this.data.setAnsicht(zielAnsicht);
+			}
+		}
+		if ((value.name === routeKonferenzuebersicht.name)
+			&& (this.data.auswahlAnsicht !== ENMLehrerFunktion.KLASSENLEITUNG)
+			&& (this.data.auswahlAnsicht !== ENMLehrerFunktion.ABTEILUNGSLEITUNG)) {
+			const zielAnsicht = this.data.optionsAuswahlAnsicht.has(ENMLehrerFunktion.KLASSENLEITUNG)
+				? ENMLehrerFunktion.KLASSENLEITUNG
+				: ENMLehrerFunktion.ABTEILUNGSLEITUNG;
+			if (this.data.optionsAuswahlAnsicht.has(zielAnsicht)) {
+				await this.data.setAnsicht(zielAnsicht);
+			}
+		}
 		if (value.name === this.data.view.name) {
 			return;
 		}
