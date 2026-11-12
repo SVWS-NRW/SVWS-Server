@@ -55,4 +55,9 @@ public final class KlassenleitungenRepositoryImpl extends RepositoryBaseImpl<DTO
 		return mapLeitungen;
 	}
 
+	@Override
+	public List<DTOKlassenLeitung> findListByIdKlasse(final long idKlasse) {
+		return conn.queryList(DTOKlassenLeitung.QUERY_BY_KLASSEN_ID, DTOKlassenLeitung.class, idKlasse);
+	}
+
 }

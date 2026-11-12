@@ -87,4 +87,25 @@ class KlassenleitungenRepositoryImplTest {
 		verifyNoInteractions(conn);
 	}
 
+	@Test
+	@DisplayName("Test: Prüfe, ob findListByIdKlasse die Klassenleitungen der Klasse über die Abfrage nach der Klassen-ID liefert.")
+	void testFindListByIdKlasse() {
+		final DTOKlassenLeitung l1 = new DTOKlassenLeitung(1L, 101L, 1);
+		final DTOKlassenLeitung l2 = new DTOKlassenLeitung(1L, 102L, 2);
+		when(conn.queryList(DTOKlassenLeitung.QUERY_BY_KLASSEN_ID, DTOKlassenLeitung.class, 1L)).thenReturn(Arrays.asList(l1, l2));
+
+		final List<DTOKlassenLeitung> result = repository.findListByIdKlasse(1L);
+
+		assertEquals(List.of(l1, l2), result);
+		verify(conn).queryList(DTOKlassenLeitung.QUERY_BY_KLASSEN_ID, DTOKlassenLeitung.class, 1L);
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob findListByIdKlasse für eine Klasse ohne Klassenleitung eine leere Liste liefert.")
+	void testFindListByIdKlasseOhneLeitung() {
+		when(conn.queryList(DTOKlassenLeitung.QUERY_BY_KLASSEN_ID, DTOKlassenLeitung.class, 5L)).thenReturn(List.of());
+
+		assertTrue(repository.findListByIdKlasse(5L).isEmpty());
+	}
+
 }

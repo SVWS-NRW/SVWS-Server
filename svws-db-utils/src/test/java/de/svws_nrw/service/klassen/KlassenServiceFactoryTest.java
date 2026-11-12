@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenleitungenRepository;
+import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
@@ -35,6 +37,9 @@ class KlassenServiceFactoryTest {
 	private SchuelerRepositoryFactory schuelerRepositoryFactory;
 
 	@Mock
+	private LehrerRepositoryFactory lehrerRepositoryFactory;
+
+	@Mock
 	private EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
 	@Mock
@@ -42,6 +47,9 @@ class KlassenServiceFactoryTest {
 
 	@Mock
 	private KlassenleitungenRepository klassenleitungenRepository;
+
+	@Mock
+	private LehrerRepository lehrerRepository;
 
 	@Mock
 	private SchuelerLernabschnittRepository lernabschnittRepository;
@@ -59,7 +67,7 @@ class KlassenServiceFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		factory = KlassenServiceFactory.getNewInstance(klassenRepositoryFactory, schuelerRepositoryFactory, eigeneSchuleServiceFactory);
+		factory = KlassenServiceFactory.getNewInstance(klassenRepositoryFactory, schuelerRepositoryFactory, lehrerRepositoryFactory, eigeneSchuleServiceFactory);
 	}
 
 	private void stubAbhaengigkeiten() {
@@ -102,6 +110,20 @@ class KlassenServiceFactoryTest {
 
 		assertThat(service1).isNotSameAs(service2);
 		verify(klassenRepositoryFactory, times(2)).getKlassenRepository();
+	}
+
+	@Test
+	@DisplayName("getKlassenleitungService erstellt einen Service mit den Repositories der Factories")
+	void getKlassenleitungService() {
+		when(klassenRepositoryFactory.getKlassenRepository()).thenReturn(klassenRepository);
+		when(klassenRepositoryFactory.getKlassenleitungenRepository()).thenReturn(klassenleitungenRepository);
+		when(lehrerRepositoryFactory.getLehrerRepository()).thenReturn(lehrerRepository);
+
+		assertThat(factory.getKlassenleitungService()).isNotNull().isInstanceOf(KlassenleitungService.class);
+
+		verify(klassenRepositoryFactory, times(1)).getKlassenRepository();
+		verify(klassenRepositoryFactory, times(1)).getKlassenleitungenRepository();
+		verify(lehrerRepositoryFactory, times(1)).getLehrerRepository();
 	}
 
 }

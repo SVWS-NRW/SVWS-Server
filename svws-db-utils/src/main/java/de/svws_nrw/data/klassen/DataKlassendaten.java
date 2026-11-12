@@ -36,6 +36,8 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.json.JsonDaten;
+import de.svws_nrw.service.klassen.KlassenServiceFactory;
+import de.svws_nrw.service.klassen.KlassenleitungService;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -319,6 +321,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 	/**
 	 * Führt das Mapping der Klassenleitungen des Core-DTOs auf das zugehörige Datenbank-DTO durch.
+	 * Die Klassenleitungen werden vom {@link KlassenleitungService} ersetzt.
 	 *
 	 * @param dto     das Datenbank-DTO
 	 * @param value   der Wert des Core-DTO-Attributes
@@ -326,64 +329,8 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 * @throws ApiOperationException   wenn ein Fehler bei dem Mapping auftritt
 	 */
 	private void mapKlassenleitungen(final DTOKlassen dto, final Object value) throws ApiOperationException {
-		// Deserialisiere Klassenleitungsliste
 		final List<Long> klassenLeitungList = JSONMapper.convertToListOfLong(value, false);
-
-		// Validiere, dass keine ID-Duplikate vorhanden sind
-		if (klassenLeitungList.stream().distinct().toArray().length != klassenLeitungList.size()) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es dürfen keine Lehrer-IDs doppelt in der Klassenleitungs-Liste vorhanden sein");
-		}
-
-		// Bestimme alle hinzuzufügenden Lehrkräfte und prüfe, ob alle IDs auch zu einer Lehrkraft gehören
-		if ((!klassenLeitungList.isEmpty()) && (conn.queryByKeyList(DTOLehrer.class, klassenLeitungList).size() != klassenLeitungList.size())) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Mindestens zu einer der angegebenen Lehrer-IDs ist keine Lehrkraft bekannt");
-		}
-
-		// Bestimme die bisherigen Klassenleitungen zu der Klasse
-		final List<DTOKlassenLeitung> klassenleitungenPersistence = conn.queryList(DTOKlassenLeitung.QUERY_BY_KLASSEN_ID, DTOKlassenLeitung.class, dto.ID);
-
-		// Entferne alle Klassenleitungen, die nicht in der neuen Liste der Klassenleitungen sind
-		for (final DTOKlassenLeitung entry : klassenleitungenPersistence) {
-			final long lehrerIdEntry = entry.Lehrer_ID;
-			if (!klassenLeitungList.contains(lehrerIdEntry)) {
-				if (!conn.transactionRemove(entry)) {
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-							"Die Klassenleitung mit der ID %d konnte bei der Klasse mit der ID %d nicht entfernt werden.".formatted(entry.Lehrer_ID,
-									entry.Klassen_ID));
-				}
-				conn.transactionFlush();
-			}
-		}
-
-		// Erstelle bzw. aktualisiere dann die Klassenleitungen, welche in der neuen Liste der Klassenleitungen sind
-		for (int i = 0; i < klassenLeitungList.size(); i++) {
-			final int reihenfolge = i + 1;  // Der Wert für die Reihenfolge ist 1-indiziert
-
-			// Überprüfe, ob es bereits eine Klassenleitung mit der jeweiligen Klassen-ID und Lehrer-ID gibt
-			final List<DTOKlassenLeitung> persistierteKlassenleitung =
-					conn.queryList(DTOKlassenLeitung.QUERY_PK, DTOKlassenLeitung.class, dto.ID, klassenLeitungList.get(i));
-
-			// Prüfe, ob die Klassenleitung gefunden wurde...
-			if (!persistierteKlassenleitung.isEmpty()) {
-				// ... und aktualisiere diese bei Bedarf
-				final DTOKlassenLeitung dtoKlassenLeitung = persistierteKlassenleitung.getFirst();
-				if (dtoKlassenLeitung.Reihenfolge == reihenfolge) {
-					continue; // bereits aktuell
-				}
-				// Setze den Reihenfolgenwert anhand des Index in der neuen Liste und persistiere die Änderung
-				dtoKlassenLeitung.Reihenfolge = reihenfolge;
-				if (!conn.transactionPersist(dtoKlassenLeitung)) {
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Klassenleitung konnte nicht aktualisiert werden");
-				}
-			} else {
-				// ... und erstelle eine neue Klassenleitung, welche dann persistiert wird
-				final DTOKlassenLeitung dtoKlassenLeitung = new DTOKlassenLeitung(dto.ID, klassenLeitungList.get(i), reihenfolge);
-				if (!conn.transactionPersist(dtoKlassenLeitung)) {
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Klassenleitung konnte nicht persistiert werden");
-				}
-			}
-			conn.transactionFlush();
-		}
+		KlassenServiceFactory.getNewInstance().getKlassenleitungService().replace(dto.ID, klassenLeitungList);
 	}
 
 

@@ -3,6 +3,7 @@ package de.svws_nrw.service.klassen;
 import de.svws_nrw.mapper.klassen.KlassenMapper;
 import de.svws_nrw.mapper.schueler.SchuelerMapper;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
@@ -14,6 +15,7 @@ public final class KlassenServiceFactory {
 
 	private final KlassenRepositoryFactory klassenRepositoryFactory;
 	private final SchuelerRepositoryFactory schuelerRepositoryFactory;
+	private final LehrerRepositoryFactory lehrerRepositoryFactory;
 	private final EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
 	/**
@@ -21,12 +23,17 @@ public final class KlassenServiceFactory {
 	 *
 	 * @param klassenRepositoryFactory       die Factory für Klassen-Repositories
 	 * @param schuelerRepositoryFactory      die Factory für Schüler-Repositories
+	 * @param lehrerRepositoryFactory        die Factory für Lehrer-Repositories
 	 * @param eigeneSchuleServiceFactory     die Factory für Services der eigenen Schule
 	 */
-	private KlassenServiceFactory(final KlassenRepositoryFactory klassenRepositoryFactory, final SchuelerRepositoryFactory schuelerRepositoryFactory,
+	private KlassenServiceFactory(
+			final KlassenRepositoryFactory klassenRepositoryFactory,
+			final SchuelerRepositoryFactory schuelerRepositoryFactory,
+			final LehrerRepositoryFactory lehrerRepositoryFactory,
 			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
 		this.klassenRepositoryFactory = klassenRepositoryFactory;
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
+		this.lehrerRepositoryFactory = lehrerRepositoryFactory;
 		this.eigeneSchuleServiceFactory = eigeneSchuleServiceFactory;
 	}
 
@@ -35,13 +42,17 @@ public final class KlassenServiceFactory {
 	 *
 	 * @param klassenRepositoryFactory       die Factory für Klassen-Repositories
 	 * @param schuelerRepositoryFactory      die Factory für Schüler-Repositories
+	 * @param lehrerRepositoryFactory        die Factory für Lehrer-Repositories
 	 * @param eigeneSchuleServiceFactory     die Factory für Services der eigenen Schule
 	 *
 	 * @return die Factory
 	 */
-	public static KlassenServiceFactory getNewInstance(final KlassenRepositoryFactory klassenRepositoryFactory,
-			final SchuelerRepositoryFactory schuelerRepositoryFactory, final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
-		return new KlassenServiceFactory(klassenRepositoryFactory, schuelerRepositoryFactory, eigeneSchuleServiceFactory);
+	public static KlassenServiceFactory getNewInstance(
+			final KlassenRepositoryFactory klassenRepositoryFactory,
+			final SchuelerRepositoryFactory schuelerRepositoryFactory,
+			final LehrerRepositoryFactory lehrerRepositoryFactory,
+			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
+		return new KlassenServiceFactory(klassenRepositoryFactory, schuelerRepositoryFactory, lehrerRepositoryFactory, eigeneSchuleServiceFactory);
 	}
 
 	/**
@@ -51,7 +62,7 @@ public final class KlassenServiceFactory {
 	 */
 	public static KlassenServiceFactory getNewInstance() {
 		return new KlassenServiceFactory(KlassenRepositoryFactory.getNewInstance(), SchuelerRepositoryFactory.getNewInstance(),
-				EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance()));
+				LehrerRepositoryFactory.getNewInstance(), EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance()));
 	}
 
 	/**
@@ -73,6 +84,18 @@ public final class KlassenServiceFactory {
 				eigeneSchuleServiceFactory.getSchuleService(),
 				schuljahresabschnittService);
 		return new KlassenService(klassenRepository, schuljahresabschnittService, kontextLoader, KlassenMapper.INSTANCE);
+	}
+
+	/**
+	 * Erstellt einen neuen Service für die Klassenleitungen einer Klasse
+	 *
+	 * @return der Service
+	 */
+	public KlassenleitungService getKlassenleitungService() {
+		return new KlassenleitungService(
+				klassenRepositoryFactory.getKlassenRepository(),
+				klassenRepositoryFactory.getKlassenleitungenRepository(),
+				lehrerRepositoryFactory.getLehrerRepository());
 	}
 
 }

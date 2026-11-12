@@ -21,4 +21,13 @@ public interface KlassenleitungenRepository extends RepositoryBase<DTOKlassenLei
 	 * @return die Zuordnung
 	 */
 	Map<Long, List<Long>> getMapKlassenleitungen(Collection<Long> idsKlassen);
+
+	/**
+	 * Bestimmt die Klassenleitungen der Klasse mit der übergebenen ID.
+	 *
+	 * @param idKlasse   die ID der Klasse
+	 *
+	 * @return die Klassenleitungen der Klasse, bzw. eine leere Liste, wenn die Klasse keine Klassenleitung hat
+	 */
+	List<DTOKlassenLeitung> findListByIdKlasse(long idKlasse);
 }
