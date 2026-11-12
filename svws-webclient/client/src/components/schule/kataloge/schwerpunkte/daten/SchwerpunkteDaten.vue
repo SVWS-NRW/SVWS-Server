@@ -2,7 +2,7 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
-				<svws-ui-input-wrapper :grid="2">
+				<svws-ui-input-wrapper :grid="1">
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
