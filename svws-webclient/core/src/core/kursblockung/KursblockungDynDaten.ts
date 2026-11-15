@@ -1090,17 +1090,6 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
-	 * Kursdifferenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdifferenzen) des
-	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 */
-	gibBewertungK1FW2NW3KD(): number {
-		return this.statistik.gibCompareZustandK1FW2NW3KD();
-	}
-
-	/**
 	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
 	 *
 	 * @param b  Das zu vergleichende Objekt.
@@ -1224,6 +1213,24 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * Liefert die Nummer der Fachart mit der größten Kursdifferenz.
+	 *
+	 * @return die Nummer der Fachart mit der größten Kursdifferenz oder -1
+	 */
+	gibFachartNrMitGroessterKursdifferenz(): number {
+		let max: number = 0;
+		let maxNr: number = -1;
+		for (const fachart of this.fachartMenge) {
+			const differenz: number = fachart.gibKursdifferenz();
+			if (differenz > max) {
+				max = differenz;
+				maxNr = fachart.gibNr();
+			}
+		}
+		return maxNr;
 	}
 
 	/**
@@ -1443,6 +1450,143 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 		}
 		return kurslagenVeraenderung;
+	}
+
+	/**
+	 * Tauscht die Schienen zweier zufälliger freier Kurse. Es werden bis zu {@code versuche} zufällige Paare probiert.
+	 *
+	 * @param versuche die maximale Anzahl an Tauschversuchen
+	 */
+	aktionKurseTauschen(versuche: number): void {
+		const frei: Array<KursblockungDynKurs> = this.gibKurseDieFreiSind();
+		if (frei.length < 2) {
+			return;
+		}
+		for (let versuch: number = 0; versuch < versuche; versuch++) {
+			const i: number = this.rnd.nextInt(frei.length);
+			let j: number = this.rnd.nextInt(frei.length - 1);
+			if (j >= i) {
+				j++;
+			}
+			if (this.aktionRingtausch2(i, j)) {
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Tauscht die Schienen der beiden freien Kurse mit den angegebenen Indizes.
+	 *
+	 * @param indexA   der Index des ersten freien Kurses
+	 * @param indexB   der Index des zweiten freien Kurses
+	 * @return {@code true}, falls der Tausch erfolgreich war
+	 */
+	aktionRingtausch2(indexA: number, indexB: number): boolean {
+		const frei: Array<KursblockungDynKurs> = this.gibKurseDieFreiSind();
+		if ((indexA < 0) || (indexB < 0) || (indexA >= frei.length) || (indexB >= frei.length) || (indexA === indexB)) {
+			return false;
+		}
+		const a: KursblockungDynKurs = frei[indexA];
+		const b: KursblockungDynKurs = frei[indexB];
+		const schieneA: number = a.gibErsteBeweglicheSchiene();
+		const schieneB: number = b.gibErsteBeweglicheSchiene();
+		if ((schieneA === schieneB) || !a.gibIstSchieneFrei(schieneB) || !b.gibIstSchieneFrei(schieneA)) {
+			return false;
+		}
+		a.aktionSetzeInSchiene(schieneB);
+		b.aktionSetzeInSchiene(schieneA);
+		return true;
+	}
+
+	/**
+	 * Tauscht die beiden zufällig gewählten Schienen für alle Kurse, die nur eine Schiene belegen.
+	 */
+	aktionSchienenTauschen(): void {
+		const anzahl: number = this.gibSchienenAnzahl();
+		if (anzahl < 2) {
+			return;
+		}
+		const a: number = this.rnd.nextInt(anzahl);
+		let b: number = this.rnd.nextInt(anzahl - 1);
+		if (b >= a) {
+			b++;
+		}
+		for (const kurs of this.gibKurseDieFreiSind()) {
+			if (kurs.gibSchienenAnzahl() !== 1) {
+				continue;
+			}
+			const schiene: number = kurs.gibErsteBeweglicheSchiene();
+			if ((schiene === a) && kurs.gibIstSchieneFrei(b)) {
+				kurs.aktionSetzeInSchiene(b);
+			} else
+				if ((schiene === b) && kurs.gibIstSchieneFrei(a)) {
+					kurs.aktionSetzeInSchiene(a);
+				}
+		}
+	}
+
+	/**
+	 * Erzeugt einen Startzustand über die Wunschkaskade und speichert ihn als Zustand K.
+	 */
+	aktionStartzustandWunschkaskade(): void {
+		this.aktionSchuelerAusAllenKursenEntfernen();
+		this.aktionKurseFreieZufaelligVerteilen();
+		this.aktionKurseVerteilenNachSchuelerwunsch();
+		this.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
+		this.aktionZustandSpeichernK();
+		this.aktionSchuelerAusAllenKursenEntfernen();
+		for (let i: number = 0; i < 60; i++) {
+			this.aktionKurseVerteilenNachSchuelerwunsch();
+			if (!this.aktionKurseVerteilenNachSchuelerwunschSingle()) {
+				break;
+			}
+		}
+		this.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
+		if (this.gibCompareZustandK1NW2KD3FW() > 0) {
+			this.aktionZustandSpeichernK();
+		} else {
+			this.aktionZustandLadenK();
+		}
+	}
+
+	/**
+	 * Verteilt den freien Kurs mit dem angegebenen Index zufällig neu.
+	 *
+	 * @param index   der Index des freien Kurses
+	 */
+	aktionRingtausch1(index: number): void {
+		if ((index < 0) || (index >= this.kursMengeFrei.length)) {
+			return;
+		}
+		this.kursMengeFrei[index].aktionZufaelligVerteilen();
+	}
+
+	/**
+	 * Tauscht die Schienen der drei freien Kurse mit den angegebenen Indizes im Ring.
+	 *
+	 * @param indexA   der Index des ersten freien Kurses
+	 * @param indexB   der Index des zweiten freien Kurses
+	 * @param indexC   der Index des dritten freien Kurses
+	 * @return {@code true}, falls der Ringtausch erfolgreich war
+	 */
+	aktionRingtausch3(indexA: number, indexB: number, indexC: number): boolean {
+		const frei: Array<KursblockungDynKurs> = this.gibKurseDieFreiSind();
+		if ((indexA < 0) || (indexB < 0) || (indexC < 0) || (indexA >= frei.length) || (indexB >= frei.length) || (indexC >= frei.length) || (indexA === indexB) || (indexA === indexC) || (indexB === indexC)) {
+			return false;
+		}
+		const a: KursblockungDynKurs = frei[indexA];
+		const b: KursblockungDynKurs = frei[indexB];
+		const c: KursblockungDynKurs = frei[indexC];
+		const schieneA: number = a.gibErsteBeweglicheSchiene();
+		const schieneB: number = b.gibErsteBeweglicheSchiene();
+		const schieneC: number = c.gibErsteBeweglicheSchiene();
+		if ((schieneA === schieneB) || (schieneA === schieneC) || (schieneB === schieneC) || !a.gibIstSchieneFrei(schieneB) || !b.gibIstSchieneFrei(schieneC) || !c.gibIstSchieneFrei(schieneA)) {
+			return false;
+		}
+		a.aktionSetzeInSchiene(schieneB);
+		b.aktionSetzeInSchiene(schieneC);
+		c.aktionSetzeInSchiene(schieneA);
+		return true;
 	}
 
 	/**

@@ -5,8 +5,8 @@ import { KursblockungAlgorithmusPermanentK } from '../../core/kursblockung/Kursb
 import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsdatenManager';
 import { KursblockungAlgorithmusPermanentKSchuelervorschlag } from '../../core/kursblockung/KursblockungAlgorithmusPermanentKSchuelervorschlag';
 import { ArrayList } from '../../java/util/ArrayList';
-import { KursblockungAlgorithmusPermanentKSchuelervorschlagSingle } from '../../core/kursblockung/KursblockungAlgorithmusPermanentKSchuelervorschlagSingle';
 import { Logger } from '../../core/logger/Logger';
+import { KursblockungAlgorithmusPermanentKMixVier } from '../../core/kursblockung/KursblockungAlgorithmusPermanentKMixVier';
 import { System } from '../../java/lang/System';
 import { Random } from '../../java/util/Random';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
@@ -56,7 +56,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 
 
 	/**
-	 * Initialisiert den Blockungsalgorithmus für eine vom Clienten initiierte dauerhafte Berechnung.
+	 * Initialisiert den Blockungsalgorithmus für eine vom Klienten initiierte dauerhafte Berechnung.
 	 *
 	 * @param pInput  Das Eingabe-Objekt (der Daten-Manager).
 	 */
@@ -73,7 +73,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	}
 
 	private erzeugeAlgorithmenNeu(): Array<KursblockungAlgorithmusPermanentK> {
-		return [new KursblockungAlgorithmusPermanentKMatching(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull()), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull())];
+		return [new KursblockungAlgorithmusPermanentKMatching(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKMixVier(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull())];
 	}
 
 	/**

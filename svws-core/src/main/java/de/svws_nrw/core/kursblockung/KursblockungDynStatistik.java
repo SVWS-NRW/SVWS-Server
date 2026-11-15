@@ -317,52 +317,6 @@ public class KursblockungDynStatistik {
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
-	 * Kursdifferenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdifferenzen) des
-	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 */
-	int gibCompareZustandK1FW2NW3KD() {
-		// Regelverletzungen
-		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveK) {
-			return -1;
-		}
-		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveK) {
-			return +1;
-		}
-
-		// FachartPaar
-		if (bewertungFachartPaar > bewertungFachartPaarSaveK) {
-			return -1;
-		}
-		if (bewertungFachartPaar < bewertungFachartPaarSaveK) {
-			return +1;
-		}
-
-		// Nichtwahlen
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK) {
-			return -1;
-		}
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK) {
-			return +1;
-		}
-
-		// Kursdifferenzen
-		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i]) {
-				return -1;
-			}
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i]) {
-				return +1;
-			}
-		}
-
-		// Bewertungen identisch
-		return 0;
-	}
-
-	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen, FachartPaar) des
 	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *

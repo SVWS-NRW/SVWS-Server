@@ -1518,17 +1518,6 @@ public class KursblockungDynDaten {
 		return statistik.gibCompareZustandG1NW2KD3FW();
 	}
 
-	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
-	 * Kursdifferenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdifferenzen) des
-	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 */
-	int gibBewertungK1FW2NW3KD() {
-		return statistik.gibCompareZustandK1FW2NW3KD();
-	}
-
 	// ########################################
 	// ########### SETTER / ACTIONS ###########
 	// ########################################
@@ -1657,6 +1646,24 @@ public class KursblockungDynDaten {
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * Liefert die Nummer der Fachart mit der größten Kursdifferenz.
+	 *
+	 * @return die Nummer der Fachart mit der größten Kursdifferenz oder -1
+	 */
+	int gibFachartNrMitGroessterKursdifferenz() {
+		int max = 0;
+		int maxNr = -1;
+		for (final @NotNull KursblockungDynFachart fachart : fachartMenge) {
+			final int differenz = fachart.gibKursdifferenz();
+			if (differenz > max) {
+				max = differenz;
+				maxNr = fachart.gibNr();
+			}
+		}
+		return maxNr;
 	}
 
 	/**
@@ -1932,6 +1939,147 @@ public class KursblockungDynDaten {
 	}
 
 	/**
+	 * Tauscht die Schienen zweier zufälliger freier Kurse. Es werden bis zu {@code versuche} zufällige Paare probiert.
+	 *
+	 * @param versuche die maximale Anzahl an Tauschversuchen
+	 */
+	void aktionKurseTauschen(final int versuche) {
+		final KursblockungDynKurs @NotNull [] frei = gibKurseDieFreiSind();
+		if (frei.length < 2) {
+			return;
+		}
+		for (int versuch = 0; versuch < versuche; versuch++) {
+			final int i = rnd.nextInt(frei.length);
+			int j = rnd.nextInt(frei.length - 1);
+			if (j >= i) {
+				j++;
+			}
+			if (aktionRingtausch2(i, j)) {
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Tauscht die Schienen der beiden freien Kurse mit den angegebenen Indizes.
+	 *
+	 * @param indexA   der Index des ersten freien Kurses
+	 * @param indexB   der Index des zweiten freien Kurses
+	 * @return {@code true}, falls der Tausch erfolgreich war
+	 */
+	boolean aktionRingtausch2(final int indexA, final int indexB) {
+		final KursblockungDynKurs @NotNull [] frei = gibKurseDieFreiSind();
+		if ((indexA < 0) || (indexB < 0) || (indexA >= frei.length) || (indexB >= frei.length) || (indexA == indexB)) {
+			return false;
+		}
+		final @NotNull KursblockungDynKurs a = frei[indexA];
+		final @NotNull KursblockungDynKurs b = frei[indexB];
+		final int schieneA = a.gibErsteBeweglicheSchiene();
+		final int schieneB = b.gibErsteBeweglicheSchiene();
+		if ((schieneA == schieneB) || !a.gibIstSchieneFrei(schieneB) || !b.gibIstSchieneFrei(schieneA)) {
+			return false;
+		}
+		a.aktionSetzeInSchiene(schieneB);
+		b.aktionSetzeInSchiene(schieneA);
+		return true;
+	}
+
+	/**
+	 * Tauscht die beiden zufällig gewählten Schienen für alle Kurse, die nur eine Schiene belegen.
+	 */
+	void aktionSchienenTauschen() {
+		final int anzahl = gibSchienenAnzahl();
+		if (anzahl < 2) {
+			return;
+		}
+		final int a = rnd.nextInt(anzahl);
+		int b = rnd.nextInt(anzahl - 1);
+		if (b >= a) {
+			b++;
+		}
+		for (final @NotNull KursblockungDynKurs kurs : gibKurseDieFreiSind()) {
+			if (kurs.gibSchienenAnzahl() != 1) {
+				continue;
+			}
+			final int schiene = kurs.gibErsteBeweglicheSchiene();
+			if ((schiene == a) && kurs.gibIstSchieneFrei(b)) {
+				kurs.aktionSetzeInSchiene(b);
+			} else if ((schiene == b) && kurs.gibIstSchieneFrei(a)) {
+				kurs.aktionSetzeInSchiene(a);
+			}
+		}
+	}
+
+	/**
+	 * Erzeugt einen Startzustand über die Wunschkaskade und speichert ihn als Zustand K.
+	 */
+	void aktionStartzustandWunschkaskade() {
+		// Startzustand erzeugen.
+		aktionSchuelerAusAllenKursenEntfernen();
+		aktionKurseFreieZufaelligVerteilen();
+		aktionKurseVerteilenNachSchuelerwunsch();
+		aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
+		aktionZustandSpeichernK();
+
+		// Wunschkaskade
+		aktionSchuelerAusAllenKursenEntfernen();
+		for (int i = 0; i < 60; i++) {
+			aktionKurseVerteilenNachSchuelerwunsch();
+			if (!aktionKurseVerteilenNachSchuelerwunschSingle()) {
+				break;
+			}
+		}
+		aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
+		if (gibCompareZustandK1NW2KD3FW() > 0) {
+			aktionZustandSpeichernK();
+		} else {
+			aktionZustandLadenK();
+		}
+	}
+
+	/**
+	 * Verteilt den freien Kurs mit dem angegebenen Index zufällig neu.
+	 *
+	 * @param index   der Index des freien Kurses
+	 */
+	void aktionRingtausch1(final int index) {
+		if ((index < 0) || (index >= kursMengeFrei.length)) {
+			return;
+		}
+		kursMengeFrei[index].aktionZufaelligVerteilen();
+	}
+
+	/**
+	 * Tauscht die Schienen der drei freien Kurse mit den angegebenen Indizes im Ring.
+	 *
+	 * @param indexA   der Index des ersten freien Kurses
+	 * @param indexB   der Index des zweiten freien Kurses
+	 * @param indexC   der Index des dritten freien Kurses
+	 * @return {@code true}, falls der Ringtausch erfolgreich war
+	 */
+	boolean aktionRingtausch3(final int indexA, final int indexB, final int indexC) {
+		final KursblockungDynKurs @NotNull [] frei = gibKurseDieFreiSind();
+		if ((indexA < 0) || (indexB < 0) || (indexC < 0) || (indexA >= frei.length) || (indexB >= frei.length)
+				|| (indexC >= frei.length) || (indexA == indexB) || (indexA == indexC) || (indexB == indexC)) {
+			return false;
+		}
+		final @NotNull KursblockungDynKurs a = frei[indexA];
+		final @NotNull KursblockungDynKurs b = frei[indexB];
+		final @NotNull KursblockungDynKurs c = frei[indexC];
+		final int schieneA = a.gibErsteBeweglicheSchiene();
+		final int schieneB = b.gibErsteBeweglicheSchiene();
+		final int schieneC = c.gibErsteBeweglicheSchiene();
+		if ((schieneA == schieneB) || (schieneA == schieneC) || (schieneB == schieneC)
+				|| !a.gibIstSchieneFrei(schieneB) || !b.gibIstSchieneFrei(schieneC) || !c.gibIstSchieneFrei(schieneA)) {
+			return false;
+		}
+		a.aktionSetzeInSchiene(schieneB);
+		b.aktionSetzeInSchiene(schieneC);
+		c.aktionSetzeInSchiene(schieneA);
+		return true;
+	}
+
+	/**
 	 * Verteilt die SuS auf die jetzige Kurslage. Pro S. werden erst die Multikurse verteilt, dann werden die übrigen
 	 * Kurse mit Hilfe eines bipartiten Matching-Algorithmus verteilt. Bereits belegte Facharten werden übersprungen.
 	 */
@@ -2029,5 +2177,4 @@ public class KursblockungDynDaten {
 
 	    return sb;
 	}
-
 }

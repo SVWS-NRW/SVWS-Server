@@ -339,6 +339,15 @@ public class KursblockungDynKurs {
 		return ((schuelerAnzahlMaximal - schuelerAnzahl - schuelerAnzahlDummy) > 0);
 	}
 
+	/**
+	 * Liefert die Nummer der ersten beweglichen Schiene des Kurses.
+	 *
+	 * @return die Nummer der ersten beweglichen Schiene oder -1, falls es keine gibt
+	 */
+	int gibErsteBeweglicheSchiene() {
+		return (schienenLageFixiert < schienenLage.length) ? schienenLage[schienenLageFixiert].gibNr() : -1;
+	}
+
 	/** Speichert die aktuelle Lage der Schienen im Zustand S,
 	 * um diese bei Bedarf mit der Methode {@link #aktionZustandLadenS} zu laden. */
 	void aktionZustandSpeichernS() {
@@ -611,5 +620,4 @@ public class KursblockungDynKurs {
 	public long gibFachID() {
 		return fachart.gibFach().id;
 	}
-
 }

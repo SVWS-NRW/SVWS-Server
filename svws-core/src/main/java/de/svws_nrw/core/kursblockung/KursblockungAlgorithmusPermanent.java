@@ -43,7 +43,7 @@ public final class KursblockungAlgorithmusPermanent {
 	private int currentIndex;
 
 	/**
-	 * Initialisiert den Blockungsalgorithmus für eine vom Clienten initiierte dauerhafte Berechnung.
+	 * Initialisiert den Blockungsalgorithmus für eine vom Klienten initiierte dauerhafte Berechnung.
 	 *
 	 * @param pInput  Das Eingabe-Objekt (der Daten-Manager).
 	 */
@@ -67,8 +67,7 @@ public final class KursblockungAlgorithmusPermanent {
 				// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
 				new KursblockungAlgorithmusPermanentKMatching(rnd, log, input),
 				new KursblockungAlgorithmusPermanentKSchuelervorschlag(rnd, log, input),
-				new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(rnd, log, input),
-				new KursblockungAlgorithmusPermanentKOptimiereBest(rnd, log, input, gibTopElementOrNull()),
+				new KursblockungAlgorithmusPermanentKMixVier(rnd, log, input),
 				new KursblockungAlgorithmusPermanentKOptimiereBest(rnd, log, input, gibTopElementOrNull()),
 				// ... Ende der K-Algorithmen.
 		};

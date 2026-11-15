@@ -309,43 +309,6 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
-	 * Kursdifferenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdifferenzen) des
-	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 */
-	gibCompareZustandK1FW2NW3KD(): number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK) {
-			return -1;
-		}
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK) {
-			return +1;
-		}
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK) {
-			return -1;
-		}
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK) {
-			return +1;
-		}
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK) {
-			return -1;
-		}
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK) {
-			return +1;
-		}
-		for (let i: number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i]) {
-				return -1;
-			}
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i]) {
-				return +1;
-			}
-		}
-		return 0;
-	}
-
-	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen, FachartPaar) des
 	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
