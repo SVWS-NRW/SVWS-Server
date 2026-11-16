@@ -1,11 +1,11 @@
 <template>
-	<div class="w-full">
+	<div>
 		<div class="text-headline-md mb-4">Freigabe der Noteneingabe</div>
-		<div class="w-full pl-4">
+		<div class="pl-4">
 			<div class="w-64 mb-4">
 				<ui-select label="Gruppierung" :manager="selectManagerGruppierung" v-model="manager().gruppierung" :removable="false" />
 			</div>
-			<ui-table-grid :header-count="3" :manager="() => gridManager" class="min-w-full" name="Matrix Noteneingabe">
+			<ui-table-grid :header-count="3" :manager="() => gridManager" class="min-w-fit" name="Matrix Noteneingabe">
 				<template #header="{ i }">
 					<template v-if="i === 1">
 						<th class="ui-divider" :class="{ 'col-span-2': manager().gruppierung !== 'Keine' }" />
@@ -101,11 +101,11 @@
 										@update:model-value="manager().toggleFehlstundeneingabeKlassenweise(manager().zeileAlleKlassen())" />
 								</template>
 								<template v-else-if="col.kuerzel === 'Teilnoten'">
-									<svws-ui-checkbox :model-value="!manager().hatSperrungTeilnoten(manager().zeileAlleKlassen())"
-										:indeterminate="manager().hatTeilsperrungTeilnoten(manager().zeileAlleKlassen())"
-										@update:model-value="manager().toggleSperrungTeilnoten(manager().zeileAlleKlassen())" />
+									<svws-ui-checkbox :model-value="!manager().hatSperrung(manager().zeileAlleKlassen(), col.name)"
+										:indeterminate="manager().hatTeilsperrung(manager().zeileAlleKlassen(), col.name)"
+										@update:model-value="manager().toggleSperrung(manager().zeileAlleKlassen(), col.name)" />
 								</template>
-								<template v-else-if="manager().istSperrbar(manager().zeileAlleKlassen(), col.name)">
+								<template v-else-if="manager().istSperrbar(manager().zeileAlleKlassen(), col.name) && (!manager().istTeilleistung(manager().zeileAlleKlassen(), col.name) || manager().istTeilleistungenBearbeitbar(manager().zeileAlleKlassen()))">
 									<svws-ui-checkbox :model-value="!manager().hatSperrung(manager().zeileAlleKlassen(), col.name)"
 										:indeterminate="manager().hatTeilsperrung(manager().zeileAlleKlassen(), col.name)"
 										@update:model-value="manager().toggleSperrung(manager().zeileAlleKlassen(), col.name)" />
@@ -173,11 +173,11 @@
 									@update:model-value="manager().toggleFehlstundeneingabeKlassenweise(row)" />
 							</template>
 							<template v-else-if="col.kuerzel === 'Teilnoten'">
-								<svws-ui-checkbox :model-value="!manager().hatSperrungTeilnoten(row)"
-									:indeterminate="manager().hatTeilsperrungTeilnoten(row)"
-									@update:model-value="manager().toggleSperrungTeilnoten(row)" />
+								<svws-ui-checkbox :model-value="!manager().hatSperrung(row, col.name)"
+									:indeterminate="manager().hatTeilsperrung(row, col.name)"
+									@update:model-value="manager().toggleSperrung(row, col.name)" />
 							</template>
-							<template v-else-if="manager().istSperrbar(row, col.name)">
+							<template v-else-if="manager().istSperrbar(row, col.name) && (!manager().istTeilleistung(row, col.name) || manager().istTeilleistungenBearbeitbar(row))">
 								<svws-ui-checkbox :model-value="!manager().hatSperrung(row, col.name)"
 									:indeterminate="manager().hatTeilsperrung(row, col.name)"
 									@update:model-value="manager().toggleSperrung(row, col.name)" />
