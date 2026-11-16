@@ -72,12 +72,8 @@ public final class SchuelerCreateService {
 		final var lernabschnitt = new SchuelerLernabschnittCreateRequest();
 		lernabschnitt.schuelerID = idSchueler;
 		lernabschnitt.schuljahresabschnitt = dto.idSchuljahresabschnitt;
-		if (dto.idKlasse != null) {
-			lernabschnitt.klassenID = JsonNullable.of(dto.idKlasse);
-		}
-		if (dto.idJahrgang != null) {
-			lernabschnitt.jahrgangID = JsonNullable.of(dto.idJahrgang);
-		}
+		lernabschnitt.klassenID = dto.idKlasse;
+		lernabschnitt.jahrgangID = dto.idJahrgang;
 		schuelerLernabschnittService.create(lernabschnitt);
 	}
 

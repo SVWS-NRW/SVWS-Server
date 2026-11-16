@@ -115,8 +115,8 @@ class SchuelerCreateServiceTest {
 		order.verify(schuelerStammdatenService).create(request);
 		order.verify(schuelerLernabschnittService).create(argThat(lernabschnitt -> lernabschnitt.schuelerID.equals(ID_SCHUELER)
 				&& lernabschnitt.schuljahresabschnitt.equals(ID_SCHULJAHRESABSCHNITT)
-				&& lernabschnitt.klassenID.equals(JsonNullable.of(7L))
-				&& lernabschnitt.jahrgangID.equals(JsonNullable.of(5L))));
+				&& lernabschnitt.klassenID.equals(7L)
+				&& lernabschnitt.jahrgangID.equals(5L)));
 		order.verify(schuelerSchulbesuchService).patch(anyLong(), argThat(patch -> patch.idEinschulungsartGrundschule.equals(JsonNullable.of(51L))));
 		order.verify(schuelerEinwilligungService).addForSchueler(ID_SCHUELER);
 		order.verify(schuelerLernplattformService).addForSchueler(ID_SCHUELER);
@@ -133,8 +133,8 @@ class SchuelerCreateServiceTest {
 
 		verify(schuelerLernabschnittService).create(argThat(lernabschnitt -> lernabschnitt.schuelerID.equals(ID_SCHUELER)
 				&& lernabschnitt.schuljahresabschnitt.equals(ID_SCHULJAHRESABSCHNITT)
-				&& !lernabschnitt.klassenID.isPresent()
-				&& !lernabschnitt.jahrgangID.isPresent()));
+				&& (lernabschnitt.klassenID == null)
+				&& (lernabschnitt.jahrgangID == null)));
 		verify(schuelerSchulbesuchService, never()).patch(anyLong(), any());
 		verify(schuelerEinwilligungService).addForSchueler(ID_SCHUELER);
 		verify(schuelerLernplattformService).addForSchueler(ID_SCHUELER);

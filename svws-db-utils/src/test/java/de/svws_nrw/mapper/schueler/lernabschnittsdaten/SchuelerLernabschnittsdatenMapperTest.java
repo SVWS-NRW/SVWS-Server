@@ -266,29 +266,139 @@ class SchuelerLernabschnittsdatenMapperTest {
 	@DisplayName("toDomain")
 	class ToDomain {
 
-		@Test
-		void toDomain_setztIdBetreuungStandardwert() {
+		private SchuelerLernabschnittCreateRequest createRequest() {
 			final var request = new SchuelerLernabschnittCreateRequest();
 			request.schuelerID = 10L;
 			request.schuljahresabschnitt = 20L;
-
-			final var result = mapper.toDomain(request);
-
-			assertThat(result.Schueler_ID).isEqualTo(10L);
-			assertThat(result.Schuljahresabschnitts_ID).isEqualTo(20L);
-			assertThat(result.idBetreuung).isEqualTo(1L);
+			return request;
 		}
 
 		@Test
-		void toDomain_uebernimmtIdBetreuungNichtAusRequest() {
-			final var request = new SchuelerLernabschnittCreateRequest();
-			request.schuelerID = 10L;
-			request.schuljahresabschnitt = 20L;
-			request.idBetreuung = JsonNullable.of(5L);
+		@DisplayName("Ohne weitere Angaben - IDs werden übernommen und die Standardwerte gesetzt")
+		void toDomain_setztStandardwerte() {
+			final var result = mapper.toDomain(createRequest(), 2024, Schulform.GY);
 
-			final var result = mapper.toDomain(request);
+			assertThat(result).satisfies(entity -> {
+				assertThat(entity.Schueler_ID).isEqualTo(10L);
+				assertThat(entity.Schuljahresabschnitts_ID).isEqualTo(20L);
+				assertThat(entity.WechselNr).isZero();
+				assertThat(entity.idBetreuung).isEqualTo(1L);
+				assertThat(entity.SemesterWertung).isTrue();
+				assertThat(entity.FachPraktAnteilAusr).isTrue();
+				assertThat(entity.meldungBAN).isFalse();
+				assertThat(entity.Wiederholung).isFalse();
+				assertThat(entity.Schwerbehinderung).isFalse();
+				assertThat(entity.AOSF).isFalse();
+				assertThat(entity.Autist).isFalse();
+				assertThat(entity.ZieldifferentesLernen).isFalse();
+				assertThat(entity.Klassen_ID).isNull();
+				assertThat(entity.Klassenart).isNull();
+				assertThat(entity.VersetzungKrz).isNull();
+			});
+		}
 
-			assertThat(result.idBetreuung).isEqualTo(1L);
+		@Test
+		@DisplayName("Mit allen Angaben - die Werte aus dem Request werden übernommen")
+		void toDomain_uebernimmtAngaben() {
+			final var request = createRequest();
+			request.datumAnfang = "2024-08-01";
+			request.datumEnde = "2025-01-31";
+			request.datumKonferenz = "2025-01-20";
+			request.datumZeugnis = "2025-01-31";
+			request.istGewertet = false;
+			request.istWiederholung = true;
+			request.pruefungsOrdnung = "APO-GOSt";
+			request.fehlstundenGesamt = 10;
+			request.fehlstundenUnentschuldigt = 2;
+			request.fehlstundenGrenzwert = 20;
+			request.hatSchwerbehinderungsNachweis = true;
+			request.hatAOSF = true;
+			request.hatAutismus = true;
+			request.hatZieldifferentenUnterricht = true;
+			request.istFachpraktischerAnteilAusreichend = false;
+			request.noteDurchschnitt = "2,3";
+			request.noteLernbereichGSbzwAL = 3;
+			request.noteLernbereichNW = 4;
+			request.abschlussart = 5;
+			request.istAbschlussPrognose = true;
+			request.textErgebnisPruefungsalgorithmus = "versetzt";
+			request.zeugnisart = "HJ";
+			request.tutorID = 11L;
+			request.sonderpaedagogeID = 12L;
+			request.folgeklassenID = 13L;
+			request.klassenID = 14L;
+			request.foerderschwerpunkt1ID = 15L;
+			request.foerderschwerpunkt2ID = 16L;
+			request.schwerpunktID = 17L;
+			request.bilingualerZweig = "E";
+			request.jahrgangID = 18L;
+			request.idBetreuung = 3L;
+			request.fachklasseID = 19L;
+
+			final var result = mapper.toDomain(request, 2024, Schulform.GY);
+
+			assertThat(result).isNotNull()
+				.hasFieldOrPropertyWithValue("DatumVon", "2024-08-01")
+				.hasFieldOrPropertyWithValue("DatumBis", "2025-01-31")
+				.hasFieldOrPropertyWithValue("Konferenzdatum", "2025-01-20")
+				.hasFieldOrPropertyWithValue("ZeugnisDatum", "2025-01-31")
+				.hasFieldOrPropertyWithValue("SemesterWertung", false)
+				.hasFieldOrPropertyWithValue("Wiederholung", true)
+				.hasFieldOrPropertyWithValue("PruefOrdnung", "APO-GOSt")
+				.hasFieldOrPropertyWithValue("SumFehlStd", 10)
+				.hasFieldOrPropertyWithValue("SumFehlStdU", 2)
+				.hasFieldOrPropertyWithValue("FehlstundenGrenzwert", 20)
+				.hasFieldOrPropertyWithValue("Schwerbehinderung", true)
+				.hasFieldOrPropertyWithValue("AOSF", true)
+				.hasFieldOrPropertyWithValue("Autist", true)
+				.hasFieldOrPropertyWithValue("ZieldifferentesLernen", true)
+				.hasFieldOrPropertyWithValue("FachPraktAnteilAusr", false)
+				.hasFieldOrPropertyWithValue("DSNote", "2,3")
+				.hasFieldOrPropertyWithValue("Gesamtnote_GS", 3)
+				.hasFieldOrPropertyWithValue("Gesamtnote_NW", 4)
+				.hasFieldOrPropertyWithValue("AbschlussArt", 5)
+				.hasFieldOrPropertyWithValue("AbschlIstPrognose", true)
+				.hasFieldOrPropertyWithValue("PruefAlgoErgebnis", "versetzt")
+				.hasFieldOrPropertyWithValue("Zeugnisart", "HJ")
+				.hasFieldOrPropertyWithValue("Tutor_ID", 11L)
+				.hasFieldOrPropertyWithValue("Sonderpaedagoge_ID", 12L)
+				.hasFieldOrPropertyWithValue("Folgeklasse_ID", 13L)
+				.hasFieldOrPropertyWithValue("Klassen_ID", 14L)
+				.hasFieldOrPropertyWithValue("Foerderschwerpunkt_ID", 15L)
+				.hasFieldOrPropertyWithValue("Foerderschwerpunkt2_ID", 16L)
+				.hasFieldOrPropertyWithValue("Schwerpunkt_ID", 17L)
+				.hasFieldOrPropertyWithValue("BilingualerZweig", "E")
+				.hasFieldOrPropertyWithValue("Jahrgang_ID", 18L)
+				.hasFieldOrPropertyWithValue("idBetreuung", 3L)
+				.hasFieldOrPropertyWithValue("Fachklasse_ID", 19L);
+		}
+
+		@Test
+		@DisplayName("Ein leeres Datum wird zu null")
+		void toDomain_leeresDatumWirdNull() {
+			final var request = createRequest();
+			request.datumAnfang = " ";
+
+			final var result = mapper.toDomain(request, 2024, Schulform.GY);
+
+			assertThat(result.DatumVon).isNull();
+		}
+
+		@Test
+		@DisplayName("Klassenart, Schulgliederung und EP-Jahre werden aufgelöst")
+		void toDomain_loestKatalogeAuf() {
+			final var request = createRequest();
+			request.idKlassenart = 6001L;
+			request.idSchulgliederung = 1001000L;
+			request.idEpJahre = 2L;
+
+			final var result = mapper.toDomain(request, 2024, Schulform.GY);
+
+			assertThat(result).satisfies(entity -> {
+				assertThat(entity.Klassenart).isEqualTo("PK");
+				assertThat(entity.Schulgliederung).isEqualTo("A01");
+				assertThat(entity.EPJahre).isEqualTo(2);
+			});
 		}
 
 	}

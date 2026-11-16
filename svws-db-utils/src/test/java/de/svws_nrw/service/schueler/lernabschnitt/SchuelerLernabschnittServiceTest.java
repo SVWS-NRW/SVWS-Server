@@ -732,18 +732,6 @@ class SchuelerLernabschnittServiceTest {
 		}
 
 		@Test
-		@DisplayName("Betreuungsart null ist nicht erlaubt - BAD_REQUEST")
-		void patch_betreuungsartNull() {
-			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
-			dto.idBetreuung = JsonNullable.of(null);
-
-			assertThatThrownBy(() -> service.patch(ID_LERNABSCHNITT, dto))
-					.isInstanceOf(ApiOperationException.class)
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-			verifyNoInteractions(mapper);
-		}
-
-		@Test
 		@DisplayName("Betreuungsart mit der ID existiert - Patch wird an den Mapper weitergegeben")
 		void patch_betreuungsartGueltig() {
 			final var dto = new SchuelerLernabschnittsdatenPatchRequest();
@@ -1143,13 +1131,9 @@ class SchuelerLernabschnittServiceTest {
 		 * Stellt das Verhalten des echten Mappers nach, da der Mapper in diesem Test ein Mock ist.
 		 */
 		private void stubMapper() {
-			when(mapper.toDomain(any(SchuelerLernabschnittCreateRequest.class)))
-					.thenAnswer(invocation -> SchuelerLernabschnittsdatenMapper.INSTANCE.toDomain(invocation.getArgument(0)));
-			lenient().doAnswer(invocation -> {
-				SchuelerLernabschnittsdatenMapper.INSTANCE.patch(invocation.getArgument(0), invocation.getArgument(1),
-						invocation.getArgument(2, Integer.class), invocation.getArgument(3, Schulform.class));
-				return null;
-			}).when(mapper).patch(any(), any(), anyInt(), any());
+			when(mapper.toDomain(any(SchuelerLernabschnittCreateRequest.class), anyInt(), any(Schulform.class)))
+					.thenAnswer(invocation -> SchuelerLernabschnittsdatenMapper.INSTANCE.toDomain(invocation.getArgument(0),
+							invocation.getArgument(1, Integer.class), invocation.getArgument(2, Schulform.class)));
 			lenient().when(repository.create(any(DTOSchuelerLernabschnittsdaten.class)))
 					.thenAnswer(invocation -> invocation.getArgument(0));
 			lenient().when(mapper.toApi(any(DTOSchuelerLernabschnittsdaten.class), anyInt(), any(Schulform.class),
@@ -1167,8 +1151,8 @@ class SchuelerLernabschnittServiceTest {
 			when(jahrgangRepository.findById(17L)).thenReturn(Optional.of(createJahrgang(17L, "05")));
 			stubMapper();
 			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
-			dto.klassenID = JsonNullable.of(46L);
-			dto.jahrgangID = JsonNullable.of(18L);
+			dto.klassenID = 46L;
+			dto.jahrgangID = 18L;
 
 			service.create(dto);
 
@@ -1193,17 +1177,17 @@ class SchuelerLernabschnittServiceTest {
 		}
 
 		@Test
-		@DisplayName("Mit weiteren Feldern des Patch-Requests - die Felder werden übernommen, die übrigen behalten ihre Defaults")
+		@DisplayName("Mit weiteren Feldern des Create-Requests - die Felder werden übernommen, die übrigen behalten ihre Defaults")
 		void create_mitWeiterenFeldern() {
 			when(lehrerRepository.existsById(12L)).thenReturn(true);
 			stubMapper();
 			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
-			dto.datumAnfang = JsonNullable.of("2024-08-01");
-			dto.datumEnde = JsonNullable.of("2025-01-31");
-			dto.istWiederholung = JsonNullable.of(true);
-			dto.fehlstundenGesamt = JsonNullable.of(10);
-			dto.fehlstundenUnentschuldigt = JsonNullable.of(2);
-			dto.tutorID = JsonNullable.of(12L);
+			dto.datumAnfang = "2024-08-01";
+			dto.datumEnde = "2025-01-31";
+			dto.istWiederholung = true;
+			dto.fehlstundenGesamt = 10;
+			dto.fehlstundenUnentschuldigt = 2;
+			dto.tutorID = 12L;
 
 			service.create(dto);
 
@@ -1231,9 +1215,13 @@ class SchuelerLernabschnittServiceTest {
 
 			final ArgumentCaptor<DTOSchuelerLernabschnittsdaten> captor = ArgumentCaptor.forClass(DTOSchuelerLernabschnittsdaten.class);
 			verify(repository).create(captor.capture());
-			assertThat(captor.getValue().Klassen_ID).isNull();
-			assertThat(captor.getValue().Jahrgang_ID).isNull();
-			assertThat(captor.getValue().ASDJahrgang).isNull();
+			assertThat(captor.getValue()).satisfies(neu -> {
+				assertThat(neu.Klassen_ID).isNull();
+				assertThat(neu.Jahrgang_ID).isNull();
+				assertThat(neu.ASDJahrgang).isNull();
+				assertThat(neu.SemesterWertung).isTrue();
+				assertThat(neu.idBetreuung).isEqualTo(1L);
+			});
 			assertThat(result).isNotNull();
 		}
 
@@ -1296,9 +1284,8 @@ class SchuelerLernabschnittServiceTest {
 		void create_klasseAndererSchuljahresabschnitt() {
 			when(klassenRepository.existsById(46L)).thenReturn(true);
 			when(klassenRepository.findById(46L)).thenReturn(Optional.of(createKlasse(46L, 21L, null)));
-			stubMapper();
 			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
-			dto.klassenID = JsonNullable.of(46L);
+			dto.klassenID = 46L;
 
 			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
@@ -1317,8 +1304,8 @@ class SchuelerLernabschnittServiceTest {
 			when(jahrgangRepository.findById(17L)).thenReturn(Optional.of(createJahrgang(17L, "05")));
 			stubMapper();
 			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
-			dto.klassenID = JsonNullable.of(46L);
-			dto.jahrgangID = JsonNullable.of(18L);
+			dto.klassenID = 46L;
+			dto.jahrgangID = 18L;
 
 			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
@@ -1331,9 +1318,8 @@ class SchuelerLernabschnittServiceTest {
 		@DisplayName("Tutor existiert nicht - BAD_REQUEST, es wird nichts angelegt")
 		void create_tutorNichtVorhanden() {
 			when(lehrerRepository.existsById(99L)).thenReturn(false);
-			stubMapper();
 			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
-			dto.tutorID = JsonNullable.of(99L);
+			dto.tutorID = 99L;
 
 			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
@@ -1345,10 +1331,9 @@ class SchuelerLernabschnittServiceTest {
 		@Test
 		@DisplayName("Enddatum liegt vor dem Anfangsdatum - BAD_REQUEST")
 		void create_enddatumVorAnfangsdatum() {
-			stubMapper();
 			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
-			dto.datumAnfang = JsonNullable.of("2025-01-31");
-			dto.datumEnde = JsonNullable.of("2024-08-01");
+			dto.datumAnfang = "2025-01-31";
+			dto.datumEnde = "2024-08-01";
 
 			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
@@ -1362,7 +1347,7 @@ class SchuelerLernabschnittServiceTest {
 			doThrow(new ApiOperationException(Response.Status.FORBIDDEN, "keine Kompetenz"))
 					.when(benutzerKompetenzService).pruefeKompetenzLeistungsdatenAendernKlassen(46L);
 			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
-			dto.klassenID = JsonNullable.of(46L);
+			dto.klassenID = 46L;
 
 			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
@@ -1745,13 +1730,9 @@ class SchuelerLernabschnittServiceTest {
 					.thenReturn(new SchuelerLernabschnittsdaten());
 			lernabschnitteDesSchuelers = new ArrayList<>();
 			lenient().when(schuelerRepository.existsById(ID_SCHUELER)).thenReturn(true);
-			lenient().when(mapper.toDomain(any(SchuelerLernabschnittCreateRequest.class)))
-					.thenAnswer(invocation -> SchuelerLernabschnittsdatenMapper.INSTANCE.toDomain(invocation.getArgument(0)));
-			lenient().doAnswer(invocation -> {
-				SchuelerLernabschnittsdatenMapper.INSTANCE.patch(invocation.getArgument(0), invocation.getArgument(1),
-						invocation.getArgument(2, Integer.class), invocation.getArgument(3, Schulform.class));
-				return null;
-			}).when(mapper).patch(any(), any(), anyInt(), any());
+			lenient().when(mapper.toDomain(any(SchuelerLernabschnittCreateRequest.class), anyInt(), any(Schulform.class)))
+					.thenAnswer(invocation -> SchuelerLernabschnittsdatenMapper.INSTANCE.toDomain(invocation.getArgument(0),
+							invocation.getArgument(1, Integer.class), invocation.getArgument(2, Schulform.class)));
 			lenient().when(repository.create(any(DTOSchuelerLernabschnittsdaten.class))).thenAnswer(invocation -> {
 				final DTOSchuelerLernabschnittsdaten neu = invocation.getArgument(0);
 				lernabschnitteDesSchuelers.add(neu);
@@ -1772,10 +1753,10 @@ class SchuelerLernabschnittServiceTest {
 			dto.schuljahresabschnitt = ID_SCHULJAHRESABSCHNITT;
 			if (asdJahrgang != null) {
 				stubJahrgang(18L, asdJahrgang);
-				dto.jahrgangID = JsonNullable.of(18L);
+				dto.jahrgangID = 18L;
 			}
 			if (idEpJahre != null) {
-				dto.idEpJahre = JsonNullable.of(idEpJahre);
+				dto.idEpJahre = idEpJahre;
 			}
 			return dto;
 		}

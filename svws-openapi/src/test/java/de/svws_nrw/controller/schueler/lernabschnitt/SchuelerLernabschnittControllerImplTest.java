@@ -104,7 +104,7 @@ class SchuelerLernabschnittControllerImplTest {
 	@DisplayName("create | Erfolg - CREATED mit den angelegten Lernabschnittsdaten")
 	void create_erfolg() {
 		final var dto = createRequest();
-		dto.fehlstundenGesamt = JsonNullable.of(10);
+		dto.fehlstundenGesamt = 10;
 		final var daten = mock(SchuelerLernabschnittsdaten.class);
 
 		when(service.create(dto)).thenReturn(daten);
@@ -145,10 +145,24 @@ class SchuelerLernabschnittControllerImplTest {
 	}
 
 	@Test
-	@DisplayName("create | BeanValidation - Felder des Patch-Requests werden geprüft, BAD_REQUEST bei negativen Fehlstunden")
+	@DisplayName("create | BeanValidation - Felder des Create-Requests werden geprüft, BAD_REQUEST bei negativen Fehlstunden")
 	void create_validierungFehlstundenNegativ() {
 		final var dto = createRequest();
-		dto.fehlstundenGesamt = JsonNullable.of(-1);
+		dto.fehlstundenGesamt = -1;
+
+		assertThatThrownBy(() -> controller.create(dto))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+		verifyNoInteractions(service);
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "", "   ", " APO", "APO ", "123456789012345678901" })
+	@DisplayName("create | BeanValidation - BAD_REQUEST bei leerer, zu langer oder von Leerzeichen umgebener Prüfungsordnung, Service wird nicht aufgerufen")
+	void create_validierungPruefungsOrdnungUngueltig(final String pruefungsOrdnung) {
+		final var dto = createRequest();
+		dto.pruefungsOrdnung = pruefungsOrdnung;
 
 		assertThatThrownBy(() -> controller.create(dto))
 				.isInstanceOf(ApiOperationException.class)

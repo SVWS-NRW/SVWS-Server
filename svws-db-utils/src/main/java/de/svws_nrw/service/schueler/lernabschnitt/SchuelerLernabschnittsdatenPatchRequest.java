@@ -1,5 +1,6 @@
 package de.svws_nrw.service.schueler.lernabschnitt;
 
+import de.svws_nrw.validation.constraints.NotBlankIfPresent;
 import de.svws_nrw.validation.constraints.ValidDateFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
@@ -13,7 +14,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
  * Enthält die Attribute, die beim Patchen von Schülerlernabschnittsdaten über den
  * {@link SchuelerLernabschnittService} geändert werden können.
  */
-public class SchuelerLernabschnittsdatenPatchRequest {
+public final class SchuelerLernabschnittsdatenPatchRequest {
 
 	/** Das Datum, wann der Lernabschnitt beginnt. */
 	@Schema(description = "Das Datum, wann der Lernabschnitt beginnt, oder null, um es zu entfernen.", example = "2024-08-01")
@@ -142,7 +143,7 @@ public class SchuelerLernabschnittsdatenPatchRequest {
 
 	/** Die Durchschnittsnote in diesem Lernabschnitt. */
 	@Schema(description = "Die Durchschnittsnote in diesem Lernabschnitt, oder null, um sie zu entfernen.", example = "2,3")
-	public JsonNullable<@Size(min = 1, max = 4) String> noteDurchschnitt = JsonNullable.undefined();
+	public JsonNullable<@NotBlankIfPresent @Size(max = 4) String> noteDurchschnitt = JsonNullable.undefined();
 
 	/** Die Lernbereichsnote Gesellschaftswissenschaft oder Arbeitslehre für den Hauptschulabschluss nach Klasse 10. */
 	@Schema(description = "Die Lernbereichsnote Gesellschaftswissenschaft oder Arbeitslehre für den Hauptschulabschluss nach Klasse 10.", example = "3")
@@ -162,10 +163,10 @@ public class SchuelerLernabschnittsdatenPatchRequest {
 
 	/** Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs- bzw. Abschlussberechnung. */
 	@Schema(description = "Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs- bzw. Abschlussberechnung, oder null, um sie zu entfernen.", example = "versetzt")
-	public JsonNullable<@Size(min = 1) String> textErgebnisPruefungsalgorithmus = JsonNullable.undefined();
+	public JsonNullable<@NotBlankIfPresent String> textErgebnisPruefungsalgorithmus = JsonNullable.undefined();
 
 	/** Die Art des Zeugnisses. */
 	@Schema(description = "Die Art des Zeugnisses, oder null, um sie zu entfernen.", example = "HJ")
-	public JsonNullable<@Size(min = 1, max = 5) String> zeugnisart = JsonNullable.undefined();
+	public JsonNullable<@NotBlankIfPresent @Size(max = 5) String> zeugnisart = JsonNullable.undefined();
 
 }

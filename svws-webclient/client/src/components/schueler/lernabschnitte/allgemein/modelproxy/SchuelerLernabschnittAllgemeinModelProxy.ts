@@ -164,7 +164,7 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 		get: () => {
 			return Betreuungsart.data().getEintragByID(this.proxy.idBetreuung);
 		},
-		set: (v) => this.proxy.idBetreuung = v?.id ?? 0,
+		set: (v) => this.proxy.idBetreuung = v?.id ?? 1,
 	});
 
 	organisationsform = computed<OrganisationsformKatalogEintrag | null>({

@@ -297,29 +297,61 @@ public interface SchuelerLernabschnittsdatenMapper {
 	}
 
 	/**
-	 * Mappt einen {@link SchuelerLernabschnittCreateRequest} auf eine neue {@link DTOSchuelerLernabschnittsdaten}-Entity
-	 * mit den Standardwerten. Es werden nur die IDs des Schülers und des Schuljahresabschnitts übernommen. Die
-	 * weiteren Attribute des Requests werden anschließend über {@link #patch} angewendet.
+	 * Mappt einen {@link SchuelerLernabschnittCreateRequest} auf eine neue {@link DTOSchuelerLernabschnittsdaten}-Entity.
+	 * Nicht angegebene Attribute des Requests werden mit ihren Standardwerten angelegt. Referenzen auf andere Tabellen und
+	 * Kataloge werden vorher in der Service-Schicht geprüft und hier nur übernommen bzw. auf Kürzel aufgelöst.
 	 *
-	 * @param dto   {@link SchuelerLernabschnittCreateRequest}
+	 * @param dto         der {@link SchuelerLernabschnittCreateRequest}
+	 * @param schuljahr   das Schuljahr des Lernabschnitts, für die Auflösung des Versetzungsvermerk-Kürzels
+	 * @param schulform   die Schulform der eigenen Schule, für die Auswahl des Organisationsform-Katalogs
 	 *
-	 * @return {@link DTOSchuelerLernabschnittsdaten}
+	 * @return die neue {@link DTOSchuelerLernabschnittsdaten}-Entity
 	 */
 	@Mapping(target = "ID", ignore = true)
 	@Mapping(target = "Schueler_ID", source = "schuelerID")
 	@Mapping(target = "Schuljahresabschnitts_ID", source = "schuljahresabschnitt")
-	@Mapping(target = "FachPraktAnteilAusr", constant = "true")
-	@Mapping(target = "meldungBAN", constant = "false")
 	@Mapping(target = "WechselNr", constant = "0")
-	@Mapping(target = "SemesterWertung", constant = "true")
-	@Mapping(target = "Schwerbehinderung", constant = "false")
-	@Mapping(target = "AOSF", constant = "false")
-	@Mapping(target = "Autist", constant = "false")
-	@Mapping(target = "ZieldifferentesLernen", constant = "false")
-	@Mapping(target = "Wiederholung", constant = "false")
-	@Mapping(target = "idBetreuung", constant = "1L")
-	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	DTOSchuelerLernabschnittsdaten toDomain(SchuelerLernabschnittCreateRequest dto);
+	@Mapping(target = "meldungBAN", constant = "false")
+	@Mapping(target = "DatumVon", source = "datumAnfang", qualifiedByName = "mapDatum")
+	@Mapping(target = "DatumBis", source = "datumEnde", qualifiedByName = "mapDatum")
+	@Mapping(target = "Konferenzdatum", source = "datumKonferenz", qualifiedByName = "mapDatum")
+	@Mapping(target = "ZeugnisDatum", source = "datumZeugnis", qualifiedByName = "mapDatum")
+	@Mapping(target = "SemesterWertung", source = "istGewertet", defaultValue = "true")
+	@Mapping(target = "Wiederholung", source = "istWiederholung", defaultValue = "false")
+	@Mapping(target = "PruefOrdnung", source = "pruefungsOrdnung")
+	@Mapping(target = "SumFehlStd", source = "fehlstundenGesamt")
+	@Mapping(target = "SumFehlStdU", source = "fehlstundenUnentschuldigt")
+	@Mapping(target = "FehlstundenGrenzwert", source = "fehlstundenGrenzwert")
+	@Mapping(target = "Schwerbehinderung", source = "hatSchwerbehinderungsNachweis", defaultValue = "false")
+	@Mapping(target = "AOSF", source = "hatAOSF", defaultValue = "false")
+	@Mapping(target = "Autist", source = "hatAutismus", defaultValue = "false")
+	@Mapping(target = "ZieldifferentesLernen", source = "hatZieldifferentenUnterricht", defaultValue = "false")
+	@Mapping(target = "FachPraktAnteilAusr", source = "istFachpraktischerAnteilAusreichend", defaultValue = "true")
+	@Mapping(target = "DSNote", source = "noteDurchschnitt")
+	@Mapping(target = "Gesamtnote_GS", source = "noteLernbereichGSbzwAL")
+	@Mapping(target = "Gesamtnote_NW", source = "noteLernbereichNW")
+	@Mapping(target = "AbschlussArt", source = "abschlussart")
+	@Mapping(target = "AbschlIstPrognose", source = "istAbschlussPrognose")
+	@Mapping(target = "PruefAlgoErgebnis", source = "textErgebnisPruefungsalgorithmus")
+	@Mapping(target = "Zeugnisart", source = "zeugnisart")
+	@Mapping(target = "Tutor_ID", source = "tutorID")
+	@Mapping(target = "Sonderpaedagoge_ID", source = "sonderpaedagogeID")
+	@Mapping(target = "Folgeklasse_ID", source = "folgeklassenID")
+	@Mapping(target = "Klassen_ID", source = "klassenID")
+	@Mapping(target = "Foerderschwerpunkt_ID", source = "foerderschwerpunkt1ID")
+	@Mapping(target = "Foerderschwerpunkt2_ID", source = "foerderschwerpunkt2ID")
+	@Mapping(target = "Schwerpunkt_ID", source = "schwerpunktID")
+	@Mapping(target = "BilingualerZweig", source = "bilingualerZweig")
+	@Mapping(target = "Jahrgang_ID", source = "jahrgangID")
+	@Mapping(target = "Klassenart", source = "idKlassenart", qualifiedByName = "mapKlassenartKuerzel")
+	@Mapping(target = "idBetreuung", source = "idBetreuung")
+	@Mapping(target = "Schulgliederung", source = "idSchulgliederung", qualifiedByName = "mapSchulgliederungKuerzel")
+	@Mapping(target = "OrgFormKrz", source = "idOrganisationsform", qualifiedByName = "mapOrganisationsformKuerzel")
+	@Mapping(target = "EPJahre", source = "idEpJahre", qualifiedByName = "mapEpJahre")
+	@Mapping(target = "Fachklasse_ID", source = "fachklasseID")
+	@Mapping(target = "VersetzungKrz", source = "idVersetzungsvermerk", qualifiedByName = "mapVersetzungsvermerkKuerzel")
+	@BeanMapping(ignoreByDefault = true)
+	DTOSchuelerLernabschnittsdaten toDomain(SchuelerLernabschnittCreateRequest dto, @Context int schuljahr, @Context Schulform schulform);
 
 	/**
 	 * Wendet die Änderungen eines {@link SchuelerLernabschnittsdatenPatchRequest} auf eine bestehende

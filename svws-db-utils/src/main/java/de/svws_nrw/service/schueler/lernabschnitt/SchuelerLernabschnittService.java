@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
@@ -183,18 +184,15 @@ public final class SchuelerLernabschnittService {
 	public SchuelerLernabschnittsdaten create(final SchuelerLernabschnittCreateRequest dto) {
 		return TransactionSupport.transactional(() -> {
 			final int schuljahr = getSchuljahrByIdAbschnitt(List.of(dto.schuljahresabschnitt)).get(dto.schuljahresabschnitt);
-			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(dto.klassenID.orElse(null));
+			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(dto.klassenID);
 			validateIdSchueler(dto.schuelerID);
 			validateKeinLernabschnittVorhanden(dto.schuelerID, dto.schuljahresabschnitt);
 			final Schulform schulform = eigeneSchuleService.getSchulform();
-			final var entity = mapper.toDomain(dto);
-			validateRequest(dto, schuljahr, schulform, entity);
-			// Der Create-Request erbt vom PatchRequest: toDomain setzt nur IDs und Standardwerte,
-			// die optionalen Felder werden hier mit der Patch-Logik auf die neue Entity angewendet.
-			mapper.patch(dto, entity, schuljahr, schulform);
+			validateRequest(dto, schuljahr, schulform);
+			final var entity = mapper.toDomain(dto, schuljahr, schulform);
 			validateAndResolveASDJahrgang(dto, entity);
 			final var neu = repository.create(entity);
-			propagateEpJahre(neu, schulform, dto);
+			propagateEpJahre(neu, schulform, hasLaufbahnChange(dto));
 			return toApi(neu);
 		});
 	}
@@ -226,7 +224,7 @@ public final class SchuelerLernabschnittService {
 			validateRequest(dto, schuljahr, schulform, entity);
 			mapper.patch(dto, entity, schuljahr, schulform);
 			validateAndResolveASDJahrgang(dto, entity);
-			propagateEpJahre(entity, schulform, dto);
+			propagateEpJahre(entity, schulform, hasLaufbahnChange(dto));
 			return toApi(entity);
 		});
 	}
@@ -306,6 +304,18 @@ public final class SchuelerLernabschnittService {
 		}
 	}
 
+	private void validateAndResolveASDJahrgang(
+			final SchuelerLernabschnittCreateRequest dto,
+			final DTOSchuelerLernabschnittsdaten entity
+	) {
+		if ((dto.klassenID != null) || (dto.jahrgangID != null)) {
+			validateKlasseUndJahrgangKompatibel(entity);
+		}
+		if (dto.jahrgangID != null) {
+			entity.ASDJahrgang = getASDJahrgang(entity.Jahrgang_ID);
+		}
+	}
+
 	/**
 	 * Aktualisiert die Bemerkungen zu dem Lernabschnitt mit der übergebenen ID teilweise (PATCH). Die allgemeine
 	 * Zeugnisbemerkung wird beim Lernabschnitt gespeichert, die weiteren Bemerkungen in den Fach-Bemerkungen.
@@ -370,7 +380,7 @@ public final class SchuelerLernabschnittService {
 		dto.bilingualerZweig.ifPresent(kuerzel -> validateBilingualerZweig(kuerzel, schuljahr, schulform));
 		dto.jahrgangID.ifPresent(this::validateIdJahrgang);
 		dto.klassenID.ifPresent(klassenID -> validateKlasseImSchuljahresabschnitt(klassenID, entity.Schuljahresabschnitts_ID));
-		dto.idEpJahre.ifPresent(idEpJahre -> validateEpJahreAenderbar(dto, idEpJahre, schulform, entity));
+		dto.idEpJahre.ifPresent(idEpJahre -> validateEpJahreAenderbar(idEpJahre, getIdEpJahre(entity), schulform, () -> getASDJahrgang(dto, entity)));
 
 		if (dto.datumAnfang.isPresent() || dto.datumEnde.isPresent()) {
 			validateDatumEndeNichtVorAnfang(dto.datumAnfang.orElse(entity.DatumVon), dto.datumEnde.orElse(entity.DatumBis));
@@ -382,28 +392,56 @@ public final class SchuelerLernabschnittService {
 
 	}
 
+	private void validateRequest(final SchuelerLernabschnittCreateRequest dto, final int schuljahr, final Schulform schulform) {
+		validateReferenzen(dto, schuljahr, schulform);
+		validateKlasseImSchuljahresabschnitt(dto.klassenID, dto.schuljahresabschnitt);
+		if (dto.idEpJahre != null) {
+			validateEpJahreAenderbar(dto.idEpJahre, null, schulform, () -> getASDJahrgang(dto.jahrgangID));
+		}
+		validateDatumEndeNichtVorAnfang(dto.datumAnfang, dto.datumEnde);
+		validateFehlstundenUnentschuldigtNichtUeberGesamt(dto.fehlstundenGesamt, dto.fehlstundenUnentschuldigt);
+	}
+
+	private void validateReferenzen(final SchuelerLernabschnittCreateRequest dto, final int schuljahr, final Schulform schulform) {
+		validateIdLehrer(dto.tutorID);
+		validateIdLehrer(dto.sonderpaedagogeID);
+		validateIdKlasse(dto.folgeklassenID);
+		validateIdKlasse(dto.klassenID);
+		validateIdFoerderschwerpunkt(dto.foerderschwerpunkt1ID);
+		validateIdFoerderschwerpunkt(dto.foerderschwerpunkt2ID);
+		validateIdSchuelerschwerpunkt(dto.schwerpunktID);
+		validateIdKlassenart(dto.idKlassenart);
+		validateIdBetreuung(dto.idBetreuung);
+		validateIdSchulgliederung(dto.idSchulgliederung);
+		validateIdOrganisationsform(dto.idOrganisationsform, schulform);
+		validateIdEpJahre(dto.idEpJahre);
+		validateIdFachklasse(dto.fachklasseID);
+		validateIdVersetzungsvermerk(dto.idVersetzungsvermerk, schuljahr, schulform);
+		validateBilingualerZweig(dto.bilingualerZweig, schuljahr, schulform);
+		validateIdJahrgang(dto.jahrgangID);
+	}
+
 	/**
 	 * Prüft, ob die EP-Jahre (Besuchsjahre in der Schuleingangsphase) geändert werden dürfen. Das ist nur an Schulen mit
 	 * Primarbereich und nur in den Jahrgängen 1 und 2 erlaubt. Maßgeblich ist der Jahrgang, den der Lernabschnitt nach dem
 	 * Request haben wird. Wird ein unveränderter Wert übermittelt (z. B. weil der Client das gesamte Objekt sendet), so
 	 * wird dieser ignoriert und nicht als Änderung gewertet. Andernfalls gibt es einen Fehler mit dem Status BAD_REQUEST.
 	 *
-	 * @param dto           der Request
-	 * @param idEpJahre     die im Request übermittelte ID der EP-Jahre, ggf. {@code null}
-	 * @param schulform     die Schulform der eigenen Schule
-	 * @param entity        der Lernabschnitt vor der Anwendung des Requests
+	 * @param idEpJahre         die im Request übermittelte ID der EP-Jahre, ggf. {@code null}
+	 * @param idEpJahreBisher   die ID der EP-Jahre vor der Anwendung des Requests, ggf. {@code null}
+	 * @param schulform         die Schulform der eigenen Schule
+	 * @param asdJahrgang       liefert den ASD-Jahrgang, den der Lernabschnitt nach dem Request haben wird, ggf. {@code null}
 	 */
-	private void validateEpJahreAenderbar(final SchuelerLernabschnittsdatenPatchRequest dto, final Long idEpJahre,
-			final Schulform schulform, final DTOSchuelerLernabschnittsdaten entity) {
-		if (Objects.equals(getIdEpJahre(entity), idEpJahre)) {
+	private static void validateEpJahreAenderbar(final Long idEpJahre, final Long idEpJahreBisher, final Schulform schulform,
+			final Supplier<String> asdJahrgang) {
+		if (Objects.equals(idEpJahreBisher, idEpJahre)) {
 			return;
 		}
 		if (!schulform.hatPrimarbereich()) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die Besuchsjahre in der Schuleingangsphase können nur an Schulen mit Primarbereich geändert werden.");
 		}
-		final var asdJahrgang = getASDJahrgang(dto, entity);
-		if (!istInJahrgaengen(ASD_JAHRGAENGE_EINGANGSPHASE, asdJahrgang)) {
+		if (!istInJahrgaengen(ASD_JAHRGAENGE_EINGANGSPHASE, asdJahrgang.get())) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die Besuchsjahre in der Schuleingangsphase können nur in den Jahrgängen 1 und 2 geändert werden.");
 		}
@@ -421,8 +459,12 @@ public final class SchuelerLernabschnittService {
 		return (asdJahrgang != null) && asdJahrgaenge.contains(asdJahrgang);
 	}
 
-	private static boolean patchEnthaeltAenderungZurLaufbahn(final SchuelerLernabschnittsdatenPatchRequest dto) {
+	private static boolean hasLaufbahnChange(final SchuelerLernabschnittsdatenPatchRequest dto) {
 		return dto.idEpJahre.isPresent() || dto.jahrgangID.isPresent();
+	}
+
+	private static boolean hasLaufbahnChange(final SchuelerLernabschnittCreateRequest dto) {
+		return (dto.idEpJahre != null) || (dto.jahrgangID != null);
 	}
 
 	/**
@@ -432,13 +474,13 @@ public final class SchuelerLernabschnittService {
 	 * nur, wenn der Request die EP-Jahre oder den Jahrgang ändert, also die Laufbahn betrifft. Liegen in den
 	 * Jahrgängen 1 und 2 keine EP-Jahre vor, so bleiben die Lernabschnitte unverändert.
 	 *
-	 * @param geaendert   der angelegte bzw. geänderte Lernabschnitt
-	 * @param schulform   die Schulform der eigenen Schule
-	 * @param dto         der Request
+	 * @param geaendert           der angelegte bzw. geänderte Lernabschnitt
+	 * @param schulform           die Schulform der eigenen Schule
+	 * @param hasLaufbahnChange   gibt an, ob der Request die EP-Jahre oder den Jahrgang enthält
 	 */
 	private void propagateEpJahre(final DTOSchuelerLernabschnittsdaten geaendert, final Schulform schulform,
-			final SchuelerLernabschnittsdatenPatchRequest dto) {
-		if (!schulform.hatPrimarbereich() || !patchEnthaeltAenderungZurLaufbahn(dto)) {
+			final boolean hasLaufbahnChange) {
+		if (!schulform.hatPrimarbereich() || !hasLaufbahnChange) {
 			return;
 		}
 		final var lernabschnitte = loadLernabschnitteMitAktuellemStand(geaendert);
@@ -516,7 +558,10 @@ public final class SchuelerLernabschnittService {
 	}
 
 	private void validateIdBetreuung(final Long idBetreuung) {
-		if ((idBetreuung == null) || (Betreuungsart.data().getEintragByID(idBetreuung) == null)) {
+		if (idBetreuung == null) {
+			return;
+		}
+		if (Betreuungsart.data().getEintragByID(idBetreuung) == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Es existiert keine gültige Betreuungsart mit der ID %s.".formatted(idBetreuung));
 		}

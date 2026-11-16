@@ -2,11 +2,11 @@ package de.svws_nrw.service.schueler.stammdaten;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.svws_nrw.validation.constraints.NoLeadingOrTrailingWhitespaces;
+import de.svws_nrw.validation.constraints.NotBlankIfPresent;
 import de.svws_nrw.validation.constraints.ValidDateFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
@@ -56,19 +56,19 @@ public class SchuelerStammdatenCreateRequest {
 
 	/** Das Anmeldedatum des Schülers im Format yyyy-MM-dd. */
 	@Schema(description = "Das Anmeldedatum des Schülers.", example = "2005-10-09")
-	@Pattern(regexp = "\\S+", message = "darf nicht leer sein")
+	@NotBlankIfPresent
 	@ValidDateFormat
 	public String anmeldedatum;
 
 	/** Das Aufnahmedatum des Schülers im Format yyyy-MM-dd. */
 	@Schema(description = "Das Aufnahmedatum des Schülers.", example = "2005-10-09")
-	@Pattern(regexp = "\\S+", message = "darf nicht leer sein")
+	@NotBlankIfPresent
 	@ValidDateFormat
 	public String aufnahmedatum;
 
 	/** Der Beginn des Bildungsgangs des Schülers im Format yyyy-MM-dd. */
 	@Schema(description = "Der Beginn des Bildungsgangs des Schülers.", example = "2005-10-09")
-	@Pattern(regexp = "\\S+", message = "darf nicht leer sein")
+	@NotBlankIfPresent
 	@ValidDateFormat
 	public String beginnBildungsgang;
 
