@@ -2,6 +2,7 @@ package de.svws_nrw.controller.schule.katalog;
 
 import de.svws_nrw.controller.schule.katalog.einwilligungsart.EinwilligungsartController;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
+import de.svws_nrw.controller.schule.katalog.haltestelle.HaltestelleController;
 import de.svws_nrw.controller.schule.katalog.jahrgang.JahrgangController;
 import de.svws_nrw.controller.schule.katalog.lernplattform.LernplattformController;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalController;
@@ -198,6 +199,16 @@ class KatalogControllerFactoryTest {
 		final ReligionController controller = KatalogControllerFactory
 				.withReadAccessStable(request)
 				.getReligionController();
+
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("getHaltestelleController | gibt einen Controller zurück")
+	void getHaltestelleController() {
+		final HaltestelleController controller = KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getHaltestelleController();
 
 		assertNotNull(controller);
 	}

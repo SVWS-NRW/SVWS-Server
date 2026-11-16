@@ -22,7 +22,6 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.kataloge.DataHaltestellen;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.kataloge.DataSchuelerSchwerpunkte;
 import de.svws_nrw.data.kataloge.DataStrassen;
@@ -31,6 +30,8 @@ import de.svws_nrw.data.schule.DataBeschaeftigungsarten;
 import de.svws_nrw.data.schule.DataKindergaerten;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragCreateRequest;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragPatchRequest;
+import de.svws_nrw.service.schule.katalog.haltestelle.HaltestelleCreateRequest;
+import de.svws_nrw.service.schule.katalog.haltestelle.HaltestellePatchRequest;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalCreateRequest;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalPatchRequest;
 import de.svws_nrw.service.schule.katalog.ort.OrtCreateRequest;
@@ -789,8 +790,10 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getHaltestellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataHaltestellen(conn).getAllAsResponse(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getHaltestelleController()
+				.getAll();
 	}
 
 	/**
@@ -798,7 +801,7 @@ public class APIKataloge {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der Haltestelle
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     das Patch-Objekt mit den zu ändernden Werten
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -816,18 +819,19 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchHaltestelle(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch einer Haltestelle", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Haltestelle.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Haltestelle.class))) final HaltestellePatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataHaltestellen(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getHaltestelleController()
+				.patch(id, patch);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen einer Haltestelle.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der Haltestelle
+	 * @param input        die Daten der zu erstellenden Haltestelle
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der erstellten Haltestelle
@@ -842,17 +846,19 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addHaltestelle(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden Haltestelle ohne ID, da diese automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Haltestelle.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Haltestelle.class))) final HaltestelleCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataHaltestellen(conn).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getHaltestelleController()
+				.create(input);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Haltestellen.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param ids       die Liste der zu löschenden IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -868,12 +874,12 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteHaltestellen(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Haltestellen",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataHaltestellen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
+				.getHaltestelleController()
+				.delete(ids);
 	}
 
 	/**

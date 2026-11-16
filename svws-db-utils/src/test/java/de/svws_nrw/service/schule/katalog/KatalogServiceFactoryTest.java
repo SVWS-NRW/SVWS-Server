@@ -6,6 +6,7 @@ import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzReposit
 import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
 import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
+import de.svws_nrw.repo.schule.kataloge.haltestelle.HaltestelleRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
@@ -23,6 +24,7 @@ import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrg
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzService;
 import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
+import de.svws_nrw.service.schule.katalog.haltestelle.HaltestelleService;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
@@ -74,6 +76,9 @@ class KatalogServiceFactoryTest {
 
 	@Mock
 	private OrtsteilRepository ortsteilRepository;
+
+	@Mock
+	private HaltestelleRepository haltestelleRepository;
 
 	private KatalogServiceFactory underTest;
 
@@ -747,6 +752,43 @@ class KatalogServiceFactoryTest {
 			underTest.getEinwilligungsartService();
 
 			verify(katalogRepositoryFactory).getEinwilligungsartRepository();
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// getHaltestelleService()
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getHaltestelleService()")
+	class GetHaltestelleService {
+
+		@BeforeEach
+		void setUp() {
+			when(katalogRepositoryFactory.getHaltestelleRepository())
+					.thenReturn(haltestelleRepository);
+		}
+
+		@Test
+		@DisplayName("gibt eine nicht-null HaltestelleService-Instanz zurück")
+		void shouldReturnNonNullService() {
+			final HaltestelleService service = underTest.getHaltestelleService();
+
+			assertThat(service).isNotNull();
+		}
+
+		@Test
+		@DisplayName("gibt eine neue Instanz bei jedem Aufruf zurück")
+		void shouldReturnNewInstanceOnEachCall() {
+			assertThat(underTest.getHaltestelleService()).isNotSameAs(underTest.getHaltestelleService());
+		}
+
+		@Test
+		@DisplayName("ruft getHaltestelleRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToRepositoryFactory() {
+			underTest.getHaltestelleService();
+
+			verify(katalogRepositoryFactory, atLeastOnce()).getHaltestelleRepository();
 		}
 	}
 

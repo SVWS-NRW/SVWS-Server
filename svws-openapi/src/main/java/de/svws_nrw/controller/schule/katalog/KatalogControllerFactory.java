@@ -10,6 +10,8 @@ import de.svws_nrw.controller.schule.katalog.einwilligungsart.EinwilligungsartCo
 import de.svws_nrw.controller.schule.katalog.einwilligungsart.EinwilligungsartControllerImpl;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseControllerImpl;
+import de.svws_nrw.controller.schule.katalog.haltestelle.HaltestelleController;
+import de.svws_nrw.controller.schule.katalog.haltestelle.HaltestelleControllerImpl;
 import de.svws_nrw.controller.schule.katalog.jahrgang.JahrgangController;
 import de.svws_nrw.controller.schule.katalog.jahrgang.JahrgangControllerImpl;
 import de.svws_nrw.controller.schule.katalog.lernplattform.LernplattformController;
@@ -212,6 +214,15 @@ public final class KatalogControllerFactory {
 	 */
 	public AnkreuzkompetenzJahrgangController getAnkreuzkompetenzJahrgangController() {
 		return new AnkreuzkompetenzJahrgangControllerImpl(serviceFactory.getAnkreuzkompetenzJahrgangService());
+	}
+
+	/**
+	 * Erstellt einen neuen HaltestelleController.
+	 *
+	 * @return {@link HaltestelleController} - neu erzeugter Controller
+	 */
+	public HaltestelleController getHaltestelleController() {
+		return new HaltestelleControllerImpl(serviceFactory.getHaltestelleService());
 	}
 
 	/**
