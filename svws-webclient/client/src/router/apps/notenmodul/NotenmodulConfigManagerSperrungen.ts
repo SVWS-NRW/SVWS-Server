@@ -1534,41 +1534,19 @@ export class NotenmodulConfigManagerSperrungen {
 	}
 
 	/**
-	 * Gibt zurück, ob bei der Spalte eine Sperrung aller Teilnoten vorliegt oder nicht.
+	 * Gibt die Anzahl der Klassen zurück, die von der Zeile umfasst werden.
 	 *
-	 * @param row   die Zeile
+	 * @param row   die Zeile (Gruppe)
 	 *
-	 * @returns true, wenn eine Sperrung vorliegt und ansonsten false
+	 * @returns die Anzahl der Klassen der Gruppe
 	 */
-	public hatSperrungTeilnoten(row: NotenmodulConfigManagerSperrungenZeile): boolean {
-		let geperrt = false;
-		for (const col of row.spalten) {
-			if (col.idTeilleistung !== null) {
-				geperrt = (typeof col.gesperrt === "number") ? (col.gesperrt > 0) : col.gesperrt;
-			}
+	private getAnzahlKlassen(row: NotenmodulConfigManagerSperrungenZeile): number {
+		if (this._gruppierung.value === 'Jahrgang') {
+			return this._mapJahrgangKlassen.get(row.id)?.size() ?? 1;
+		} else if (this._gruppierung.value === 'Abteilung') {
+			return this._mapAbteilungKlassen.get(row.id)?.size() ?? 1;
 		}
-		return geperrt;
-	}
-
-	/**
-	 * Gibt zurück, ob Teilsperrung aller Teilnoten vorliegt oder nicht.
-	 *
-	 * @param row   die Zeile
-	 *
-	 * @returns true, wenn eine Sperrung vorliegt und ansonsten false
-	 */
-	public hatTeilsperrungTeilnoten(row: NotenmodulConfigManagerSperrungenZeile): boolean {
-		let geperrt = 0;
-		let teilnoten = 0;
-		for (const col of row.spalten) {
-			if (col.idTeilleistung !== null) {
-				teilnoten++;
-				if ((typeof col.gesperrt === "number") ? (col.gesperrt > 0) : col.gesperrt) {
-					geperrt++;
-				}
-			}
-		}
-		return !((geperrt === 0) || (geperrt === teilnoten));
+		return this._listKlassen.size();
 	}
 
 	/**
@@ -1583,21 +1561,26 @@ export class NotenmodulConfigManagerSperrungen {
 		if ((col === null) || (typeof col.gesperrt !== "number") || (!this.istGruppe(row))) {
 			return false;
 		}
-		let max = 1;
-		if (this._gruppierung.value === 'Jahrgang') {
-			const listJahrgangsklassen = this._mapJahrgangKlassen.get(row.id);
-			if (listJahrgangsklassen !== null) {
-				max = listJahrgangsklassen.size();
-			}
-		} else if (this._gruppierung.value === 'Abteilung') {
-			const listAbteilungKlassen = this._mapAbteilungKlassen.get(row.id);
-			if (listAbteilungKlassen !== null) {
-				max = listAbteilungKlassen.size();
-			}
-		} else {
-			max = this._listKlassen.size();
+		return (col.gesperrt > 0) && (col.gesperrt < this.getAnzahlKlassen(row));
+	}
+
+	/**
+	 * Gibt zurück, ob die einzelnen Teilleistungsarten bei der Zeile bearbeitet werden können.
+	 * Bei einer Gruppe ist dies der Fall, solange nicht bei allen Klassen die Teilnoten gesperrt sind.
+	 *
+	 * @param row   die Zeile
+	 *
+	 * @returns true, wenn die Teilleistungsarten bearbeitet werden können, und ansonsten false
+	 */
+	public istTeilleistungenBearbeitbar(row: NotenmodulConfigManagerSperrungenZeile): boolean {
+		const col = this.getColumn(row, 'Teilnoten');
+		if (col === null) {
+			return false;
 		}
-		return (col.gesperrt > 0) && (col.gesperrt < max);
+		if (typeof col.gesperrt !== "number") {
+			return !col.gesperrt;
+		}
+		return col.gesperrt < this.getAnzahlKlassen(row);
 	}
 
 	/**
@@ -1719,27 +1702,6 @@ export class NotenmodulConfigManagerSperrungen {
 				await this.toggleSperrungAlleKlassen(row, col);
 			}
 		}
-	}
-
-	/**
-	 * Toggelt die Teilnoten als Ganzes
-	 *
-	 * @param row   die Zeile
-	 */
-	public async toggleSperrungTeilnoten(row: NotenmodulConfigManagerSperrungenZeile) {
-		const teilnoten = this.getColumn(row, 'Teilnoten');
-		if (teilnoten === null) {
-			return;
-		}
-		await this.toggleSperrung(row, "Teilnoten");
-		const gesperrt = (typeof teilnoten.gesperrt === "number") ? (teilnoten.gesperrt > 0) : teilnoten.gesperrt;
-		for (const col of row.spalten) {
-			if (col.idTeilleistung !== null) {
-				col.gesperrt = gesperrt;
-				console.log(col.name, gesperrt);
-			}
-		}
-		triggerRef(this._mapKlassenSpalte);
 	}
 
 }

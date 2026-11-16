@@ -127,12 +127,10 @@
 
 	import type { PairNN } from '@core/asd/adt/PairNN';
 	import { Note } from '@core/asd/types/Note';
-	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
 	import type { ENMv2Teilleistung } from '@core/core/data/enm/v2/ENMv2Teilleistung';
 	import { ArrayList } from '@core/java/util/ArrayList';
-	import { HashSet } from '@core/java/util/HashSet';
 	import type { List } from '@core/java/util/List';
 	import type { GridInputNote } from '@ui/ui/controls/tablegrid/GridInputNote';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
