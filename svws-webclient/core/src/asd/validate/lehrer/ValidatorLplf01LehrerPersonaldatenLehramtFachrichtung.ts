@@ -10,27 +10,30 @@ export class ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung extends Valid
 	/**
 	 * Die Katalog-ID der Fachrichtung.
 	 */
-	private readonly _idFachrichtung: Supplier<number>;
+	private readonly _idFachrichtung: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
 	 * @param schuljahr        Schuljahr
+	 * @param idLehramt        die Katalog-ID des Lehramtes
 	 * @param idFachrichtung   die Katalog-ID der Fachrichtung
 	 * @param kontext          der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number>, idFachrichtung: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idLehramt: Supplier<number | null>, idFachrichtung: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idFachrichtung = idFachrichtung;
-		this._validatoren.add(new ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung(schuljahr, idFachrichtung, kontext));
+		this._validatoren.add(new ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung(schuljahr, idLehramt, idFachrichtung, kontext));
 	}
 
 	protected pruefe(): boolean {
 		const idFachrichtung: number | null = this._idFachrichtung.get();
-		if (LehrerFachrichtung.data().getSchluesselByIDOrNull(idFachrichtung) === null) {
-			this.addFehler(0, "Lehrer Fachrichtung: Das Feld 'Fachrichtung' muss zulässig sein.");
-			return false;
+		if (idFachrichtung !== null) {
+			if (LehrerFachrichtung.data().getSchluesselByIDOrNull(idFachrichtung) === null) {
+				this.addFehler(0, "Lehrer Fachrichtung: Das Feld 'Fachrichtung' muss zulässig sein.");
+				return false;
+			}
 		}
 		return true;
 	}

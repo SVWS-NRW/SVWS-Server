@@ -14,14 +14,15 @@ export class ValidatorLplfLehrerPersonaldatenLehramtFachrichtung extends Validat
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
 	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+	 * @param idLehramt                die Katalog-ID des Lehramtes
 	 * @param idFachrichtung           die Katalog-ID der Fachrichtung
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idFachrichtung: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idLehramt: Supplier<number | null>, idFachrichtung: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
-		this._validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(schuljahr, idFachrichtung, kontext));
+		this._validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(schuljahr, idLehramt, idFachrichtung, kontext));
 	}
 
 	protected pruefe(): boolean {

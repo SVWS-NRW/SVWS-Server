@@ -146,6 +146,7 @@ public final class ValidatorGesamt extends Validator {
 				for (final LehrerFachrichtungEintrag fachrichtungen : lehraemter.fachrichtungen) {
 					list.add(new ValidatorLplfLehrerPersonaldatenLehramtFachrichtung(
 							() -> gesamt.schule.idSchuljahresabschnitt,
+							() -> lehraemter.idKatalogLehramt,
 							() -> fachrichtungen.idFachrichtung,
 							this.kontext()));
 				}

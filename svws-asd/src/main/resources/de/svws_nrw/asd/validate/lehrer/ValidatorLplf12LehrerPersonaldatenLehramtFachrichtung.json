@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplf12LehrerPersonaldatenLehramtFachrichtung",
+    "historie" : [ {
+    "praefix" : "LPLF12",
+    "altes_kuerzel" : "AC5",
+    "zweig" : "Lehrer-Personaldaten-Lehramt-Fachrichtung",
+    "dtos" : "LehrerPersonaldaten, LehrerFachrichtungEintrag",
+    "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Tabelle 'Lehrämter'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LPLF02"],
+    "muss" : ["BK", "SB"],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "text" : "Fachrichtung des Lehrers: Bei allen Lehrkräften muss das Feld 'Fachrichtung' besetzt sein. ",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerFachrichtungEintrag.idFachrichtung = @",
+    "gueltigVon" : null,
+    "gueltigBis" : null
+    } ]
+    }

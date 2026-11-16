@@ -23,7 +23,8 @@ class TestValidatorLplf01LehrerPersonaldatenLehramtFachrichtung {
 
 	private static final String TESTDATEN_FACHRICHTUNG = """
 			78   , true
-			999  , false
+			-1   , false
+			null , true
 		""";
 
 	/** Stammdaten der Schule */
@@ -52,7 +53,7 @@ class TestValidatorLplf01LehrerPersonaldatenLehramtFachrichtung {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung validator =
-				new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(() -> 0, () -> idFachrichtung, kontext);
+				new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(() -> 0, () -> null, () -> idFachrichtung, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

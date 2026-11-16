@@ -106,7 +106,7 @@ export class ValidatorGesamt extends Validator {
 					list.add(new ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung({ get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrbefaehigungen.idAnerkennungsgrund }, this.kontext()));
 				}
 				for (const fachrichtungen of lehraemter.fachrichtungen) {
-					list.add(new ValidatorLplfLehrerPersonaldatenLehramtFachrichtung({ get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => fachrichtungen.idFachrichtung }, this.kontext()));
+					list.add(new ValidatorLplfLehrerPersonaldatenLehramtFachrichtung({ get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehraemter.idKatalogLehramt }, { get: () => fachrichtungen.idFachrichtung }, this.kontext()));
 				}
 			}
 			this._validatoren.addAll(list);

@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplf10LehrerPersonaldatenLehramtFachrichtung",
+    "historie" : [ {
+    "praefix" : "LPLF10",
+    "altes_kuerzel" : "AC4",
+    "zweig" : "Lehrer-Personaldaten-Lehramt-Fachrichtung",
+    "dtos" : "LehrerPersonaldaten, LehrerFachrichtungEintrag",
+    "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Tabelle 'Lehrämter'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LPLF02"],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG"],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "text" : "Fachrichtung des Lehrers: Bei Lehrkräften, die über das angegebene Lehramt verfügen, darf das Feld 'Fachrichtung' nicht besetzt sein.",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonaldaten.lehraemter ≙ (Bezeichner 'ID_08', 'ID_09', 'ID_10', 'ID_11', 'ID_12', 'ID_14', 'ID_27', 'ID_31', 'ID_35', 'ID_90', 'ID_96', 'ID_98' in LehrerLehramt.json) ∧ LehrerFachrichtungEintrag.idFachrichtung ≠ @",
+    "gueltigVon" : null,
+    "gueltigBis" : null
+    } ]
+    }

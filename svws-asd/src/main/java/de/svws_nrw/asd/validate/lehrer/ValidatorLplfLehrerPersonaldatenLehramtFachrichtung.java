@@ -19,12 +19,14 @@ public final class ValidatorLplfLehrerPersonaldatenLehramtFachrichtung extends V
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
 	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+	 * @param idLehramt                die Katalog-ID des Lehramtes
 	 * @param idFachrichtung           die Katalog-ID der Fachrichtung
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLplfLehrerPersonaldatenLehramtFachrichtung(
 			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
-			final @NotNull Supplier<Long> idFachrichtung,
+			final @NotNull Supplier<@AllowNull Long> idLehramt,
+			final @NotNull Supplier<@AllowNull Long> idFachrichtung,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
@@ -32,7 +34,7 @@ public final class ValidatorLplfLehrerPersonaldatenLehramtFachrichtung extends V
 
 		final @NotNull Supplier<@NotNull Integer> schuljahr = () ->  kontext.getSchuljahrBySchuljahresabschnitt(getNotNullSupplierLong(idSchuljahresabschnitt));
 
-		_validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(schuljahr, idFachrichtung, kontext));
+		_validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(schuljahr, idLehramt, idFachrichtung, kontext));
 
 	}
 
