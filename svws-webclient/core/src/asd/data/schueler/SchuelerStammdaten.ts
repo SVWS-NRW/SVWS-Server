@@ -31,7 +31,7 @@ export class SchuelerStammdaten extends JavaObject {
 	/**
 	 * Alle Vornamen, sofern es mehrere gibt, des Schülerdatensatzes.
 	 */
-	public alleVornamen: string = "";
+	public alleVornamen: string | null = null;
 
 	/**
 	 * Die ID des Geschlechtes
@@ -287,9 +287,7 @@ export class SchuelerStammdaten extends JavaObject {
 		if (obj.vorname === undefined)
 			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
-		if (obj.alleVornamen === undefined)
-			throw new Error('invalid json format, missing attribute alleVornamen');
-		result.alleVornamen = obj.alleVornamen;
+		result.alleVornamen = (obj.alleVornamen === undefined) ? null : obj.alleVornamen === null ? null : obj.alleVornamen;
 		if (obj.geschlecht === undefined)
 			throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
@@ -373,7 +371,7 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"foto" : ' + ((obj.foto === null) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
-		result += '"alleVornamen" : ' + JSON.stringify(obj.alleVornamen) + ',';
+		result += '"alleVornamen" : ' + ((obj.alleVornamen === null) ? 'null' : JSON.stringify(obj.alleVornamen)) + ',';
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		result += '"geburtsort" : ' + ((obj.geburtsort === null) ? 'null' : JSON.stringify(obj.geburtsort)) + ',';
@@ -442,7 +440,7 @@ export class SchuelerStammdaten extends JavaObject {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		}
 		if (obj.alleVornamen !== undefined) {
-			result += '"alleVornamen" : ' + JSON.stringify(obj.alleVornamen) + ',';
+			result += '"alleVornamen" : ' + ((obj.alleVornamen === null) ? 'null' : JSON.stringify(obj.alleVornamen)) + ',';
 		}
 		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';

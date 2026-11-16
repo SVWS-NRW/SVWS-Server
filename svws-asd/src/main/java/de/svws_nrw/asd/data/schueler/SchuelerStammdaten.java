@@ -38,7 +38,7 @@ public class SchuelerStammdaten {
 
 	/** Alle Vornamen, sofern es mehrere gibt, des Schülerdatensatzes. */
 	@Schema(description = "alle Vornamen, sofern es mehrere gibt, sonst erfolgt der Zugriff nur auf Vorname", example = "Max Moritz")
-	public @NotNull String alleVornamen = "";
+	public String alleVornamen;
 
 	/** Die ID des Geschlechtes */
 	@Schema(description = "die ID des Geschlechtes", example = "3")
