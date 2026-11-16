@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa22LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA22",
+	  "altes_kuerzel" : "BM2",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungen",
+      "dtos" : "LehrerPersonalabschnittsdatenAnrechnungsstunden",
+      "ausfuehrungsbereich_ui" : "Tabelle 'Mehr- und Minderleistungen, Anrechnungsstunden'",
+      "anzeigebereich_ui" : "Feld 'Anrechnung'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPA02"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+	  "text" : "Anrechnungsgründe des Lehrers: Der Anrechnungsgrund kommt mehrfach vor. Bitte prüfen.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund = LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund; i = beliebiger Anrechnungsgrund; j = beliebiger Anrechnungsgrund, i ≠ j",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

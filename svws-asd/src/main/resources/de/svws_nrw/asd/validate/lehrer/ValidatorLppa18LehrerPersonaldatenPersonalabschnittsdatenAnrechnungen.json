@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa18LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA18",
+	  "altes_kuerzel" : "BPE11",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungen",
+      "dtos" : "LehrerPersonalabschnittsdatenAnrechnungsstunden",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Tabelle 'Mehr- und Minderleistungen, Anrechnungsstunden'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPA02"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+	  "text" : "Anrechnungsstunden des Lehrers: Bei Eintragung des Minderleistungsgrunds 'Beurlaubung, Rückkehr im Laufe des Schuljahres' muss die Zahl der Ermäßigungsstunden dem Pflichtstundensoll der Lehrkraft entsprechen.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund ≙ Bezeichner 'ID_230' in LehrerMinderleistungsarten.json ∧ LehrerPersonalabschnittsdatenAnrechnungsstunden.anzahl ≠ LehrerPersonalabschnittsdaten.pflichtstundensoll",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

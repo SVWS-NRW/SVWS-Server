@@ -17,33 +17,44 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen extends Validator {
 
 	/** Die Liste der Anrechnungsstunden. */
-	private final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> anrechnungen;
+	private final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> _anrechnungen;
 
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Anrechnungsgründe im Katalog.
 	 *
-	 * @param schuljahr          Schuljahr
-	 * @param anrechnungen       die Liste der Anrechnungsstunden
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param pflichtstundensoll das Pflichtstundensoll
-	 * @param kontext            der Kontext des Validators
+	 * @param schuljahr              Schuljahr
+	 * @param anrechnungen           die Liste der Anrechnungsstunden
+	 * @param mehrleistung           die Liste der Mehrleistungsstunden
+	 * @param minderleistung         die Liste der Minderleistungsstunden
+	 * @param lehraemter             die Liste der Lehrämter
+	 * @param pflichtstundensoll     das Pflichtstundensoll
+	 * @param idBeschaeftigungsart   die ID der Beschäftigungsart
+	 * @param idEinsatzstatus        die ID des Einsatzstatus
+	 * @param geschlecht             das Geschlecht der Lehrkraft
+	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
 			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> anrechnungen,
+			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistung,
+			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistung,
 			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull Integer> geschlecht,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.anrechnungen = anrechnungen;
+		_anrechnungen = anrechnungen;
 
-		_validatoren.add(new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(schuljahr, anrechnungen, lehraemter, pflichtstundensoll, kontext));
-
+		_validatoren.add(new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
+				schuljahr, anrechnungen, mehrleistung, minderleistung, lehraemter,
+				pflichtstundensoll, idBeschaeftigungsart, idEinsatzstatus, geschlecht, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> liste = this.anrechnungen.get();
+		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> liste = _anrechnungen.get();
 
 		if (liste == null) {
 			return true;
@@ -60,4 +71,5 @@ public final class ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnre
 
 		return true;
 	}
+
 }

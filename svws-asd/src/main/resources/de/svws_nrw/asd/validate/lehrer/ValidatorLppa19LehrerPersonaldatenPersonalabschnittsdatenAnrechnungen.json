@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa19LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA19",
+	  "altes_kuerzel" : "BPE12",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungen",
+      "dtos" : "LehrerPersonalabschnittsdatenAnrechnungsstunden",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Tabelle 'Mehr- und Minderleistungen, Anrechnungsstunden'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPA02"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+	  "text" : "Anrechnungsstunden des Lehrers: Bei Eintragung des Minderleistungsgrunds 'langfristige Erkrankung' muss die Zahl der Ermäßigungsstunden dem Pflichtstundensoll der Lehrkraft entsprechen.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund ≙ Bezeichner 'ID_240' in LehrerMinderleistungsarten.json ∧ LehrerPersonalabschnittsdatenAnrechnungsstunden.anzahl ≠ LehrerPersonalabschnittsdaten.pflichtstundensoll",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

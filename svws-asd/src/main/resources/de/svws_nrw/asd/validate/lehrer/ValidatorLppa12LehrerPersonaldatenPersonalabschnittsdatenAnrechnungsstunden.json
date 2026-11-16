@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa12LehrerPersonaldatenPersonalabschnittsdatenAnrechnungsstunden",
+    "historie" : [ {
+    "praefix" : "LPPA12",
+    "altes_kuerzel" : "BZ7",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungsstunden",
+    "dtos" : "LehrerPersonalabschnittsdatenAnrechnungsstunden",
+    "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Tabelle 'Mehr- und Minderleistungen, Anrechnungsstunden'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LPPA02"],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG", "BK", "SB"],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "text" : "Anrechnungsgrund des Lehrers: Bei einer Lehrkraft mit der Mehrleistung 'Mehrarbeit (angeordnet und regelmäßig)' dürfen nicht zusätzlich die Minderleistungen 'Beurlaubung (auch Elternzeit), Rückkehr im Laufe des Schuljahres', 'Langfristige Erkrankung' oder 'Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG' eingetragen sein.",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund ≙ Bezeichner 'ID_110' in LehrerMehrleistungsarten.json ∧ LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund = Bezeichner 'ID_230', 'ID_240', 'ID_250' in LehrerMehrleistungsarten.json",
+    "gueltigVon" : null,
+    "gueltigBis" : null
+    } ]
+    }

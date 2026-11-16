@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa16LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA16",
+	  "altes_kuerzel" : "BZ6",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungen",
+      "dtos" : "LehrerPersonalabschnittsdatenAnrechnungsstunden",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Tabelle 'Mehr- und Minderleistungen, Anrechnungsstunden'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPA02"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+	  "text" : "Anrechnungsgründe des Lehrers: Der Minderleistungsgrund kommt mehrfach vor. Bitte prüfen.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund(n) ≙ LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund(m); (n ≠ m; n = 1, 2, ..., max; m = 1, 2, ..., max)",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

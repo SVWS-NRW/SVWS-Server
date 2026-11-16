@@ -24,18 +24,19 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 	/**
 	 * Erstellt einen neuen Sammel-Validator für Personalabschnittsdaten.
 	 *
-	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param idStaatsangehoerigkeit  die idStaatsangehoerigkeit des Lehrers
-	 * @param idRechtsverhaeltnis     das Rechtsverhältnis
-	 * @param pflichtstundensoll      das Pflichtstundensoll
-	 * @param anrechnungen            die Liste der Anrechnungsstunden
-	 * @param idEinsatzstatus         der Einsatz-Status
-	 * @param idBeschaeftigungsart    die Beschäftigungsart
-	 * @param geburtsdatum            das Geburtsdatum des Lehrers
-	 * @param lehraemter              die Liste der Lehrämter der Lehrkraft
-	 * @param mehrleistungen          die Liste der Mehrleistungen
-	 * @param minderleistungen        die Liste der Minderleistungen
-	 * @param kontext                 der Kontext des Validators
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
+	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param pflichtstundensoll       das Pflichtstundensoll
+	 * @param anrechnungen             die Liste der Anrechnungsstunden
+	 * @param idEinsatzstatus          der Einsatz-Status
+	 * @param idBeschaeftigungsart     die Beschäftigungsart
+	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param geschlecht               das Geschlecht des Lehrers
+	 * @param lehraemter               die Liste der Lehrämter der Lehrkraft
+	 * @param mehrleistungen           die Liste der Mehrleistungen
+	 * @param minderleistungen         die Liste der Minderleistungen
+	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
@@ -46,15 +47,17 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
 			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull String> geburtsdatum,
+			final @NotNull Supplier<@AllowNull Integer> geschlecht,
 			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
-
 		// Hinzufügen der fachspezifischen Validatoren
-		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(idSchuljahresabschnitt, anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
+				idSchuljahresabschnitt, anrechnungen, mehrleistungen, minderleistungen,
+				lehraemter, pflichtstundensoll, idBeschaeftigungsart, idEinsatzstatus, geschlecht, kontext));
 
 		validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idSchuljahresabschnitt, idBeschaeftigungsart,
 				getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
@@ -68,10 +71,12 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,
 						kontext));
 
-		_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis,
+		_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit,
+				idRechtsverhaeltnis,
 				geburtsdatum, this.kontext()));
 
-		_validatoren.add(new ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(idRechtsverhaeltnis, idBeschaeftigungsart,	kontext));
+		_validatoren.add(new ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(idRechtsverhaeltnis,
+				idBeschaeftigungsart, kontext));
 
 	}
 

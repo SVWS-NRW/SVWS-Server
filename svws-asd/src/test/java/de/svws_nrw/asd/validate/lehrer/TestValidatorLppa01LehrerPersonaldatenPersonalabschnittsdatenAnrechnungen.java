@@ -65,16 +65,26 @@ class TestValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 		eintrag.anzahl = 1.0;
 		anrechnungenListe.add(eintrag);
 
-		//Leere Einträge, da die Signatur des Validators die Parameter erwartet, aber nicht testet
+		// Leere Einträge, da die Signatur des Validators die Parameter erwartet, aber nicht testet
+		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> mehrleistung = new ArrayList<>();
+		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> minderleistung = new ArrayList<>();
 		final List<LehrerLehramtEintrag> lehraemter = new ArrayList<>();
 		final Double soll = null;
+		final Long idBeschaeftigungsart = null;
+		final Long idEinsatzstatus = null;
+		final Integer geschlecht = null;
 
 		final ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen validator =
 				new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
 						() -> 0,
 						() -> anrechnungenListe,
+						() -> mehrleistung,
+						() -> minderleistung,
 						() -> lehraemter,
 						() -> soll,
+						() -> idBeschaeftigungsart,
+						() -> idEinsatzstatus,
+						() -> geschlecht,
 						kontext);
 
 		assertEquals(expectedResult, validator.pruefe(), "Fehler bei Validierung der idGrund: " + idGrund);

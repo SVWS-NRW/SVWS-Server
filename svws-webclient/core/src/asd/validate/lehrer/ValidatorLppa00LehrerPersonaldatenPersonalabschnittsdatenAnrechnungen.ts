@@ -12,26 +12,31 @@ export class ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 	/**
 	 * Die Liste der Anrechnungsstunden.
 	 */
-	private readonly anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>;
+	private readonly _anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator für die Pflichtfeldprüfung der Anrechnungsgründe.
 	 *
-	 * @param schuljahr          Schuljahr
-	 * @param anrechnungen       die Liste der Anrechnungsstunden
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param pflichtstundensoll das Pflichtstundensoll
-	 * @param kontext            der Kontext des Validators
+	 * @param schuljahr              Schuljahr
+	 * @param anrechnungen           die Liste der Anrechnungsstunden
+	 * @param mehrleistung           die Liste der Mehrleistungsstunden
+	 * @param minderleistung         die Liste der Minderleistungsstunden
+	 * @param lehraemter             die Liste der Lehrämter
+	 * @param pflichtstundensoll     das Pflichtstundensoll
+	 * @param idBeschaeftigungsart   die ID der Beschäftigungsart
+	 * @param idEinsatzstatus        die ID des Einsatzstatus
+	 * @param geschlecht             das Geschlecht der Lehrkraft
+	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, mehrleistung: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistung: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, geschlecht: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.anrechnungen = anrechnungen;
-		this._validatoren.add(new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(schuljahr, anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		this._anrechnungen = anrechnungen;
+		this._validatoren.add(new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(schuljahr, anrechnungen, mehrleistung, minderleistung, lehraemter, pflichtstundensoll, idBeschaeftigungsart, idEinsatzstatus, geschlecht, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null = this.anrechnungen.get();
+		const liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null = this._anrechnungen.get();
 		let istGueltig: boolean = true;
 		if (liste === null) {
 			istGueltig = false;

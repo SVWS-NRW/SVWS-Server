@@ -18,15 +18,20 @@ export class ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen
 	 *
 	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
 	 * @param anrechnungen             die Liste der Anrechnungsstunden
+	 * @param mehrleistung             die Liste der Mehrleistungsstunden
+	 * @param minderleistung           die Liste der Minderleistungsstunden
 	 * @param lehraemter               die Liste der Lehrämter
 	 * @param pflichtstundensoll       das Pflichtstundensoll
+	 * @param idBeschaeftigungsart     die ID der Beschäftigungsart
+	 * @param idEinsatzstatus          die ID des Einsatzstatus
+	 * @param geschlecht               das Geschlecht der Lehrkraft
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, mehrleistung: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistung: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, geschlecht: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
-		this._validatoren.add(new ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(schuljahr, anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		this._validatoren.add(new ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(schuljahr, anrechnungen, mehrleistung, minderleistung, lehraemter, pflichtstundensoll, idBeschaeftigungsart, idEinsatzstatus, geschlecht, kontext));
 	}
 
 	protected pruefe(): boolean {

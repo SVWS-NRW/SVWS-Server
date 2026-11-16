@@ -25,22 +25,23 @@ export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Vali
 	/**
 	 * Erstellt einen neuen Sammel-Validator für Personalabschnittsdaten.
 	 *
-	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param idStaatsangehoerigkeit  die idStaatsangehoerigkeit des Lehrers
-	 * @param idRechtsverhaeltnis     das Rechtsverhältnis
-	 * @param pflichtstundensoll      das Pflichtstundensoll
-	 * @param anrechnungen            die Liste der Anrechnungsstunden
-	 * @param idEinsatzstatus         der Einsatz-Status
-	 * @param idBeschaeftigungsart    die Beschäftigungsart
-	 * @param geburtsdatum            das Geburtsdatum des Lehrers
-	 * @param lehraemter              die Liste der Lehrämter der Lehrkraft
-	 * @param mehrleistungen          die Liste der Mehrleistungen
-	 * @param minderleistungen        die Liste der Minderleistungen
-	 * @param kontext                 der Kontext des Validators
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
+	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param pflichtstundensoll       das Pflichtstundensoll
+	 * @param anrechnungen             die Liste der Anrechnungsstunden
+	 * @param idEinsatzstatus          der Einsatz-Status
+	 * @param idBeschaeftigungsart     die Beschäftigungsart
+	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param geschlecht               das Geschlecht des Lehrers
+	 * @param lehraemter               die Liste der Lehrämter der Lehrkraft
+	 * @param mehrleistungen           die Liste der Mehrleistungen
+	 * @param minderleistungen         die Liste der Minderleistungen
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, geburtsdatum: Supplier<string | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, geburtsdatum: Supplier<string | null>, geschlecht: Supplier<number | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(idSchuljahresabschnitt, anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		this.validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(idSchuljahresabschnitt, anrechnungen, mehrleistungen, minderleistungen, lehraemter, pflichtstundensoll, idBeschaeftigungsart, idEinsatzstatus, geschlecht, kontext));
 		this.validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idSchuljahresabschnitt, idBeschaeftigungsart, this.getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
 		this.validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(idBeschaeftigungsart, pflichtstundensoll, idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
 		this.validatoren.add(new ValidatorLppeLehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idSchuljahresabschnitt, idEinsatzstatus, kontext));

@@ -125,6 +125,7 @@ public final class ValidatorGesamt extends Validator {
 					() -> lehrer.idEinsatzstatus,
 					() -> lehrer.idBeschaeftigungsart,
 					() -> lehrer.geburtsdatum,
+					() -> lehrer.geschlecht,
 					() -> lehrer.lehraemter,
 					() -> lehrer.mehrleistung,
 					() -> lehrer.minderleistung,
@@ -220,14 +221,14 @@ public final class ValidatorGesamt extends Validator {
 		mapValidatorenKlassen.clear();
 
 		// Id-Liste der Lehrer
-		final @NotNull List<Long> idListLehrer = new ArrayList<Long>();
-		for (final LehrerStatistikGesamt lehrer: gesamt.lehrer) {
+		final @NotNull List<Long> idListLehrer = new ArrayList<>();
+		for (final LehrerStatistikGesamt lehrer : gesamt.lehrer) {
 			idListLehrer.add(lehrer.id);
 		}
 
 		// Klassenkürzelliste
 		final @NotNull List<String> klassenKuerzelListe = new ArrayList<>();
-		for (final KlassenStatistikGesamt klasse: gesamt.klassen) {
+		for (final KlassenStatistikGesamt klasse : gesamt.klassen) {
 			klassenKuerzelListe.add(klasse.kuerzel);
 		}
 

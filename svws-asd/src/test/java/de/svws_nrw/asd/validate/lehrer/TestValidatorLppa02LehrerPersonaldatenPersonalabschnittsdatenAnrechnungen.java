@@ -62,16 +62,26 @@ class TestValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 		eintrag.idGrund = idGrund;
 		anrechnungenListe.add(eintrag);
 
-		//Leere Einträge, da die Signatur des Validators die Parameter erwartet, aber nicht testet
+		// Leere Einträge, da die Signatur des Validators die Parameter erwartet, aber nicht testet
+		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> mehrleistung = new ArrayList<>();
+		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> minderleistung = new ArrayList<>();
 		final List<LehrerLehramtEintrag> lehraemter = new ArrayList<>();
 		final Double soll = null;
+		final Long idBeschaeftigungsart = null;
+		final Long idEinsatzstatus = null;
+		final Integer geschlecht = null;
 
 		final ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen validator =
 				new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
 						() -> schuljahr,
 						() -> anrechnungenListe,
+						() -> mehrleistung,
+						() -> minderleistung,
 						() -> lehraemter,
 						() -> soll,
+						() -> idBeschaeftigungsart,
+						() -> idEinsatzstatus,
+						() -> geschlecht,
 						kontext);
 
 		assertThat(validator.pruefe())

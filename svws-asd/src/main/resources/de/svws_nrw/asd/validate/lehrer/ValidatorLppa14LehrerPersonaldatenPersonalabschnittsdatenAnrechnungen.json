@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa14LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA14",
+	  "altes_kuerzel" : "AD622",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungen",
+      "dtos" : "LehrerPersonalabschnittsdatenAnrechnungsstunden",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Tabelle 'Mehr- und Minderleistungen, Anrechnungsstunden'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPA02"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+	  "text" : "Anrechnungsgründe des Lehrers: Den Angaben nach befindet sich die ausgewählte Lehrkraft in der 'Ansparphase' bzw. 'Phase mit erhöhter Arbeitszeit' der 'Teilzeitbeschäftigung im Blockmodell'. Bitte erfassen Sie bei der Mehrleistung 'Ansparphase, Phase mit erhöhter Arbeitszeit 'Teilzeitbeschäftigung im Blockmodell' im Feld 'Stunden' die Differenz aus der tatsächlich geleisteten Arbeitszeit und dem Pflichtstundensoll. Das Pflichtstundensoll ist in jeder Phase der Teilzeitbeschäftigung im Blockmodell gleich.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idBeschaeftigungsart ≙ Bezeichner 'TS' in LehrerBeschaeftigungsart.json ∧ LehrerPersonalabschnittsdaten.idEinsatzstatus ≙ Bezeichner 'A', @ in LehrerEinsatzstatus.json ∧ LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund ≙ Bezeichner 'ID_100' in LehrerMehrleistungsarten.json ∧ LehrerPersonalabschnittsdatenAnrechnungsstunden.anzahl = 0.00",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

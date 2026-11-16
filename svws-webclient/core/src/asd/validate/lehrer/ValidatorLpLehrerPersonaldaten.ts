@@ -23,15 +23,16 @@ export class ValidatorLpLehrerPersonaldaten extends Validator {
 	 * @param idEinsatzstatus          der Einsatz-Status
 	 * @param idBeschaeftigungsart     die Beschäftigungsart
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param geschlecht               das Geschlecht des Lehrers
 	 * @param lehraemter               die Liste der Lehrämter, die geprüft werden sollen
 	 * @param mehrleistungen           die Liste mit den Einträgen zu Mehrleistungen
 	 * @param minderleistungen         die Liste mit den Einträgen zu Minderleistungen
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(lehrerId: Supplier<number>, idSchuljahresabschnitt: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, geburtsdatum: Supplier<string | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(lehrerId: Supplier<number>, idSchuljahresabschnitt: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, geburtsdatum: Supplier<string | null>, geschlecht: Supplier<number | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorLplLehrerPersonaldatenLehramt(lehraemter, lehrerId, this.getDateManagerSupplier(geburtsdatum), kontext));
-		this._validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, pflichtstundensoll, anrechnungen, idEinsatzstatus, idBeschaeftigungsart, geburtsdatum, lehraemter, mehrleistungen, minderleistungen, kontext));
+		this._validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, pflichtstundensoll, anrechnungen, idEinsatzstatus, idBeschaeftigungsart, geburtsdatum, geschlecht, lehraemter, mehrleistungen, minderleistungen, kontext));
 	}
 
 	protected pruefe(): boolean {

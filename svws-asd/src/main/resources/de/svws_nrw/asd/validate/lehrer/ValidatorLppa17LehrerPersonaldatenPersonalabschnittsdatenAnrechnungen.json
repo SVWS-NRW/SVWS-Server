@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa17LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA17",
+	  "altes_kuerzel" : "BPE7",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungen",
+      "dtos" : "LehrerPersonalabschnittsdatenAnrechnungsstunden",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Tabelle 'Mehr- und Minderleistungen, Anrechnungsstunden'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPA02"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+	  "text" : "Anrechnungsgründe des Lehrers: Die Minderleistungsgründe 'Abwesenheit wegen Beschäftigungsverbot gem. § 3 MuSchG' oder 'Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG' dürfen nur bei weiblichen Lehrkräften angegeben werden.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdatenAnrechnungsstunden.idGrund ≙ (Bezeichner 'ID_250', 'ID_255' in LehrerMinderleistungsarten.json) ∧ LehrerStammdaten.geschlecht ≠ (Bezeichner 'ID_4', 'ID_5', 'ID_6' in in der Klasse 'Geschlecht.java').",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

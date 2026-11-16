@@ -28,6 +28,7 @@ public final class ValidatorLpLehrerPersonaldaten extends Validator {
 	 * @param idEinsatzstatus          der Einsatz-Status
 	 * @param idBeschaeftigungsart     die Beschäftigungsart
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param geschlecht               das Geschlecht des Lehrers
 	 * @param lehraemter               die Liste der Lehrämter, die geprüft werden sollen
 	 * @param mehrleistungen           die Liste mit den Einträgen zu Mehrleistungen
 	 * @param minderleistungen         die Liste mit den Einträgen zu Minderleistungen
@@ -43,6 +44,7 @@ public final class ValidatorLpLehrerPersonaldaten extends Validator {
 			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
 			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull String> geburtsdatum,
+			final @NotNull Supplier<@AllowNull Integer> geschlecht,
 			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
@@ -50,8 +52,9 @@ public final class ValidatorLpLehrerPersonaldaten extends Validator {
 		super(kontext);
 		// ValidatorLpaLehrerPersonaldatenAbgangsdatum - nur für die INIT-Truppe interessant, wird hier nicht eingebunden
 		_validatoren.add(new ValidatorLplLehrerPersonaldatenLehramt(lehraemter, lehrerId, getDateManagerSupplier(geburtsdatum), kontext));
-		_validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, pflichtstundensoll,
-				anrechnungen, idEinsatzstatus, idBeschaeftigungsart, geburtsdatum, lehraemter, mehrleistungen, minderleistungen, kontext));
+		_validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis,
+				pflichtstundensoll,
+				anrechnungen, idEinsatzstatus, idBeschaeftigungsart, geburtsdatum, geschlecht, lehraemter, mehrleistungen, minderleistungen, kontext));
 
 	}
 
