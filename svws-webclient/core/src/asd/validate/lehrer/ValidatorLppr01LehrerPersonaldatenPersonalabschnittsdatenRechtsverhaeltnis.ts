@@ -6,6 +6,7 @@ import { ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaelt
 import { DateManager } from '../../../asd/validate/DateManager';
 import { ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 import type { Supplier } from '../../../java/util/function/Supplier';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -25,13 +26,14 @@ export class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
 	 * @param idRechtsverhaeltnis      die ID des Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param lehraemter               die Liste der Lehramts-Katalog-IDs des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number>, geburtsdatum: Supplier<DateManager | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number>, geburtsdatum: Supplier<DateManager | null>, lehraemter: Supplier<List<number>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
 		const rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis> = { get: () => LehrerRechtsverhaeltnis.data().getWertByID(this.getNotNullSupplierLong(idRechtsverhaeltnis).get()) };
-		this._validatoren.add(new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, kontext));
+		this._validatoren.add(new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, lehraemter, kontext));
 		this._validatoren.add(new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));

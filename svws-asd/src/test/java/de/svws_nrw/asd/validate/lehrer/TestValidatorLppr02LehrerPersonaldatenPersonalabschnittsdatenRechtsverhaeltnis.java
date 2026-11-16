@@ -14,7 +14,7 @@ import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 
 /**
- * Testklasse für den Validator {@link ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus}.
+ * Testklasse für den Validator {@link ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis}.
  *
  * Die Testdaten werden aus einer statischen JSON-Ressource eingelesen.
  */
@@ -42,19 +42,21 @@ class TestValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 	/**
 	 * Test von ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis.
 	 *
-	 * @param schuljahr             Schuljahr
 	 * @param idRechtsverhaeltnis   die Katalog-ID des Rechtsverhaeltnisses
+	 * @param schuljahr             Schuljahr
 	 * @param result                gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
-	void testValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(final Long idRechtsverhaeltnis, final int schuljahr, final boolean result) {
+	void testValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(final Long idRechtsverhaeltnis, final int schuljahr,
+			final boolean result) {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
-				new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> schuljahr, () -> null, () -> idRechtsverhaeltnis, kontext);
+				new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> schuljahr, () -> null, () -> idRechtsverhaeltnis,
+						() -> null, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

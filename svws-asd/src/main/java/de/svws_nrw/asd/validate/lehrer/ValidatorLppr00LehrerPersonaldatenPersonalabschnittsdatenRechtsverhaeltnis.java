@@ -1,5 +1,6 @@
 package de.svws_nrw.asd.validate.lehrer;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.validate.DateManager;
@@ -24,6 +25,7 @@ public final class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRech
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
 	 * @param idRechtsverhaeltnis      die ID des Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param lehraemter               die Liste der Lehramts-Katalog-IDs des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
@@ -31,13 +33,15 @@ public final class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRech
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<@AllowNull DateManager> geburtsdatum,
+			final @NotNull Supplier<List<Long>> lehraemter,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
 
 		_idRechtsverhaeltnis = idRechtsverhaeltnis;
 
-		_validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, getNotNullSupplierLong(idRechtsverhaeltnis), geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit,
+				getNotNullSupplierLong(idRechtsverhaeltnis), geburtsdatum, lehraemter, kontext));
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
+import { ValidatorLppr15LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr15LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsverhaeltnis';
 import { ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
@@ -25,15 +27,17 @@ export class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	 * @param schuljahr                Schuljahr
 	 * @param idStaatsangehoerigkeit   die Staatsangehoerigkeit
 	 * @param idRechtsverhaeltnis      das Rechtsverhaeltnis
+	 * @param lehraemter               die Liste der Lehramts-Katalog-IDs des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number>, lehraemter: Supplier<List<number>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._schuljahr = schuljahr;
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
 		const rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis> = { get: () => LehrerRechtsverhaeltnis.data().getWertByID(this.getNotNullSupplierLong(idRechtsverhaeltnis).get()) };
 		const staatsangehoerigkeitSchluessel: Supplier<string> = this.getNotNullSupplier({ get: () => Nationalitaeten.data().getSchluesselByIDOrNull(idStaatsangehoerigkeit.get()) });
 		this._validatoren.add(new ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(staatsangehoerigkeitSchluessel, rechtsverhaeltnisNotNull, kontext));
+		this._validatoren.add(new ValidatorLppr15LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(rechtsverhaeltnisNotNull, lehraemter, kontext));
 	}
 
 	public pruefe(): boolean {

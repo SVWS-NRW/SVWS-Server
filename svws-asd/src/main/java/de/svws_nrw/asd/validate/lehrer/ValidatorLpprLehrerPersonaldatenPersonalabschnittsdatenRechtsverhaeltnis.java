@@ -1,5 +1,6 @@
 package de.svws_nrw.asd.validate.lehrer;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
@@ -24,6 +25,7 @@ public final class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechts
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
 	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param lehraemter               die Liste der Lehramts-Katalog-IDs des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
@@ -31,6 +33,7 @@ public final class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechts
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<@AllowNull String> geburtsdatum,
+			final @NotNull Supplier<List<Long>> lehraemter,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
@@ -38,22 +41,23 @@ public final class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechts
 		@NotNull Supplier<@AllowNull DateManager> supplierGeburtsdatumNullable;
 		try {
 			final @NotNull DateManager datum = DateManager.from(geburtsdatum.get());
-			supplierGeburtsdatumNullable =  () -> datum;
-		} catch (Exception e) {
+			supplierGeburtsdatumNullable = () -> datum;
+		} catch (final Exception e) {
 			supplierGeburtsdatumNullable = () -> null;
 		}
 
 		_idSchuljahresabschnitt = idSchuljahresabschnitt;
 
-		final @NotNull Supplier<@NotNull Integer> schuljahr = () ->  kontext.getSchuljahrBySchuljahresabschnitt(getNotNullSupplierLong(idSchuljahresabschnitt));
+		final @NotNull Supplier<@NotNull Integer> schuljahr = () -> kontext.getSchuljahrBySchuljahresabschnitt(getNotNullSupplierLong(idSchuljahresabschnitt));
 
-		_validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, supplierGeburtsdatumNullable, kontext));
+		_validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis,
+				supplierGeburtsdatumNullable, lehraemter, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
 
-		final Schuljahresabschnitt sja =  kontext().getSchuljahresabschnittByID(getNotNullSupplierLong(_idSchuljahresabschnitt).get());
+		final Schuljahresabschnitt sja = kontext().getSchuljahresabschnittByID(getNotNullSupplierLong(_idSchuljahresabschnitt).get());
 		if (sja == null) {
 			addFehler(0, "Dem Lehrer ist kein Schuljahresabschnitt zugeordnet");
 			return false;

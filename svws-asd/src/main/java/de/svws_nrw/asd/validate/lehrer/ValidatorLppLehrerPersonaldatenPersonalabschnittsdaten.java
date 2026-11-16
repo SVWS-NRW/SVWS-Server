@@ -71,9 +71,21 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,
 						kontext));
 
+		final @NotNull Supplier<List<Long>> idsLehraemter = () -> {
+			final List<Long> result = new ArrayList<>();
+			final List<LehrerLehramtEintrag> liste = lehraemter.get();
+			if (liste != null) {
+				for (final LehrerLehramtEintrag eintrag : liste) {
+					if (eintrag != null) {
+						result.add(eintrag.idKatalogLehramt);
+					}
+				}
+			}
+			return result;
+		};
+
 		_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit,
-				idRechtsverhaeltnis,
-				geburtsdatum, this.kontext()));
+				idRechtsverhaeltnis, geburtsdatum, idsLehraemter, this.kontext()));
 
 		_validatoren.add(new ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(idRechtsverhaeltnis,
 				idBeschaeftigungsart, kontext));
@@ -84,4 +96,5 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 	protected boolean pruefe() {
 		return true;
 	}
+
 }

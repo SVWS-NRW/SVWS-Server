@@ -1,6 +1,7 @@
 import { LehrerBeschaeftigungsart } from '../../../asd/types/lehrer/LehrerBeschaeftigungsart';
 import { ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 import { ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { ValidatorLpprb10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLpprb10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart';
 import { ValidatorLpprb17LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLpprb17LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart';
 import { ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
@@ -27,14 +28,14 @@ export class ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverha
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idRechtsverhaeltnis  	das Rechtsverhaeltnis
-	 * @param idBeschaeftigungsart  die Beschäftigungsart
-	 * @param kontext   			der Kontext des Validators
+	 * @param idRechtsverhaeltnis    das Rechtsverhaeltnis
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param kontext                der Kontext des Validators
 	 */
 	public constructor(idRechtsverhaeltnis: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		const datumUebergabe: Supplier<DateManager> = this.getNotNullSupplierObject(this.getDateManagerSupplier({ get: () => "1980-01-01" }));
-		if (new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart({ get: () => 0 }, idBeschaeftigungsart, { get: () => null }, { get: () => null }, kontext).pruefe() && new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart({ get: () => 0 }, this.getNotNullSupplierLong(idBeschaeftigungsart), { get: () => null }, { get: () => null }, kontext).pruefe() && new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart({ get: () => kontext.getSchuljahr() }, this.getNotNullSupplierLong(idBeschaeftigungsart), { get: () => null }, { get: () => null }, kontext).pruefe() && new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis({ get: () => 0 }, { get: () => null }, idRechtsverhaeltnis, datumUebergabe, kontext).pruefe() && new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis({ get: () => 0 }, { get: () => null }, this.getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, kontext).pruefe() && new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis({ get: () => kontext.getSchuljahr() }, { get: () => null }, this.getNotNullSupplierLong(idRechtsverhaeltnis), kontext).pruefe()) {
+		if (new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart({ get: () => 0 }, idBeschaeftigungsart, { get: () => null }, { get: () => null }, kontext).pruefe() && new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart({ get: () => 0 }, this.getNotNullSupplierLong(idBeschaeftigungsart), { get: () => null }, { get: () => null }, kontext).pruefe() && new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart({ get: () => kontext.getSchuljahr() }, this.getNotNullSupplierLong(idBeschaeftigungsart), { get: () => null }, { get: () => null }, kontext).pruefe() && new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis({ get: () => 0 }, { get: () => null }, idRechtsverhaeltnis, datumUebergabe, { get: () => new ArrayList() }, kontext).pruefe() && new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis({ get: () => 0 }, { get: () => null }, this.getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, { get: () => new ArrayList() }, kontext).pruefe() && new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis({ get: () => kontext.getSchuljahr() }, { get: () => null }, this.getNotNullSupplierLong(idRechtsverhaeltnis), { get: () => new ArrayList() }, kontext).pruefe()) {
 			const lehrerRechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null> = { get: () => LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis.get()) };
 			const lehrerBeschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null> = { get: () => LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart.get()) };
 			if (lehrerRechtsverhaeltnis.get() !== null && lehrerBeschaeftigungsart.get() !== null) {

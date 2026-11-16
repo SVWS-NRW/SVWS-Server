@@ -1,5 +1,6 @@
 package de.svws_nrw.asd.validate.lehrer;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
@@ -26,12 +27,14 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 	 * @param schuljahr                Schuljahr
 	 * @param idStaatsangehoerigkeit   die Staatsangehoerigkeit
 	 * @param idRechtsverhaeltnis      das Rechtsverhaeltnis
+	 * @param lehraemter               die Liste der Lehramts-Katalog-IDs des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@NotNull Long> idRechtsverhaeltnis,
+			final @NotNull Supplier<List<Long>> lehraemter,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
@@ -44,8 +47,9 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 		final @NotNull Supplier<@NotNull String> staatsangehoerigkeitSchluessel =
 				getNotNullSupplier(() -> Nationalitaeten.data().getSchluesselByIDOrNull(idStaatsangehoerigkeit.get()));
 
-		_validatoren.add(new ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(staatsangehoerigkeitSchluessel, rechtsverhaeltnisNotNull, kontext));
-
+		_validatoren.add(new ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(staatsangehoerigkeitSchluessel,
+				rechtsverhaeltnisNotNull, kontext));
+		_validatoren.add(new ValidatorLppr15LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(rechtsverhaeltnisNotNull, lehraemter, kontext));
 	}
 
 	@Override
@@ -58,4 +62,5 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 
 		return true;
 	}
+
 }

@@ -46,7 +46,19 @@ export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Vali
 		this.validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(idBeschaeftigungsart, pflichtstundensoll, idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
 		this.validatoren.add(new ValidatorLppeLehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idSchuljahresabschnitt, idEinsatzstatus, kontext));
 		this.validatoren.add(new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart, kontext));
-		this._validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, this.kontext()));
+		const idsLehraemter: Supplier<List<number>> = { get: () => {
+			const result: List<number> | null = new ArrayList<number>();
+			const liste: List<LehrerLehramtEintrag> | null = lehraemter.get();
+			if (liste !== null) {
+				for (const eintrag of liste) {
+					if (eintrag !== null) {
+						result.add(eintrag.idKatalogLehramt);
+					}
+				}
+			}
+			return result;
+		} };
+		this._validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, idsLehraemter, this.kontext()));
 		this._validatoren.add(new ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(idRechtsverhaeltnis, idBeschaeftigungsart, kontext));
 	}
 

@@ -12,6 +12,8 @@ import { ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsa
 import { ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from "@core/asd/validate/lehrer/ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll";
 import { ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from "@core/asd/validate/lehrer/ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis";
 import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -25,6 +27,7 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
 export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPersonalabschnittsdaten> {
 
 	protected readonly stammdaten: () => LehrerStammdaten;
+	protected readonly lehraemter: () => List<number>;
 
 	/**
 	 * Erstellt einen ModelProxy für das Core-DTO LehrerIndividualdaten.
@@ -34,9 +37,10 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 	 * @param stammdaten         Zugriff auf die Stammdaten des Lehrers, z.B. für das Geburtsdatum
 	 * @param patch              ggf. die Methode zum Patchen der einzelnen Attribute, sofern das automatische Patchen
 	 *                           bei Änderungen gewünscht ist
+	 * @param lehraemter         ggf. Zugriff auf die Liste der Lehramts-Katalog-IDs des Lehrers
 	 */
 	constructor(data: () => LehrerPersonalabschnittsdaten | null, validatorKontext: () => ValidatorKontext, stammdaten: () => LehrerStammdaten,
-		patch?: (data: Partial<LehrerPersonalabschnittsdaten>) => Promise<boolean>) {
+		patch?: (data: Partial<LehrerPersonalabschnittsdaten>) => Promise<boolean>, lehraemter?: () => List<number>) {
 		const daten = () => {
 			const tmp = data();
 			if (tmp !== null) {
@@ -53,6 +57,7 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 		super({ data: daten, patch, listOfAutopatchProps });
 
 		this.stammdaten = stammdaten;
+		this.lehraemter = lehraemter ?? (() => new ArrayList<number>());
 		this.addValidatoren(validatorKontext);
 		this.validate();
 	}
@@ -65,6 +70,7 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 			{ get: () => this.stammdaten().idStaatsangehoerigkeit },
 			{ get: () => this.proxy.idRechtsverhaeltnis },
 			{ get: () => this.stammdaten().geburtsdatum },
+			{ get: () => this.lehraemter() },
 			validatorKontext()), "idRechtsverhaeltnis", "pflichtstundensoll");
 
 		// Beschäftigungsart

@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppr15LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
+    "historie" : [ {
+      "praefix" : "LPPR15",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis",
+      "dtos" : "LehrerPersonalabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Feld 'Rechtsverhältnis'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPR02"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Rechtsverhältnis des Lehrers: Für das Rechtsverhältnis 'Beamte auf Widerruf (LAA)' muss das Lehramt 'Lehramtsanwärter/-in / Studienreferendar/-in' vorliegen.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idRechtsverhaeltnis ≙ Bezeichner 'W' in LehrerRechtsverhaeltnis.json ∧ LehrerLehramtEintrag.idKatalogLehramt  ≠  Bezeichner 'ID_98' in LehrerLehramt.json", 
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

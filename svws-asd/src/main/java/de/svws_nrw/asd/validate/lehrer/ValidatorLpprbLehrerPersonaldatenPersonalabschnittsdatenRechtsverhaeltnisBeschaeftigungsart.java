@@ -1,5 +1,6 @@
 package de.svws_nrw.asd.validate.lehrer;
 
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
@@ -19,9 +20,9 @@ public final class ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRecht
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idRechtsverhaeltnis  	das Rechtsverhaeltnis
-	 * @param idBeschaeftigungsart  die Beschäftigungsart
-	 * @param kontext   			der Kontext des Validators
+	 * @param idRechtsverhaeltnis    das Rechtsverhaeltnis
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
@@ -33,13 +34,18 @@ public final class ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRecht
 		final @NotNull Supplier<@NotNull DateManager> datumUebergabe = getNotNullSupplierObject(getDateManagerSupplier(() -> "1980-01-01"));
 
 		// Hier kann nicht nur die Vorbedingung 02 geprüft werden, da die ID's "null" sein könnten, muss vorher auch jeweils die 00 und 01 geprüft werden
-		if (new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> 0, idBeschaeftigungsart, () -> null, () -> null, kontext).pruefe()
-				&& new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> 0, getNotNullSupplierLong(idBeschaeftigungsart), () -> null, () -> null, kontext).pruefe()
-				&& new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> kontext.getSchuljahr(), getNotNullSupplierLong(idBeschaeftigungsart), () -> null, () -> null, kontext).pruefe()
-				&& new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> 0, () -> null, idRechtsverhaeltnis, datumUebergabe, kontext).pruefe()
-				&& new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> 0, () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, kontext).pruefe()
-				&& new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> kontext.getSchuljahr(), () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), kontext).pruefe()
-				) {
+		if (new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> 0, idBeschaeftigungsart, () -> null, () -> null, kontext)
+				.pruefe()
+				&& new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> 0, getNotNullSupplierLong(idBeschaeftigungsart),
+						() -> null, () -> null, kontext).pruefe()
+				&& new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> kontext.getSchuljahr(),
+						getNotNullSupplierLong(idBeschaeftigungsart), () -> null, () -> null, kontext).pruefe()
+				&& new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> 0, () -> null, idRechtsverhaeltnis, datumUebergabe,
+						() -> new ArrayList<>(), kontext).pruefe()
+				&& new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> 0, () -> null,
+						getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, () -> new ArrayList<>(), kontext).pruefe()
+				&& new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> kontext.getSchuljahr(), () -> null,
+						getNotNullSupplierLong(idRechtsverhaeltnis), () -> new ArrayList<>(), kontext).pruefe()) {
 
 			final @NotNull Supplier<@AllowNull LehrerRechtsverhaeltnis> lehrerRechtsverhaeltnis =
 					() -> LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis.get());
@@ -47,28 +53,36 @@ public final class ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRecht
 					() -> LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart.get());
 
 			if (lehrerRechtsverhaeltnis.get() != null && lehrerBeschaeftigungsart.get() != null) {
-				_validatoren.add(new ValidatorLpprb10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
-				_validatoren.add(new ValidatorLpprb11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
-				_validatoren.add(new ValidatorLpprb12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
-				_validatoren.add(new ValidatorLpprb13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
-				_validatoren.add(new ValidatorLpprb14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
-				_validatoren.add(new ValidatorLpprb15LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb15LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
-				_validatoren.add(new ValidatorLpprb16LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb16LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
-				_validatoren.add(new ValidatorLpprb17LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb17LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
-				_validatoren.add(new ValidatorLpprb18LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
+				_validatoren.add(new ValidatorLpprb18LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(
+						getNotNullSupplierObject(lehrerRechtsverhaeltnis), getNotNullSupplierObject(lehrerBeschaeftigungsart),
 						kontext));
 			}
 		}
 	}
-
 
 	@Override
 	protected boolean pruefe() {
