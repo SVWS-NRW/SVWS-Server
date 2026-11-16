@@ -1,6 +1,7 @@
 package de.svws_nrw.api.server;
 
 import de.svws_nrw.controller.filter.FilterControllerFactory;
+import de.svws_nrw.core.data.filter.FilterAttributeResponse;
 import de.svws_nrw.core.data.filter.FilterCategoryResponse;
 import de.svws_nrw.core.types.filter.FilterDomain;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -75,6 +76,52 @@ public class APIFilter {
 		final FilterDomain filterDomain = getDomain(domain);
 		return FilterControllerFactory.withReadAccessByDomain(request, filterDomain)
 				.getFilterCategoryController()
+				.getByDomain(filterDomain);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer Liste mit allen verfügbaren Filterattributen einer Domäne.
+	 *
+	 * @param schema Das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param domain Der Schlüssel der Domäne, z. B. {@code schueler}
+	 * @param request Der HTTP-Request
+	 *
+	 * @return Liste mit Filterattributen
+	 */
+	@GET
+	@Path("{domain}/attributes")
+	@Operation(
+			summary = "Liefert eine Liste mit allen verfügbaren Filterattributen einer Domäne.",
+			description = """
+					Liefert eine Liste mit allen verfügbaren Filterattributen der angegebenen Domäne, z. B. schueler.
+					Jedes Attribut verweist auf seine Filterkategorie und nennt seinen Typ sowie die Quelle der auswählbaren Werte.
+					"""
+	)
+	@ApiResponse(
+			responseCode = "200",
+			description = "Liste mit Filterattributen der Domäne",
+			content = @Content(
+					mediaType = "application/json",
+					array = @ArraySchema(
+							schema = @Schema(
+									implementation = FilterAttributeResponse.class
+							)
+					)
+			)
+	)
+	@ApiResponse(
+			responseCode = "403",
+			description = "Der Benutzer hat keine Rechte, um die Filterattribute der Domäne abzurufen."
+	)
+	@ApiResponse(
+			responseCode = "404",
+			description = "Es gibt keine Filterdomäne mit dem angegebenen Schlüssel."
+	)
+	public Response getFilterAttributes(@PathParam("schema") final String schema, @PathParam("domain") final String domain,
+			@Context final HttpServletRequest request) {
+		final FilterDomain filterDomain = getDomain(domain);
+		return FilterControllerFactory.withReadAccessByDomain(request, filterDomain)
+				.getFilterAttributeController()
 				.getByDomain(filterDomain);
 	}
 

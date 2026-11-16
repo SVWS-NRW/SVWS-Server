@@ -1,5 +1,7 @@
 package de.svws_nrw.service.filter;
 
+import de.svws_nrw.core.types.filter.FilterAttributeType;
+
 /**
  * Ein Filterattribut, dessen Werte aus einem CoreType stammen.
  */
@@ -59,6 +61,26 @@ public class CoreTypeFilterAttribute implements FilterAttribute {
 	@Override
 	public FilterCategoryKey getKeyCategory() {
 		return this.keyCategory;
+	}
+
+	/**
+	 * Liefert den Typ des Filterattributes zurück.
+	 *
+	 * @return {@link FilterAttributeType#CORETYPE}
+	 */
+	@Override
+	public FilterAttributeType getType() {
+		return FilterAttributeType.CORETYPE;
+	}
+
+	/**
+	 * Liefert den Namen des CoreTypes zurück, aus dem die Werte stammen.
+	 *
+	 * @return Name des CoreTypes
+	 */
+	@Override
+	public String getSource() {
+		return this.coreTypeName;
 	}
 
 	/**

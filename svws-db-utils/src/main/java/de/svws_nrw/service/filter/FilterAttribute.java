@@ -1,5 +1,7 @@
 package de.svws_nrw.service.filter;
 
+import de.svws_nrw.core.types.filter.FilterAttributeType;
+
 /**
  * Ein Attribut, nach dem innerhalb einer Filterkategorie gefiltert werden kann.
  */
@@ -25,6 +27,20 @@ public interface FilterAttribute {
 	 * @return Schlüssel
 	 */
 	FilterCategoryKey getKeyCategory();
+
+	/**
+	 * Liefert den Typ des Filterattributes zurück. Der Typ bestimmt, woher die auswählbaren Werte stammen.
+	 *
+	 * @return Typ
+	 */
+	FilterAttributeType getType();
+
+	/**
+	 * Liefert den Namen des Enums, CoreTypes oder Katalogs zurück, aus dem die Werte des Filterattributes stammen.
+	 *
+	 * @return Name der Quelle der Werte
+	 */
+	String getSource();
 
 	/**
 	 * Liefert die technische Zuordnung dieses Filterattributs zu dem Entity-Feld, aus dem der zu filternde Wert ermittelt wird.

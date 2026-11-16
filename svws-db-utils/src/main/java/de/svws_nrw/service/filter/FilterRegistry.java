@@ -21,7 +21,7 @@ final class FilterRegistry {
 	private static final FilterRegistry DEFAULT = createDefault();
 
 	private final Map<FilterDomain, List<FilterCategory>> categoriesByDomain;
-	private final Map<FilterCategoryKey, List<FilterAttribute>> attributesByCategory; // NOSONAR - wird für die Attribut-Endpunkte noch benötigt
+	private final Map<FilterCategoryKey, List<FilterAttribute>> attributesByCategory;
 
 	/**
 	 * Erzeugt eine neue Registry und legt unveränderliche Kopien der übergebenen Konfiguration an.
@@ -79,6 +79,20 @@ final class FilterRegistry {
 		return categoriesByDomain.getOrDefault(domain, List.of());
 	}
 
+	/**
+	 * Liefert alle Filterattribute zu einer {@link FilterDomain} zurück. Die Attribute sind nach der Reihenfolge der Filterkategorien der
+	 * Domäne und innerhalb einer Kategorie nach ihrer Registrierung sortiert.
+	 *
+	 * @param domain {@link FilterDomain}
+	 *
+	 * @return Liste mit Filterattributen
+	 */
+	List<FilterAttribute> getAttributesByDomain(final FilterDomain domain) {
+		return getCategoriesByDomain(domain).stream()
+				.flatMap(category -> attributesByCategory.getOrDefault(category.key(), Collections.emptyList()).stream())
+				.toList();
+	}
+
 	private static FilterRegistry createDefault() {
 		final Builder builder = new Builder();
 
@@ -102,14 +116,14 @@ final class FilterRegistry {
 						FilterCategoryKeys.SCHUELER_INDIVIDUALDATEN,
 						AttributeTarget.of(DTOSchueler.class.getName(), "idStatus")
 				),
-				new CoreTypeFilterAttribute(
+				new EnumFilterAttribute(
 						FilterAttributeKeys.SCHUELER_GESCHLECHT,
 						"Geschlecht",
 						"Geschlecht",
 						FilterCategoryKeys.SCHUELER_INDIVIDUALDATEN,
 						AttributeTarget.of(DTOSchueler.class.getName(), "Geschlecht")
 				),
-				new CoreTypeFilterAttribute(
+				new CatalogFilterAttribute(
 						FilterAttributeKeys.SCHUELER_WOHNORT,
 						"Ort",
 						"Orte",

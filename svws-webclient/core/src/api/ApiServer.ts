@@ -55,6 +55,7 @@ import { FachgruppeKatalogEintrag } from '../asd/data/fach/FachgruppeKatalogEint
 import { FachKatalogEintrag } from '../asd/data/fach/FachKatalogEintrag';
 import { FachklasseEintrag } from '../core/data/schule/FachklasseEintrag';
 import { Fahrschuelerart } from '../core/data/schule/Fahrschuelerart';
+import { FilterAttributeResponse } from '../core/data/filter/FilterAttributeResponse';
 import { FilterCategoryResponse } from '../core/data/filter/FilterCategoryResponse';
 import { Floskel } from '../core/data/schule/Floskel';
 import { Floskelgruppe } from '../core/data/schule/Floskelgruppe';
@@ -26490,6 +26491,40 @@ export class ApiServer extends BaseApi {
 		obj.forEach((elem: any) => {
 			const text: string = JSON.stringify(elem);
 			ret.add(UvZeitraster.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getFilterAttributes für den Zugriff auf die URL https://{hostname}/db/{schema}/v1/filter/{domain}/attributes
+	 *
+	 * Liefert eine Liste mit allen verfügbaren Filterattributen der angegebenen Domäne, z. B. schueler.
+Jedes Attribut verweist auf seine Filterkategorie und nennt seinen Typ sowie die Quelle der auswählbaren Werte.
+
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Liste mit Filterattributen der Domäne
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<FilterAttributeResponse>
+	 *   Code 403: Der Benutzer hat keine Rechte, um die Filterattribute der Domäne abzurufen.
+	 *   Code 404: Es gibt keine Filterdomäne mit dem angegebenen Schlüssel.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} domain - der Pfad-Parameter domain
+	 *
+	 * @returns Liste mit Filterattributen der Domäne
+	 */
+	public async getFilterAttributes(schema: string, domain: string): Promise<List<FilterAttributeResponse>> {
+		const path = "/db/{schema}/v1/filter/{domain}/attributes"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{domain\s*(:[^{}]+({[^{}]+})*)?}/g, domain);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<FilterAttributeResponse>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FilterAttributeResponse.transpilerFromJSON(text));
 		});
 		return ret;
 	}

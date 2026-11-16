@@ -6,6 +6,7 @@ import java.util.Set;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.service.filter.FilterAttributeServiceFactory;
 import de.svws_nrw.service.filter.FilterCategoryServiceFactory;
 import de.svws_nrw.core.types.filter.FilterDomain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,14 +24,17 @@ public final class FilterControllerFactory {
 
 	private final FilterCategoryServiceFactory filterCategoryServiceFactory;
 
-	private FilterControllerFactory(final FilterCategoryServiceFactory filterCategoryServiceFactory) {
+	private final FilterAttributeServiceFactory filterAttributeServiceFactory;
+
+	private FilterControllerFactory(final FilterCategoryServiceFactory filterCategoryServiceFactory,
+			final FilterAttributeServiceFactory filterAttributeServiceFactory) {
 		this.filterCategoryServiceFactory = filterCategoryServiceFactory;
+		this.filterAttributeServiceFactory = filterAttributeServiceFactory;
 	}
 
 	private static FilterControllerFactory getNewInstance(final HttpServletRequest request, final Set<BenutzerKompetenz> requiredKompetenzen) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, requiredKompetenzen.toArray(new BenutzerKompetenz[0]));
-		final var serviceFactory = FilterCategoryServiceFactory.getNewInstance();
-		return new FilterControllerFactory(serviceFactory);
+		return new FilterControllerFactory(FilterCategoryServiceFactory.getNewInstance(), FilterAttributeServiceFactory.getNewInstance());
 	}
 
 	/**
@@ -52,6 +56,15 @@ public final class FilterControllerFactory {
 	 */
 	public FilterCategoryController getFilterCategoryController() {
 		return new FilterCategoryControllerImpl(filterCategoryServiceFactory.getService());
+	}
+
+	/**
+	 * Erzeugt einen neuen {@link FilterAttributeController}.
+	 *
+	 * @return ein neuer {@link FilterAttributeControllerImpl}
+	 */
+	public FilterAttributeController getFilterAttributeController() {
+		return new FilterAttributeControllerImpl(filterAttributeServiceFactory.getService());
 	}
 
 }

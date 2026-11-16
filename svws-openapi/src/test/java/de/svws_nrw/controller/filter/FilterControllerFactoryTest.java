@@ -64,4 +64,20 @@ class FilterControllerFactoryTest {
 			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), any(BenutzerKompetenz[].class)), times(1));
 		}
 	}
+
+	@Test
+	@DisplayName("getFilterAttributeController | liefert bei jedem Aufruf einen neuen FilterAttributeControllerImpl")
+	void getFilterAttributeController() {
+		final HttpServletRequest request = mock(HttpServletRequest.class);
+		try (MockedStatic<DBBenutzerUtils> dbUtilsMock = mockStatic(DBBenutzerUtils.class)) {
+			final FilterControllerFactory factory = FilterControllerFactory.withReadAccessByDomain(request, FilterDomain.SCHUELER);
+
+			final FilterAttributeController first = factory.getFilterAttributeController();
+			final FilterAttributeController second = factory.getFilterAttributeController();
+
+			assertThat(first).isInstanceOf(FilterAttributeControllerImpl.class);
+			assertThat(second).isInstanceOf(FilterAttributeControllerImpl.class).isNotSameAs(first);
+			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), any(BenutzerKompetenz[].class)), times(1));
+		}
+	}
 }

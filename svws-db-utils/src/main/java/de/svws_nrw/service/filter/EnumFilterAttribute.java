@@ -1,5 +1,7 @@
 package de.svws_nrw.service.filter;
 
+import de.svws_nrw.core.types.filter.FilterAttributeType;
+
 /**
  * Ein Filterattribut, dessen Werte aus einem Enum stammen.
  */
@@ -59,6 +61,26 @@ public class EnumFilterAttribute implements FilterAttribute {
 	@Override
 	public FilterCategoryKey getKeyCategory() {
 		return this.keyCategory;
+	}
+
+	/**
+	 * Liefert den Typ des Filterattributes zurück.
+	 *
+	 * @return {@link FilterAttributeType#ENUM}
+	 */
+	@Override
+	public FilterAttributeType getType() {
+		return FilterAttributeType.ENUM;
+	}
+
+	/**
+	 * Liefert den Namen des Enums zurück, aus dem die Werte stammen.
+	 *
+	 * @return Name des Enums
+	 */
+	@Override
+	public String getSource() {
+		return this.enumName;
 	}
 
 	/**

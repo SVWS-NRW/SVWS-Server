@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.core.types.filter.FilterAttributeType;
 import de.svws_nrw.core.types.filter.FilterDomain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
 
 @DisplayName("FilterRegistry")
 class FilterRegistryTest {
@@ -141,8 +143,76 @@ class FilterRegistryTest {
 	}
 
 	@Nested
+	@DisplayName("getAttributesByDomain")
+	class GetAttributesByDomain {
+
+		@Test
+		@DisplayName("liefert die Attribute aller Kategorien der Domäne in der Reihenfolge der Kategorien")
+		void returnsAttributesOfAllCategoriesInOrder() {
+			final var keyCategoryOther = new FilterCategoryKey("schueler.andere");
+			final var keyAttributeOther = new FilterAttributeKey("schueler.anderesattribut");
+			final var attributeFirst = attribute();
+			final var attributeOther = new EnumFilterAttribute(keyAttributeOther, "Anderes", "AndererEnum", keyCategoryOther,
+					AttributeTarget.of("Entity", "other"));
+			final var cut = new FilterRegistry(
+					Map.of(FilterDomain.SCHUELER, List.of(category(KEY_CATEGORY), new FilterCategory(keyCategoryOther, "Andere", 2, List.of(keyAttributeOther)))),
+					Map.of(KEY_CATEGORY, List.of(attributeFirst), keyCategoryOther, List.of(attributeOther)));
+
+			assertThat(cut.getAttributesByDomain(FilterDomain.SCHUELER)).containsExactly(attributeFirst, attributeOther);
+		}
+
+		@Test
+		@DisplayName("liefert eine leere Liste, wenn für die Kategorie keine Attribute registriert sind")
+		void categoryWithoutAttributes() {
+			final var cut = new FilterRegistry(Map.of(FilterDomain.SCHUELER, List.of(category(KEY_CATEGORY))), Map.of());
+
+			assertThat(cut.getAttributesByDomain(FilterDomain.SCHUELER)).isEmpty();
+		}
+
+		@Test
+		@DisplayName("liefert eine leere Liste, wenn für die Domäne nichts konfiguriert ist")
+		void unknownDomainReturnsEmptyList() {
+			final var cut = new FilterRegistry(Map.of(), Map.of(KEY_CATEGORY, List.of(attribute())));
+
+			assertThat(cut.getAttributesByDomain(FilterDomain.SCHUELER)).isEmpty();
+		}
+
+		@Test
+		@DisplayName("liefert eine leere Liste, wenn die Domäne null ist")
+		void nullDomainReturnsEmptyList() {
+			final var cut = new FilterRegistry(Map.of(FilterDomain.SCHUELER, List.of(category(KEY_CATEGORY))), Map.of(KEY_CATEGORY, List.of(attribute())));
+
+			assertThat(cut.getAttributesByDomain(null)).isEmpty();
+		}
+
+		@Test
+		@DisplayName("liefert eine unveränderliche Liste")
+		void returnedListIsImmutable() {
+			final var cut = new FilterRegistry(Map.of(FilterDomain.SCHUELER, List.of(category(KEY_CATEGORY))), Map.of(KEY_CATEGORY, List.of(attribute())));
+			final var result = cut.getAttributesByDomain(FilterDomain.SCHUELER);
+			final var other = attribute();
+
+			assertThatThrownBy(() -> result.add(other)).isInstanceOf(UnsupportedOperationException.class);
+		}
+	}
+
+	@Nested
 	@DisplayName("defaults")
 	class Defaults {
+
+		@Test
+		@DisplayName("enthält für SCHUELER die Attribute Status (CoreType), Geschlecht (Enum) und Wohnort (Katalog) in dieser Reihenfolge")
+		void containsSchuelerAttributes() {
+			final var result = FilterRegistry.defaults().getAttributesByDomain(FilterDomain.SCHUELER);
+
+			assertThat(result)
+					.extracting(FilterAttribute::getKey, FilterAttribute::getType, FilterAttribute::getSource, FilterAttribute::getKeyCategory)
+					.containsExactly(
+							tuple(FilterAttributeKeys.SCHUELER_STATUS, FilterAttributeType.CORETYPE, "SchuelerStatus", FilterCategoryKeys.SCHUELER_INDIVIDUALDATEN),
+							tuple(FilterAttributeKeys.SCHUELER_GESCHLECHT, FilterAttributeType.ENUM, "Geschlecht", FilterCategoryKeys.SCHUELER_INDIVIDUALDATEN),
+							tuple(FilterAttributeKeys.SCHUELER_WOHNORT, FilterAttributeType.CATALOG, "Orte", FilterCategoryKeys.SCHUELER_INDIVIDUALDATEN));
+		}
+
 
 		@Test
 		@DisplayName("liefert immer dieselbe Instanz")
