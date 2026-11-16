@@ -6,11 +6,11 @@
 		<p>Die Konferenzübersicht wird geladen …</p>
 	</div>
 	<div v-else-if="berechtigt" class="page page-flex-col gap-3 p-3 konferenz-druck-seite">
-		<div v-if="punkteToggleSichtbar" class="flex items-center justify-end gap-2 text-black print:!hidden">
+		<div v-if="punkteToggleSichtbar" class="flex items-center justify-end gap-2 text-ui-100 print:!hidden">
 			<span>Noten</span>
 			<svws-ui-checkbox v-model="punkteAnsicht" type="toggle">Punkte</svws-ui-checkbox>
 		</div>
-		<div v-if="mahnungsToggleSichtbar" class="flex items-center justify-end gap-2 text-black print:!hidden">
+		<div v-if="mahnungsToggleSichtbar" class="flex items-center justify-end gap-2 text-ui-100 print:!hidden">
 			<svws-ui-checkbox v-model="mahnungsAnsicht" type="toggle">Mahnungsübersicht</svws-ui-checkbox>
 		</div>
 		<div class="flex justify-end print:!hidden">
@@ -24,9 +24,9 @@
 				<span class="konferenz-titel-bildschirm">Konferenzübersicht</span>
 				<span class="konferenz-titel-druck">Konferenzübersicht {{ klassenLabelDruck }} - {{ druckdatum }}</span>
 			</h1>
-			<p class="text-black">Fächer, Fachnoten und Teilleistungen aller Schüler der ausgewählten Klasse.</p>
+			<p class="text-ui-100">Fächer, Fachnoten und Teilleistungen aller Schüler der ausgewählten Klasse.</p>
 		</header>
-		<div v-if="schuelerZeilenAngezeigt.length === 0" class="rounded-lg bg-ui-75 p-4 text-black">
+		<div v-if="schuelerZeilenAngezeigt.length === 0" class="rounded-lg bg-ui-75 p-4 text-ui-100">
 			{{ mahnungsAnsicht ? 'Keine gefährdeten Schüler in der ausgewählten Klasse.' : 'Keine Schüler in der ausgewählten Klasse.' }}
 		</div>
 		<div v-else class="min-h-0 flex-1 overflow-auto konferenz-druck-liste">
@@ -34,24 +34,32 @@
 				<article v-for="zeile in schuelerZeilenAngezeigt" :key="`${zeile.klasse.id}-${zeile.schueler.id}`" class="w-fit max-w-full overflow-hidden rounded-lg border border-ui-50 konferenz-schueler-tabelle">
 					<header class="flex items-baseline gap-2 border-b border-ui-50 bg-ui px-3 py-1.5 konferenz-schueler-kopf">
 						<h2 class="text-[1.3125rem] font-semibold konferenz-schueler-name">{{ zeile.schueler.nachname }}, {{ zeile.schueler.vorname }}</h2>
-						<span class="text-xs text-black konferenz-klassenkuerzel">{{ zeile.klasse.kuerzelAnzeige ?? zeile.klasse.kuerzel }}</span>
+						<span class="text-xs text-ui-100 konferenz-klassenkuerzel">{{ zeile.klasse.kuerzelAnzeige ?? zeile.klasse.kuerzel }}</span>
 					</header>
 					<div class="overflow-x-auto konferenz-druck-scroll">
 						<div class="min-w-max">
 							<div class="grid konferenz-raster border-b border-ui-50 bg-ui-75" :style="rasterStyle(zeile)">
 								<div class="border-r border-ui-50 px-1 py-1 text-center text-xs font-semibold uppercase">Fach</div>
-								<div v-for="fach in zeile.faecher" :key="fach.fachID" class="border-r border-ui-50 px-1 py-1 text-center last:border-r-0" :class="fach.lerngruppe.toLocaleUpperCase().includes('LK') ? 'bg-sky-100' : ''">
+								<div v-for="fach in zeile.faecher" :key="fach.fachID" class="border-r border-ui-50 px-1 py-1 text-center last:border-r-0" :class="fach.lerngruppe.toLocaleUpperCase().includes('LK') ? 'bg-ui-selected text-ui-onselected' : ''">
 									<div class="konferenz-kopftext text-sm font-bold" :title="fach.lerngruppe">{{ fach.lerngruppe || fach.kuerzel }}</div>
-									<div class="konferenz-kopftext text-xs text-black" :title="fach.lehrkraefte">{{ fach.lehrkraefte }}</div>
+									<div class="konferenz-kopftext text-xs" :title="fach.lehrkraefte">{{ fach.lehrkraefte }}</div>
 								</div>
 							</div>
-							<div class="grid konferenz-raster border-b-2 border-ui-50 bg-ui-75" :style="rasterStyle(zeile)">
+							<div class="grid konferenz-raster border-ui-50 bg-ui-75" :class="hatQuartalsnoten(zeile) ? 'border-b' : 'border-b-2'" :style="rasterStyle(zeile)">
 								<div class="grid place-items-center border-r border-ui-50 px-2 py-1 text-center text-xs font-semibold">Note</div>
 								<div v-for="fach in zeile.faecher" :key="`note-${fach.fachID}`" class="grid min-h-8 place-items-center border-r border-ui-50 px-1 py-1 text-center last:border-r-0">
 									<div class="flex h-full w-full items-center justify-center text-center">
-										<svws-ui-badge v-if="(fach.leistung.note !== null) && (getNotenBadge(zeile.klasse, fach.leistung.note) !== null)" type="light" class="!mx-auto !px-1.5 !py-0 !text-sm" :style="badgeStyle(zeile.klasse, fach.leistung.note)">{{ getAnzeigewert(zeile.klasse, fach.leistung.note) }}</svws-ui-badge>
-										<span v-else-if="fach.leistung.note !== null" class="text-sm text-black">{{ getAnzeigewert(zeile.klasse, fach.leistung.note) }}</span>
-										<span v-else class="text-xs text-black">–</span>
+										<svws-ui-badge v-if="istNoteneintragVorhanden(fach.leistung.note) && (getNotenBadge(zeile.klasse, fach.leistung.note) !== null)" type="light" class="!mx-auto !px-1.5 !py-0 !text-base !font-semibold" :style="badgeStyle(zeile.klasse, fach.leistung.note)">{{ getAnzeigewert(zeile.klasse, fach.leistung.note) }}</svws-ui-badge>
+										<span v-else-if="istNoteneintragVorhanden(fach.leistung.note)" class="text-base font-semibold text-ui-100">{{ getAnzeigewert(zeile.klasse, fach.leistung.note) }}</span>
+									</div>
+								</div>
+							</div>
+							<div v-if="hatQuartalsnoten(zeile)" class="grid konferenz-raster border-b-2 border-ui-50 bg-ui-75" :style="rasterStyle(zeile)">
+								<div class="grid place-items-center border-r border-ui-50 px-2 py-1 text-center text-xs font-semibold">Quartal</div>
+								<div v-for="fach in zeile.faecher" :key="`quartal-${fach.fachID}`" class="grid min-h-8 place-items-center border-r border-ui-50 px-1 py-1 text-center last:border-r-0">
+									<div class="flex h-full w-full items-center justify-center text-center">
+										<svws-ui-badge v-if="istNoteneintragVorhanden(fach.leistung.noteQuartal) && (getNotenBadge(zeile.klasse, fach.leistung.noteQuartal) !== null)" type="light" class="!mx-auto !px-1.5 !py-0 !text-base !font-semibold" :style="badgeStyle(zeile.klasse, fach.leistung.noteQuartal)">{{ getAnzeigewert(zeile.klasse, fach.leistung.noteQuartal) }}</svws-ui-badge>
+										<span v-else-if="istNoteneintragVorhanden(fach.leistung.noteQuartal)" class="text-base font-semibold text-ui-100">{{ getAnzeigewert(zeile.klasse, fach.leistung.noteQuartal) }}</span>
 									</div>
 								</div>
 							</div>
@@ -61,8 +69,8 @@
 									<div v-for="fach in zeile.faecher" :key="`${art.id}-${fach.fachID}`" class="grid min-h-7 place-items-center gap-0.5 border-r border-ui-50 px-1 py-0.5 text-center last:border-r-0">
 										<template v-for="(note, index) in getTeilleistungen(fach.leistung, art.id)" :key="index">
 											<div class="flex w-full items-center justify-center text-center">
-												<svws-ui-badge v-if="(note !== null) && (getNotenBadge(zeile.klasse, note) !== null)" type="light" class="!mx-auto !px-1.5 !py-0 !text-base" :style="badgeStyle(zeile.klasse, note)">{{ getAnzeigewert(zeile.klasse, note) }}</svws-ui-badge>
-												<span v-else class="text-base text-black">{{ getAnzeigewert(zeile.klasse, note) ?? '–' }}</span>
+												<svws-ui-badge v-if="(note !== null) && (getNotenBadge(zeile.klasse, note) !== null)" type="light" class="!mx-auto !px-1.5 !py-0 !text-base !font-semibold" :style="badgeStyle(zeile.klasse, note)">{{ getAnzeigewert(zeile.klasse, note) }}</svws-ui-badge>
+												<span v-else class="text-base font-semibold text-ui-100">{{ getAnzeigewert(zeile.klasse, note) ?? '–' }}</span>
 											</div>
 										</template>
 									</div>
@@ -75,8 +83,8 @@
 										<div v-for="art in getTeilleistungsartenGruppe(zeile, gruppe)" :key="art.id" class="flex flex-col items-center gap-0.5" :title="art.bezeichnung ?? undefined">
 											<template v-for="(note, indexNote) in getTeilleistungen(fach.leistung, art.id)" :key="`${art.id}-${indexNote}`">
 												<div class="flex w-full items-center justify-center text-center">
-													<svws-ui-badge v-if="(note !== null) && (getNotenBadge(zeile.klasse, note) !== null)" type="light" class="!mx-auto !px-1.5 !py-0 !text-base" :style="badgeStyle(zeile.klasse, note)">{{ getAnzeigewert(zeile.klasse, note) }}</svws-ui-badge>
-													<span v-else class="text-base text-black">{{ getAnzeigewert(zeile.klasse, note) ?? '–' }}</span>
+													<svws-ui-badge v-if="(note !== null) && (getNotenBadge(zeile.klasse, note) !== null)" type="light" class="!mx-auto !px-1.5 !py-0 !text-base !font-semibold" :style="badgeStyle(zeile.klasse, note)">{{ getAnzeigewert(zeile.klasse, note) }}</svws-ui-badge>
+													<span v-else class="text-base font-semibold text-ui-100">{{ getAnzeigewert(zeile.klasse, note) ?? '–' }}</span>
 												</div>
 											</template>
 										</div>
@@ -310,6 +318,14 @@
 		return wert;
 	}
 
+	function istNoteneintragVorhanden(note: string | null): boolean {
+		return (note !== null) && (note.trim().length > 0);
+	}
+
+	function hatQuartalsnoten(zeile: SchuelerZeile): boolean {
+		return zeile.faecher.some(fach => istNoteneintragVorhanden(fach.leistung.noteQuartal));
+	}
+
 	function getTeilleistungen(leistung: ENMv2Leistung, artID: number): (string | null)[] {
 		const result: (string | null)[] = [];
 		for (const teilleistung of leistung.teilleistungen) {
@@ -385,11 +401,11 @@
 
 	function getTeilleistungsartenGruppe(zeile: SchuelerZeile, gruppe: 'So' | 'Kl'): ENMv2Teilleistungsart[] {
 		const passende = zeile.teilleistungsarten.filter(art => {
-			const bezeichnung = (art.bezeichnung ?? '').toLocaleLowerCase();
-			return gruppe === 'So' ? /^(so|somi|sonst)/.test(bezeichnung) : /^(kl|klaus)/.test(bezeichnung);
+			const bezeichnung = (art.bezeichnung ?? '').toLocaleLowerCase().replace(/[^a-z0-9]/g, '');
+			return gruppe === 'So' ? /^(so(?:mi)?|sonst)/.test(bezeichnung) : /^(kl|klausur)/.test(bezeichnung);
 		});
 		if (passende.length > 0) {
-			return passende.slice(0, 2);
+			return passende;
 		}
 		const grenzwert = Math.min(2, zeile.teilleistungsarten.length);
 		return gruppe === 'So' ? zeile.teilleistungsarten.slice(0, grenzwert) : zeile.teilleistungsarten.slice(grenzwert, grenzwert + 2);

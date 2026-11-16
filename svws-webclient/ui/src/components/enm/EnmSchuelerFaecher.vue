@@ -6,7 +6,7 @@
 		<p>Die Notenübersicht wird geladen …</p>
 	</div>
 	<div v-else-if="berechtigt" class="page page-flex-col gap-4 p-4">
-		<div v-if="punkteToggleSichtbar" class="flex items-center justify-end gap-2 text-black">
+		<div v-if="punkteToggleSichtbar" class="flex items-center justify-end gap-2 text-ui-100">
 			<span>Noten</span>
 			<svws-ui-checkbox v-model="punkteAnsicht" type="toggle">Punkte</svws-ui-checkbox>
 		</div>
