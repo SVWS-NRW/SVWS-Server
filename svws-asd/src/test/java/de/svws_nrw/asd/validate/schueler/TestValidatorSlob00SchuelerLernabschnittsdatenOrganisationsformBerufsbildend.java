@@ -58,7 +58,7 @@ class TestValidatorSlob00SchuelerLernabschnittsdatenOrganisationsformBerufsbilde
 	 * @param idOrganisationsform    Organisationsform ID
 	 * @param result                 gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit")
+	@DisplayName("Tests für ValidatorSlob00SchuelerLernabschnittsdatenOrganisationsformBerufsbildend")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
 	void testValidatorSlob00SchuelerLernabschnittsdatenOrganisationsformBerufsbildend(final Long idOrganisationsform, final boolean result) {

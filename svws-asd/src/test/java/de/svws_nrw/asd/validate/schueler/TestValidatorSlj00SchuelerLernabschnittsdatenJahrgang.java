@@ -55,7 +55,7 @@ class TestValidatorSlj00SchuelerLernabschnittsdatenJahrgang {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorSlj00SchuelerLernabschnittsdatenJahrgang validator =
-				new ValidatorSlj00SchuelerLernabschnittsdatenJahrgang(() -> jahrgangID, () -> testdaten_001.jahrgaenge, kontext);
+				new ValidatorSlj00SchuelerLernabschnittsdatenJahrgang(() -> jahrgangID, () -> null, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

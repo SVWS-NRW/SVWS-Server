@@ -9,7 +9,7 @@ import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Dieser Validator führt eine Statistikprüfung auf Stammdaten
+ * Dieser Validator führt eine Statistikprüfung auf SchülerLernabschnittsdaten
  * eines Schuelers einer Schule aus.
  */
 public final class ValidatorSlobSchuelerLernabschnittsdatenOrganisationsformBerufsbildend extends Validator {

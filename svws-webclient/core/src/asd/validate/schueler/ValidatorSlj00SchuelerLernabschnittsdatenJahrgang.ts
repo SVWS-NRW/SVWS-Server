@@ -2,7 +2,6 @@ import { ValidatorSlj01SchuelerLernabschnittsdatenJahrgang } from '../../../asd/
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { JahrgaengeStatistikGesamt } from '../../../asd/data/statistik/JahrgaengeStatistikGesamt';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -17,14 +16,14 @@ export class ValidatorSlj00SchuelerLernabschnittsdatenJahrgang extends Validator
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param jahrgangID   die ID des Jahrgangs des Schülers
-	 * @param jahrgaenge   die Liste aller Jahrgänge der Schule
-	 * @param kontext      der Kontext des Validators
+	 * @param jahrgangID         die ID des Jahrgangs des Schülers
+	 * @param idListJahrgaenge   die Liste aller Jahrgänge der Schule
+	 * @param kontext            der Kontext des Validators
 	 */
-	public constructor(jahrgangID: Supplier<number | null>, jahrgaenge: Supplier<List<JahrgaengeStatistikGesamt>>, kontext: ValidatorKontext) {
+	public constructor(jahrgangID: Supplier<number | null>, idListJahrgaenge: Supplier<List<number>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._jahrgangID = jahrgangID;
-		this._validatoren.add(new ValidatorSlj01SchuelerLernabschnittsdatenJahrgang(jahrgangID, jahrgaenge, kontext));
+		this._validatoren.add(new ValidatorSlj01SchuelerLernabschnittsdatenJahrgang(jahrgangID, idListJahrgaenge, kontext));
 	}
 
 	protected pruefe(): boolean {

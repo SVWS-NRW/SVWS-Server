@@ -29,6 +29,7 @@ class TestValidatorSsmk10SchuelerStammdatenMigrationshintergrundKombination {
 
 	private static final String TESTDATEN = """
 			'DEU', 'DEU', 'DEU', 'de', false , true
+			'DEU', 'DEU', 'DEU', 'de', null  , true
 			'DEU', 'DEU', 'DEU', 'de', true  , false
 			'BEL', 'DEU', 'DEU', 'de', false , true
 			'DEU', 'MAR', 'DEU', 'de', false , true
@@ -64,7 +65,13 @@ class TestValidatorSsmk10SchuelerStammdatenMigrationshintergrundKombination {
 	@DisplayName("Tests für ValidatorSsmk10SchuelerStammdatenMigrationshintergrundKombination")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
-	void testValidatorSsmk10SchuelerStammdatenMigrationshintergrundKombination(final String geburtsland, final String geburtslandMutter, final String geburtslandVater, final String verkehrsspracheFamilie, final boolean hatMigrationshintergrund, final boolean result) {
+	void testValidatorSsmk10SchuelerStammdatenMigrationshintergrundKombination(
+			final String geburtsland,
+			final String geburtslandMutter,
+			final String geburtslandVater,
+			final String verkehrsspracheFamilie,
+			final Boolean hatMigrationshintergrund,
+			final boolean result) {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),

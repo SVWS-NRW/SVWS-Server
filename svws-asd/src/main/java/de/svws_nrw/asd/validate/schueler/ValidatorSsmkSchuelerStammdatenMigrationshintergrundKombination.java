@@ -31,30 +31,27 @@ public final class ValidatorSsmkSchuelerStammdatenMigrationshintergrundKombinati
 			final @NotNull Supplier<@AllowNull Long> idGeburtslandMutter,
 			final @NotNull Supplier<@AllowNull Long> idGeburtslandVater,
 			final @NotNull Supplier<@AllowNull Long> idVerkehrsspracheFamilie,
-			final @NotNull Supplier<@NotNull Boolean> hatMigrationshintergrund,
+			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
 
-//		String geburtsland = Nationalitaeten.data().getEintragByID(idGeburtsland.get()) != null ? Nationalitaeten.data().getEintragByID(idGeburtsland.get()).kuerzel : "DEU";
 		@NotNull String geburtsland;
-		@AllowNull NationalitaetenKatalogEintrag nationalitaetEintrag = Nationalitaeten.data().getEintragByID(idGeburtslandVater.get());
+		@AllowNull NationalitaetenKatalogEintrag nationalitaetEintrag = Nationalitaeten.data().getEintragByID(idGeburtsland.get());
 		if (nationalitaetEintrag != null) {
 			geburtsland = nationalitaetEintrag.kuerzel;
 		} else {
 			geburtsland = "DEU";
 		}
 
-//		String geburtslandMutter = Nationalitaeten.data().getEintragByID(idGeburtslandMutter.get()) != null ? Nationalitaeten.data().getEintragByID(idGeburtslandMutter.get()).kuerzel : "DEU";
 		@NotNull String geburtslandMutter;
-		nationalitaetEintrag = Nationalitaeten.data().getEintragByID(idGeburtslandVater.get());
+		nationalitaetEintrag = Nationalitaeten.data().getEintragByID(idGeburtslandMutter.get());
 		if (nationalitaetEintrag != null) {
 			geburtslandMutter = nationalitaetEintrag.kuerzel;
 		} else {
 			geburtslandMutter = "DEU";
 		}
 
-//		String geburtslandVater = Nationalitaeten.data().getEintragByID(idGeburtslandVater.get()) != null ? Nationalitaeten.data().getEintragByID(idGeburtslandVater.get()).kuerzel : "DEU";
 		@NotNull String geburtslandVater;
 		nationalitaetEintrag = Nationalitaeten.data().getEintragByID(idGeburtslandVater.get());
 		if (nationalitaetEintrag != null) {
@@ -63,7 +60,6 @@ public final class ValidatorSsmkSchuelerStammdatenMigrationshintergrundKombinati
 			geburtslandVater = "DEU";
 		}
 
-//		String verkehrsspracheFamilie = Verkehrssprache.data().getEintragByID(idVerkehrsspracheFamilie.get()) != null ? Verkehrssprache.data().getEintragByID(idVerkehrsspracheFamilie.get()).kuerzel : "de";
 		@NotNull String verkehrsspracheFamilie;
 		@AllowNull VerkehrsspracheKatalogEintrag verkehrsspracheEintrag = Verkehrssprache.data().getEintragByID(idVerkehrsspracheFamilie.get());
 		if (verkehrsspracheEintrag != null) {

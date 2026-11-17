@@ -1,5 +1,6 @@
 package de.svws_nrw.asd.validate.schueler;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.validate.Validator;
@@ -24,6 +25,8 @@ public final class ValidatorSlSchuelerLernabschnittsdaten extends Validator {
 	 * @param idSchuljahresabschnitt          die ID des Schuljahresabschnitts
 	 * @param idKlassenart                    die Klassenart ID
 	 * @param idEpJahre                       die EPJahre ID
+	 * @param idJahrgang                      die Jahrgangs ID
+	 * @param idListJahrgaenge                die Jahrgaenge der Schule
 	 * @param kontext                         der Kontext des Validators
 	 */
 	public ValidatorSlSchuelerLernabschnittsdaten(
@@ -36,12 +39,15 @@ public final class ValidatorSlSchuelerLernabschnittsdaten extends Validator {
 			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Long> idKlassenart,
 			final @NotNull Supplier<@AllowNull Long> idEpJahre,
+			final @NotNull Supplier<@AllowNull Long> idJahrgang,
+			final @NotNull Supplier<List<Long>> idListJahrgaenge,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
 		_validatoren.add(new ValidatorSlbSchuelerLernabschnittsdatenFachklassen(idSchuljahresabschnitt, idFachklasse, kontext));
 		_validatoren.add(new ValidatorSleSchuelerLernabschnittsdatenEpJahre(idSchuljahresabschnitt, idEpJahre, kontext));
 		_validatoren.add(new ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt(hatSchwerbehinderungsNachweis, idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		_validatoren.add(new ValidatorSljSchuelerLernabschnittsdatenJahrgang(idJahrgang, idListJahrgaenge, kontext));
 		_validatoren.add(new ValidatorSlkSchuelerLernabschnittsdatenKlassenart(idSchuljahresabschnitt, idKlassenart, kontext));
 		_validatoren.add(new ValidatorSloaSchuelerLernabschnittsdatenOrganisationsformAllgemeinbildend(idSchuljahresabschnitt, idOrganisationsform, kontext));
 		_validatoren.add(new ValidatorSlobSchuelerLernabschnittsdatenOrganisationsformBerufsbildend(idSchuljahresabschnitt, idOrganisationsform, kontext));

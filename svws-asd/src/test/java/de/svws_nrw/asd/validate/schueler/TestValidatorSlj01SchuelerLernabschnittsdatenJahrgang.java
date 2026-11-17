@@ -2,6 +2,7 @@ package de.svws_nrw.asd.validate.schueler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -9,9 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.statistik.JahrgaengeStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
-import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
@@ -28,7 +27,7 @@ class TestValidatorSlj01SchuelerLernabschnittsdatenJahrgang {
 			null       , true
 			-1         , false
 			999999     , false
-			1000000    , true
+			1          , true
 		""";
 
 	/** Stammdaten der Schule */
@@ -53,6 +52,10 @@ class TestValidatorSlj01SchuelerLernabschnittsdatenJahrgang {
 	@ParameterizedTest
 	@CsvSource(useHeadersInDisplayName = true, textBlock = TESTDATEN, nullValues = { "null" })
 	void testValidatorSlj01SchuelerLernabschnittsdatenJahrgang(final Long jahrgangID, final boolean result) {
+		final List<Long> idListe = new ArrayList<Long>();
+		idListe.add(1L);
+		idListe.add(2L);
+
 		final ValidatorKontext kontext = new ValidatorKontext(
 				testdaten_001.schule.schulNr,
 				Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
@@ -60,18 +63,8 @@ class TestValidatorSlj01SchuelerLernabschnittsdatenJahrgang {
 				testdaten_001.schule.idSchuljahresabschnitt,
 				true);
 
-		// Wir greifen auf die regulären Jahrgangs-Werte aus den Core-Types über den Manager zu
-		final List<JahrgaengeStatistikGesamt> jahrgaengeList = Jahrgaenge.data().getWerte().stream()
-				.map(j -> {
-					final JahrgaengeStatistikGesamt js = new JahrgaengeStatistikGesamt();
-					// Nutzen des Managers, um den ersten Historieneintrag sicher zu ermitteln
-					js.id = Jahrgaenge.data().getHistorieByWert(j).get(0).id;
-					js.kuerzel = Jahrgaenge.data().getHistorieByWert(j).get(0).kuerzel;
-					return js;
-				}).toList();
-
 		final ValidatorSlj01SchuelerLernabschnittsdatenJahrgang validator =
-				new ValidatorSlj01SchuelerLernabschnittsdatenJahrgang(() -> jahrgangID, () -> jahrgaengeList, kontext);
+				new ValidatorSlj01SchuelerLernabschnittsdatenJahrgang(() -> jahrgangID, () -> idListe, kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

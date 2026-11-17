@@ -3,7 +3,6 @@ package de.svws_nrw.asd.validate.schueler;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.statistik.JahrgaengeStatistikGesamt;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -19,37 +18,35 @@ public final class ValidatorSlj01SchuelerLernabschnittsdatenJahrgang extends Val
 	private final @NotNull Supplier<@AllowNull Long> _jahrgangID;
 
 	/** Die Liste aller Jahrgänge der Schule */
-	private final @NotNull Supplier<List<JahrgaengeStatistikGesamt>> _jahrgaenge;
+	private final @NotNull Supplier<List<Long>> _idListJahrgaenge;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param jahrgangID   die ID des Jahrgangs des Schülers
-	 * @param jahrgaenge   die Liste aller Jahrgänge der Schule
-	 * @param kontext      der Kontext des Validators
+	 * @param jahrgangID         die ID des Jahrgangs des Schülers
+	 * @param idListJahrgaenge   die Liste aller Jahrgänge der Schule
+	 * @param kontext            der Kontext des Validators
 	 */
 	public ValidatorSlj01SchuelerLernabschnittsdatenJahrgang(
 			final @NotNull Supplier<@AllowNull Long> jahrgangID,
-			final @NotNull Supplier<List<JahrgaengeStatistikGesamt>> jahrgaenge,
+			final @NotNull Supplier<List<Long>> idListJahrgaenge,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_jahrgangID = jahrgangID;
-		_jahrgaenge = jahrgaenge;
+		_idListJahrgaenge = idListJahrgaenge;
 	}
 
 	@Override
 	protected boolean pruefe() {
 		final @AllowNull Long jahrgangID = _jahrgangID.get();
-		final List<JahrgaengeStatistikGesamt> listJahrgaenge = _jahrgaenge.get();
+		final List<Long> listJahrgaenge = _idListJahrgaenge.get();
 
 		if ((jahrgangID == null) || (listJahrgaenge == null)) {
 			return true;
 		}
 
-		for (final JahrgaengeStatistikGesamt jahrgang : listJahrgaenge) {
-			if (jahrgang.id == jahrgangID) {
-				return true;
-			}
+		if (listJahrgaenge.contains(jahrgangID)) {
+			return true;
 		}
 
 		addFehler(0, "Jahrgang des Schülers: Das Feld 'Jahrgang' muss zulässig sein.");

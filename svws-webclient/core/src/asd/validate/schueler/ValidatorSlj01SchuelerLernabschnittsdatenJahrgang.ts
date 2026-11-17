@@ -1,7 +1,6 @@
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { JahrgaengeStatistikGesamt } from '../../../asd/data/statistik/JahrgaengeStatistikGesamt';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -15,32 +14,30 @@ export class ValidatorSlj01SchuelerLernabschnittsdatenJahrgang extends Validator
 	/**
 	 * Die Liste aller Jahrgänge der Schule
 	 */
-	private readonly _jahrgaenge: Supplier<List<JahrgaengeStatistikGesamt>>;
+	private readonly _idListJahrgaenge: Supplier<List<number>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param jahrgangID   die ID des Jahrgangs des Schülers
-	 * @param jahrgaenge   die Liste aller Jahrgänge der Schule
-	 * @param kontext      der Kontext des Validators
+	 * @param jahrgangID         die ID des Jahrgangs des Schülers
+	 * @param idListJahrgaenge   die Liste aller Jahrgänge der Schule
+	 * @param kontext            der Kontext des Validators
 	 */
-	public constructor(jahrgangID: Supplier<number | null>, jahrgaenge: Supplier<List<JahrgaengeStatistikGesamt>>, kontext: ValidatorKontext) {
+	public constructor(jahrgangID: Supplier<number | null>, idListJahrgaenge: Supplier<List<number>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._jahrgangID = jahrgangID;
-		this._jahrgaenge = jahrgaenge;
+		this._idListJahrgaenge = idListJahrgaenge;
 	}
 
 	protected pruefe(): boolean {
 		const jahrgangID: number | null = this._jahrgangID.get();
-		const listJahrgaenge: List<JahrgaengeStatistikGesamt> | null = this._jahrgaenge.get();
+		const listJahrgaenge: List<number> | null = this._idListJahrgaenge.get();
 		if ((jahrgangID === null) || (listJahrgaenge === null)) {
 			return true;
 		}
-		for (const jahrgang of listJahrgaenge) {
-			if (jahrgang.id === jahrgangID) {
-				return true;
-			}
+		if (listJahrgaenge.contains(jahrgangID)) {
+			return true;
 		}
 		this.addFehler(0, "Jahrgang des Schülers: Das Feld 'Jahrgang' muss zulässig sein.");
 		return false;

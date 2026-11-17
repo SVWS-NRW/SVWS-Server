@@ -33,8 +33,10 @@ public final class ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflich
 		final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart =
 				() -> LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart.get());
 
-		_validatoren.add(new ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart,
-				kontext));
+				_validatoren.add(new ValidatorLpppkLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensollKombination(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,
+						kontext));
+				_validatoren.add(new ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart,
+						kontext));
 	}
 
 

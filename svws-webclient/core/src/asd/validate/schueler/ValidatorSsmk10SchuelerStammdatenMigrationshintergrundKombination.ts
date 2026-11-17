@@ -6,12 +6,24 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSsmk10SchuelerStammdatenMigrationshintergrundKombination extends Validator {
 
+	/**
+	 * Geburtsland
+	 */
 	private readonly _geburtsland: Supplier<string>;
 
+	/**
+	 * geburtslandMutter
+	 */
 	private readonly _geburtslandMutter: Supplier<string>;
 
+	/**
+	 * geburtslandVater
+	 */
 	private readonly _geburtslandVater: Supplier<string>;
 
+	/**
+	 * verkehrssprache
+	 */
 	private readonly _verkehrsspracheFamilie: Supplier<string>;
 
 	/**

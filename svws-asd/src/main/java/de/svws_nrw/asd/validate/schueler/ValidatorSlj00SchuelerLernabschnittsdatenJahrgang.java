@@ -3,7 +3,6 @@ package de.svws_nrw.asd.validate.schueler;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.statistik.JahrgaengeStatistikGesamt;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -21,17 +20,17 @@ public final class ValidatorSlj00SchuelerLernabschnittsdatenJahrgang extends Val
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param jahrgangID   die ID des Jahrgangs des Schülers
-	 * @param jahrgaenge   die Liste aller Jahrgänge der Schule
-	 * @param kontext      der Kontext des Validators
+	 * @param jahrgangID         die ID des Jahrgangs des Schülers
+	 * @param idListJahrgaenge   die Liste aller Jahrgänge der Schule
+	 * @param kontext            der Kontext des Validators
 	 */
 	public ValidatorSlj00SchuelerLernabschnittsdatenJahrgang(
 			final @NotNull Supplier<@AllowNull Long> jahrgangID,
-			final @NotNull Supplier<List<JahrgaengeStatistikGesamt>> jahrgaenge,
+			final @NotNull Supplier<List<Long>> idListJahrgaenge,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_jahrgangID = jahrgangID;
-		_validatoren.add(new ValidatorSlj01SchuelerLernabschnittsdatenJahrgang(jahrgangID, jahrgaenge, kontext));
+		_validatoren.add(new ValidatorSlj01SchuelerLernabschnittsdatenJahrgang(jahrgangID, idListJahrgaenge, kontext));
 	}
 
 	@Override

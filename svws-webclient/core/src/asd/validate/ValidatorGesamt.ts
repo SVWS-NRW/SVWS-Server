@@ -21,6 +21,7 @@ import { ValidatorUfUnterrichtsverteilungsdatenFach } from '../../asd/validate/k
 import { ValidatorLsLehrerStammdaten } from '../../asd/validate/lehrer/ValidatorLsLehrerStammdaten';
 import { ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung } from '../../asd/validate/lehrer/ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung';
 import { ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft } from '../../asd/validate/kurse/ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft';
+import { ValidatorUkUnterrichtsverteilungsdatenKursart } from '../../asd/validate/kurse/ValidatorUkUnterrichtsverteilungsdatenKursart';
 import { ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet } from '../../asd/validate/klassen/ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet';
 import { ValidatorIopIntKatalogOrtePlz } from '../../asd/validate/intKataloge/ValidatorIopIntKatalogOrtePlz';
 import type { Supplier } from '../../java/util/function/Supplier';
@@ -30,6 +31,7 @@ import { ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung } fr
 import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
 import { ValidatorLplfLehrerPersonaldatenLehramtFachrichtung } from '../../asd/validate/lehrer/ValidatorLplfLehrerPersonaldatenLehramtFachrichtung';
 import { ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden } from '../../asd/validate/kurse/ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden';
+import { ValidatorSbSchuelerSchulbesuchsdaten } from '../../asd/validate/schueler/ValidatorSbSchuelerSchulbesuchsdaten';
 import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
 import { ValidatorKaKlassenAbkuerzung } from '../../asd/validate/klassen/ValidatorKaKlassenAbkuerzung';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
@@ -121,15 +123,20 @@ export class ValidatorGesamt extends Validator {
 	 */
 	private addSubvalidatorenSchueler(gesamt: StatistikGesamt): void {
 		this.mapValidatorenSchueler.clear();
+		const idListJahrgaenge: List<number> = new ArrayList<number>();
+		for (const jahrgang of gesamt.jahrgaenge) {
+			idListJahrgaenge.add(jahrgang.id);
+		}
 		const allgemein: List<Validator> = new ArrayList<Validator>();
 		allgemein.add(new ValidatorGsGesamtSchuelerdaten({ get: () => gesamt.schueler }, this.kontext()));
 		this._validatoren.addAll(allgemein);
 		this.mapValidatorenSchueler.put(-1, allgemein);
 		for (const schueler of gesamt.schueler) {
 			const list: List<Validator> = new ArrayList<Validator>();
+			list.add(new ValidatorSbSchuelerSchulbesuchsdaten({ get: () => schueler.idKuerzelGrundschuleUebergangsempfehlung }, this.kontext()));
 			list.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.idSchuljahresabschnitt }, { get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.idGeburtslandMutter }, { get: () => schueler.idGeburtslandVater }, { get: () => schueler.hatMigrationshintergrund }, { get: () => schueler.idStaatsangehoerigkeit }, { get: () => schueler.idStaatsangehoerigkeit2 }, { get: () => schueler.idVerkehrspracheFamilie }, { get: () => schueler.zuzugsjahr }, this.kontext()));
 			for (const lernabschnitt of schueler.lernabschnitte) {
-				list.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idOrganisationsform }, { get: () => lernabschnitt.idSchulgliederung }, { get: () => lernabschnitt.idFachklasse }, { get: () => lernabschnitt.hatSchwerbehinderungsNachweis }, { get: () => this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt1) }, { get: () => this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt2) }, { get: () => lernabschnitt.idSchuljahresabschnitt }, { get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.idEpJahre }, this.kontext()));
+				list.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idOrganisationsform }, { get: () => lernabschnitt.idSchulgliederung }, { get: () => lernabschnitt.idFachklasse }, { get: () => lernabschnitt.hatSchwerbehinderungsNachweis }, { get: () => this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt1) }, { get: () => this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt2) }, { get: () => lernabschnitt.idSchuljahresabschnitt }, { get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.idEpJahre }, { get: () => lernabschnitt.idJahrgang }, { get: () => idListJahrgaenge }, this.kontext()));
 			}
 			this._validatoren.addAll(list);
 			this.mapValidatorenSchueler.put(schueler.id, list);
@@ -177,6 +184,7 @@ export class ValidatorGesamt extends Validator {
 		for (const kurs of gesamt.kurse) {
 			const list: List<Validator> = new ArrayList<Validator>();
 			list.add(new ValidatorUfUnterrichtsverteilungsdatenFach({ get: () => kurs.idFach }, this.kontext()));
+			list.add(new ValidatorUkUnterrichtsverteilungsdatenKursart({ get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => kurs.kursartAllg }, this.kontext()));
 			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft({ get: () => kurs.idLehrer }, { get: () => gesamt.lehrer }, this.kontext()));
 			list.add(new ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden({ get: () => kurs.wochenstundenLehrer }, this.kontext()));
 			list.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden({ get: () => kurs.wochenstunden as number }, this.kontext()));

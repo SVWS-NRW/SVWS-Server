@@ -12,13 +12,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorSsmk10SchuelerStammdatenMigrationshintergrundKombination extends Validator {
 
-//	/** Geburtsland */
+	/** Geburtsland */
 	private final @NotNull Supplier<@NotNull String> _geburtsland;
-//	/** geburtslandMutter */
+	/** geburtslandMutter */
 	private final @NotNull Supplier<@NotNull String> _geburtslandMutter;
-//	/** geburtslandVater */
+	/** geburtslandVater */
 	private final @NotNull Supplier<@NotNull String> _geburtslandVater;
-//	/** verkehrssprache */
+	/** verkehrssprache */
 	private final @NotNull Supplier<@NotNull String> _verkehrsspracheFamilie;
 	/** hat Migrationshintergrund */
 	private final @NotNull Supplier<@AllowNull Boolean> _hatMigrationshintergrund;

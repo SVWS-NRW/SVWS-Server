@@ -1,0 +1,19 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpppkLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensollKombination",
+    "historie" : [ {
+    "praefix" : "LPPPK",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Pflichtstundensoll-Kombination",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Feld 'Pflichtstundensoll'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG", "BK", "SB"],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "gueltigVon" : null,
+    "gueltigBis" : null
+    } ]
+    }

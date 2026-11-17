@@ -32,6 +32,7 @@ import de.svws_nrw.asd.validate.klassen.ValidatorKaKlassenAbkuerzung;
 import de.svws_nrw.asd.validate.klassen.ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet;
 import de.svws_nrw.asd.validate.klassen.ValidatorKlKlassenKlassenleitung;
 import de.svws_nrw.asd.validate.kurse.ValidatorUfUnterrichtsverteilungsdatenFach;
+import de.svws_nrw.asd.validate.kurse.ValidatorUkUnterrichtsverteilungsdatenKursart;
 import de.svws_nrw.asd.validate.kurse.ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft;
 import de.svws_nrw.asd.validate.kurse.ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden;
 import de.svws_nrw.asd.validate.kurse.ValidatorUwUnterrichtsverteilungsdatenWochenstunden;
@@ -42,6 +43,7 @@ import de.svws_nrw.asd.validate.lehrer.ValidatorLplaLehrerPersonaldatenLehramtLe
 import de.svws_nrw.asd.validate.lehrer.ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLplfLehrerPersonaldatenLehramtFachrichtung;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten;
+import de.svws_nrw.asd.validate.schueler.ValidatorSbSchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.validate.schueler.ValidatorSlSchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.validate.schueler.ValidatorSsSchuelerStammdaten;
 import de.svws_nrw.asd.validate.schule.ValidatorSssSchuleStammdatenSchulform;
@@ -167,6 +169,12 @@ public final class ValidatorGesamt extends Validator {
 		// Leere zunächst die Map für die Schülervalidatoren
 		mapValidatorenSchueler.clear();
 
+		// Id-Liste der Jahrgänge
+		final @NotNull List<Long> idListJahrgaenge = new ArrayList<>();
+		for (final  JahrgaengeStatistikGesamt jahrgang : gesamt.jahrgaenge) {
+			idListJahrgaenge.add(jahrgang.id);
+		}
+
 		// Ergänze die allgemeinen Validatoren unter der ID -1
 		final @NotNull List<Validator> allgemein = new ArrayList<>();
 		allgemein.add(new ValidatorGsGesamtSchuelerdaten(() -> gesamt.schueler, this.kontext()));
@@ -177,7 +185,9 @@ public final class ValidatorGesamt extends Validator {
 		for (final SchuelerStatistikGesamt schueler : gesamt.schueler) {
 			// Erzeuge die Liste der Subvalidatoren für den Schüler
 			final @NotNull List<Validator> list = new ArrayList<>();
-
+			list.add(new ValidatorSbSchuelerSchulbesuchsdaten(
+					() -> schueler.idKuerzelGrundschuleUebergangsempfehlung,
+					this.kontext()));
 			list.add(new ValidatorSsSchuelerStammdaten(
 					() -> schueler.idSchuljahresabschnitt,
 					() -> schueler.geschlecht,
@@ -202,6 +212,8 @@ public final class ValidatorGesamt extends Validator {
 						() -> lernabschnitt.idSchuljahresabschnitt,
 						() -> lernabschnitt.idKlassenart,
 						() -> lernabschnitt.idEpJahre,
+						() -> lernabschnitt.idJahrgang,
+						() -> idListJahrgaenge,
 						this.kontext()));
 			}
 
@@ -284,9 +296,12 @@ public final class ValidatorGesamt extends Validator {
 		for (final KursStatistikGesamt kurs : gesamt.kurse) {
 			// Erzeuge die Liste der Subvalidatoren für die Kurse
 			final @NotNull List<Validator> list = new ArrayList<>();
-
 			list.add(new ValidatorUfUnterrichtsverteilungsdatenFach(
 					() -> kurs.idFach,
+					this.kontext()));
+			list.add(new ValidatorUkUnterrichtsverteilungsdatenKursart(
+					() -> gesamt.schule.idSchuljahresabschnitt,
+					() -> kurs.kursartAllg,
 					this.kontext()));
 			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft(
 					() -> kurs.idLehrer,

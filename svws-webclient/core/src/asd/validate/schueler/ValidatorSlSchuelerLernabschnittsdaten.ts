@@ -5,9 +5,11 @@ import { ValidatorSlobSchuelerLernabschnittsdatenOrganisationsformBerufsbildend 
 import { ValidatorSloaSchuelerLernabschnittsdatenOrganisationsformAllgemeinbildend } from '../../../asd/validate/schueler/ValidatorSloaSchuelerLernabschnittsdatenOrganisationsformAllgemeinbildend';
 import { ValidatorSlowSchuelerLernabschnittsdatenOrganisationsformWeiterbildung } from '../../../asd/validate/schueler/ValidatorSlowSchuelerLernabschnittsdatenOrganisationsformWeiterbildung';
 import type { Supplier } from '../../../java/util/function/Supplier';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorSlkSchuelerLernabschnittsdatenKlassenart } from '../../../asd/validate/schueler/ValidatorSlkSchuelerLernabschnittsdatenKlassenart';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { ValidatorSljSchuelerLernabschnittsdatenJahrgang } from '../../../asd/validate/schueler/ValidatorSljSchuelerLernabschnittsdatenJahrgang';
 import { Validator } from '../../../asd/validate/Validator';
 import { ValidatorSlbSchuelerLernabschnittsdatenFachklassen } from '../../../asd/validate/schueler/ValidatorSlbSchuelerLernabschnittsdatenFachklassen';
 
@@ -26,13 +28,16 @@ export class ValidatorSlSchuelerLernabschnittsdaten extends Validator {
 	 * @param idSchuljahresabschnitt          die ID des Schuljahresabschnitts
 	 * @param idKlassenart                    die Klassenart ID
 	 * @param idEpJahre                       die EPJahre ID
+	 * @param idJahrgang                      die Jahrgangs ID
+	 * @param idListJahrgaenge                die Jahrgaenge der Schule
 	 * @param kontext                         der Kontext des Validators
 	 */
-	public constructor(idOrganisationsform: Supplier<number | null>, idSchulgliederung: Supplier<number | null>, idFachklasse: Supplier<number | null>, hatSchwerbehinderungsNachweis: Supplier<boolean | null>, idFoerderschwerpunkt1: Supplier<number | null>, idFoerderschwerpunkt2: Supplier<number | null>, idSchuljahresabschnitt: Supplier<number | null>, idKlassenart: Supplier<number | null>, idEpJahre: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idOrganisationsform: Supplier<number | null>, idSchulgliederung: Supplier<number | null>, idFachklasse: Supplier<number | null>, hatSchwerbehinderungsNachweis: Supplier<boolean | null>, idFoerderschwerpunkt1: Supplier<number | null>, idFoerderschwerpunkt2: Supplier<number | null>, idSchuljahresabschnitt: Supplier<number | null>, idKlassenart: Supplier<number | null>, idEpJahre: Supplier<number | null>, idJahrgang: Supplier<number | null>, idListJahrgaenge: Supplier<List<number>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorSlbSchuelerLernabschnittsdatenFachklassen(idSchuljahresabschnitt, idFachklasse, kontext));
 		this._validatoren.add(new ValidatorSleSchuelerLernabschnittsdatenEpJahre(idSchuljahresabschnitt, idEpJahre, kontext));
 		this._validatoren.add(new ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt(hatSchwerbehinderungsNachweis, idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		this._validatoren.add(new ValidatorSljSchuelerLernabschnittsdatenJahrgang(idJahrgang, idListJahrgaenge, kontext));
 		this._validatoren.add(new ValidatorSlkSchuelerLernabschnittsdatenKlassenart(idSchuljahresabschnitt, idKlassenart, kontext));
 		this._validatoren.add(new ValidatorSloaSchuelerLernabschnittsdatenOrganisationsformAllgemeinbildend(idSchuljahresabschnitt, idOrganisationsform, kontext));
 		this._validatoren.add(new ValidatorSlobSchuelerLernabschnittsdatenOrganisationsformBerufsbildend(idSchuljahresabschnitt, idOrganisationsform, kontext));

@@ -21,17 +21,17 @@ export class ValidatorSsmkSchuelerStammdatenMigrationshintergrundKombination ext
 	 * @param hatMigrationshintergrund  Gibt an, ob ein Migrationshintergrund vorhanden ist
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idGeburtsland: Supplier<number | null>, idGeburtslandMutter: Supplier<number | null>, idGeburtslandVater: Supplier<number | null>, idVerkehrsspracheFamilie: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
+	public constructor(idGeburtsland: Supplier<number | null>, idGeburtslandMutter: Supplier<number | null>, idGeburtslandVater: Supplier<number | null>, idVerkehrsspracheFamilie: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		let geburtsland: string;
-		let nationalitaetEintrag: NationalitaetenKatalogEintrag | null = Nationalitaeten.data().getEintragByID(idGeburtslandVater.get());
+		let nationalitaetEintrag: NationalitaetenKatalogEintrag | null = Nationalitaeten.data().getEintragByID(idGeburtsland.get());
 		if (nationalitaetEintrag !== null) {
 			geburtsland = nationalitaetEintrag.kuerzel;
 		} else {
 			geburtsland = "DEU";
 		}
 		let geburtslandMutter: string;
-		nationalitaetEintrag = Nationalitaeten.data().getEintragByID(idGeburtslandVater.get());
+		nationalitaetEintrag = Nationalitaeten.data().getEintragByID(idGeburtslandMutter.get());
 		if (nationalitaetEintrag !== null) {
 			geburtslandMutter = nationalitaetEintrag.kuerzel;
 		} else {
