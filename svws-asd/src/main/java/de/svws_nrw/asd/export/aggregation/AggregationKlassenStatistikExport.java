@@ -784,7 +784,7 @@ public class AggregationKlassenStatistikExport {
 							if (idSchulform != null) {
 								final String schulform_Bezeichner =
 										Schulform.data().getWertByIDOrNull(idSchulform) == null ? null
-												: HerkunftSchulform.data().getWertByIDOrNull(idSchulform).name();
+												: Schulform.data().getWertByIDOrNull(idSchulform).name();
 								if (schulform_Bezeichner != null) {
 									if ("HI".equals(schulform_Bezeichner) || "WF".equals(schulform_Bezeichner)) {
 										herkunftsschulform = "FW";
@@ -851,13 +851,18 @@ public class AggregationKlassenStatistikExport {
 
 						/*
 						 * herkunftsart
-						 *
-						 * schluessel aus Herkunftsarten.json
-						 * anhand von vorigeArtLetzteVersetzung
 						 */
-						//TODO ID vorigeArtLetzteVersetzung ist momentan als String
-						herkunftsart = Herkunftsarten.data()
-								.getSchluesselByID(Long.valueOf(schueler.vorigeArtLetzteVersetzung == null ? "0" : schueler.vorigeArtLetzteVersetzung));
+						if (!istWB_BK_SB) {
+							herkunftsart = Herkunftsarten.data()
+									.getSchluesselByID(Long.valueOf(schueler.vorigeArtLetzteVersetzung == null ? "0" : schueler.vorigeArtLetzteVersetzung));
+						} else {
+							final String herkunftsart_1_Stelle = schueler.idVorigeAbschlussart == null ? "" : schueler.idVorigeAbschlussart;
+							final String herkunftsart_2_Stelle =
+									schueler.berufsabschlussVorhandenVorherigeSchule || (Hochschulabschluss.OHNE_HOCHSCHULABSCHLUSS != Hochschulabschluss
+											.data().getWertByIDOrNull(schueler.idHochschulabschluss)) ? "Y" : "";
+							herkunftsart = herkunftsart_1_Stelle + herkunftsart_2_Stelle;
+						}
+
 
 						/*
 						 * kuerzelGrundschuleUebergangsempfehlung
