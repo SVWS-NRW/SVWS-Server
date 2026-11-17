@@ -355,7 +355,8 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 			.setDefault("0")
 			.setConverter(Boolean01Converter.class)
 			.setJavaComment("Gibt an, ob die Schule internationale Kontakte pflegt oder nicht")
-			.setRevision(SchemaRevisionen.REV_81);
+			.setRevision(SchemaRevisionen.REV_81)
+			.setVeraltet(SchemaRevisionen.REV_85);
 
 	/** Die Definition der Tabellenspalte hatKonfessionelleKooperation */
 	public final SchemaTabelleSpalte col_hatKonfessionelleKooperation = add("hatKonfessionelleKooperation", SchemaDatentypen.INT, false)

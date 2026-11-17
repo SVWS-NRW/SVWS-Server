@@ -1,6 +1,7 @@
 import type { InjectionKey } from "vue";
 
 import type { StatistikGesamt } from "@core/asd/data/statistik/StatistikGesamt";
+import type { ZusatzerhebungenStatistikGesamt } from "@core/asd/data/statistik/ZusatzerhebungenStatistikGesamt";
 import type { ValidatorGesamt } from "@core/asd/validate/ValidatorGesamt";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -31,6 +32,16 @@ export interface StatistikState {
 	setKlasse: (id: number) => Promise<void>;
 
 	get mapSchueler(): Map<number, SchuelerListeEintrag>;
+
+	/**
+	 * Patcht die Daten der Zusatzerhebungen für den Schuljahresabschnitt der Statistik und übernimmt
+	 * die vom Server zurückgegebenen Daten in die Gesamtstatistik.
+	 *
+	 * @param data   die zu ändernden Daten
+	 *
+	 * @returns true, wenn der Patch erfolgreich war
+	 */
+	patchZusatzerhebungen: (data: Partial<ZusatzerhebungenStatistikGesamt>) => Promise<boolean>;
 }
 
 export const StatistikStateKey: InjectionKey<StatistikState> = Symbol('StatistikState');

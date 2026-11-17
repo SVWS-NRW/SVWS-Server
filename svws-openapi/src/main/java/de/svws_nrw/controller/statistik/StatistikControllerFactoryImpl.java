@@ -49,7 +49,7 @@ public final class StatistikControllerFactoryImpl implements StatistikController
 	@Override
 	public StatistikController getControllerStatistikGesamt() throws ApiOperationException {
 		final StatistikService service = this.serviceFactory.getStatistikService();
-		return new StatistikControllerImpl(service);
+		return new StatistikControllerImpl(service, this.serviceFactory.getZusatzerhebungenStatistikService());
 	}
 
 }

@@ -36,6 +36,7 @@ import { routeStatistikKurse } from "./RouteStatistikKurse";
 import { routeStatistikLehrer } from "./RouteStatistikLehrer";
 import { routeStatistikSchueler } from "./RouteStatistikSchueler";
 import { routeStatistikUebersicht } from "./RouteStatistikUebersicht";
+import { routeStatistikZusatzerhebungen } from "./RouteStatistikZusatzerhebungen";
 
 const StatistikApp = () => import("~/components/statistik/StatistikApp.vue");
 
@@ -53,6 +54,7 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 			routeStatistikLehrer,
 			routeStatistikKurse,
 			routeStatistikKlassen,
+			routeStatistikZusatzerhebungen,
 		];
 		super.defaultChild = routeStatistikUebersicht;
 		super.icon = "i-ri-bar-chart-2-line";

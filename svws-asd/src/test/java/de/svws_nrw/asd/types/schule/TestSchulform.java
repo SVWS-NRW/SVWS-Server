@@ -1,11 +1,13 @@
 package de.svws_nrw.asd.types.schule;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -111,6 +113,67 @@ class TestSchulform {
 	@DisplayName("Teste CoreType Schulform: Schulformen ohne Primarbereich.")
 	void testSchulform_HatKeinenPrimarbereich(final Schulform schulform) {
 		assertFalse(schulform.hatPrimarbereich(), schulform.name());
+	}
+
+	/**
+	 * Erzeugt einen Schuljahresabschnitt für die Tests zu den Klinikschulen.
+	 *
+	 * @return der Schuljahresabschnitt
+	 */
+	private static Schuljahresabschnitt getAbschnitt() {
+		final Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
+		abschnitt.id = 1;
+		abschnitt.schuljahr = 2026;
+		abschnitt.abschnitt = 1;
+		return abschnitt;
+	}
+
+	/**
+	 * Test des CoreTypes Schulform
+	 *
+	 * CoreType: Schulform
+	 * Testfall: Prüft, dass eine Schule der Schulform KS unabhängig von der Schulnummer als Klinikschule gilt
+	 * Ergebnis: true
+	 *
+	 * @param schulnummer   die Schulnummer
+	 */
+	@ParameterizedTest
+	@ValueSource(longs = { 100000L, 152614L, 999999L })
+	@DisplayName("Teste CoreType Schulform: Schulform KS ist immer eine Klinikschule.")
+	void testSchulform_IstKlinikschule_SchulformKS(final long schulnummer) {
+		assertTrue(Schulform.istKlinikschule(schulnummer, Schulform.KS, getAbschnitt()));
+	}
+
+	/**
+	 * Test des CoreTypes Schulform
+	 *
+	 * CoreType: Schulform
+	 * Testfall: Prüft, dass die festgelegten Schulnummern auch bei einer anderen Schulform als Klinikschule gelten
+	 * Ergebnis: true
+	 *
+	 * @param schulnummer   die Schulnummer
+	 */
+	@ParameterizedTest
+	@ValueSource(longs = { 152614L, 154593L, 157648L, 192569L, 199254L, 190561L })
+	@DisplayName("Teste CoreType Schulform: Festgelegte Schulnummern sind Klinikschulen.")
+	void testSchulform_IstKlinikschule_FesteSchulnummer(final long schulnummer) {
+		assertTrue(Schulform.istKlinikschule(schulnummer, Schulform.S, getAbschnitt()));
+	}
+
+	/**
+	 * Test des CoreTypes Schulform
+	 *
+	 * CoreType: Schulform
+	 * Testfall: Prüft, dass eine andere Schulform mit einer anderen Schulnummer keine Klinikschule ist
+	 * Ergebnis: false
+	 *
+	 * @param schulform   die Schulform
+	 */
+	@ParameterizedTest
+	@EnumSource(value = Schulform.class, mode = EnumSource.Mode.EXCLUDE, names = { "KS" })
+	@DisplayName("Teste CoreType Schulform: Andere Schulformen mit anderen Schulnummern sind keine Klinikschulen.")
+	void testSchulform_IstKeineKlinikschule(final Schulform schulform) {
+		assertFalse(Schulform.istKlinikschule(152615L, schulform, getAbschnitt()), schulform.name());
 	}
 
 }

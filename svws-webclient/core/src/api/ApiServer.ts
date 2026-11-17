@@ -275,6 +275,7 @@ import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
 import { WiedervorlageEintrag } from '../core/data/schule/WiedervorlageEintrag';
 import { WiedervorlageErledigungRequest } from '../core/data/schule/WiedervorlageErledigungRequest';
 import { ZulaessigeKursartKatalogEintrag } from '../asd/data/kurse/ZulaessigeKursartKatalogEintrag';
+import { ZusatzerhebungenStatistikGesamt } from '../asd/data/statistik/ZusatzerhebungenStatistikGesamt';
 
 export class ApiServer extends BaseApi {
 
@@ -20634,6 +20635,37 @@ export class ApiServer extends BaseApi {
 		const result: string = await super.getJSON(path);
 		const text = result;
 		return StatistikGesamt.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchStatistikZusatzerhebungen für den Zugriff auf die URL https://{hostname}/db/{schema}/statistik/zusatzerhebungen/{idSchuljahresabschnitt : \d+}
+	 *
+	 * Patched die Daten der Zusatzerhebungen für den angegebenen Schuljahresabschnitt und legt diese ggf. neu an, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ZusatzerhebungenStatistikGesamt
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Schuljahresabschnitt mit der angegebenen ID gefunden
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<ZusatzerhebungenStatistikGesamt>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert.
+	 */
+	public async patchStatistikZusatzerhebungen(data: Partial<ZusatzerhebungenStatistikGesamt>, schema: string, idSchuljahresabschnitt: number): Promise<ZusatzerhebungenStatistikGesamt> {
+		const path = "/db/{schema}/statistik/zusatzerhebungen/{idSchuljahresabschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
+		const body: string = ZusatzerhebungenStatistikGesamt.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return ZusatzerhebungenStatistikGesamt.transpilerFromJSON(text);
 	}
 
 

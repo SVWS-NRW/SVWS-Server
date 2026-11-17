@@ -63,4 +63,24 @@ class TestAggregationStatistikExport {
 		aggregationStatistikExport.getFehlermeldungen().stream().forEach(System.out::println);
 	}
 
+	/**
+	 * Test von Aggregation StatistikExport für die Angabe zu den internationalen Kontakten
+	 *
+	 * Eingabedaten: StatistikGesamt mit gesetzten internationalen Kontakten in den Zusatzerhebungen
+	 * Testfall: Die Angabe wird aus den Zusatzerhebungen übernommen
+	 * Ergebnis: Im Export ist die Angabe gesetzt
+	 *
+	 * @throws Exception falls die Testdaten nicht gelesen werden können
+	 */
+	@Test
+	@DisplayName("Teste, dass die internationalen Kontakte aus den Zusatzerhebungen in den Export übernommen werden.")
+	void testInternationaleKontakteAusZusatzerhebungen() throws Exception {
+		final StatistikGesamt daten = JsonReader.mapper.readValue(
+				JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_GY.json"), StatistikGesamt.class);
+		daten.zusatzerhebungen.hatInternationaleKontakte = true;
+		final AggregationStatistikExport aggregationStatistikExport = new AggregationStatistikExport(daten);
+		assertEquals(true, aggregationStatistikExport.run());
+		assertEquals(true, aggregationStatistikExport.getStatistikExport().schuleStatistikExport.hatInternationaleKontakte);
+	}
+
 }

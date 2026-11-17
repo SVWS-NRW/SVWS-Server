@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.asd.data.statistik.SchuleStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.data.statistik.ZusatzerhebungenStatistikGesamt;
 import de.svws_nrw.data.TransactionSupport;
 
 /**
@@ -63,6 +64,9 @@ class StatistikServiceTest {
 	@Mock
 	private SchulKatalogStatistikService serviceSchulKatalog;
 
+	@Mock
+	private ZusatzerhebungenStatistikService serviceZusatzerhebungen;
+
 	@InjectMocks
 	private StatistikService statistikService;
 
@@ -92,8 +96,12 @@ class StatistikServiceTest {
 		final var testSchuldaten = new SchuleStatistikGesamt();
 		testSchuldaten.schulNr = 123456;
 		testSchuldaten.bezeichnung1 = "Eine Test-Schule";
+		testSchuldaten.idSchuljahresabschnitt = 11L;
+		final var testZusatzerhebungen = new ZusatzerhebungenStatistikGesamt();
+		testZusatzerhebungen.idSchuljahresabschnitt = 11L;
 
 		when(serviceSchule.get()).thenReturn(testSchuldaten);
+		when(serviceZusatzerhebungen.get(11L)).thenReturn(testZusatzerhebungen);
 
 		// TODO Das Ergebnis sollte später auch inhaltlich geprüft werden und nicht nur über leere Listen...
 		when(serviceLehrer.getList()).thenReturn(new ArrayList<>());
@@ -110,6 +118,7 @@ class StatistikServiceTest {
 		final StatistikGesamt result = statistikService.get();
 		assertNotNull(result, "Das Ergebnis-Objekt darf nicht null sein.");
 		assertEquals(testSchuldaten, result.schule, "Die Schuldaten wurden nicht korrekt gemappt.");
+		assertEquals(testZusatzerhebungen, result.zusatzerhebungen, "Die Zusatzerhebungen für den aktuellen Schuljahresabschnitt wurden nicht übernommen.");
 
 		// Verifizieren, dass die Transaktionsklammer genutzt wurde
 		transactionSupportMock.verify(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()), times(1));

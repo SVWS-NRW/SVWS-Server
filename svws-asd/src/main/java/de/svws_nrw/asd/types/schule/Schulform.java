@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import jakarta.validation.constraints.NotNull;
@@ -71,6 +73,10 @@ public enum Schulform implements @NotNull CoreType<SchulformKatalogEintrag, Schu
 
 	/** Freie Waldorfschule (Förderschule) */
 	WF;
+
+
+	/** Die Schulnummern der Schulen, die unabhängig von ihrer Schulform als Klinikschule gelten */
+	private static final @NotNull Set<Long> _setSchulnummernKlinikschulen = Set.of(152614L, 154593L, 157648L, 192569L, 199254L, 190561L);
 
 
 	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
@@ -199,5 +205,22 @@ public enum Schulform implements @NotNull CoreType<SchulformKatalogEintrag, Schu
 			case FW, HI, WF, G, PS, S, KS, V -> true;
 			default -> false;
 		};
+	}
+
+	/**
+	 * Gibt zurück, ob es sich bei der angegebenen Schule um eine Klinikschule handelt. Dies ist
+	 * bei der Schulform KS der Fall und zusätzlich bei einigen Schulen anderer Schulformen, die
+	 * über ihre Schulnummer festgelegt sind. Der Schuljahresabschnitt ist für eine spätere
+	 * zeitliche Einschränkung dieser Schulnummern vorgesehen und wird derzeit nicht ausgewertet.
+	 *
+	 * @param schulnummer            die Schulnummer der Schule
+	 * @param schulform              die Schulform der Schule
+	 * @param schuljahresabschnitt   der Schuljahresabschnitt, für den die Prüfung erfolgt
+	 *
+	 * @return true, wenn es sich um eine Klinikschule handelt, und ansonsten false
+	 */
+	public static boolean istKlinikschule(final long schulnummer, final @NotNull Schulform schulform,
+			final @NotNull Schuljahresabschnitt schuljahresabschnitt) {
+		return (schulform == KS) || _setSchulnummernKlinikschulen.contains(schulnummer);
 	}
 }

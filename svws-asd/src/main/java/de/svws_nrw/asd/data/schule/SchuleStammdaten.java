@@ -114,10 +114,6 @@ public class SchuleStammdaten {
 	@Schema(description = "Gibt an, ob eine Realschule einen Hauptschulbildungsgang anbietet", example = "false")
 	public boolean hatRealschuleHauptschulbildungsgang;
 
-	/** Gibt an, ob die Schule internationale Kontakte pflegt */
-	@Schema(description = "Gibt an, ob die Schule internationale Kontakte pflegt", example = "false")
-	public boolean hatInternationaleKontakte;
-
 	/** Gibt an, ob an der Schule eine konfessionelle Kooperation vorhanden ist */
 	@Schema(description = "Gibt an, ob an der Schule eine konfessionelle Kooperation vorhanden ist", example = "false")
 	public boolean hatKonfessionelleKooperation;

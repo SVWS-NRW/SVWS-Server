@@ -64,12 +64,9 @@
 							:removable="false" :readonly />
 					</svws-ui-input-wrapper>
 				</svws-ui-content-card>
-				<svws-ui-content-card title="Angabe für die Amtlichen Schuldaten">
+				<svws-ui-content-card v-if="showJVA" title="Angabe für die Amtlichen Schuldaten">
 					<svws-ui-input-wrapper :grid="1">
-						<svws-ui-checkbox v-if="showInternationaleKontakte" :readonly v-model="hatInternationaleKontakte" statistics>
-							Hat Internationale Kontakte
-						</svws-ui-checkbox>
-						<svws-ui-checkbox v-if="showJVA" :readonly v-model="istJVA" statistics>
+						<svws-ui-checkbox :readonly v-model="istJVA" statistics>
 							JVA-Schule
 						</svws-ui-checkbox>
 					</svws-ui-input-wrapper>
@@ -111,8 +108,6 @@
 	const showBilingualerUnterricht = [Schulform.G, Schulform.R, Schulform.PS, Schulform.SK, Schulform.GE, Schulform.GY, Schulform.BK, Schulform.SR, Schulform.SG]
 		.includes(schuleState.schulform);
 	const showKonfessionelleKooperation = [Schulform.G, Schulform.H, Schulform.V, Schulform.S, Schulform.R, Schulform.PS, Schulform.SK, Schulform.GE, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GY, Schulform.WB, Schulform.BK, Schulform.KS, Schulform.SR, Schulform.SG, Schulform.SB]
-		.includes(schuleState.schulform);
-	const showInternationaleKontakte = [Schulform.G, Schulform.H, Schulform.V, Schulform.S, Schulform.R, Schulform.PS, Schulform.SK, Schulform.GE, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GY, Schulform.WB, Schulform.BK, Schulform.KS, Schulform.SR, Schulform.SG, Schulform.SB]
 		.includes(schuleState.schulform);
 	const showReformpaedagogik = [Schulform.G, Schulform.H, Schulform.V, Schulform.S, Schulform.R, Schulform.PS, Schulform.SK, Schulform.GE, Schulform.GY, Schulform.KS, Schulform.SR, Schulform.SG]
 		.includes(schuleState.schulform);
@@ -177,10 +172,6 @@
 	const hatKonfessionelleKooperation = computed({
 		get: () => schuleState.stammdaten.hatKonfessionelleKooperation,
 		set: (hatKonfessionelleKooperation) => void props.patch({ hatKonfessionelleKooperation }),
-	});
-	const hatInternationaleKontakte = computed({
-		get: () => schuleState.stammdaten.hatInternationaleKontakte,
-		set: (hatInternationaleKontakte) => void props.patch({ hatInternationaleKontakte }),
 	});
 	const istJVA = computed({
 		get: () => schuleState.stammdaten.istJva,

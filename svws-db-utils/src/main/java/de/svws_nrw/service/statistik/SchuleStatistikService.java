@@ -57,7 +57,6 @@ public final class SchuleStatistikService {
 		daten.istJva = Boolean.TRUE.equals(dtoSchule.JVAZeigen);
 		daten.idBilingualerUnterricht = dtoSchule.idBilingualerUnterricht;
 		daten.hatRealschuleHauptschulbildungsgang = Boolean.TRUE.equals(dtoSchule.hatRealschuleHauptschulbildungsgang);
-		daten.hatInternationaleKontakte = Boolean.TRUE.equals(dtoSchule.hatInternationaleKontakte);
 		daten.hatKonfessionelleKooperation = Boolean.TRUE.equals(dtoSchule.hatKonfessionelleKooperation);
 		daten.idTalentschule = dtoSchule.idTalentschule;
 		daten.idReformpaedagogik = dtoSchule.idReformpaedagogik;

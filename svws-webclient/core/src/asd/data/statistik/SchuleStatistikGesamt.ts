@@ -118,11 +118,6 @@ export class SchuleStatistikGesamt extends JavaObject {
 	public hatRealschuleHauptschulbildungsgang: boolean = false;
 
 	/**
-	 * Hat die Schule internationale Kontakte
-	 */
-	public hatInternationaleKontakte: boolean = false;
-
-	/**
 	 * Hat die Schule eine konfessionelle Kooperation
 	 */
 	public hatKonfessionelleKooperation: boolean = false;
@@ -212,9 +207,6 @@ export class SchuleStatistikGesamt extends JavaObject {
 		if (obj.hatRealschuleHauptschulbildungsgang === undefined)
 			throw new Error('invalid json format, missing attribute hatRealschuleHauptschulbildungsgang');
 		result.hatRealschuleHauptschulbildungsgang = obj.hatRealschuleHauptschulbildungsgang;
-		if (obj.hatInternationaleKontakte === undefined)
-			throw new Error('invalid json format, missing attribute hatInternationaleKontakte');
-		result.hatInternationaleKontakte = obj.hatInternationaleKontakte;
 		if (obj.hatKonfessionelleKooperation === undefined)
 			throw new Error('invalid json format, missing attribute hatKonfessionelleKooperation');
 		result.hatKonfessionelleKooperation = obj.hatKonfessionelleKooperation;
@@ -261,7 +253,6 @@ export class SchuleStatistikGesamt extends JavaObject {
 		result += '"istJva" : ' + obj.istJva.toString() + ',';
 		result += '"idBilingualerUnterricht" : ' + obj.idBilingualerUnterricht.toString() + ',';
 		result += '"hatRealschuleHauptschulbildungsgang" : ' + obj.hatRealschuleHauptschulbildungsgang.toString() + ',';
-		result += '"hatInternationaleKontakte" : ' + obj.hatInternationaleKontakte.toString() + ',';
 		result += '"hatKonfessionelleKooperation" : ' + obj.hatKonfessionelleKooperation.toString() + ',';
 		result += '"idTalentschule" : ' + obj.idTalentschule.toString() + ',';
 		result += '"idReformpaedagogik" : ' + obj.idReformpaedagogik.toString() + ',';
@@ -353,9 +344,6 @@ export class SchuleStatistikGesamt extends JavaObject {
 		}
 		if (obj.hatRealschuleHauptschulbildungsgang !== undefined) {
 			result += '"hatRealschuleHauptschulbildungsgang" : ' + obj.hatRealschuleHauptschulbildungsgang.toString() + ',';
-		}
-		if (obj.hatInternationaleKontakte !== undefined) {
-			result += '"hatInternationaleKontakte" : ' + obj.hatInternationaleKontakte.toString() + ',';
 		}
 		if (obj.hatKonfessionelleKooperation !== undefined) {
 			result += '"hatKonfessionelleKooperation" : ' + obj.hatKonfessionelleKooperation.toString() + ',';

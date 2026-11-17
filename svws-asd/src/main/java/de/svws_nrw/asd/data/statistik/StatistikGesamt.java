@@ -72,6 +72,10 @@ public class StatistikGesamt {
 			description = "Ein Array mit den Schulen."))
 	public @NotNull List<SchulKatalogStatistikGesamt> schulkatalog = new ArrayList<>();
 
+	/** Die Daten der Zusatzerhebungen für den Schuljahresabschnitt der Statistik. */
+	@Schema(description = "die Daten der Zusatzerhebungen für den Schuljahresabschnitt der Statistik")
+	public @NotNull ZusatzerhebungenStatistikGesamt zusatzerhebungen = new ZusatzerhebungenStatistikGesamt();
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

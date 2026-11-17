@@ -131,6 +131,14 @@ class StatistikServiceFactoryTest {
 	}
 
 	@Test
+	@DisplayName("Test: getZusatzerhebungenStatistikService nutzt die Repositories für die Zusatzerhebungen und die Schuljahresabschnitte")
+	void testGetZusatzerhebungenStatistikService() {
+		assertNotNull(factory.getZusatzerhebungenStatistikService());
+		verify(repoSchuleFactory).getZusatzerhebungenStatistikRepository();
+		verify(repoSchuleFactory).getSchuljahresabschnitteRepository();
+	}
+
+	@Test
 	@DisplayName("Test: getStatistikService aggregiert alle Unter-Statistik-Services")
 	void testGetStatistikService() {
 		final var service = factory.getStatistikService();

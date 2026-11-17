@@ -122,7 +122,6 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		daten.istJva = Boolean.TRUE.equals(schule.JVAZeigen);
 		daten.idBilingualerUnterricht = schule.idBilingualerUnterricht;
 		daten.hatRealschuleHauptschulbildungsgang = Boolean.TRUE.equals(schule.hatRealschuleHauptschulbildungsgang);
-		daten.hatInternationaleKontakte = Boolean.TRUE.equals(schule.hatInternationaleKontakte);
 		daten.hatKonfessionelleKooperation = Boolean.TRUE.equals(schule.hatKonfessionelleKooperation);
 		daten.idTalentschule = schule.idTalentschule;
 		daten.idReformpaedagogik = schule.idReformpaedagogik;
@@ -323,7 +322,6 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 					case "istJva" -> schule.JVAZeigen = JSONMapper.convertToBoolean(value, false, key);
 					case "idBilingualerUnterricht" -> schule.idBilingualerUnterricht = convertToKatalogId(value, FormBilingualerUnterricht.data(), key);
 					case "hatRealschuleHauptschulbildungsgang" -> schule.hatRealschuleHauptschulbildungsgang = JSONMapper.convertToBoolean(value, false, key);
-					case "hatInternationaleKontakte" -> schule.hatInternationaleKontakte = JSONMapper.convertToBoolean(value, false, key);
 					case "hatKonfessionelleKooperation" -> schule.hatKonfessionelleKooperation = JSONMapper.convertToBoolean(value, false, key);
 					case "idTalentschule" -> schule.idTalentschule = convertToKatalogId(value, Talentschule.data(), key);
 					case "idReformpaedagogik" -> schule.idReformpaedagogik = convertToKatalogId(value, Reformpaedagogik.data(), key);
@@ -426,7 +424,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionPersist(schuljahresabschnitt);
 		conn.transactionFlush();
 		// Initialisiere die Daten in der Tabelle EigeneSchule
-		eigeneSchule = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
+		eigeneSchule = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, 1L, 0L);
 		final Schulform schulform = switch (schulEintrag.SF) {
 			case "81" -> Schulform.S;
 			default -> Schulform.data().getWertBySchluessel(schulEintrag.SF);

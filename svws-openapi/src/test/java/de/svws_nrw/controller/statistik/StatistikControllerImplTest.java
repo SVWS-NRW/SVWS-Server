@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,10 +19,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import de.svws_nrw.asd.data.statistik.KlassenStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.data.statistik.ZusatzerhebungenStatistikGesamt;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.statistik.StatistikService;
+import de.svws_nrw.service.statistik.ZusatzerhebungenStatistikPatchRequest;
+import de.svws_nrw.service.statistik.ZusatzerhebungenStatistikService;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -28,6 +36,9 @@ class StatistikControllerImplTest {
 
 	@Mock
 	private StatistikService serviceMock;
+
+	@Mock
+	private ZusatzerhebungenStatistikService serviceZusatzerhebungenMock;
 
 	@InjectMocks
 	private StatistikControllerImpl controller;
@@ -72,6 +83,35 @@ class StatistikControllerImplTest {
 
 		assertEquals("Fehler bei Statistik-Aggregation, z.B. ein Datenbank-Fehler", thrown.getMessage());
 		verify(serviceMock).get();
+	}
+
+	@Test
+	@DisplayName("Test: patchZusatzerhebungen ruft den Service auf und gibt die geänderten Daten mit einer OK-Response zurück")
+	void testPatchZusatzerhebungenSuccess() {
+		final var patch = new ZusatzerhebungenStatistikPatchRequest();
+		patch.anzahlSchulanmeldungen = JsonNullable.of(113);
+		final var daten = new ZusatzerhebungenStatistikGesamt();
+		daten.idSchuljahresabschnitt = 11L;
+		daten.anzahlSchulanmeldungen = 113;
+		when(serviceZusatzerhebungenMock.patch(11L, patch)).thenReturn(daten);
+
+		final Response response = controller.patchZusatzerhebungen(11L, patch);
+
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		assertEquals(daten, response.getEntity());
+		verify(serviceZusatzerhebungenMock).patch(11L, patch);
+	}
+
+	@Test
+	@DisplayName("Test: patchZusatzerhebungen lehnt einen ungültigen Patch mit 400 ab, ohne den Service aufzurufen")
+	void testPatchZusatzerhebungenUngueltig() {
+		final var patch = new ZusatzerhebungenStatistikPatchRequest();
+		patch.anzahlSchulanmeldungen = JsonNullable.of(-1);
+
+		final ApiOperationException thrown = assertThrows(ApiOperationException.class, () -> controller.patchZusatzerhebungen(11L, patch));
+
+		assertEquals(Status.BAD_REQUEST, thrown.getStatus());
+		verify(serviceZusatzerhebungenMock, never()).patch(anyLong(), any());
 	}
 
 }

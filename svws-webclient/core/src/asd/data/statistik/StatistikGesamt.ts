@@ -9,6 +9,7 @@ import { JahrgaengeStatistikGesamt } from '../../../asd/data/statistik/Jahrgaeng
 import { SchulKatalogStatistikGesamt } from '../../../asd/data/statistik/SchulKatalogStatistikGesamt';
 import { OrteStatistikGesamt } from '../../../asd/data/statistik/OrteStatistikGesamt';
 import { FoerderschwerpunktStatistikGesamt } from '../../../asd/data/statistik/FoerderschwerpunktStatistikGesamt';
+import { ZusatzerhebungenStatistikGesamt } from '../../../asd/data/statistik/ZusatzerhebungenStatistikGesamt';
 import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
 import type { List } from '../../../java/util/List';
 import { KursStatistikGesamt } from '../../../asd/data/statistik/KursStatistikGesamt';
@@ -70,6 +71,11 @@ export class StatistikGesamt extends JavaObject {
 	 * Der Schuleigene Katalog der Schulen.
 	 */
 	public schulkatalog: List<SchulKatalogStatistikGesamt> = new ArrayList<SchulKatalogStatistikGesamt>();
+
+	/**
+	 * Die Daten der Zusatzerhebungen für den Schuljahresabschnitt der Statistik.
+	 */
+	public zusatzerhebungen: ZusatzerhebungenStatistikGesamt = new ZusatzerhebungenStatistikGesamt();
 
 
 	/**
@@ -145,6 +151,9 @@ export class StatistikGesamt extends JavaObject {
 				result.schulkatalog.add(SchulKatalogStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (obj.zusatzerhebungen === undefined)
+			throw new Error('invalid json format, missing attribute zusatzerhebungen');
+		result.zusatzerhebungen = ZusatzerhebungenStatistikGesamt.transpilerFromJSON(JSON.stringify(obj.zusatzerhebungen));
 		return result;
 	}
 
@@ -231,6 +240,7 @@ export class StatistikGesamt extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
+		result += '"zusatzerhebungen" : ' + ZusatzerhebungenStatistikGesamt.transpilerToJSON(obj.zusatzerhebungen) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -340,6 +350,9 @@ export class StatistikGesamt extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
+		}
+		if (obj.zusatzerhebungen !== undefined) {
+			result += '"zusatzerhebungen" : ' + ZusatzerhebungenStatistikGesamt.transpilerToJSON(obj.zusatzerhebungen) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

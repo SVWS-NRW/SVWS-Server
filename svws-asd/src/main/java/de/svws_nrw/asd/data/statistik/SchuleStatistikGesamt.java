@@ -107,10 +107,6 @@ public class SchuleStatistikGesamt {
 	@Schema(description = "Hat Realschule Hauptbildungsgang", example = "false")
 	public boolean hatRealschuleHauptschulbildungsgang;
 
-	/** Hat die Schule internationale Kontakte */
-	@Schema(description = "Hat die Schule internationale Kontakte", example = "false")
-	public boolean hatInternationaleKontakte;
-
 	/** Hat die Schule eine konfessionelle Kooperation */
 	@Schema(description = "Hat die Schule eine konfessionelle Kooperation", example = "false")
 	public boolean hatKonfessionelleKooperation;

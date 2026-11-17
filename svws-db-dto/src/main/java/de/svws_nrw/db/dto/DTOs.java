@@ -190,6 +190,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchulwechselAbgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchulwechselDokument;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchulwechselErfolgreicheBewerbung;
 import de.svws_nrw.db.dto.current.schild.schule.DTOStatistikKommentar;
+import de.svws_nrw.db.dto.current.schild.schule.DTOStatistikZusatzerhebungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOStundentafel;
 import de.svws_nrw.db.dto.current.schild.schule.DTOStundentafelFaecher;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
@@ -503,6 +504,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOSchulwechselDokument.class.getSimpleName(), DTOSchulwechselDokument.class);
              mapDTOName2DTOClass.put(DTOSchulwechselErfolgreicheBewerbung.class.getSimpleName(), DTOSchulwechselErfolgreicheBewerbung.class);
              mapDTOName2DTOClass.put(DTOStatistikKommentar.class.getSimpleName(), DTOStatistikKommentar.class);
+             mapDTOName2DTOClass.put(DTOStatistikZusatzerhebungen.class.getSimpleName(), DTOStatistikZusatzerhebungen.class);
              mapDTOName2DTOClass.put(DTOStundentafel.class.getSimpleName(), DTOStundentafel.class);
              mapDTOName2DTOClass.put(DTOStundentafelFaecher.class.getSimpleName(), DTOStundentafelFaecher.class);
              mapDTOName2DTOClass.put(DTOTeilstandorte.class.getSimpleName(), DTOTeilstandorte.class);
@@ -811,6 +813,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("SchulwechselDokument", DTOSchulwechselDokument.class);
              mapTablename2DTOClass.put("SchulwechselErfolgreicheBewerbung", DTOSchulwechselErfolgreicheBewerbung.class);
              mapTablename2DTOClass.put("StatistikKommentar", DTOStatistikKommentar.class);
+             mapTablename2DTOClass.put("Statistik_Zusatzerhebungen", DTOStatistikZusatzerhebungen.class);
              mapTablename2DTOClass.put("Stundentafel", DTOStundentafel.class);
              mapTablename2DTOClass.put("Stundentafel_Faecher", DTOStundentafelFaecher.class);
              mapTablename2DTOClass.put("EigeneSchule_Teilstandorte", DTOTeilstandorte.class);

@@ -46,7 +46,7 @@ class DataSchuleStammdatenTest {
 	}
 
 	private static DTOEigeneSchule createSchule() {
-		final var schule = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, false, 1L, 0L);
+		final var schule = new DTOEigeneSchule(1L, 1L, 3L, false, 1L, false, false, 1L, 0L);
 		schule.SchulNr = 123456;
 		schule.Schuljahresabschnitts_ID = 14L;
 		schule.AnzahlAbschnitte = 2;
@@ -67,7 +67,6 @@ class DataSchuleStammdatenTest {
 		schule.JVAZeigen = true;
 		schule.idBilingualerUnterricht = 3L;
 		schule.hatRealschuleHauptschulbildungsgang = true;
-		schule.hatInternationaleKontakte = true;
 		schule.hatKonfessionelleKooperation = true;
 		schule.idTalentschule = 2L;
 		schule.idReformpaedagogik = 3000L;
@@ -83,7 +82,6 @@ class DataSchuleStammdatenTest {
 		assertThat(daten.istJva).isTrue();
 		assertThat(daten.idBilingualerUnterricht).isEqualTo(3L);
 		assertThat(daten.hatRealschuleHauptschulbildungsgang).isTrue();
-		assertThat(daten.hatInternationaleKontakte).isTrue();
 		assertThat(daten.hatKonfessionelleKooperation).isTrue();
 		assertThat(daten.idTalentschule).isEqualTo(2L);
 		assertThat(daten.idReformpaedagogik).isEqualTo(3000L);
@@ -96,7 +94,6 @@ class DataSchuleStammdatenTest {
 		schule.istOffenerGanztag = null;
 		schule.JVAZeigen = null;
 		schule.hatRealschuleHauptschulbildungsgang = null;
-		schule.hatInternationaleKontakte = null;
 		schule.hatKonfessionelleKooperation = null;
 		when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(schule);
 		final var abschnitt = mock(DTOSchuljahresabschnitte.class);
@@ -107,7 +104,6 @@ class DataSchuleStammdatenTest {
 		assertThat(daten.istOffenerGanztag).isFalse();
 		assertThat(daten.istJva).isFalse();
 		assertThat(daten.hatRealschuleHauptschulbildungsgang).isFalse();
-		assertThat(daten.hatInternationaleKontakte).isFalse();
 		assertThat(daten.hatKonfessionelleKooperation).isFalse();
 	}
 
@@ -120,7 +116,7 @@ class DataSchuleStammdatenTest {
 
 		final Response response = patch("""
 				{"idGebundenerGanztag": 4, "idFormOffenerGanztag": 2, "istOffenerGanztag": true, "istJva": true,
-				 "idBilingualerUnterricht": 3, "hatRealschuleHauptschulbildungsgang": true, "hatInternationaleKontakte": true,
+				 "idBilingualerUnterricht": 3, "hatRealschuleHauptschulbildungsgang": true,
 				 "hatKonfessionelleKooperation": true, "idTalentschule": 2, "idReformpaedagogik": 3000}
 				""");
 
@@ -131,7 +127,6 @@ class DataSchuleStammdatenTest {
 		assertThat(schule.JVAZeigen).isTrue();
 		assertThat(schule.idBilingualerUnterricht).isEqualTo(3L);
 		assertThat(schule.hatRealschuleHauptschulbildungsgang).isTrue();
-		assertThat(schule.hatInternationaleKontakte).isTrue();
 		assertThat(schule.hatKonfessionelleKooperation).isTrue();
 		assertThat(schule.idTalentschule).isEqualTo(2L);
 		assertThat(schule.idReformpaedagogik).isEqualTo(3000L);
@@ -192,9 +187,20 @@ class DataSchuleStammdatenTest {
 		verify(conn).transactionPersist(schule);
 	}
 
+	@Test
+	@DisplayName("patch: Die internationalen Kontakte werden nicht mehr in EigeneSchule gespeichert und daher abgelehnt (BAD_REQUEST)")
+	void testPatchInternationaleKontakteWirdAbgelehnt() {
+		when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(createSchule());
+
+		assertThatThrownBy(() -> patch("{\"hatInternationaleKontakte\": true}"))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
+		verify(conn, never()).transactionPersist(any());
+	}
+
 	@ParameterizedTest(name = "{0} = null ist nicht erlaubt")
 	@ValueSource(strings = { "idGebundenerGanztag", "idFormOffenerGanztag", "idBilingualerUnterricht", "idTalentschule", "idReformpaedagogik",
-			"istOffenerGanztag", "istJva", "hatRealschuleHauptschulbildungsgang", "hatInternationaleKontakte", "hatKonfessionelleKooperation" })
+			"istOffenerGanztag", "istJva", "hatRealschuleHauptschulbildungsgang", "hatKonfessionelleKooperation" })
 	@DisplayName("patch: Der Wert null wird für die neuen Attribute abgelehnt (BAD_REQUEST)")
 	void testPatchNullWirdAbgelehnt(final String attribut) {
 		when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(createSchule());
@@ -206,8 +212,7 @@ class DataSchuleStammdatenTest {
 	}
 
 	@ParameterizedTest(name = "{0} mit einem Text statt Boolean wird abgelehnt")
-	@ValueSource(strings = { "istOffenerGanztag", "istJva", "hatRealschuleHauptschulbildungsgang", "hatInternationaleKontakte",
-			"hatKonfessionelleKooperation" })
+	@ValueSource(strings = { "istOffenerGanztag", "istJva", "hatRealschuleHauptschulbildungsgang", "hatKonfessionelleKooperation" })
 	@DisplayName("patch: Ein Wert, der kein Boolean ist, wird für die Boolean-Attribute abgelehnt (BAD_REQUEST)")
 	void testPatchBooleanMitUngueltigemTyp(final String attribut) {
 		when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(createSchule());

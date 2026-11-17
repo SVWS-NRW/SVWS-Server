@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import { StatistikGesamt } from "@core/asd/data/statistik/StatistikGesamt";
+import type { ZusatzerhebungenStatistikGesamt } from "@core/asd/data/statistik/ZusatzerhebungenStatistikGesamt";
 import { ValidatorGesamt } from "@core/asd/validate/ValidatorGesamt";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
@@ -106,6 +107,21 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 	public setKlasse = async (id: number) => {
 		const daten = await api.server.getKlasse(api.schema, id);
 		klassenAuswahlStateImpl.setDatenDirekt(daten);
+	};
+
+	/**
+	 * Patcht die Daten der Zusatzerhebungen für den Schuljahresabschnitt der Statistik und übernimmt
+	 * die vom Server zurückgegebenen Daten in die Gesamtstatistik.
+	 *
+	 * @param data   die zu ändernden Daten
+	 *
+	 * @returns true, wenn der Patch erfolgreich war
+	 */
+	public patchZusatzerhebungen = async (data: Partial<ZusatzerhebungenStatistikGesamt>): Promise<boolean> => {
+		const idSchuljahresabschnitt = this.statistikGesamt.zusatzerhebungen.idSchuljahresabschnitt;
+		this.statistikGesamt.zusatzerhebungen = await api.server.patchStatistikZusatzerhebungen(data, api.schema, idSchuljahresabschnitt);
+		this.commit();
+		return true;
 	};
 }
 

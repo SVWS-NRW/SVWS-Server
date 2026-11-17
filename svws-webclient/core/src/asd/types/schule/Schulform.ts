@@ -1,13 +1,16 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import type { JavaSet } from '../../../java/util/JavaSet';
+import { java_util_Set_of } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
-import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_id, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
 export class Schulform extends JavaEnum<Schulform> implements CoreType<SchulformKatalogEintrag, Schulform> {
 
@@ -111,6 +114,11 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	 * Freie Waldorfschule (Förderschule)
 	 */
 	public static readonly WF: Schulform = new Schulform("WF", 18);
+
+	/**
+	 * Die Schulnummern der Schulen, die unabhängig von ihrer Schulform als Klinikschule gelten
+	 */
+	private static readonly _setSchulnummernKlinikschulen: JavaSet<number> = java_util_Set_of(152614, 154593, 157648, 192569, 199254, 190561);
 
 	private static readonly _mapSchuljahrToSchulformenMitGymOb: JavaMap<number, List<Schulform>> = new HashMap<number, List<Schulform>>();
 
@@ -308,6 +316,22 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 			_sevar_1366640777 = false;
 		}
 		return _sevar_1366640777;
+	}
+
+	/**
+	 * Gibt zurück, ob es sich bei der angegebenen Schule um eine Klinikschule handelt. Dies ist
+	 * bei der Schulform KS der Fall und zusätzlich bei einigen Schulen anderer Schulformen, die
+	 * über ihre Schulnummer festgelegt sind. Der Schuljahresabschnitt ist für eine spätere
+	 * zeitliche Einschränkung dieser Schulnummern vorgesehen und wird derzeit nicht ausgewertet.
+	 *
+	 * @param schulnummer            die Schulnummer der Schule
+	 * @param schulform              die Schulform der Schule
+	 * @param schuljahresabschnitt   der Schuljahresabschnitt, für den die Prüfung erfolgt
+	 *
+	 * @return true, wenn es sich um eine Klinikschule handelt, und ansonsten false
+	 */
+	public static istKlinikschule(schulnummer: number, schulform: Schulform, schuljahresabschnitt: Schuljahresabschnitt): boolean {
+		return (schulform as unknown === Schulform.KS as unknown) || Schulform._setSchulnummernKlinikschulen.contains(schulnummer);
 	}
 
 	/**

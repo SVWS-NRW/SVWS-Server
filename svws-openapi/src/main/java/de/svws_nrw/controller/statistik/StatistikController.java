@@ -1,5 +1,6 @@
 package de.svws_nrw.controller.statistik;
 
+import de.svws_nrw.service.statistik.ZusatzerhebungenStatistikPatchRequest;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -24,5 +25,16 @@ public interface StatistikController {
 	 * @return die Response
 	 */
 	Response getStatistikExport();
+
+	/**
+	 * Führt einen Patch auf die Daten der Zusatzerhebungen für den angegebenen Schuljahresabschnitt aus
+	 * und gibt die geänderten Daten als Response zurück.
+	 *
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param patch                    der Patch-Request
+	 *
+	 * @return die Response
+	 */
+	Response patchZusatzerhebungen(long idSchuljahresabschnitt, ZusatzerhebungenStatistikPatchRequest patch);
 
 }

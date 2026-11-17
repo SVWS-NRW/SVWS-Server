@@ -6,6 +6,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.dto.current.schild.schule.DTOStatistikZusatzerhebungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.repo.RepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungKlasseRepository;
@@ -101,4 +102,15 @@ public final class EigeneSchuleRepositoryFactory extends RepositoryFactory {
 	public TeilstandortRepository getTeilstandortRepository() {
 		return getOrCreate(TeilstandortRepository.class, () -> new TeilstandortRepositoryImpl(conn));
 	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOStatistikZusatzerhebungen}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public ZusatzerhebungenStatistikRepository getZusatzerhebungenStatistikRepository() {
+		return getOrCreate(ZusatzerhebungenStatistikRepository.class, () -> new ZusatzerhebungenStatistikRepositoryImpl(conn));
+	}
+
 }

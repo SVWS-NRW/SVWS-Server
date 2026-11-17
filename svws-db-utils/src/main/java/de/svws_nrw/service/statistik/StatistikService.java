@@ -44,6 +44,9 @@ public final class StatistikService {
 	/** Der Service für den Zugriff auf den Schuleigenen Katalog der Schulen */
 	private final SchulKatalogStatistikService schulKatalogStatistikService;
 
+	/** Der Service für den Zugriff auf die Daten der Zusatzerhebungen */
+	private final ZusatzerhebungenStatistikService zusatzerhebungenStatistikService;
+
 	/**
 	 * Erstellt einen neuen Service.
 	 *
@@ -58,6 +61,7 @@ public final class StatistikService {
 	 * @param religionStatistikService             der Service für den Datenbank-Zugriff auf die Religionen
 	 * @param fachStatistikService                 der Service für den Datenbank-Zugriff auf die Fächer
 	 * @param schulKatalogStatistikService         der Service für den Datenbank-Zugriff auf die Schulen
+	 * @param zusatzerhebungenStatistikService     der Service für den Zugriff auf die Daten der Zusatzerhebungen
 	 */
 	public StatistikService(final SchuleStatistikService schuleStatistikService,
 			final LehrerStatistikService lehrerStatistikService,
@@ -69,7 +73,8 @@ public final class StatistikService {
 			final FoerderschwerpunkteStatistikService foerderschwerpunktStatistikService,
 			final ReligionStatistikService religionStatistikService,
 			final FachStatistikService fachStatistikService,
-			final SchulKatalogStatistikService schulKatalogStatistikService) {
+			final SchulKatalogStatistikService schulKatalogStatistikService,
+			final ZusatzerhebungenStatistikService zusatzerhebungenStatistikService) {
 		this.schuleStatistikService = schuleStatistikService;
 		this.lehrerStatistikService = lehrerStatistikService;
 		this.klassenStatistikService = klassenStatistikService;
@@ -81,6 +86,7 @@ public final class StatistikService {
 		this.religionStatistikService = religionStatistikService;
 		this.fachStatistikService = fachStatistikService;
 		this.schulKatalogStatistikService = schulKatalogStatistikService;
+		this.zusatzerhebungenStatistikService = zusatzerhebungenStatistikService;
 	}
 
 
@@ -103,6 +109,7 @@ public final class StatistikService {
 			daten.religionen = religionStatistikService.getList();
 			daten.faecher = fachStatistikService.getList();
 			daten.schulkatalog = schulKatalogStatistikService.getList();
+			daten.zusatzerhebungen = zusatzerhebungenStatistikService.get(daten.schule.idSchuljahresabschnitt);
 			return daten;
 		});
 	}

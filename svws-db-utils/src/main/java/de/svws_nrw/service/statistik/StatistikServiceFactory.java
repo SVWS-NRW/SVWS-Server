@@ -1,6 +1,7 @@
 package de.svws_nrw.service.statistik;
 
 import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMapperImpl;
+import de.svws_nrw.mapper.statistik.ZusatzerhebungenStatistikMapper;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
@@ -243,6 +244,17 @@ public final class StatistikServiceFactory {
 
 
 	/**
+	 * Erstellt einen neuen Service für den Zugriff auf die Daten der Zusatzerhebungen für die Statistik
+	 *
+	 * @return der Service für den Zugriff auf die Daten der Zusatzerhebungen
+	 */
+	public ZusatzerhebungenStatistikService getZusatzerhebungenStatistikService() {
+		return new ZusatzerhebungenStatistikService(eigeneSchuleRepositoryFactory.getZusatzerhebungenStatistikRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(), ZusatzerhebungenStatistikMapper.INSTANCE);
+	}
+
+
+	/**
 	 * Erstellt einen neuen Statistik-Service für den Zugriff auf die Statistikdaten.
 	 *
 	 * @return der Statistik-Service
@@ -259,7 +271,8 @@ public final class StatistikServiceFactory {
 				getFoerderschwerpunkteStatistikService(),
 				getReligionStatistikService(),
 				getFachStatistikService(),
-				getSchulKatalogStatistikService()
+				getSchulKatalogStatistikService(),
+				getZusatzerhebungenStatistikService()
 		);
 	}
 

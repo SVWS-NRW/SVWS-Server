@@ -206,7 +206,7 @@ class EnmV2GetServiceTest {
 	// -------------------------------------------------------------------------
 
 	private void stubGrunddaten() {
-		final DTOEigeneSchule schule = new DTOEigeneSchule(1L, 0L, 0L, false, 0L, false, false, false, 0L, 0L);
+		final DTOEigeneSchule schule = new DTOEigeneSchule(1L, 0L, 0L, false, 0L, false, false, 0L, 0L);
 		dtoSchule = schule;
 		schule.SchulNr = 123456;
 		schule.SchulformKuerzel = "GY";

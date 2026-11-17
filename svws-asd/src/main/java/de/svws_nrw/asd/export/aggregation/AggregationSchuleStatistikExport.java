@@ -155,7 +155,7 @@ public class AggregationSchuleStatistikExport {
 		//TODO: Wo ist der zugehörige Katalog? Einbinden.
 //		statistikExport.schuleStatistikExport.bilingualerUnterricht = statistikGesamt.schule.idBilingualerUnterricht; // ?Katalog
 		statistikExport.schuleStatistikExport.hatRealschuleHauptschulbildungsgang = statistikGesamt.schule.hatRealschuleHauptschulbildungsgang;
-		statistikExport.schuleStatistikExport.hatInternationaleKontakte = statistikGesamt.schule.hatInternationaleKontakte;
+		statistikExport.schuleStatistikExport.hatInternationaleKontakte = statistikGesamt.zusatzerhebungen.hatInternationaleKontakte;
 		statistikExport.schuleStatistikExport.hatKonfessionelleKooperation = statistikGesamt.schule.hatKonfessionelleKooperation;
 		//TODO: 2027 Ausgelaufen-noch erhalten?
 		statistikExport.schuleStatistikExport.talentschule = (int) statistikGesamt.schule.idTalentschule; // ?2027 Ausgelaufen-noch erhalten?

@@ -229,6 +229,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_SchulwechselAbgang;
 import de.svws_nrw.db.schema.tabellen.Tabelle_SchulwechselDokument;
 import de.svws_nrw.db.schema.tabellen.Tabelle_SchulwechselErfolgreicheBewerbung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_StatistikKommentar;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Statistik_Zusatzerhebungen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Aufsichtsbereiche;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Kalenderwochen_Zuordnung;
@@ -1251,6 +1252,9 @@ public final class Schema {
 
 	/** Tabelle StatistikKommentar */
 	public static final Tabelle_StatistikKommentar tab_StatistikKommentar = add(new Tabelle_StatistikKommentar());
+
+	/** Tabelle Statistik_Zusatzerhebungen */
+	public static final Tabelle_Statistik_Zusatzerhebungen tab_Statistik_Zusatzerhebungen = add(new Tabelle_Statistik_Zusatzerhebungen());
 
 	/**
 	 * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern
