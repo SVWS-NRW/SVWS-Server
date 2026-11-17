@@ -1,6 +1,5 @@
 package de.svws_nrw.api.server;
 
-import java.io.InputStream;
 import java.util.List;
 
 import de.svws_nrw.asd.data.klassen.KlassenDatenMinimal;
@@ -11,12 +10,12 @@ import org.jboss.resteasy.annotations.GZIP;
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.controller.klassen.KlassenControllerFactory;
+import de.svws_nrw.service.klassen.KlassenCreateRequest;
+import de.svws_nrw.service.klassen.KlassenPatchRequest;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.klassen.DataKatalogKlassenarten;
-import de.svws_nrw.data.klassen.DataKlassendaten;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -198,18 +197,19 @@ public class APIKlassen {
 	 * Die API-Methode für das Patchen einer Klasse.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Klasse
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param id             die Datenbank-ID zur Identifikation der Klasse
+	 * @param patchRequest   der Patch mit den zu ändernden Attributen der Klasse
+	 * @param request        die Informationen zur HTTP-Anfrage
 	 *
-	 * @return das Ergebnis der Patch-Operation
+	 * @return die HTTP-Antwort mit den Daten der geänderten Klasse
 	 */
 	@PATCH
 	@Path("/{id : \\d+}")
 	@Operation(summary = "Passt die Daten der Klasse mit der angebenen ID an.",
-			description = "Passt die Daten der Klasse mit der angebenen ID an. "
+			description = "Passt die Daten der Klasse mit der angebenen ID an und gibt die geänderten Daten zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Klassendaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert. Die Daten der geänderten Klasse werden zurückgegeben.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = KlassenDaten.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
@@ -218,20 +218,21 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Daten der Klasse", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final KlassenPatchRequest patchRequest,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return KlassenControllerFactory
+				.withWriteAccess(request)
+				.getKlassenController()
+				.patch(id, patchRequest);
 	}
 
 
 	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Klasse mit den angegebenen Klassendaten.
 	 *
-	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema          das Datenbankschema
+	 * @param createRequest   der Request mit den Attributen der neuen Klasse
+	 * @param request         die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit den Daten der Klasse
 	 */
@@ -246,11 +247,12 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "404", description = "Benötigte Daten wurden nicht gefunden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addKlasse(@PathParam("schema") final String schema, @RequestBody(description = "Die Daten der Klasse", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final InputStream is,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final KlassenCreateRequest createRequest,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).addAsResponse(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return KlassenControllerFactory
+				.withWriteAccess(request)
+				.getKlassenController()
+				.create(createRequest);
 	}
 
 
@@ -258,7 +260,7 @@ public class APIKlassen {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Klassen.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste von zu löschenden IDs
+	 * @param ids       die IDs der zu löschenden Klassen
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -273,12 +275,12 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKlassen(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Klassen", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataKlassendaten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return KlassenControllerFactory
+				.withWriteAccess(request)
+				.getKlassenController()
+				.delete(ids);
 	}
 
 
@@ -327,9 +329,10 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "404", description = "Keine Jahrgangs- oder Klassen-Einträge gefunden")
 	public Response setKlassenSortierungFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).setDefaultSortierung(abschnitt),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return KlassenControllerFactory
+				.withWriteAccess(request)
+				.getKlassenController()
+				.setDefaultSortierung(abschnitt);
 	}
 
 }

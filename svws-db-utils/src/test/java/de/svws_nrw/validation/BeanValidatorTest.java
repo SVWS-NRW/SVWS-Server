@@ -23,6 +23,17 @@ class BeanValidatorTest {
 	}
 
 	@Test
+	@DisplayName("validate | fehlendes Objekt (null) liefert 400")
+	void testValidateNull() {
+		final var throwable = ThrowableAssert.catchThrowable(() -> BeanValidator.validate(null));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessage("Der Request darf nicht null sein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
 	@DisplayName("validate | invalides Objekt")
 	void testValidateFail() {
 		final var invalidRecord = new TestValidation(null, 51);

@@ -23,6 +23,12 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 	private static final String QUERY_LIST_AKTUELL_BY_KLASSEN_IDS =
 			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN ?1 AND e.WechselNr = 0";
 
+	/** Die Query für die Anzahl der nicht gelöschten Schüler je Klasse über die aktuellen Lernabschnitte (WechselNr = 0) zu den Klassen-IDs */
+	private static final String QUERY_ANZAHL_NICHT_GELOESCHT_AKTUELL_BY_KLASSEN_IDS =
+			"SELECT l.Klassen_ID, COUNT(DISTINCT l.Schueler_ID) FROM DTOSchuelerLernabschnittsdaten l, DTOSchueler s "
+					+ "WHERE l.Klassen_ID IN ?1 AND l.WechselNr = 0 AND s.ID = l.Schueler_ID "
+					+ "AND (s.hatLoeschvermerk IS NULL OR s.hatLoeschvermerk = false) GROUP BY l.Klassen_ID";
+
 	private static final String QUERY_LIST_BY_KLASSE_AND_SCHULJAHRESABSCHNITT =
 			"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2";
 
@@ -110,6 +116,15 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		return groupSchuelerByKlasse(listAbschnitte);
 	}
 
+	@Override
+	public Map<Long, Long> getMapAnzahlSchuelerAktuell(final Collection<Long> idsKlassen) {
+		if ((idsKlassen == null) || (idsKlassen.isEmpty())) {
+			return Collections.emptyMap();
+		}
+		return conn.queryList(QUERY_ANZAHL_NICHT_GELOESCHT_AKTUELL_BY_KLASSEN_IDS, Object[].class, idsKlassen).stream()
+				.collect(Collectors.toMap(zeile -> ((Number) zeile[0]).longValue(), zeile -> ((Number) zeile[1]).longValue()));
+	}
+
 	/**
 	 * Gruppiert die Schüler-IDs der übergebenen Lernabschnitte nach den Klassen-IDs der Lernabschnitte.
 	 * Jeder Schüler wird je Klasse nur einmal aufgeführt.
@@ -184,7 +199,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		}
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(QUERY_LIST_AKTUELLER_ABSCHNITT_BY_SCHUELER_ID,
 				DTOSchuelerLernabschnittsdaten.class, idSchueler, 0);
-		return lernabschnitte.size() == 1 ? Optional.of(lernabschnitte.getFirst()) : Optional.empty();
+		return (lernabschnitte.size() == 1) ? Optional.of(lernabschnitte.getFirst()) : Optional.empty();
 	}
 
 	@Override
@@ -211,7 +226,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 			if (idSchueler == null) {
 				continue;
 			}
-			result.computeIfAbsent(idSchueler, id -> new ArrayList<DTOSchuelerLernabschnittsdaten>());
+			result.computeIfAbsent(idSchueler, id -> new ArrayList<>());
 		}
 		return result;
 	}

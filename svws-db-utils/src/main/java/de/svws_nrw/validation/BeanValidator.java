@@ -16,6 +16,8 @@ import jakarta.ws.rs.core.Response;
  */
 public final class BeanValidator {
 
+	private static final String REQUEST_NICHT_NULL = "Der Request darf nicht null sein.";
+
 	private static final ValidatorFactory VALIDATOR_FACTORY = Validation.buildDefaultValidatorFactory();
 	private static final Validator VALIDATOR = VALIDATOR_FACTORY.getValidator();
 
@@ -24,11 +26,16 @@ public final class BeanValidator {
 	}
 
 	/**
-	 * Validiert das übergebene DTO gegen die jakarta bean validation
+	 * Validiert das übergebene DTO gegen die jakarta bean validation. Ein fehlendes DTO (null), z. B. durch einen leeren Request-Body,
+	 * führt zu einer Antwort mit dem Status 400 (Bad Request).
+	 *
 	 * @param input zu überprüfendes DTO
 	 * @param <T> Generic Type
 	 */
 	public static <T> void validate(final T input) {
+		if (input == null) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, REQUEST_NICHT_NULL);
+		}
 		final Set<ConstraintViolation<T>> violations = VALIDATOR.validate(input);
 		if (!violations.isEmpty()) {
 			final List<String> errors = violations.stream()

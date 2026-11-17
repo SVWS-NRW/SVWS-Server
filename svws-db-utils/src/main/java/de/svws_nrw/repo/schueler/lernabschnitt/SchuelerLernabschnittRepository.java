@@ -63,6 +63,17 @@ public interface SchuelerLernabschnittRepository extends Repository<DTOSchuelerL
 	 */
 	Map<Long, List<Long>> getMapKlassenSchuelerAktuell(Collection<Long> idsKlassen);
 
+	/**
+	 * Bestimmt die Anzahl der nicht gelöschten Schüler je Klasse für die Klassen mit den übergebenen IDs. Berücksichtigt werden nur die
+	 * aktuellen Lernabschnitte der Schüler (WechselNr = 0). Ein Schüler zählt je Klasse nur einmal. Als gelöscht gilt ein Schüler mit
+	 * Löschvermerk.
+	 *
+	 * @param idsKlassen   die IDs der Klassen
+	 *
+	 * @return die Anzahl der Schüler je Klassen-ID, Klassen ohne Schüler sind nicht enthalten, bzw. eine leere Map, wenn keine IDs übergeben wurden
+	 */
+	Map<Long, Long> getMapAnzahlSchuelerAktuell(Collection<Long> idsKlassen);
+
 
 	/**
 	 * Gibt eine Map der Lernabschnittsdaten für den Lernabschnitt mit der Wechsel-Nummer 0 aus dem Schuljahresabschnitt zugeordnet

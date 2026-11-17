@@ -667,8 +667,8 @@ class DataManagerRevisedTest {
 
 
 	/**
-	 * Diese Klasse dient als Mock um die Funktionalitäten des DataManagerRevised testen zu können. Der Mock orientiert sich dabei an den Implementierungen
-	 * von DataKlassendaten, weicht jedoch in seiner Komplexität stark ab.
+	 * Diese Klasse dient als Mock um die Funktionalitäten des DataManagerRevised testen zu können. Der Mock orientiert sich dabei an der früheren Implementierung
+	 * von DataKlassendaten (inzwischen durch den KlassenService abgelöst), weicht jedoch in seiner Komplexität stark ab.
 	 */
 	static class DataManagerRevisedMock extends DataManagerRevised<Long, DTOKlassen, KlassenDaten> {
 

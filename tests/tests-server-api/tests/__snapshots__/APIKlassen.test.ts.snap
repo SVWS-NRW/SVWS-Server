@@ -35,10 +35,26 @@ ArrayList {
       },
       "success": false,
     },
+    SimpleOperationResponse {
+      "id": 9999,
+      "log": ArrayList {
+        "addFirst": [Function],
+        "addLast": [Function],
+        "elementData": [
+          "Keine Klasse zur ID 9999 gefunden.",
+        ],
+        "getFirst": [Function],
+        "getLast": [Function],
+        "modCount": 1,
+        "removeFirst": [Function],
+        "removeLast": [Function],
+      },
+      "success": false,
+    },
   ],
   "getFirst": [Function],
   "getLast": [Function],
-  "modCount": 2,
+  "modCount": 3,
   "removeFirst": [Function],
   "removeLast": [Function],
 }

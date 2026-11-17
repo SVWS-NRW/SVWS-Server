@@ -9453,10 +9453,12 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/{id : \d+}
 	 *
-	 * Passt die Daten der Klasse mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Klassendaten besitzt.
+	 * Passt die Daten der Klasse mit der angebenen ID an und gibt die geänderten Daten zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Klassendaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 200: Der Patch wurde erfolgreich integriert. Die Daten der geänderten Klasse werden zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KlassenDaten
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
@@ -9466,13 +9468,17 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<KlassenDaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert. Die Daten der geänderten Klasse werden zurückgegeben.
 	 */
-	public async patchKlasse(data: Partial<KlassenDaten>, schema: string, id: number): Promise<void> {
+	public async patchKlasse(data: Partial<KlassenDaten>, schema: string, id: number): Promise<KlassenDaten> {
 		const path = "/db/{schema}/klassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = KlassenDaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return KlassenDaten.transpilerFromJSON(text);
 	}
 
 

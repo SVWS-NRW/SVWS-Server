@@ -67,7 +67,7 @@ public final class KlassenSchuelerLoader {
 				.toList();
 		return schuelerRepository.findListByIds(idsSchueler).stream()
 				.filter(Objects::nonNull)
-				.filter(s -> Boolean.FALSE.equals(s.hatLoeschvermerk))
+				.filter(s -> !Boolean.TRUE.equals(s.hatLoeschvermerk))
 				.collect(Collectors.toMap(s -> s.ID, schuelerMapper::toSchueler));
 	}
 

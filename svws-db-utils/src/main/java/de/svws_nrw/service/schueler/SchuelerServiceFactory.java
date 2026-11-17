@@ -126,6 +126,8 @@ public final class SchuelerServiceFactory {
 				KlassenRepositoryFactory.getNewInstance(),
 				factories.schuelerRepositoryFactory(),
 				LehrerRepositoryFactory.getNewInstance(),
+				factories.katalogRepositoryFactory(),
+				factories.eigeneSchuleRepositoryFactory(),
 				factories.eigeneSchuleServiceFactory());
 		final var kursServiceFactory = KursServiceFactory.getNewInstance(
 				factories.kurseRepositoryFactory(),

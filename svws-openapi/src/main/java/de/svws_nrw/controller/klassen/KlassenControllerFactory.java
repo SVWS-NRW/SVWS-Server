@@ -51,6 +51,20 @@ public final class KlassenControllerFactory {
 	}
 
 	/**
+	 * Erstellt eine Factory-Instanz mit Schreibberechtigung.
+	 * <p>
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN}.
+	 * </p>
+	 *
+	 * @param request   die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 *
+	 * @return eine KlassenControllerFactory-Instanz mit Schreibberechtigung
+	 */
+	public static KlassenControllerFactory withWriteAccess(final HttpServletRequest request) {
+		return getNewInstance(request, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+	}
+
+	/**
 	 * Erstellt eine Factory-Instanz ohne erforderliche Benutzerkompetenz.
 	 *
 	 * @param request   die HTTP-Anfrage zur Initialisierung der Datenbankverbindung

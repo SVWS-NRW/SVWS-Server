@@ -1,11 +1,11 @@
 package de.svws_nrw.service.klassen;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,7 +25,8 @@ import de.svws_nrw.service.schule.SchuljahresabschnittService;
  * <ul>
  *   <li>die Klassenleitungen mit einer einzigen Abfrage,</li>
  *   <li>die Schüler (optional) mit einer einzigen Zuordnungs- und einer einzigen Schüler-Abfrage,</li>
- *   <li>die Schuljahresabschnitte und die Klassen der Nachbarabschnitte je Abschnitt nur einmal.</li>
+ *   <li>die Schuljahresabschnitte mit einer einzigen Abfrage und die Klassen der Nachbarabschnitte je Abschnitt nur einmal und nur, wenn eine Klasse
+ *       eine Vorgänger- bzw. Folgeklasse hat.</li>
  * </ul>
  */
 public final class KlassenMappingContextLoader {
@@ -71,13 +72,15 @@ public final class KlassenMappingContextLoader {
 			return Collections.emptyMap();
 		}
 		final var abschnitte = loadAbschnitte(klassen);
-		final var klassenNachAbschnitt = loadKlassenDerNachbarabschnitte(abschnitte.values());
+		final var klassenNachAbschnitt = loadKlassenDerNachbarabschnitte(klassen, abschnitte);
 		final var schulform = eigeneSchuleService.getSchulform();
 		final var idsKlassen = klassen.stream()
 				.map(k -> k.ID)
 				.toList();
 		final var klassenleitungen = klassenleitungenRepository.getMapKlassenleitungen(idsKlassen);
-		final Map<Long, List<Schueler>> schueler = mitSchueler ? schuelerLoader.load(idsKlassen) : Collections.emptyMap();
+		final Map<Long, List<Schueler>> schueler = mitSchueler
+				? schuelerLoader.load(idsKlassen)
+				: Collections.emptyMap();
 		return klassen.stream()
 				.collect(Collectors.toMap(
 						k -> k.ID,
@@ -95,32 +98,49 @@ public final class KlassenMappingContextLoader {
 	}
 
 	/**
-	 * Lädt die Schuljahresabschnitte der Klassen, jeden Abschnitt nur einmal.
+	 * Lädt die Schuljahresabschnitte der Klassen mit einer einzigen Abfrage, jeden Abschnitt nur einmal.
 	 *
 	 * @param klassen   die Klassen
 	 *
 	 * @return die Schuljahresabschnitte mit der Abschnitts-ID als Schlüssel
 	 */
 	private Map<Long, Schuljahresabschnitt> loadAbschnitte(final List<DTOKlassen> klassen) {
-		return klassen.stream()
+		final var idsAbschnitte = klassen.stream()
 				.map(k -> k.Schuljahresabschnitts_ID)
 				.distinct()
-				.collect(Collectors.toMap(Function.identity(), schuljahresabschnittService::getById));
+				.toList();
+
+		return schuljahresabschnittService.getMapByIds(idsAbschnitte);
 	}
 
 	/**
-	 * Lädt die Klassen der vorigen und folgenden Abschnitte der übergebenen Schuljahresabschnitte, jeden Nachbarabschnitt nur einmal.
+	 * Lädt die Klassen der vorigen und folgenden Abschnitte der Klassen, jeden Nachbarabschnitt nur einmal. Die Klassen des vorigen
+	 * Abschnitts werden nur geladen, wenn eine Klasse eine Vorgängerklasse hat, die des folgenden Abschnitts nur, wenn eine Klasse
+	 * eine Folgeklasse hat.
 	 *
-	 * @param abschnitte   die Schuljahresabschnitte
+	 * @param klassen      die Klassen
+	 * @param abschnitte   die Schuljahresabschnitte der Klassen mit der Abschnitts-ID als Schlüssel
 	 *
 	 * @return die Klassen mit dem Kürzel als Schlüssel je Abschnitts-ID der Nachbarabschnitte
 	 */
-	private Map<Long, Map<String, DTOKlassen>> loadKlassenDerNachbarabschnitte(final Collection<Schuljahresabschnitt> abschnitte) {
-		return abschnitte.stream()
-				.flatMap(a -> Stream.of(a.idVorigerAbschnitt, a.idFolgeAbschnitt))
-				.filter(Objects::nonNull)
+	private Map<Long, Map<String, DTOKlassen>> loadKlassenDerNachbarabschnitte(final List<DTOKlassen> klassen,
+			final Map<Long, Schuljahresabschnitt> abschnitte) {
+		return Stream.concat(
+				getIdsNachbarabschnitte(klassen, abschnitte, k -> k.VKlasse != null, a -> a.idVorigerAbschnitt != null, a -> a.idVorigerAbschnitt),
+				getIdsNachbarabschnitte(klassen, abschnitte, k -> k.FKlasse != null, a -> a.idFolgeAbschnitt != null, a -> a.idFolgeAbschnitt))
 				.distinct()
 				.collect(Collectors.toMap(Function.identity(), this::getKlassenByKuerzel));
+	}
+
+	private static Stream<Long> getIdsNachbarabschnitte(final List<DTOKlassen> klassen, final Map<Long, Schuljahresabschnitt> abschnitte,
+			final Predicate<DTOKlassen> hatNachbarklasse, final Predicate<Schuljahresabschnitt> hatNachbarabschnitt,
+			final ToLongFunction<Schuljahresabschnitt> getIdNachbarabschnitt) {
+		return klassen.stream()
+				.filter(hatNachbarklasse)
+				.map(k -> abschnitte.get(k.Schuljahresabschnitts_ID))
+				.filter(hatNachbarabschnitt)
+				.mapToLong(getIdNachbarabschnitt)
+				.boxed();
 	}
 
 	/**

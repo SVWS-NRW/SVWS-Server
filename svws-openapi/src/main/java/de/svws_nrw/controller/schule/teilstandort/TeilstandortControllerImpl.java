@@ -5,7 +5,6 @@ import java.util.List;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Teilstandort;
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.schule.teilstandort.TeilstandortCreateRequest;
 import de.svws_nrw.service.schule.teilstandort.TeilstandortPatchRequest;
 import de.svws_nrw.service.schule.teilstandort.TeilstandortService;
@@ -41,9 +40,6 @@ public final class TeilstandortControllerImpl implements TeilstandortController 
 
 	@Override
 	public Response create(final TeilstandortCreateRequest request) {
-		if (request == null) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Request darf nicht null sein.");
-		}
 		BeanValidator.validate(request);
 
 		final Teilstandort created = service.create(request);
@@ -53,9 +49,6 @@ public final class TeilstandortControllerImpl implements TeilstandortController 
 
 	@Override
 	public Response patch(final String id, final TeilstandortPatchRequest patch) {
-		if (patch == null) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Patch darf nicht null sein.");
-		}
 		BeanValidator.validate(patch);
 
 		final Teilstandort updated = service.patch(id, patch);

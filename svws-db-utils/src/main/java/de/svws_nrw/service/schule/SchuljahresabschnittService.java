@@ -1,8 +1,12 @@
 package de.svws_nrw.service.schule;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils;
@@ -79,9 +83,38 @@ public final class SchuljahresabschnittService {
 	 * @throws ApiOperationException   wenn kein Schuljahresabschnitt zur ID gefunden wurde
 	 */
 	public Schuljahresabschnitt getById(final Long id) {
-		return repository.findById(id)
-				.map(mapper::toApi)
+		return findById(id)
 				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, SCHULJAHRESABSCHNITT_NICHT_GEFUNDEN.formatted(id)));
+	}
+
+
+	/**
+	 * Bestimmt den Schuljahresabschnitt anhand der ID, sofern er existiert.
+	 *
+	 * @param id   die ID des Schuljahresabschnittes
+	 *
+	 * @return der Schuljahresabschnitt oder ein leeres Optional, falls er nicht existiert
+	 */
+	public Optional<Schuljahresabschnitt> findById(final Long id) {
+		return repository.findById(id).map(mapper::toApi);
+	}
+
+
+	/**
+	 * Bestimmt die Schuljahresabschnitte zu den übergebenen IDs mit einer einzigen Datenbankabfrage.
+	 *
+	 * @param ids   die IDs der Schuljahresabschnitte
+	 *
+	 * @return die Schuljahresabschnitte mit der ID als Schlüssel, leer wenn keine IDs übergeben wurden
+	 */
+	public Map<Long, Schuljahresabschnitt> getMapByIds(final Collection<Long> ids) {
+		final var abschnitte = repository.findListByIds(ids).stream()
+				.map(mapper::toApi)
+				.collect(Collectors.toMap(a -> a.id, Function.identity()));
+
+		validateAllFound(ids, abschnitte);
+
+		return abschnitte;
 	}
 
 
@@ -210,6 +243,16 @@ public final class SchuljahresabschnittService {
 
 		return repository.findById(idAktiv)
 				.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, AKTIVER_SCHULJAHRESABSCHNITT_NICHT_GEFUNDEN.formatted(idAktiv)));
+	}
+
+
+	private static void validateAllFound(final Collection<Long> ids, final Map<Long, Schuljahresabschnitt> abschnitte) {
+		ids.stream()
+				.filter(id -> !abschnitte.containsKey(id))
+				.findFirst()
+				.ifPresent(id -> {
+					throw new ApiOperationException(Status.NOT_FOUND, SCHULJAHRESABSCHNITT_NICHT_GEFUNDEN.formatted(id));
+				});
 	}
 
 

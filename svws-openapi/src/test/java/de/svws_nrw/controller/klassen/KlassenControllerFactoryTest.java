@@ -64,6 +64,26 @@ class KlassenControllerFactoryTest {
 	}
 
 	@Test
+	@DisplayName("withWriteAccess | Factory wird erstellt und DBBenutzerUtils mit UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN aufgerufen")
+	void withWriteAccess() {
+		final var factory = KlassenControllerFactory.withWriteAccess(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), eq(ServerMode.STABLE), eq(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN)), times(1));
+		assertThat(factory).isNotNull();
+	}
+
+	@Test
+	@DisplayName("withWriteAccess | Fehlende Berechtigung: Die Exception von DBBenutzerUtils wird weitergegeben")
+	void withWriteAccess_forbidden() {
+		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(any(HttpServletRequest.class), any(ServerMode.class), any(BenutzerKompetenz.class)))
+				.thenThrow(new ApiOperationException(Response.Status.FORBIDDEN, "Keine Berechtigung."));
+
+		assertThatThrownBy(() -> KlassenControllerFactory.withWriteAccess(request))
+				.isInstanceOfSatisfying(ApiOperationException.class, e -> assertThat(e.getStatus()).isEqualTo(Response.Status.FORBIDDEN));
+	}
+
+	@Test
 	@DisplayName("withNoAccess | Factory wird erstellt und DBBenutzerUtils mit KEINE aufgerufen")
 	void withNoAccess() {
 		final var factory = KlassenControllerFactory.withNoAccess(request);

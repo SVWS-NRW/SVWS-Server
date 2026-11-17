@@ -116,6 +116,32 @@ class SchuljahresabschnittServiceTest {
 	}
 
 
+	// --- findById ---
+
+	@Test
+	@DisplayName("findById | liefert den korrekt gemappten Schuljahresabschnitt")
+	void findById_success() {
+		final long id = 42L;
+		final var dto = new DTOSchuljahresabschnitte(id, 2023, 2);
+		dto.VorigerAbschnitt_ID = 41L;
+		when(repoMock.findById(id)).thenReturn(Optional.of(dto));
+
+		assertThat(service.findById(id))
+				.isPresent()
+				.get()
+				.extracting("id", "schuljahr", "abschnitt", "idVorigerAbschnitt", "idFolgeAbschnitt")
+				.containsExactly(id, 2023, 2, 41L, null);
+	}
+
+	@Test
+	@DisplayName("findById | unbekannte ID liefert ein leeres Optional ohne Exception")
+	void findById_empty() {
+		when(repoMock.findById(42L)).thenReturn(Optional.empty());
+
+		assertThat(service.findById(42L)).isEmpty();
+	}
+
+
 	// --- findBySchuljahrAndAbschnitt ---
 
 	@Test
@@ -196,6 +222,43 @@ class SchuljahresabschnittServiceTest {
 		when(repoMock.findListBySchuljahre(List.of(2030))).thenReturn(List.of());
 
 		assertThat(service.getListBySchuljahre(List.of(2030))).isEmpty();
+	}
+
+
+	// --- getMapByIds ---
+
+	@Test
+	@DisplayName("getMapByIds | lädt alle Abschnitte mit einer Abfrage und liefert sie mit der ID als Schlüssel")
+	void getMapByIds_mapped() {
+		final var dto1 = new DTOSchuljahresabschnitte(1L, 2026, 1);
+		final var dto2 = new DTOSchuljahresabschnitte(2L, 2026, 2);
+		when(repoMock.findListByIds(List.of(1L, 2L))).thenReturn(List.of(dto1, dto2));
+
+		final var result = service.getMapByIds(List.of(1L, 2L));
+
+		assertThat(result).containsOnlyKeys(1L, 2L)
+				.satisfies(map -> assertThat(map.get(2L)).extracting("schuljahr", "abschnitt").containsExactly(2026, 2));
+		verify(repoMock, times(1)).findListByIds(List.of(1L, 2L));
+	}
+
+	@Test
+	@DisplayName("getMapByIds | ohne IDs wird eine leere Map geliefert")
+	void getMapByIds_empty() {
+		when(repoMock.findListByIds(List.of())).thenReturn(List.of());
+
+		assertThat(service.getMapByIds(List.of())).isEmpty();
+	}
+
+	@Test
+	@DisplayName("getMapByIds | eine nicht gefundene ID führt zu 404")
+	void getMapByIds_notFound() {
+		when(repoMock.findListByIds(List.of(1L, 77L))).thenReturn(List.of(new DTOSchuljahresabschnitte(1L, 2026, 1)));
+
+		assertThatThrownBy(() -> service.getMapByIds(List.of(1L, 77L)))
+				.isInstanceOfSatisfying(ApiOperationException.class, e -> {
+					assertThat(e.getStatus()).isEqualTo(Response.Status.NOT_FOUND);
+					assertThat(e.getBody()).isEqualTo("Der Schuljahresabschnitt mit der ID 77 wurde nicht gefunden.");
+				});
 	}
 
 

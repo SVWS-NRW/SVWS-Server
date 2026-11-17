@@ -63,8 +63,9 @@ describe("APIKlassen Tests", () => {
 			},
 			schema, 3);
 
-			expect(result).toBeTruthy();
-			expect((await handleRequest(api, api.getKlasse, schema, 3)).content).toMatchSnapshot();
+			const klasse = await handleRequest(api, api.getKlasse, schema, 3);
+			expect(result.content).toEqual(klasse.content);
+			expect(klasse.content).toMatchSnapshot();
 		});
 
 		test.runIf(allowDestructiveTests)('DELETE: Mehrere Klassen mit unterschiedlichen Löschergebnissen', async () => {

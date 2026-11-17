@@ -102,6 +102,30 @@ class SchuelerLernabschnittRepositoryImplTest {
 	}
 
 	@Test
+	@DisplayName("Test: Prüfe, ob getMapAnzahlSchuelerAktuell die Anzahl der nicht gelöschten Schüler je Klasse aus den Zeilen der Abfrage bestimmt.")
+	void testGetMapAnzahlSchuelerAktuell() {
+		final List<Long> idsKlassen = Arrays.asList(1L, 2L, 3L);
+		final String query = "SELECT l.Klassen_ID, COUNT(DISTINCT l.Schueler_ID) FROM DTOSchuelerLernabschnittsdaten l, DTOSchueler s "
+				+ "WHERE l.Klassen_ID IN ?1 AND l.WechselNr = 0 AND s.ID = l.Schueler_ID "
+				+ "AND (s.hatLoeschvermerk IS NULL OR s.hatLoeschvermerk = false) GROUP BY l.Klassen_ID";
+
+		when(conn.queryList(query, Object[].class, idsKlassen)).thenReturn(List.of(new Object[] { 1L, 3L }, new Object[] { 2L, 1L }));
+
+		final Map<Long, Long> result = repository.getMapAnzahlSchuelerAktuell(idsKlassen);
+
+		assertEquals(Map.of(1L, 3L, 2L, 1L), result);
+		verify(conn).queryList(query, Object[].class, idsKlassen);
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getMapAnzahlSchuelerAktuell bei null oder einer leeren Liste eine leere Map ohne DB-Interaktion zurückgibt.")
+	void testGetMapAnzahlSchuelerAktuellEmptyInputs() {
+		assertTrue(repository.getMapAnzahlSchuelerAktuell(null).isEmpty());
+		assertTrue(repository.getMapAnzahlSchuelerAktuell(Collections.emptyList()).isEmpty());
+		verifyNoInteractions(conn);
+	}
+
+	@Test
 	@DisplayName("Test: getMapBySchuelerIDsAndSchuljahreabschnitt nutzt korrekte JPQL-Parameter.")
 	void testGetMapBySchuelerIDsAndSchuljahreabschnitt() {
 		final List<Long> idsSchueler = Arrays.asList(100L);
