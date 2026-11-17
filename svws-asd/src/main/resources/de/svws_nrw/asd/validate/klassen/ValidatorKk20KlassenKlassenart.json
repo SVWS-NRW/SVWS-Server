@@ -1,0 +1,23 @@
+{
+	"version" : 1,
+	"validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKk20KlassenKlassenart",
+	"historie" : [ {
+		"praefix" : "KK20",
+		"altes_kuerzel" : "UAPK",
+		"zweig" : "Klassen-Klassenart",
+		"dtos" : "KlassenDaten, SchuelerLernabschnittsdaten",
+		"ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+		"anzeigebereich_ui" : "Feld 'Nachname'",
+		"svws" : true,
+		"zebras" : true,
+		"vorbedingung" : [ ],
+		"muss" : [],
+		"kann" : ["GY"],
+		"hinweis" : [ ],
+		"text" : "Klassenart der Klasse: In der vorliegenden Klasse ist mindestens ein(e) Schüler(in) mit der Klassenart 'Profilklasse' vorhanden. In den Daten zu dieser Klasse findet sich jedoch kein entsprechender Eintrag zur Profilklasse.",
+		"erlaeuterung" : "Der Fehler soll anspringen, wenn in einer Klasse bei mindestens einer/einem Schüler/Schülerin die Klassenart 'Profilklasse' (SchuelerLernabschnittsdaten.idKlassenart ≙ Bezeichner 'PK' in Klassenart.json) eingetragen ist und in der entsprechenden Klasse jedoch nicht (KlassenDaten.idKlassen ≙ Bezeichner 'PK' in Klassenart.json).",
+		"bedingung" : "KlassenDaten.idKlassen ≙ Bezeichner 'PK' in Klassenart.json ∧ wenn in einer Klasse bei mindestens einer/einem Schüler/Schülerin die Klassenart 'Profilklasse' (SchuelerLernabschnittsdaten.idKlassenart ≙ Bezeichner 'PK' in Klassenart.json) eingetragen ist",
+		"gueltigVon" : null,
+		"gueltigBis" : null
+	} ]
+}

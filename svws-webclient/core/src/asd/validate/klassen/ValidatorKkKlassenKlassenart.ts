@@ -1,8 +1,10 @@
 import { ValidatorKk00KlassenKlassenart } from '../../../asd/validate/klassen/ValidatorKk00KlassenKlassenart';
 import type { Supplier } from '../../../java/util/function/Supplier';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorKk20KlassenKlassenart } from '../../../asd/validate/klassen/ValidatorKk20KlassenKlassenart';
 
 export class ValidatorKkKlassenKlassenart extends Validator {
 
@@ -10,12 +12,14 @@ export class ValidatorKkKlassenKlassenart extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idKlassenart   KlassenartID
-	 * @param kontext        der Kontext des Validators
+	 * @param idKlassenart                KlassenartID
+	 * @param listIdKlassenartSchueler    Liste der IDs der Klassenart der Schüler dieser Klasse
+	 * @param kontext                     der Kontext des Validators
 	 */
-	public constructor(idKlassenart: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idKlassenart: Supplier<number | null>, listIdKlassenartSchueler: Supplier<List<number> | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorKk00KlassenKlassenart(idKlassenart, kontext));
+		this._validatoren.add(new ValidatorKk20KlassenKlassenart(idKlassenart, listIdKlassenartSchueler, kontext));
 	}
 
 	protected pruefe(): boolean {
