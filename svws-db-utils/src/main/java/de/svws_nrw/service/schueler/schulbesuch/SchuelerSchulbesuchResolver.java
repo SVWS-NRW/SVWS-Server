@@ -2,7 +2,9 @@ package de.svws_nrw.service.schueler.schulbesuch;
 
 import java.util.Optional;
 
+import de.svws_nrw.asd.data.CoreTypeData;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
+import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
 import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
@@ -287,13 +289,12 @@ public final class SchuelerSchulbesuchResolver {
 	 * @param entity    die Schüler-Entity mit den Quellfeldern {@code LSSchulNr}, {@code LSSchulform} und {@code LSSchulformSIM}
 	 * @param target    das Zielobjekt, in dem {@code idSchulgliederungVorherigeSchule} gesetzt wird
 	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird;
-	 *                  ist {@code null}, wird kein Mapping vorgenommen
+	 *                  ist {@code null} (z. B. weil kein Entlassdatum vorliegt), wird der aktuellste Historieneintrag verwendet
 	 */
 	public static void mapSchulgliederung(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final Integer schuljahr) {
-		if (schulgliederungGesetzt(entity) && (schuljahr != null)) {
+		if (schulgliederungGesetzt(entity)) {
 			target.idSchulgliederungVorherigeSchule = Optional.ofNullable(HerkunftBildungsgang.data().getWertByKuerzel(entity.LSSchulformSIM))
-					.map(h -> h.daten(schuljahr))
-					.map(h -> h.id)
+					.map(h -> findIdBySchuljahr(h, schuljahr))
 					.orElse(null);
 		}
 	}
@@ -334,17 +335,21 @@ public final class SchuelerSchulbesuchResolver {
 	 * @param entity    die Schüler-Entity mit den Quellfeldern {@code LSSchulNr}, {@code LSSchulform} und {@code LSSchulformSIM}
 	 * @param target    das Zielobjekt, in dem {@code idHerkunftSchulformVorherigeSchule} gesetzt wird
 	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird;
-	 *                  ist {@code null}, wird kein Mapping vorgenommen
+	 *                  ist {@code null} (z. B. weil kein Entlassdatum vorliegt), wird der aktuellste Historieneintrag verwendet
 	 */
 	public static void mapHerkunftSchulform(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final Integer schuljahr) {
 		// falls schulform == "SF" -> dann wird die Schulform in LSSchulformSIM gespeichert und nicht in LSSchulform
 		final var schulform = (entity.LSSchulform == null) ? entity.LSSchulformSIM : entity.LSSchulform;
-		if (isSonstigeSchule(entity.LSSchulNr) && (schuljahr != null) && (schulform != null)) {
+		if (isSonstigeSchule(entity.LSSchulNr) && (schulform != null)) {
 			target.idHerkunftSchulformVorherigeSchule = Optional.ofNullable(HerkunftSchulform.data().getWertByKuerzel(schulform))
-					.map(h -> h.daten(schuljahr))
-					.map(h -> h.id)
+					.map(h -> findIdBySchuljahr(h, schuljahr))
 					.orElse(null);
 		}
+	}
+
+	private static <T extends CoreTypeData, U extends CoreType<T, U>> Long findIdBySchuljahr(final U wert, final Integer schuljahr) {
+		final var eintrag = (schuljahr == null) ? wert.historie().getLast() : wert.daten(schuljahr);
+		return (eintrag == null) ? null : eintrag.id;
 	}
 
 	private static boolean keinSchulbesuch(final DTOSchueler entity) {

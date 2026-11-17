@@ -552,18 +552,34 @@ class SchuelerSchulbesuchResolverTest {
 		}
 
 		@Test
-		@DisplayName("schuljahr null - kein Mapping")
-		void schuljahrNull_keinMapping() {
+		@DisplayName("schuljahr null - setzt id des aktuellsten Historieneintrags")
+		void schuljahrNull_setztIdDesLetztenHistorieneintrags() {
+			final var wert = HerkunftBildungsgang.data().getWerte().getFirst();
+			final var erwartetId = wert.historie().getLast().id;
 			final var entity = new DTOSchueler(1L, "123", true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulform = KUERZEL_BK;
-			entity.LSSchulformSIM = "BK1";
+			entity.LSSchulformSIM = wert.historie().getLast().schluessel;
+			final var target = new SchuelerSchulbesuchsdaten();
+
+			SchuelerSchulbesuchResolver.mapSchulgliederung(entity, target, null);
+
+			assertThat(target.idSchulgliederungVorherigeSchule).isEqualTo(erwartetId);
+		}
+
+		@Test
+		@DisplayName("schuljahr null, unbekannter LSSchulformSIM-Schluessel - setzt null")
+		void schuljahrNull_unbekannterSIM_setztNull() {
+			final var entity = new DTOSchueler(1L, "123", true);
+			entity.LSSchulNr = "100001";
+			entity.LSSchulform = KUERZEL_BK;
+			entity.LSSchulformSIM = "UNBEKANNT";
 			final var target = new SchuelerSchulbesuchsdaten();
 			target.idSchulgliederungVorherigeSchule = 99L;
 
 			SchuelerSchulbesuchResolver.mapSchulgliederung(entity, target, null);
 
-			assertThat(target.idSchulgliederungVorherigeSchule).isEqualTo(99L);
+			assertThat(target.idSchulgliederungVorherigeSchule).isNull();
 		}
 	}
 
@@ -760,18 +776,33 @@ class SchuelerSchulbesuchResolverTest {
 		}
 
 		@Test
-		@DisplayName("schuljahr null - kein Mapping")
-		void schuljahrNull_keinMapping() {
+		@DisplayName("schuljahr null - setzt id des aktuellsten Historieneintrags")
+		void schuljahrNull_setztIdDesLetztenHistorieneintrags() {
+			final var erwartetId = HerkunftSchulform.data().getWertByKuerzel(KUERZEL_GY).historie().getLast().id;
 			final var entity = new DTOSchueler(1L, "123", true);
 			entity.LSSchulNr = "200001";
 			entity.LSSchulform = KUERZEL_GY;
+			entity.LSSchulformSIM = null;
+			final var target = new SchuelerSchulbesuchsdaten();
+
+			SchuelerSchulbesuchResolver.mapHerkunftSchulform(entity, target, null);
+
+			assertThat(target.idHerkunftSchulformVorherigeSchule).isEqualTo(erwartetId);
+		}
+
+		@Test
+		@DisplayName("schuljahr null, unbekannter LSSchulform-Schluessel - setzt null")
+		void schuljahrNull_unbekannterSchulform_setztNull() {
+			final var entity = new DTOSchueler(1L, "123", true);
+			entity.LSSchulNr = "200001";
+			entity.LSSchulform = "UNBEKANNT";
 			entity.LSSchulformSIM = null;
 			final var target = new SchuelerSchulbesuchsdaten();
 			target.idHerkunftSchulformVorherigeSchule = 99L;
 
 			SchuelerSchulbesuchResolver.mapHerkunftSchulform(entity, target, null);
 
-			assertThat(target.idHerkunftSchulformVorherigeSchule).isEqualTo(99L);
+			assertThat(target.idHerkunftSchulformVorherigeSchule).isNull();
 		}
 	}
 
