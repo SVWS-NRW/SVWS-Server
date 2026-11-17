@@ -14247,7 +14247,9 @@ export class ApiServer extends BaseApi {
 	 * Passt die Schüler-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Der Patch wurde erfolgreich in die Schülerstammdaten integriert.
+	 *   Code 200: Der Patch wurde erfolgreich in die Schülerstammdaten integriert. Die aktualisierten Schülerstammdaten werden zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerStammdaten
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.
 	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
@@ -14257,13 +14259,17 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<SchuelerStammdaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich in die Schülerstammdaten integriert. Die aktualisierten Schülerstammdaten werden zurückgegeben.
 	 */
-	public async patchSchuelerStammdaten(data: Partial<SchuelerStammdaten>, schema: string, id: number): Promise<void> {
+	public async patchSchuelerStammdaten(data: Partial<SchuelerStammdaten>, schema: string, id: number): Promise<SchuelerStammdaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = SchuelerStammdaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return SchuelerStammdaten.transpilerFromJSON(text);
 	}
 
 

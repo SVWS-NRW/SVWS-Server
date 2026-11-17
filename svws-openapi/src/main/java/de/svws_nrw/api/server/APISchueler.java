@@ -292,7 +292,9 @@ public class APISchueler {
 	@Operation(summary = "Patch für eines Schüler Stammdaten Objektes.",
 			description = "Passt die Schüler-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert. "
+			+ "Die aktualisierten Schülerstammdaten werden zurückgegeben.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
