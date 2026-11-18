@@ -165,7 +165,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 		const pruefungProjektkurse: Abi30BelegpruefungProjektkurse = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse(this.pruefungen_vorher[0]));
 		const projektkurs: AbiturFachbelegung | null = pruefungProjektkurse.getProjektkurs();
 		const referenzFach: GostFach | null = ((projektkurs !== null) && (projektkurs.idReferenzfach !== null)) ? this.manager.faecher().get(projektkurs.idReferenzfach) : null;
-		if ((projektkurs !== null) && (referenzFach !== null) && (projektkurs.abiturFach === 5) && GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(referenzFach)) {
+		if ((projektkurs !== null) && (referenzFach !== null) && (projektkurs.abiturFach !== null) && (projektkurs.abiturFach === 5) && GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(referenzFach)) {
 			const fachbelegung: AbiturFachbelegung | null = this.manager.getFachbelegungByID(referenzFach.id);
 			if ((this.manager.pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))) {
 				return;
