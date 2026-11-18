@@ -1,5 +1,6 @@
 package de.svws_nrw.service.enm;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -19,6 +21,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.MockedStatic;
 import org.openapitools.jackson.nullable.JsonNullable;
 
+import de.svws_nrw.core.data.enm.ENMConfigKlasse;
+import de.svws_nrw.core.data.enm.ENMConfigKlasseSpalte;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
@@ -150,6 +154,62 @@ class NotenmodulLocalServiceTest {
 				.isInstanceOf(ApiOperationException.class)
 				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
 		verify(schuelerAnkreuzkompetenzRepository, never()).findById(anyLong());
+	}
+
+
+	// -------------------------------------------------------------------------
+	// Sperrkonfiguration: feste Spalten und gleichnamige Teilleistungsarten
+	// -------------------------------------------------------------------------
+
+	private static final int BERECHTIGUNG = 1;
+
+	private static ENMConfigKlasseSpalte spalte(final Long idTeilleistung, final String name, final boolean gesperrt) {
+		final ENMConfigKlasseSpalte spalte = new ENMConfigKlasseSpalte();
+		spalte.idTeilleistung = idTeilleistung;
+		spalte.name = name;
+		spalte.gesperrt = gesperrt;
+		return spalte;
+	}
+
+	private static ENMConfigKlasse config(final ENMConfigKlasseSpalte... spalten) {
+		final ENMConfigKlasse config = new ENMConfigKlasse();
+		config.id = 1L;
+		config.spalten.addAll(List.of(spalten));
+		return config;
+	}
+
+	@Test
+	@DisplayName("Sperrprüfung: Eine feste Spalte ist nur freigegeben, wenn sie selbst freigegeben ist")
+	void sperrpruefungFesteSpalte() {
+		assertThatCode(() -> NotenmodulLocalService.pruefeKonfigurationPatchErlaubt(BERECHTIGUNG, config(spalte(null, "Note", false)), "Note"))
+				.doesNotThrowAnyException();
+		assertThatThrownBy(() -> NotenmodulLocalService.pruefeKonfigurationPatchErlaubt(BERECHTIGUNG, config(spalte(null, "Note", true)), "Note"))
+				.isInstanceOf(ApiOperationException.class).hasFieldOrPropertyWithValue("status", Status.FORBIDDEN);
+	}
+
+	@Test
+	@DisplayName("Sperrprüfung: Eine freigegebene Teilleistungsart mit der Bezeichnung einer festen Spalte gibt diese nicht frei")
+	void sperrpruefungTeilleistungsartMitBezeichnungFesterSpalte() {
+		assertThatThrownBy(() -> NotenmodulLocalService.pruefeKonfigurationPatchErlaubt(BERECHTIGUNG,
+				config(spalte(null, "Note", true), spalte(100L, "Note", false)), "Note"))
+				.isInstanceOf(ApiOperationException.class).hasFieldOrPropertyWithValue("status", Status.FORBIDDEN);
+		assertThatThrownBy(() -> NotenmodulLocalService.pruefeKonfigurationPatchErlaubtFehlstunden(BERECHTIGUNG,
+				config(spalte(null, "Fehlstunden", true), spalte(100L, "Fehlstunden", false))))
+				.isInstanceOf(ApiOperationException.class).hasFieldOrPropertyWithValue("status", Status.FORBIDDEN);
+		assertThatThrownBy(() -> NotenmodulLocalService.pruefeKonfigurationPatchErlaubtTeilleistung(BERECHTIGUNG,
+				config(spalte(null, "Teilnoten", true), spalte(100L, "Teilnoten", false), spalte(101L, "KA", false)), 101L))
+				.isInstanceOf(ApiOperationException.class).hasFieldOrPropertyWithValue("status", Status.FORBIDDEN);
+	}
+
+	@Test
+	@DisplayName("Sperrprüfung: Eine Teilleistung braucht die Freigabe der Teilnoten und ihrer Teilleistungsart")
+	void sperrpruefungTeilleistung() {
+		assertThatCode(() -> NotenmodulLocalService.pruefeKonfigurationPatchErlaubtTeilleistung(BERECHTIGUNG,
+				config(spalte(null, "Teilnoten", false), spalte(100L, "KA", false)), 100L))
+				.doesNotThrowAnyException();
+		assertThatThrownBy(() -> NotenmodulLocalService.pruefeKonfigurationPatchErlaubtTeilleistung(BERECHTIGUNG,
+				config(spalte(null, "Teilnoten", false), spalte(100L, "KA", true)), 100L))
+				.isInstanceOf(ApiOperationException.class).hasFieldOrPropertyWithValue("status", Status.FORBIDDEN);
 	}
 
 }

@@ -295,12 +295,12 @@ public class NotenmodulLocalService {
 	}
 
 
-	private static void pruefeKonfigurationPatchErlaubt(final int berechtigung, final ENMConfigKlasse config, final @NotNull String attribute)
+	static void pruefeKonfigurationPatchErlaubt(final int berechtigung, final ENMConfigKlasse config, final @NotNull String attribute)
 			throws ApiOperationException {
 		// Prüfe generelle Berechtigung bei der Eingabespalte
 		boolean allowed = false;
 		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
-			if (attribute.equals(col.name) && (!col.gesperrt)) {
+			if ((col.idTeilleistung == null) && attribute.equals(col.name) && (!col.gesperrt)) {
 				allowed = true;
 				break;
 			}
@@ -315,11 +315,11 @@ public class NotenmodulLocalService {
 	}
 
 
-	private static void pruefeKonfigurationPatchErlaubtFehlstunden(final int berechtigung, final ENMConfigKlasse config) throws ApiOperationException {
+	static void pruefeKonfigurationPatchErlaubtFehlstunden(final int berechtigung, final ENMConfigKlasse config) throws ApiOperationException {
 		// Prüfe generelle Berechtigung bei den Fehlstunden
 		boolean allowed = false;
 		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
-			if ("Fehlstunden".equals(col.name) && (!col.gesperrt)) {
+			if ((col.idTeilleistung == null) && "Fehlstunden".equals(col.name) && (!col.gesperrt)) {
 				allowed = true;
 				break;
 			}
@@ -335,13 +335,13 @@ public class NotenmodulLocalService {
 	}
 
 
-	private static void pruefeKonfigurationPatchErlaubtTeilleistung(final int berechtigung, final ENMConfigKlasse config, final long idTeilleistungsart)
+	static void pruefeKonfigurationPatchErlaubtTeilleistung(final int berechtigung, final ENMConfigKlasse config, final long idTeilleistungsart)
 			throws ApiOperationException {
 		// Prüfe generelle Berechtigung bei der Eingabespalte
 		boolean allowed = false;
 		boolean allowedSpecial = false;
 		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
-			if ("Teilnoten".equals(col.name) && (!col.gesperrt)) {
+			if ((col.idTeilleistung == null) && "Teilnoten".equals(col.name) && (!col.gesperrt)) {
 				allowed = true;
 			} else if ((col.idTeilleistung != null) && (col.idTeilleistung == idTeilleistungsart) && (!col.gesperrt)) {
 				allowedSpecial = true;

@@ -118,7 +118,7 @@ class PatchManager {
         // Prüfe generelle Berechtigung bei der Eingabespalte
         $allowed = false;
         foreach ($config->spalten as $col) {
-            if ((strcmp($attr, $col->name) === 0) && (!$col->gesperrt)) {
+            if (($col->idTeilleistung === null) && (strcmp($attr, $col->name) === 0) && (!$col->gesperrt)) {
                 $allowed = true;
                 break;
             }
@@ -141,7 +141,7 @@ class PatchManager {
         // Prüfe generelle Berechtigung bei der Eingabespalte
         $allowed = false;
         foreach ($config->spalten as $col) {
-            if ((strcmp("Fehlstunden" , $col->name) === 0) && (!$col->gesperrt)) {
+            if (($col->idTeilleistung === null) && (strcmp("Fehlstunden" , $col->name) === 0) && (!$col->gesperrt)) {
                 $allowed = true;
                 break;
             }
@@ -168,7 +168,7 @@ class PatchManager {
         $allowed = false;
         $allowedSpecial = false;
         foreach ($config->spalten as $col) {
-            if ((strcmp("Teilnoten", $col->name) === 0) && (!$col->gesperrt)) {
+            if (($col->idTeilleistung === null) && (strcmp("Teilnoten", $col->name) === 0) && (!$col->gesperrt)) {
                 $allowed = true;
             } elseif (($col->idTeilleistung != null) && ($col->idTeilleistung == $idTeilleistungsart) && (!$col->gesperrt)) {
                 $allowedSpecial = true;

@@ -47,8 +47,10 @@ export class EnmSperrManager {
 		for (const sperrung of this.sperrungen) {
 			this.mapSperrungen.put(sperrung.id, sperrung);
 			for (const col of sperrung.spalten) {
-				this.mapSperrungenSpalten.put(sperrung.id, col.name, col);
-				if (col.idTeilleistung !== null) {
+				// Feste Spalten werden über den Namen, Teilleistungsarten über die ID zugeordnet, da eine Bezeichnung einer festen Spalte entsprechen kann
+				if (col.idTeilleistung === null) {
+					this.mapSperrungenSpalten.put(sperrung.id, col.name, col);
+				} else {
 					this.mapSperrungenSpaltenTeilleistung.put(sperrung.id, col.idTeilleistung, col);
 				}
 			}
