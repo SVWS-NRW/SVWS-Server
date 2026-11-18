@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIab02IntKatalogFaecherBilingualeSprache",
+    "historie" : [ {
+      "praefix" : "IAB02",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Faecher-BilingualeSprache",
+      "dtos" : "FachStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Fächer",
+      "anzeigebereich_ui" : "Feld 'Bilinguale Sachfachsprache'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["IAB01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Bilinguale Sachfachsprache des Fachs: Der eingetragene Wert für das Feld 'Bilinguale Sachfachsprache' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "",
+      "bedingung" : "FachStatistikGesamt.bilingualeSprache ≠ einem zeitlich gültigen Historieneintrag in BilingualeSprache.json ∧ FachStatistikGesamt.bilingualeSprache ≠ @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+ }
