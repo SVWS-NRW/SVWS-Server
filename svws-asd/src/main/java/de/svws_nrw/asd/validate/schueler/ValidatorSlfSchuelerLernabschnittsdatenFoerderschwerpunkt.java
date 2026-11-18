@@ -28,9 +28,8 @@ public final class ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt ext
 		super(kontext);
 
 		_validatoren.add(
-				new ValidatorSlfeSchuelerLernabschnittsdatenFoerderschwerpunktEins(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
-		_validatoren.add(
-				new ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(idFoerderschwerpunkt1, hatSchwerbehinderungsNachweis, kontext));
+				new ValidatorSlfeSchuelerLernabschnittsdatenFoerderschwerpunktEins(idFoerderschwerpunkt1, idFoerderschwerpunkt2, hatSchwerbehinderungsNachweis,
+						kontext));
 		_validatoren.add(
 				new ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
 	}

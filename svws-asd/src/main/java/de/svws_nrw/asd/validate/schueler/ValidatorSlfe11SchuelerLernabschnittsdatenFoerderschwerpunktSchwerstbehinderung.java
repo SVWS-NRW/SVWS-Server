@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf den ersten Förderschwerpunkt-Schwerstbehinderung
  * der Lernabschnittsdaten eines Schülers aus.
  */
-public final class ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung extends Validator {
+public final class ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung extends Validator {
 
 	private final @NotNull Supplier<@AllowNull Long> idFoerderschwerpunkt1;
 	private final @NotNull Supplier<@AllowNull Boolean> hatSchwerbehinderungsNachweis;
@@ -23,7 +23,7 @@ public final class ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktS
 	 * @param hatSchwerbehinderungsNachweis   Schwerbehinderungsnachweis vorhanden
 	 * @param kontext                         der Kontext des Validators
 	 */
-	public ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(
+	public ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(
 			final @NotNull Supplier<@AllowNull Long> idFoerderschwerpunkt1,
 			final @NotNull Supplier<@AllowNull Boolean> hatSchwerbehinderungsNachweis,
 			final @NotNull ValidatorKontext kontext) {

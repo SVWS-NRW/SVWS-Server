@@ -1,4 +1,3 @@
-import { ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung } from '../../../asd/validate/schueler/ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung';
 import { ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei } from '../../../asd/validate/schueler/ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -19,8 +18,7 @@ export class ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt extends V
 	 */
 	public constructor(hatSchwerbehinderungsNachweis: Supplier<boolean | null>, idFoerderschwerpunkt1: Supplier<number | null>, idFoerderschwerpunkt2: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorSlfeSchuelerLernabschnittsdatenFoerderschwerpunktEins(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
-		this._validatoren.add(new ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(idFoerderschwerpunkt1, hatSchwerbehinderungsNachweis, kontext));
+		this._validatoren.add(new ValidatorSlfeSchuelerLernabschnittsdatenFoerderschwerpunktEins(idFoerderschwerpunkt1, idFoerderschwerpunkt2, hatSchwerbehinderungsNachweis, kontext));
 		this._validatoren.add(new ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
 	}
 

@@ -3,7 +3,7 @@ import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung extends Validator {
+export class ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung extends Validator {
 
 	private readonly idFoerderschwerpunkt1: Supplier<number | null>;
 
@@ -34,17 +34,17 @@ export class ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwers
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.validate.schueler.ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung';
+		return 'de.svws_nrw.asd.validate.schueler.ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.validate.schueler.ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.schueler.ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static readonly class = new Class<ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung>('de.svws_nrw.asd.validate.schueler.ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung');
+	public static readonly class = new Class<ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung>('de.svws_nrw.asd.validate.schueler.ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_schueler_ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(obj: unknown): ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung {
-	return obj as ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung;
+export function cast_de_svws_nrw_asd_validate_schueler_ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(obj: unknown): ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung {
+	return obj as ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung;
 }

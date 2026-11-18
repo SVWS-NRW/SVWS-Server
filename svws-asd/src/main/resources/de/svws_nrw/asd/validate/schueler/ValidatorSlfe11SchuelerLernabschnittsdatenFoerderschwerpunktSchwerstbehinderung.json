@@ -1,8 +1,8 @@
 {
     "version" : 1,
-    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung",
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung",
     "historie" : [ {
-      "praefix" : "SLFS10",
+      "praefix" : "SLFE11",
       "altes_kuerzel" : "AB52, TB",
       "zweig" : "Schueler-Lernabschnittsdaten-Foerderschwerpunkt-Schwerstbehinderung",
       "dtos" : "SchuelerLernabschnittsdaten",

@@ -16,12 +16,12 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für den Validator
  * <ul>
- *   <li> {@link ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung}
+ *   <li> {@link ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung}
  * </ul>
  * </p>
  */
-@DisplayName("Tests ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung")
-class TestValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung {
+@DisplayName("Tests ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung")
+class TestValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung {
 
 	private static final String TESTDATEN = """
 			null   , true    , false
@@ -45,24 +45,25 @@ class TestValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbe
 	}
 
 	/**
-	 * Test von ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung
+	 * Test von ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung
 	 *
 	 * @param idFoerderschwerpunkt1           die ID des ersten Förderschwerpunkts
 	 * @param hatSchwerbehinderungsNachweis   Schwerbehinderungsnachweis vorhanden
 	 * @param result                          gibt an, welches Ergebnis erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung")
+	@DisplayName("Tests für ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
-	void testValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(final Long idFoerderschwerpunkt1, final Boolean hatSchwerbehinderungsNachweis,
+	void testValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(final Long idFoerderschwerpunkt1,
+			final Boolean hatSchwerbehinderungsNachweis,
 			final boolean result) {
 
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
-		final ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung validator =
-				new ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(
+		final ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung validator =
+				new ValidatorSlfe11SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung(
 						() -> idFoerderschwerpunkt1,
 						() -> hatSchwerbehinderungsNachweis,
 						kontext);
