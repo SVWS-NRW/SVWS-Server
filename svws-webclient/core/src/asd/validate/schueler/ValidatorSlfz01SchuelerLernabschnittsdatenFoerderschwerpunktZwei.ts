@@ -1,6 +1,10 @@
+import { ValidatorSlfz12SchuelerLernabschnittsdatenFoerderschwerpunktZwei } from '../../../asd/validate/schueler/ValidatorSlfz12SchuelerLernabschnittsdatenFoerderschwerpunktZwei';
 import { ValidatorSlfz10SchuelerLernabschnittsdatenFoerderschwerpunktZwei } from '../../../asd/validate/schueler/ValidatorSlfz10SchuelerLernabschnittsdatenFoerderschwerpunktZwei';
 import type { Supplier } from '../../../java/util/function/Supplier';
+import { ValidatorSlfz11SchuelerLernabschnittsdatenFoerderschwerpunktZwei } from '../../../asd/validate/schueler/ValidatorSlfz11SchuelerLernabschnittsdatenFoerderschwerpunktZwei';
+import { ValidatorSlfz14SchuelerLernabschnittsdatenFoerderschwerpunktZwei } from '../../../asd/validate/schueler/ValidatorSlfz14SchuelerLernabschnittsdatenFoerderschwerpunktZwei';
 import { Class } from '../../../java/lang/Class';
+import { ValidatorSlfz13SchuelerLernabschnittsdatenFoerderschwerpunktZwei } from '../../../asd/validate/schueler/ValidatorSlfz13SchuelerLernabschnittsdatenFoerderschwerpunktZwei';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Foerderschwerpunkt } from '../../../asd/types/schule/Foerderschwerpunkt';
 import { Validator } from '../../../asd/validate/Validator';
@@ -26,6 +30,10 @@ export class ValidatorSlfz01SchuelerLernabschnittsdatenFoerderschwerpunktZwei ex
 		this._idFoerderschwerpunkt1 = idFoerderschwerpunkt1;
 		this._idFoerderschwerpunkt2 = idFoerderschwerpunkt2;
 		this._validatoren.add(new ValidatorSlfz10SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		this._validatoren.add(new ValidatorSlfz11SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		this._validatoren.add(new ValidatorSlfz12SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		this._validatoren.add(new ValidatorSlfz13SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		this._validatoren.add(new ValidatorSlfz14SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
 	}
 
 	protected pruefe(): boolean {

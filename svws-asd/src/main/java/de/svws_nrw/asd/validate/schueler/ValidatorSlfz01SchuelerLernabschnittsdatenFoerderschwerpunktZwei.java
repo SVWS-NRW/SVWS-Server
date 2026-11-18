@@ -35,6 +35,10 @@ public final class ValidatorSlfz01SchuelerLernabschnittsdatenFoerderschwerpunktZ
 		_idFoerderschwerpunkt2 = idFoerderschwerpunkt2;
 
 		_validatoren.add(new ValidatorSlfz10SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		_validatoren.add(new ValidatorSlfz11SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		_validatoren.add(new ValidatorSlfz12SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		_validatoren.add(new ValidatorSlfz13SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		_validatoren.add(new ValidatorSlfz14SchuelerLernabschnittsdatenFoerderschwerpunktZwei(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
 	}
 
 	@Override
