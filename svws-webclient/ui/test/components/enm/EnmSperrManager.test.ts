@@ -1,8 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
-
-import { EnmSperrManager } from "../../../src/components/enm/EnmSperrManager";
+import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 
 /**
  * Erzeugt das JSON der Sperrkonfiguration für die Klasse mit der ID 1.
