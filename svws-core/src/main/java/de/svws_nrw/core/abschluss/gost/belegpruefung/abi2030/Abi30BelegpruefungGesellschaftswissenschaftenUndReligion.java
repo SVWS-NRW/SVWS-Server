@@ -202,7 +202,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 		final @NotNull Abi30BelegpruefungProjektkurse pruefungProjektkurse = ((@NotNull Abi30BelegpruefungProjektkurse) pruefungen_vorher[0]);
 		final AbiturFachbelegung projektkurs = pruefungProjektkurse.getProjektkurs();
 		final GostFach referenzFach = ((projektkurs != null) && (projektkurs.idReferenzfach != null)) ? manager.faecher().get(projektkurs.idReferenzfach) : null;
-		if ((projektkurs != null) && (referenzFach != null) && (projektkurs.abiturFach == 5) && GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(referenzFach)) {
+		if ((projektkurs != null) && (referenzFach != null) && (projektkurs.abiturFach != null) && (projektkurs.abiturFach == 5) && GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(referenzFach)) {
 			final AbiturFachbelegung fachbelegung = manager.getFachbelegungByID(referenzFach.id);
 			if ((manager.pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
 					&& (manager.pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))) {
