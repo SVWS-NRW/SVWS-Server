@@ -131,6 +131,7 @@
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
 	import type { ENMv2Teilleistung } from '@core/core/data/enm/v2/ENMv2Teilleistung';
 	import { ArrayList } from '@core/java/util/ArrayList';
+	import { HashSet } from '@core/java/util/HashSet';
 	import type { List } from '@core/java/util/List';
 	import type { GridInputNote } from '@ui/ui/controls/tablegrid/GridInputNote';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
@@ -179,13 +180,15 @@
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 
 	const listTeilleistungsarten = computed(() => {
-		const result = new ArrayList<number>();
+		// Mehrere Lerngruppen können dieselbe Teilleistungsart nutzen, diese darf aber nur eine Spalte erhalten
+		const set = new HashSet<number>();
 		for (const lerngruppe of props.auswahl()) {
 			const arten = props.enmManager().mapLerngruppeTeilleistungsarten.get(lerngruppe.id);
 			if (arten !== null) {
-				result.addAll(arten);
+				set.addAll(arten);
 			}
 		}
+		const result = new ArrayList<number>(set);
 		result.sort({ compare: (o1, o2) => {
 			const s1 = props.enmManager().mapTeilleistungsarten.get(o1)?.sortierung ?? 32000;
 			const s2 = props.enmManager().mapTeilleistungsarten.get(o2)?.sortierung ?? 32000;
