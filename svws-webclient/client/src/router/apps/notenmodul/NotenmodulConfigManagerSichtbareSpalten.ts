@@ -166,17 +166,22 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 
 	/** Liefert die Spaltenkonfigurationen für die Teilleistungen */
 	spaltenTeilleistungen = computed(() => {
-		const list = new ArrayList<string>();
+		const cols = new ArrayList<ENMConfigSpalte>();
 		for (const col of this.mapConfigSpalte.value.values()) {
 			if (col.idTeilleistung !== null) {
-				list.add(col.name);
+				cols.add(col);
 			}
 		}
-		list.sort({ compare: (o1, o2) => {
-			const s1 = this.mapTeilleistungsarten.get(o1)?.sortierung ?? 32000;
-			const s2 = this.mapTeilleistungsarten.get(o2)?.sortierung ?? 32000;
+		// Sortiere anhand der Teilleistungsart, die über die ID der Spalte bestimmt wird
+		cols.sort({ compare: (o1, o2) => {
+			const s1 = this.mapTeilleistungsarten.get(o1.idTeilleistung)?.sortierung ?? 32000;
+			const s2 = this.mapTeilleistungsarten.get(o2.idTeilleistung)?.sortierung ?? 32000;
 			return s1 < s2 ? -1 : 1;
 		} });
+		const list = new ArrayList<string>();
+		for (const col of cols) {
+			list.add(col.name);
+		}
 		return list;
 	});
 
