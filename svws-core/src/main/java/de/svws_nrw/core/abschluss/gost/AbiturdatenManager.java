@@ -30,6 +30,7 @@ import de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Sport;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungAbiFaecher;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungAllgemeines;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungBLL;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungDeutsch;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungEinbringung;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFachWaehlbar;
@@ -233,6 +234,7 @@ public class AbiturdatenManager {
 		abi30BelegpruefungKurszahlenUndWochenstunden = new Abi30BelegpruefungKurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
 		pruefungen.add(abi30BelegpruefungKurszahlenUndWochenstunden);
 		pruefungen.add(new Abi30BelegpruefungAllgemeines(this, pruefungsArt));
+		pruefungen.add(new Abi30BelegpruefungBLL(this, pruefungsArt));
 		// Die Prüfung von schulspezifischen Fachkombinationen
 		pruefungen.add(new Abi30BelegpruefungFachkombinationen(this, pruefungsArt));
 		// Die Prüfung der schulspezifischen Wählbarkeit von Fächern

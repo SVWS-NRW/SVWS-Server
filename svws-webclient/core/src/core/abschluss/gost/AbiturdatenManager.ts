@@ -60,6 +60,7 @@ import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
 import { Abi30BelegpruefungGesellschaftswissenschaftenUndReligion } from '../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungGesellschaftswissenschaftenUndReligion';
+import { Abi30BelegpruefungBLL } from '../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungBLL';
 import { GesellschaftswissenschaftenUndReligion } from '../../../core/abschluss/gost/belegpruefung/GesellschaftswissenschaftenUndReligion';
 import { GostBelegungsfehler } from '../../../core/abschluss/gost/GostBelegungsfehler';
 import { Abi30GostAbiturMarkierungspruefung } from '../../../core/abschluss/gost/Abi30GostAbiturMarkierungspruefung';
@@ -253,6 +254,7 @@ export class AbiturdatenManager extends JavaObject {
 		this.abi30BelegpruefungKurszahlenUndWochenstunden = new Abi30BelegpruefungKurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
 		pruefungen.add(this.abi30BelegpruefungKurszahlenUndWochenstunden);
 		pruefungen.add(new Abi30BelegpruefungAllgemeines(this, pruefungsArt));
+		pruefungen.add(new Abi30BelegpruefungBLL(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungFachkombinationen(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungFachWaehlbar(this, pruefungsArt));
 		this.abi30BelegpruefungEinbringung = new Abi30BelegpruefungEinbringung(this, pruefungsArt, pruefungProjektkurse, pruefungSchwerpunkt, pruefungAbiFaecher, this.abi30BelegpruefungKurszahlenUndWochenstunden);

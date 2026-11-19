@@ -446,6 +446,16 @@ public enum GostBelegungsfehler {
 			"Der Projektkurs wurde als 5. Abiturfach gewählt, obwohl das aktuell gewählte Referenzfach bereits als Abiturfach gewählt ist. Beides zusammen ist nicht möglich.",
 			null),
 
+	/** BelegungsfehlerArt BLL_10 */
+	GOST30_BLL_10("BLL_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Bei einer externen besonderen Lernleistung muss deren Fach und nicht ein Projektkurs als 5. Abiturfach gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt BLL_11 */
+	GOST30_BLL_11("BLL_11", GostBelegungsfehlerArt.BELEGUNG,
+			"Bei einer besonderen Lernleistung im Projektkurs muss der Projektkurs als 5. Abiturfach gewählt werden.",
+			null),
+
 	/** BelegungsfehlerArt RE_10 */
 	GOST30_RE_10("RE_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesem Fall muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen.",

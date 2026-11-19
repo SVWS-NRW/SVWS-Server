@@ -1,0 +1,16 @@
+{
+  "erfolgreich": false,
+  "fehlercodes": [
+    {
+      "code": "NW_FS_12_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftlich-technische Fächer durchgehend belegt wurden, oder kein naturwissenschaftlich-technisches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor."
+    },
+    {
+      "code": "BLL_10",
+      "art": "BELEGUNG",
+      "beschreibung": "Bei einer externen besonderen Lernleistung muss deren Fach und nicht ein Projektkurs als 5. Abiturfach gewählt werden."
+    }
+  ],
+  "log": []
+}
