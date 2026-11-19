@@ -391,11 +391,6 @@ public enum GostBelegungsfehler {
 			"Es existiert kein Projektkurs, der als besondere Lernleistung eingebracht werden kann.",
 			null),
 
-	/** BelegungsfehlerArt PF_16_INFO */
-	GOST30_PF_16_INFO("PF_16_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"Wird der Projektkurs als besondere Lernleistung in das Abitur eingebracht, so zählt er nicht mehr zu den einbringungsfähigen Kursen in Block I.",
-			null),
-
 	/** BelegungsfehlerArt PF_19 */
 	GOST30_PF_19("PF_19", GostBelegungsfehlerArt.BELEGUNG,
 			"Ein Projektkurs kann als Referenzfach kein anderes Projektkursfach, ein Vertiefungskursfach oder ein Ersatzfach aus dem literarisch künstlerischen Bereich haben.",

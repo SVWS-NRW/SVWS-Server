@@ -70,8 +70,8 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		if (this.projektkurs !== null) {
 			this.pruefeBelegungReferenzfaecher();
 		}
-		if (this.manager.istProjektKursBesondereLernleistung()) {
-			this.addFehler((this.projektkurs !== null) ? GostBelegungsfehler.GOST30_PF_16_INFO : GostBelegungsfehler.GOST30_PF_15);
+		if (this.manager.istProjektKursBesondereLernleistung() && (this.projektkurs === null)) {
+			this.addFehler(GostBelegungsfehler.GOST30_PF_15);
 		}
 	}
 
@@ -220,7 +220,7 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			return false;
 		}
 		const halbjahr: GostHalbjahr | null = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
-		if ((this.projektkurs === null) || (this.projektkursHalbjahre.size() !== 2) || (this.manager.istProjektKursBesondereLernleistung())) {
+		if ((this.projektkurs === null) || (this.projektkursHalbjahre.size() !== 2)) {
 			return false;
 		}
 		return (halbjahr as unknown === this.projektkursHalbjahre.get(0) as unknown) || (halbjahr as unknown === this.projektkursHalbjahre.get(1) as unknown);
@@ -232,7 +232,7 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 * @return die Anzahl der anrechenbaren Kurse
 	 */
 	public getAnrechenbareKurse(): number {
-		if ((this.projektkurs === null) || (this.manager.istProjektKursBesondereLernleistung())) {
+		if (this.projektkurs === null) {
 			return 0;
 		}
 		return 2;
