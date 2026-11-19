@@ -6,6 +6,7 @@ import { Abi30BelegpruefungKurszahlenUndWochenstunden } from '../../../../../cor
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
 import { ArrayList } from '../../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { GostBesondereLernleistung } from '../../../../../core/types/gost/GostBesondereLernleistung';
 import { GostBelegpruefung } from '../../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../../core/abschluss/gost/AbiturdatenManager';
 import { Abi30BelegpruefungAbiFaecher } from '../../../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungAbiFaecher';
@@ -39,6 +40,11 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 	 * Gibt an, ob der gewählte Projektkurs Abiturfach ist oder nicht.
 	 */
 	private hatPjkAbi: boolean = false;
+
+	/**
+	 * Gibt an, ob eine externe besondere Lernleistung vorliegt. Dann entfällt die Einbringungspflicht für das 5. Abiturfach (§ 26 (2) S. 3).
+	 */
+	private hatBLLExtern: boolean = false;
 
 	/**
 	 * Das Referenzfach des Projektkurses
@@ -83,6 +89,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		const projektkurs: AbiturFachbelegung | null = this.pruefungProjektkurse.getProjektkurs();
 		const referenzfachBelegung: AbiturFachbelegung | null = (projektkurs === null) || (projektkurs.idReferenzfach === null) ? null : this.manager.getFachbelegungByID(projektkurs.idReferenzfach);
 		this.hatPjkAbi = (projektkurs !== null) && (projektkurs.abiturFach !== null);
+		this.hatBLLExtern = GostBesondereLernleistung.EXTERNE.is(this.manager.daten().besondereLernleistung);
 		const refFach: GostFach | null = this.manager.getFach(referenzfachBelegung);
 		if (refFach !== null) {
 			this.referenzfach = refFach;
@@ -96,8 +103,23 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		// empty block
 	}
 
+	/**
+	 * Prüft, ob die Fachbelegung als Abiturfach einbringungspflichtig ist. Bei einer externen besonderen Lernleistung
+	 * entfällt dies für das 5. Abiturfach (§ 26 (2) S. 3).
+	 *
+	 * @param belegung   die Fachbelegung
+	 *
+	 * @return true, wenn die Fachbelegung als Abiturfach einbringungspflichtig ist
+	 */
+	private istAbifachEinbringungspflichtig(belegung: AbiturFachbelegung): boolean {
+		return (belegung.abiturFach !== null) && !(this.hatBLLExtern && (belegung.abiturFach === 5));
+	}
+
 	private hatAbifachGWOhnePJK(): boolean {
 		for (const abifach of GostAbiturFach.values()) {
+			if (this.hatBLLExtern && (abifach as unknown === GostAbiturFach.AB5 as unknown)) {
+				continue;
+			}
 			const bel: AbiturFachbelegung | null = this.pruefungAbiFaecher.getAbiturfach(abifach);
 			const fach: GostFach | null = this.manager.getFach(bel);
 			if (fach === null) {
@@ -111,7 +133,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 	}
 
 	private pruefeSport(): void {
-		const hatSportAbi: boolean = (this.sport.size() === 1) && (this.sport.get(0).abiturFach !== null);
+		const hatSportAbi: boolean = (this.sport.size() === 1) && this.istAbifachEinbringungspflichtig(this.sport.get(0));
 		const hatSportAbiPJK: boolean = this.hatPjkAbi && GostFachbereich.SPORT.hat(this.referenzfach);
 		if (hatSportAbi) {
 			this.kurseUntereGrenze += 4;
@@ -139,7 +161,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		for (const nwNeu of listNwNeu) {
 			const anzahl: number = this.manager.zaehleHalbjahresbelegungen(nwNeu, ...GostHalbjahr.getQualifikationsphase());
 			anzahlKurseNw += anzahl;
-			if ((anzahl === 4) && (nwNeu.abiturFach !== null)) {
+			if ((anzahl === 4) && this.istAbifachEinbringungspflichtig(nwNeu)) {
 				hatNwNeuAbi = true;
 				anzahlNwAbi++;
 			} else
@@ -151,7 +173,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		for (const nwKl of listNwKl) {
 			const anzahl: number = this.manager.zaehleHalbjahresbelegungen(nwKl, ...GostHalbjahr.getQualifikationsphase());
 			anzahlKurseNw += anzahl;
-			if ((anzahl === 4) && (nwKl.abiturFach !== null)) {
+			if ((anzahl === 4) && this.istAbifachEinbringungspflichtig(nwKl)) {
 				anzahlNwAbi++;
 			} else
 				if (this.hatPjkAbi && (nwKl.fachID === this.referenzfach.id)) {
@@ -165,7 +187,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		for (const fs of listFS) {
 			const anzahl: number = this.manager.zaehleHalbjahresbelegungen(fs, ...GostHalbjahr.getQualifikationsphase());
 			anzahlKurseFs += anzahl;
-			if ((anzahl === 4) && (fs.abiturFach !== null)) {
+			if ((anzahl === 4) && this.istAbifachEinbringungspflichtig(fs)) {
 				anzahlFsAbi++;
 			}
 			if (this.hatPjkAbi && (fs.fachID === this.referenzfach.id)) {
@@ -222,7 +244,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		for (const kml of kumuli) {
 			const anzahl: number = this.manager.zaehleHalbjahresbelegungen(kml, ...GostHalbjahr.getQualifikationsphase());
 			anzahlKurseKML += anzahl;
-			if ((anzahl === 4) && (kml.abiturFach !== null)) {
+			if ((anzahl === 4) && this.istAbifachEinbringungspflichtig(kml)) {
 				anzahlKMLAbi++;
 			}
 		}
@@ -240,7 +262,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		const listRE: List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
 		let istREAbi: boolean = false;
 		for (const religion of listRE) {
-			if (religion.abiturFach !== null) {
+			if (this.istAbifachEinbringungspflichtig(religion)) {
 				istREAbi = true;
 			}
 		}
@@ -269,7 +291,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		const istPLDurchgaengig: boolean = (!this.hatGWDurchgaengig) && (anzahlPL === 4) && !istGEDurchgaengig && !istSWDurchgaengig;
 		if (listPL.size() === 1) {
 			const philosophie: AbiturFachbelegung = listPL.getFirst();
-			if (((anzahlPL === 4) && (philosophie.abiturFach !== null))) {
+			if (((anzahlPL === 4) && this.istAbifachEinbringungspflichtig(philosophie))) {
 				this.kurseUntereGrenze += 4;
 			} else
 				if (this.hatPjkAbi && (philosophie.fachID === this.referenzfach.id)) {
@@ -304,7 +326,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		let istErsatzfachRE: boolean = false;
 		let istGEAbi: boolean = false;
 		for (const ge of geschichte) {
-			if (ge.abiturFach !== null) {
+			if (this.istAbifachEinbringungspflichtig(ge)) {
 				istGEAbi = true;
 			}
 		}
@@ -330,7 +352,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		let istErsatzfachRE: boolean = false;
 		let istSWAbi: boolean = false;
 		for (const sw of sozialwissenschaften) {
-			if (sw.abiturFach !== null) {
+			if (this.istAbifachEinbringungspflichtig(sw)) {
 				istSWAbi = true;
 			}
 		}
@@ -360,7 +382,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		if (nimmAlsDurchgaengigeGW) {
 			this.hatGWDurchgaengig = true;
 		}
-		if (gw.abiturFach !== null) {
+		if (this.istAbifachEinbringungspflichtig(gw)) {
 			this.kurseUntereGrenze += 4;
 			anzahl -= 4;
 			istErsatzDurchPflichtkurse = istErsatzfachRE;
