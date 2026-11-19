@@ -5,6 +5,7 @@ import Markdown from 'unplugin-vue-markdown/vite';
 import { resolve } from "node:path";
 import tailwindcss from '@tailwindcss/vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
+import { coreTypeGuard } from "../vite/coreTypeGuard";
 
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd());
@@ -31,6 +32,7 @@ export default defineConfig(({ mode }) => {
 			Vue({ include: [/\.vue$/, /\.md$/] }),
 			basicSsl(),
 			tailwindcss(),
+			coreTypeGuard(),
 			Markdown({}),
 			Components({
 				globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{vue,md}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
