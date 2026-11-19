@@ -65,7 +65,8 @@ public class APIEmail {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Anpassen der SMTP-Server-Konfiguration der Schule.
+	 * Die OpenAPI-Methode für das Anpassen der SMTP-Server-Konfiguration der Schule. Sie verlangt das Admin-Recht, weil die
+	 * Konfiguration bestimmt, an welchen Server alle Benutzer ihre SMTP-Zugangsdaten senden.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
@@ -77,10 +78,10 @@ public class APIEmail {
 	@Path("/smtp/server/konfiguration")
 	@Operation(summary = "Passt die SMTP-Server-Konfiguration an und speichert das Ergebnis in der Datenbank.",
 			description = "Passt die SMTP-Server-Konfiguration an und speichert das Ergebnis in der Datenbank. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.")
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer Admin-Rechte besitzt.")
 	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich in die SMTP-Server-Konfiguration integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Admin-Rechte.")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -91,7 +92,7 @@ public class APIEmail {
 							schema = @Schema(implementation = SMTPServerKonfiguration.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataEmailSMTPServerKonfiguration(conn).patch(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
 	}
 
 

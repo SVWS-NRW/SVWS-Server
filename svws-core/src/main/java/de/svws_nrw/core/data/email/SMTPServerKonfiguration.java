@@ -30,15 +30,20 @@ public class SMTPServerKonfiguration {
 	@Schema(description = "gibt an, ob StartTLS für die SMTP-Verbindung genutzt wird oder nicht", example = "true")
 	public boolean useStartTLS = true;
 
-	/** Gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Wird dies genutzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe trustTLSHost). */
-	@Schema(description = "gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Wird dies genutzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe trustTLSHost)",
+	/** Gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Das Zertifikat des SMTP-Servers muss dann vertrauenswürdig sein oder zum Fingerabdruck in zertifikatFingerabdruck passen. */
+	@Schema(description = "gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Das Zertifikat des SMTP-Servers muss dann vertrauenswürdig sein oder zum Fingerabdruck in zertifikatFingerabdruck passen.",
 			example = "false")
 	public boolean useTLS = false;
 
-	/** Gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host. */
-	@Schema(description = "gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host.",
+	/** Gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host. Die Angabe nutzen ausschließlich externe Programme, der SVWS-Server wertet sie nicht aus. */
+	@Schema(description = "gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host. Die Angabe nutzen ausschließlich externe Programme, der SVWS-Server wertet sie nicht aus.",
 			example = "*")
 	public String trustTLSHost = null;
+
+	/** Der SHA-256-Fingerabdruck eines Zertifikats des SMTP-Servers oder null. Ist er gesetzt, vertraut der SVWS-Server nur noch diesem einen Zertifikat, zum Beispiel auch einem selbst erstellten. */
+	@Schema(description = "der SHA-256-Fingerabdruck eines Zertifikats des SMTP-Servers oder null. Ist er gesetzt, vertraut der SVWS-Server nur noch diesem einen Zertifikat, zum Beispiel auch einem selbst erstellten.",
+			example = "3A:F2:9C:0E:51:7B:D4:88:26:6F:A1:C3:90:5D:E7:12:4B:B8:0F:6C:D9:73:A5:2E:18:C4:F0:9B:63:7D:E2:45")
+	public String zertifikatFingerabdruck = null;
 
 	/**
 	 * Leerer Standardkonstruktor.

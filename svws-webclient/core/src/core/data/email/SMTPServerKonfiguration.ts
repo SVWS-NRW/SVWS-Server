@@ -24,14 +24,19 @@ export class SMTPServerKonfiguration extends JavaObject {
 	public useStartTLS: boolean = true;
 
 	/**
-	 * Gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Wird dies genutzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe trustTLSHost).
+	 * Gibt an, ob TLS für die SMTP-Verbindung genutzt wird oder nicht. Das Zertifikat des SMTP-Servers muss dann vertrauenswürdig sein oder zum Fingerabdruck in zertifikatFingerabdruck passen.
 	 */
 	public useTLS: boolean = false;
 
 	/**
-	 * Gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host.
+	 * Gibt an, falls nicht null, welchem Host - unabhängig von vorhandenen Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host. Die Angabe nutzen ausschließlich externe Programme, der SVWS-Server wertet sie nicht aus.
 	 */
 	public trustTLSHost: string | null = null;
+
+	/**
+	 * Der SHA-256-Fingerabdruck eines Zertifikats des SMTP-Servers oder null. Ist er gesetzt, vertraut der SVWS-Server nur noch diesem einen Zertifikat, zum Beispiel auch einem selbst erstellten.
+	 */
+	public zertifikatFingerabdruck: string | null = null;
 
 
 	/**
@@ -70,6 +75,7 @@ export class SMTPServerKonfiguration extends JavaObject {
 			throw new Error('invalid json format, missing attribute useTLS');
 		result.useTLS = obj.useTLS;
 		result.trustTLSHost = (obj.trustTLSHost === undefined) ? null : obj.trustTLSHost === null ? null : obj.trustTLSHost;
+		result.zertifikatFingerabdruck = (obj.zertifikatFingerabdruck === undefined) ? null : obj.zertifikatFingerabdruck === null ? null : obj.zertifikatFingerabdruck;
 		return result;
 	}
 
@@ -81,6 +87,7 @@ export class SMTPServerKonfiguration extends JavaObject {
 		result += '"useStartTLS" : ' + obj.useStartTLS.toString() + ',';
 		result += '"useTLS" : ' + obj.useTLS.toString() + ',';
 		result += '"trustTLSHost" : ' + ((obj.trustTLSHost === null) ? 'null' : JSON.stringify(obj.trustTLSHost)) + ',';
+		result += '"zertifikatFingerabdruck" : ' + ((obj.zertifikatFingerabdruck === null) ? 'null' : JSON.stringify(obj.zertifikatFingerabdruck)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -105,6 +112,9 @@ export class SMTPServerKonfiguration extends JavaObject {
 		}
 		if (obj.trustTLSHost !== undefined) {
 			result += '"trustTLSHost" : ' + ((obj.trustTLSHost === null) ? 'null' : JSON.stringify(obj.trustTLSHost)) + ',';
+		}
+		if (obj.zertifikatFingerabdruck !== undefined) {
+			result += '"zertifikatFingerabdruck" : ' + ((obj.zertifikatFingerabdruck === null) ? 'null' : JSON.stringify(obj.zertifikatFingerabdruck)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

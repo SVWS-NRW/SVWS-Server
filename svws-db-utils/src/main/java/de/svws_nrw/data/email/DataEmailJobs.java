@@ -166,6 +166,7 @@ public class DataEmailJobs {
 			config.setPort(daten.port);
 			config.setTLS(daten.useTLS);
 			config.setStartTLS(daten.useStartTLS);
+			config.setZertifikatFingerabdruck(daten.zertifikatFingerabdruck);
 			return config;
 		} catch (@SuppressWarnings("unused") final AESException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,

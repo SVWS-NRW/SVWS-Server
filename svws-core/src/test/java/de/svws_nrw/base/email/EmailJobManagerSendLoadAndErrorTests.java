@@ -43,9 +43,10 @@ class EmailJobManagerSendLoadAndErrorTests extends AbstractEmailJobManagerSendTe
 
 			awaitJobStatusForManager(errorManager, id, EmailJobStatus.FAILED, 2000);
 
-			// Prüfe, ob keine Mail versendet wurde und die Exception-Nachricht im Log erscheint.
+			// Prüfe, ob keine Mail versendet wurde und die Exception-Nachricht und die Empfängeradresse im Log erscheinen.
 			assertJobSentMailCount(errorManager, id, 0);
 			assertJobLogErrorContains(errorManager, id, "SMTP connection failed");
+			assertJobLogErrorContains(errorManager, id, "an Empfänger to_a@example.org:");
 		} finally {
 			EmailJobManagerFactory.getInstance().freeManager("schemaError", 99L);
 		}

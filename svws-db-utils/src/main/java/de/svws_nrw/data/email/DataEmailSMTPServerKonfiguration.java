@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 
+import de.svws_nrw.base.email.MailSmtpSessionConfig;
 import de.svws_nrw.core.data.email.SMTPServerKonfiguration;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -44,6 +45,7 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 		daten.useStartTLS = dto.SMTPStartTLS;
 		daten.useTLS = dto.SMTPUseTLS;
 		daten.trustTLSHost = dto.SMTPTrustTLSHost;
+		daten.zertifikatFingerabdruck = dto.SMTPZertifikatFingerabdruck;
 		return daten;
 	};
 
@@ -118,7 +120,14 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 			Map.entry("port", (conn, dto, value, map) -> dto.SMTPPort = JSONMapper.convertToIntegerInRange(value, false, 1, 65536)),
 			Map.entry("useStartTLS", (conn, dto, value, map) -> dto.SMTPStartTLS = JSONMapper.convertToBoolean(value, false)),
 			Map.entry("useTLS", (conn, dto, value, map) -> dto.SMTPUseTLS = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("trustTLSHost", (conn, dto, value, map) -> dto.SMTPTrustTLSHost = JSONMapper.convertToString(value, true, false, 256)));
+			Map.entry("trustTLSHost", (conn, dto, value, map) -> dto.SMTPTrustTLSHost = JSONMapper.convertToString(value, true, false, 256)),
+			Map.entry("zertifikatFingerabdruck", (conn, dto, value, map) -> {
+				try {
+					dto.SMTPZertifikatFingerabdruck = MailSmtpSessionConfig.normalisiereFingerabdruck(JSONMapper.convertToString(value, true, true, null));
+				} catch (final IllegalArgumentException e) {
+					throw new ApiOperationException(Status.BAD_REQUEST, e, "Der Fingerabdruck muss ein SHA-256-Fingerabdruck aus 32 Bytes in hexadezimaler Schreibweise sein.");
+				}
+			}));
 
 
 	@Override

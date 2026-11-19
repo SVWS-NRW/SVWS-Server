@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Email")
-@JsonPropertyOrder({"ID", "Domain", "SMTPServer", "SMTPPort", "SMTPStartTLS", "SMTPUseTLS", "SMTPTrustTLSHost"})
+@JsonPropertyOrder({"ID", "Domain", "SMTPServer", "SMTPPort", "SMTPStartTLS", "SMTPUseTLS", "SMTPTrustTLSHost", "SMTPZertifikatFingerabdruck"})
 public final class DTOSchuleEmail {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -83,6 +83,12 @@ public final class DTOSchuleEmail {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPTrustTLSHost */
 	public static final String QUERY_LIST_BY_SMTPTRUSTTLSHOST = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPTrustTLSHost IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SMTPZertifikatFingerabdruck */
+	public static final String QUERY_BY_SMTPZERTIFIKATFINGERABDRUCK = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPZertifikatFingerabdruck = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SMTPZertifikatFingerabdruck */
+	public static final String QUERY_LIST_BY_SMTPZERTIFIKATFINGERABDRUCK = "SELECT e FROM DTOSchuleEmail e WHERE e.SMTPZertifikatFingerabdruck IN ?1";
+
 	/** Die ID des Eintrags */
 	@Id
 	@Column(name = "ID")
@@ -112,7 +118,7 @@ public final class DTOSchuleEmail {
 	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean SMTPStartTLS;
 
-	/** Gibt an, ob TLS für die SMTP-Verbindung genutzt wird (1) oder nicht (0). Ist TLS gesetzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe Spalte SMTPTrustTLSHost) */
+	/** Gibt an, ob TLS für die SMTP-Verbindung genutzt wird (1) oder nicht (0). Ist TLS gesetzt, muss das Zertifikat des SMTP-Servers vertrauenswürdig sein oder zum Fingerabdruck in der Spalte SMTPZertifikatFingerabdruck passen */
 	@Column(name = "SMTPUseTLS")
 	@JsonProperty
 	@Convert(converter = Boolean01Converter.class)
@@ -120,10 +126,15 @@ public final class DTOSchuleEmail {
 	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean SMTPUseTLS;
 
-	/** Gibt an, falls gesetzt, welchem Host - unabhängig von Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host */
+	/** Gibt an, falls gesetzt, welchem Host - unabhängig von Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host. Die Spalte nutzen ausschließlich externe Programme, der SVWS-Server wertet sie nicht aus. */
 	@Column(name = "SMTPTrustTLSHost")
 	@JsonProperty
 	public String SMTPTrustTLSHost;
+
+	/** Der SHA-256-Fingerabdruck eines Zertifikats des SMTP-Servers. Ist er gesetzt, vertraut der SVWS-Server nur noch diesem einen Zertifikat, z. B. auch einem selbst erstellten */
+	@Column(name = "SMTPZertifikatFingerabdruck")
+	@JsonProperty
+	public String SMTPZertifikatFingerabdruck;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuleEmail ohne eine Initialisierung der Attribute.
@@ -183,7 +194,7 @@ public final class DTOSchuleEmail {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuleEmail(ID=" + this.ID + ", Domain=" + this.Domain + ", SMTPServer=" + this.SMTPServer + ", SMTPPort=" + this.SMTPPort + ", SMTPStartTLS=" + this.SMTPStartTLS + ", SMTPUseTLS=" + this.SMTPUseTLS + ", SMTPTrustTLSHost=" + this.SMTPTrustTLSHost + ")";
+		return "DTOSchuleEmail(ID=" + this.ID + ", Domain=" + this.Domain + ", SMTPServer=" + this.SMTPServer + ", SMTPPort=" + this.SMTPPort + ", SMTPStartTLS=" + this.SMTPStartTLS + ", SMTPUseTLS=" + this.SMTPUseTLS + ", SMTPTrustTLSHost=" + this.SMTPTrustTLSHost + ", SMTPZertifikatFingerabdruck=" + this.SMTPZertifikatFingerabdruck + ")";
 	}
 
 }

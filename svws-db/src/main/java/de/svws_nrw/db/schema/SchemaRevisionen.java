@@ -396,21 +396,24 @@ public enum SchemaRevisionen {
 	REV_84(84, "2026-11-10"),
 
 	/** Tabelle Statistik_Zusatzerhebungen für die Zusatzerhebungen zur amtlichen Schulstatistik je Schuljahresabschnitt hinzugefügt und die Angabe zu internationalen Kontakten aus EigeneSchule dorthin verschoben */
-	REV_85(85, "2026-11-17");
+	REV_85(85, "2026-11-17"),
+
+	/** Tabelle EigeneSchule_Email um die Spalte SMTPZertifikatFingerabdruck ergänzt. Ist ein Fingerabdruck gesetzt, vertraut der SVWS-Server nur noch diesem einen Zertifikat des SMTP-Servers. */
+	REV_86(86, "2026-11-17");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_85;
+	public static final SchemaRevisionen maxRevision = REV_86;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_85;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_86;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */

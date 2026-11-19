@@ -45,11 +45,16 @@ public class Tabelle_EigeneSchule_Email extends SchemaTabelle {
 			.setNotNull()
 			.setConverter(Boolean01Converter.class)
 			.setJavaComment(
-					"Gibt an, ob TLS für die SMTP-Verbindung genutzt wird (1) oder nicht (0). Ist TLS gesetzt, so wird entweder ein Zertifikat im Key-Store des Servers benötigt oder es muss einem Host vertraut werden (siehe Spalte SMTPTrustTLSHost)");
+					"Gibt an, ob TLS für die SMTP-Verbindung genutzt wird (1) oder nicht (0). Ist TLS gesetzt, muss das Zertifikat des SMTP-Servers vertrauenswürdig sein oder zum Fingerabdruck in der Spalte SMTPZertifikatFingerabdruck passen");
 
 	/** Die Definition der Tabellenspalte SMTPTrustTLSHost */
 	public final SchemaTabelleSpalte col_SMTPTrustTLSHost = add("SMTPTrustTLSHost", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-			.setJavaComment("Gibt an, falls gesetzt, welchem Host - unabhängig von Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host");
+			.setJavaComment("Gibt an, falls gesetzt, welchem Host - unabhängig von Zertifikaten - vertraut werden kann, '*' für jeden beliebigen Host. Die Spalte nutzen ausschließlich externe Programme, der SVWS-Server wertet sie nicht aus.");
+
+	/** Die Definition der Tabellenspalte SMTPZertifikatFingerabdruck */
+	public final SchemaTabelleSpalte col_SMTPZertifikatFingerabdruck = add("SMTPZertifikatFingerabdruck", SchemaDatentypen.VARCHAR, false).setDatenlaenge(95)
+			.setJavaComment("Der SHA-256-Fingerabdruck eines Zertifikats des SMTP-Servers. Ist er gesetzt, vertraut der SVWS-Server nur noch diesem einen Zertifikat, z. B. auch einem selbst erstellten")
+			.setRevision(SchemaRevisionen.REV_86);
 
 
 	/**

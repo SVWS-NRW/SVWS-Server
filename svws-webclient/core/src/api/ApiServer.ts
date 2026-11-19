@@ -2136,12 +2136,12 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchSMTPServerKonfiguration für den Zugriff auf die URL https://{hostname}/db/{schema}/email/smtp/server/konfiguration
 	 *
-	 * Passt die SMTP-Server-Konfiguration an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.
+	 * Passt die SMTP-Server-Konfiguration an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer Admin-Rechte besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Der Patch wurde erfolgreich in die SMTP-Server-Konfiguration integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.
+	 *   Code 403: Der SVWS-Benutzer hat keine Admin-Rechte.
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *

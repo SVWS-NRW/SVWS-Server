@@ -489,7 +489,7 @@ public final class EmailJobManager {
 			// Wenn der Versand abgebrochen wurde, wird die Exception weitergeleitet.
 			throw e;
 		} catch (final Exception e) {
-			job.addLogError("- Fehler beim Versand an Empfänger " + recipient + ": " + e.getMessage());
+			job.addLogError("- Fehler beim Versand an Empfänger " + recipient.email + ": " + e.getMessage());
 			return false;
 		}
 		job.notifyEmailSent();

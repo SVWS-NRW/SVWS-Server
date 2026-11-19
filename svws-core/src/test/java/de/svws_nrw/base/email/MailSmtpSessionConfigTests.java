@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -106,6 +107,48 @@ class MailSmtpSessionConfigTests {
 		// StartTLS deaktivieren
 		config.setStartTLS(false);
 		assertFalse(config.isStartTLS());
+	}
+
+	@Test
+	@DisplayName("Ein Fingerabdruck wird unabhängig von Schreibweise und Trennzeichen einheitlich gespeichert")
+	void testFingerabdruckEinheitlich() {
+		final String einheitlich = "3A:F2:9C:0E:51:7B:D4:88:26:6F:A1:C3:90:5D:E7:12:4B:B8:0F:6C:D9:73:A5:2E:18:C4:F0:9B:63:7D:E2:45";
+		final MailSmtpSessionConfig config = new MailSmtpSessionConfig("localhost", "user", "pass");
+		assertNull(config.getZertifikatFingerabdruck());
+
+		config.setZertifikatFingerabdruck(einheitlich.toLowerCase());
+		assertEquals(einheitlich, config.getZertifikatFingerabdruck());
+
+		config.setZertifikatFingerabdruck(einheitlich.replace(":", ""));
+		assertEquals(einheitlich, config.getZertifikatFingerabdruck());
+
+		config.setZertifikatFingerabdruck(" " + einheitlich.replace(":", " ") + " ");
+		assertEquals(einheitlich, config.getZertifikatFingerabdruck());
+	}
+
+	@Test
+	@DisplayName("Ein leerer Fingerabdruck bedeutet die Prüfung gegen den Truststore")
+	void testFingerabdruckLeer() {
+		final MailSmtpSessionConfig config = new MailSmtpSessionConfig("localhost", "user", "pass");
+		config.setZertifikatFingerabdruck("3AF29C0E517BD488266FA1C3905DE7124BB80F6CD973A52E18C4F09B637DE245");
+		config.setZertifikatFingerabdruck("  ");
+		assertNull(config.getZertifikatFingerabdruck());
+		config.setZertifikatFingerabdruck(null);
+		assertNull(config.getZertifikatFingerabdruck());
+	}
+
+	@Test
+	@DisplayName("Eine Angabe, die kein SHA-256-Fingerabdruck ist, wird abgelehnt")
+	void testFingerabdruckUngueltig() {
+		final MailSmtpSessionConfig config = new MailSmtpSessionConfig("localhost", "user", "pass");
+		// SHA-1 mit 20 Bytes
+		assertThrows(IllegalArgumentException.class, () -> config.setZertifikatFingerabdruck("3A:F2:9C:0E:51:7B:D4:88:26:6F:A1:C3:90:5D:E7:12:4B:B8:0F:6C"));
+		// ein Zeichen, das keine Hexadezimalziffer ist
+		assertThrows(IllegalArgumentException.class,
+				() -> config.setZertifikatFingerabdruck("3AF29C0E517BD488266FA1C3905DE7124BB80F6CD973A52E18C4F09B637DE24G"));
+		// ein Host statt eines Fingerabdrucks
+		assertThrows(IllegalArgumentException.class, () -> config.setZertifikatFingerabdruck("*"));
+		assertNull(config.getZertifikatFingerabdruck());
 	}
 
 	@Test
