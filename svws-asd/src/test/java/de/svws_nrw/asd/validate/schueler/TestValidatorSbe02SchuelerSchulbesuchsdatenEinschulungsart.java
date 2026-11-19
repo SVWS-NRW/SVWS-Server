@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -46,28 +45,19 @@ class TestValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart {
 	/**
 	 * Test von ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart
 	 *
-	 * @param idEinschulungsart   die ID der Einschulungsart
-	 * @param result              gibt an, welches Ergebnis erwartet wird
+	 * @param idEinschulungsartGrundschule   die ID der Einschulungsart an der Grundschule
+	 * @param result                         gibt an, welches Ergebnis erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
-	void testValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart(final Long idEinschulungsart, final boolean result) {
+	void testValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart(final Long idEinschulungsartGrundschule, final boolean result) {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
 		final ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart validator =
-				new ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart(
-						() -> {
-							if (idEinschulungsart == null) {
-								return null;
-							}
-							final SchuelerSchulbesuchsdaten daten = new SchuelerSchulbesuchsdaten();
-							daten.idEinschulungsartGrundschule = idEinschulungsart;
-							return daten;
-						},
-						kontext);
+				new ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart(() -> idEinschulungsartGrundschule, kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

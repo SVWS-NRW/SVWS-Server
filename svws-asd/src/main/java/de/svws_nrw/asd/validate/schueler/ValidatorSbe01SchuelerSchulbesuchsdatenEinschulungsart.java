@@ -2,10 +2,10 @@ package de.svws_nrw.asd.validate.schueler;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -14,31 +14,32 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorSbe01SchuelerSchulbesuchsdatenEinschulungsart extends Validator {
 
-	private final @NotNull Supplier<SchuelerSchulbesuchsdaten> _schulbesuchsdaten;
+	/** Die ID der Einschulungsart an der Grundschule */
+	private final @NotNull Supplier<@AllowNull Long> _idEinschulungsartGrundschule;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param schulbesuchsdaten   ein Supplier für die Schulbesuchsdaten des Schülers
-	 * @param kontext             der Kontext des Validators
+	 * @param idEinschulungsartGrundschule   die ID der Einschulungsart an der Grundschule
+	 * @param kontext                        der Kontext des Validators
 	 */
 	public ValidatorSbe01SchuelerSchulbesuchsdatenEinschulungsart(
-			final @NotNull Supplier<SchuelerSchulbesuchsdaten> schulbesuchsdaten,
+			final @NotNull Supplier<@AllowNull Long> idEinschulungsartGrundschule,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_schulbesuchsdaten = schulbesuchsdaten;
-		_validatoren.add(new ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart(schulbesuchsdaten, kontext));
+		_idEinschulungsartGrundschule = idEinschulungsartGrundschule;
+		_validatoren.add(new ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart(idEinschulungsartGrundschule, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final SchuelerSchulbesuchsdaten daten = _schulbesuchsdaten.get();
+		final @AllowNull Long idEinschulungsartGrundschule = _idEinschulungsartGrundschule.get();
 
-		if ((daten == null) || (daten.idEinschulungsartGrundschule == null) || (daten.idEinschulungsartGrundschule < 0)) {
+		if ((idEinschulungsartGrundschule == null) || (idEinschulungsartGrundschule < 0)) {
 			return true;
 		}
 
-		if (Einschulungsart.data().getWertByIDOrNull(daten.idEinschulungsartGrundschule) == null) {
+		if (Einschulungsart.data().getWertByIDOrNull(idEinschulungsartGrundschule) == null) {
 			addFehler(0, "Einschulungsart des Schülers: Das Feld 'Einschulungsart' muss zulässig sein.");
 			return false;
 		}

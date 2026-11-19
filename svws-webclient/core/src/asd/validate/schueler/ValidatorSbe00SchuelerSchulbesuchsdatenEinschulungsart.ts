@@ -1,5 +1,4 @@
 import { ValidatorSbe01SchuelerSchulbesuchsdatenEinschulungsart } from '../../../asd/validate/schueler/ValidatorSbe01SchuelerSchulbesuchsdatenEinschulungsart';
-import { SchuelerSchulbesuchsdaten } from '../../../asd/data/schueler/SchuelerSchulbesuchsdaten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -7,24 +6,27 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSbe00SchuelerSchulbesuchsdatenEinschulungsart extends Validator {
 
-	private readonly _schulbesuchsdaten: Supplier<SchuelerSchulbesuchsdaten>;
+	/**
+	 * Die ID der Einschulungsart an der Grundschule
+	 */
+	private readonly _idEinschulungsartGrundschule: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param schulbesuchsdaten ein Supplier für die Schulbesuchsdaten
-	 * @param kontext           der Kontext des Validators
+	 * @param idEinschulungsartGrundschule   die ID der Einschulungsart an der Grundschule
+	 * @param kontext                        der Kontext des Validators
 	 */
-	public constructor(schulbesuchsdaten: Supplier<SchuelerSchulbesuchsdaten>, kontext: ValidatorKontext) {
+	public constructor(idEinschulungsartGrundschule: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._schulbesuchsdaten = schulbesuchsdaten;
-		this._validatoren.add(new ValidatorSbe01SchuelerSchulbesuchsdatenEinschulungsart(schulbesuchsdaten, kontext));
+		this._idEinschulungsartGrundschule = idEinschulungsartGrundschule;
+		this._validatoren.add(new ValidatorSbe01SchuelerSchulbesuchsdatenEinschulungsart(idEinschulungsartGrundschule, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const daten: SchuelerSchulbesuchsdaten | null = this._schulbesuchsdaten.get();
-		if ((daten === null) || (daten.idEinschulungsartGrundschule === null) || (daten.idEinschulungsartGrundschule < 0)) {
+		const idEinschulungsartGrundschule: number | null = this._idEinschulungsartGrundschule.get();
+		if ((idEinschulungsartGrundschule === null) || (idEinschulungsartGrundschule < 0)) {
 			this.addFehler(0, "Einschulungsart des Schülers: Kein Wert vorhanden.");
 			return false;
 		}

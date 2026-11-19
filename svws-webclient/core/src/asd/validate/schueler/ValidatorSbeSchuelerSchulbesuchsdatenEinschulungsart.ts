@@ -1,5 +1,4 @@
 import { ValidatorSbe00SchuelerSchulbesuchsdatenEinschulungsart } from '../../../asd/validate/schueler/ValidatorSbe00SchuelerSchulbesuchsdatenEinschulungsart';
-import { SchuelerSchulbesuchsdaten } from '../../../asd/data/schueler/SchuelerSchulbesuchsdaten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -9,14 +8,14 @@ export class ValidatorSbeSchuelerSchulbesuchsdatenEinschulungsart extends Valida
 
 
 	/**
-	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
+	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
-	 * @param schulbesuchsdaten ein Supplier für die Schulbesuchsdaten des Schülers
-	 * @param kontext           der Kontext des Validators
+	 * @param idEinschulungsartGrundschule   die ID der Einschulungsart an der Grundschule
+	 * @param kontext                        der Kontext des Validators
 	 */
-	public constructor(schulbesuchsdaten: Supplier<SchuelerSchulbesuchsdaten>, kontext: ValidatorKontext) {
+	public constructor(idEinschulungsartGrundschule: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorSbe00SchuelerSchulbesuchsdatenEinschulungsart(schulbesuchsdaten, kontext));
+		this._validatoren.add(new ValidatorSbe00SchuelerSchulbesuchsdatenEinschulungsart(idEinschulungsartGrundschule, kontext));
 	}
 
 	protected pruefe(): boolean {

@@ -2,9 +2,9 @@ package de.svws_nrw.asd.validate.schueler;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -14,16 +14,16 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorSbeSchuelerSchulbesuchsdatenEinschulungsart extends Validator {
 
 	/**
-	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
+	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
-	 * @param schulbesuchsdaten ein Supplier für die Schulbesuchsdaten des Schülers
-	 * @param kontext           der Kontext des Validators
+	 * @param idEinschulungsartGrundschule   die ID der Einschulungsart an der Grundschule
+	 * @param kontext                        der Kontext des Validators
 	 */
 	public ValidatorSbeSchuelerSchulbesuchsdatenEinschulungsart(
-			final @NotNull Supplier<SchuelerSchulbesuchsdaten> schulbesuchsdaten,
+			final @NotNull Supplier<@AllowNull Long> idEinschulungsartGrundschule,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorSbe00SchuelerSchulbesuchsdatenEinschulungsart(schulbesuchsdaten, kontext));
+		_validatoren.add(new ValidatorSbe00SchuelerSchulbesuchsdatenEinschulungsart(idEinschulungsartGrundschule, kontext));
 	}
 
 	@Override

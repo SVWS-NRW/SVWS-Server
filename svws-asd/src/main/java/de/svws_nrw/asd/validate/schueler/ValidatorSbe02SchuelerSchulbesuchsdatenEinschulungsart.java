@@ -2,10 +2,10 @@ package de.svws_nrw.asd.validate.schueler;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -14,30 +14,31 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart extends Validator {
 
-	private final @NotNull Supplier<SchuelerSchulbesuchsdaten> _schulbesuchsdaten;
+	/** Die ID der Einschulungsart an der Grundschule */
+	private final @NotNull Supplier<@AllowNull Long> _idEinschulungsartGrundschule;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param schulbesuchsdaten   ein Supplier für die Schulbesuchsdaten des Schülers
-	 * @param kontext             der Kontext des Validators
+	 * @param idEinschulungsartGrundschule   die ID der Einschulungsart an der Grundschule
+	 * @param kontext                        der Kontext des Validators
 	 */
 	public ValidatorSbe02SchuelerSchulbesuchsdatenEinschulungsart(
-			final @NotNull Supplier<SchuelerSchulbesuchsdaten> schulbesuchsdaten,
+			final @NotNull Supplier<@AllowNull Long> idEinschulungsartGrundschule,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_schulbesuchsdaten = schulbesuchsdaten;
+		_idEinschulungsartGrundschule = idEinschulungsartGrundschule;
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final SchuelerSchulbesuchsdaten daten = _schulbesuchsdaten.get();
+		final @AllowNull Long idEinschulungsartGrundschule = _idEinschulungsartGrundschule.get();
 
-		if ((daten == null) || (daten.idEinschulungsartGrundschule == null) || (daten.idEinschulungsartGrundschule < 0)) {
+		if ((idEinschulungsartGrundschule == null) || (idEinschulungsartGrundschule < 0)) {
 			return true;
 		}
 
-		final Einschulungsart art = Einschulungsart.data().getWertByIDOrNull(daten.idEinschulungsartGrundschule);
+		final Einschulungsart art = Einschulungsart.data().getWertByIDOrNull(idEinschulungsartGrundschule);
 		if (art == null) {
 			return true;
 		}
