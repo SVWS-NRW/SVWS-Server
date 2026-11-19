@@ -94,9 +94,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			pruefeBelegungReferenzfaecher();
 		}
 
-		// ist der Kurs eine besondere Lernleistung?
-		if (manager.istProjektKursBesondereLernleistung()) {
-			addFehler((projektkurs != null) ? GostBelegungsfehler.GOST30_PF_16_INFO : GostBelegungsfehler.GOST30_PF_15);
+		// Soll eine besondere Lernleistung im Projektkurs erbracht werden, so muss ein Projektkurs existieren
+		if (manager.istProjektKursBesondereLernleistung() && (projektkurs == null)) {
+			addFehler(GostBelegungsfehler.GOST30_PF_15);
 		}
 	}
 
@@ -272,7 +272,8 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			return false;
 		}
 		final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
-		if ((projektkurs == null) || (projektkursHalbjahre.size() != 2) || (manager.istProjektKursBesondereLernleistung())) {
+		// Der Projektkurs ist auch bei einer besonderen Lernleistung anrechenbar
+		if ((projektkurs == null) || (projektkursHalbjahre.size() != 2)) {
 			return false;
 		}
 		return (halbjahr == projektkursHalbjahre.get(0)) || (halbjahr == projektkursHalbjahre.get(1));
@@ -285,7 +286,7 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 * @return die Anzahl der anrechenbaren Kurse
 	 */
 	public int getAnrechenbareKurse() {
-		if ((projektkurs == null) || (manager.istProjektKursBesondereLernleistung())) {
+		if (projektkurs == null) {
 			return 0;
 		}
 		return 2;
