@@ -1,6 +1,7 @@
 package de.svws_nrw.service.schueler.leistungsdaten;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -1131,6 +1132,14 @@ class SchuelerLeistungsdatenServiceTest {
 		@DisplayName("Liste null - BAD_REQUEST, es wird nichts geprüft oder gelöscht")
 		void listeNull() {
 			assertApiException(() -> service.deleteMultiple(null), Response.Status.BAD_REQUEST);
+
+			verifyNoInteractions(repository, benutzerKompetenzService);
+		}
+
+		@Test
+		@DisplayName("Liste enthält null - BAD_REQUEST, es wird nichts geprüft oder gelöscht")
+		void listeEnthaeltNull() {
+			assertApiException(() -> service.deleteMultiple(Collections.singletonList(null)), Response.Status.BAD_REQUEST);
 
 			verifyNoInteractions(repository, benutzerKompetenzService);
 		}

@@ -42,7 +42,7 @@ public final class SchuelerLeistungsdatenService {
 	private static final String ENTITY_LABEL = "Leistungsdaten";
 	private static final String NICHT_VORHANDEN = "Es existiert kein %s mit der ID %d.";
 	private static final String KEIN_SCHULJAHRESABSCHNITT = "Zum Lernabschnitt mit der ID %d wurde kein Schuljahresabschnitt gefunden.";
-	private static final String IDS_ZUM_LOESCHEN_NULL = "Die Liste der zu löschenden IDs darf nicht null sein.";
+	private static final String IDS_ZUM_LOESCHEN_UNGUELTIG = "Die Liste der zu löschenden IDs darf nicht null sein und keine null-Werte enthalten.";
 	private static final String ATTRIBUT_NICHT_LESBAR = "Das Attribut %s des Requests konnte nicht gelesen werden.";
 	private static final Set<String> FACHLEHRER_ATTRIBUTE = Set.of("note", "noteQuartal", "fehlstundenGesamt", "fehlstundenUnentschuldigt");
 	private static final String BEZEICHNUNG_LERNABSCHNITT = "Lernabschnitt";
@@ -173,15 +173,24 @@ public final class SchuelerLeistungsdatenService {
 	 * @return die Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
 	 */
 	public List<SimpleOperationResponse> deleteMultiple(final List<Long> idsToDelete) {
-		if (idsToDelete == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, IDS_ZUM_LOESCHEN_NULL);
-		}
+		assertIdsZumLoeschenValid(idsToDelete);
 
 		return TransactionSupport.transactional(() -> {
 			checkKompetenzLoeschen(idsToDelete);
 
 			return BulkDeleteUtils.delete(idsToDelete, repository, e -> e.ID, ENTITY_LABEL);
 		});
+	}
+
+	private static void assertIdsZumLoeschenValid(final List<Long> idsToDelete) {
+		if ((idsToDelete == null) || containsNull(idsToDelete)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, IDS_ZUM_LOESCHEN_UNGUELTIG);
+		}
+	}
+
+	private static boolean containsNull(final List<Long> ids) {
+		return ids.stream()
+				.anyMatch(Objects::isNull);
 	}
 
 	private DTOSchuelerLeistungsdaten findLeistungsdaten(final long id) {

@@ -914,6 +914,7 @@ public class APISchueler {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Leistungsdaten hat.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "400", description = "Die Liste der IDs ist null oder enthält null-Werte.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten zu entfernen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchuelerLeistungsdatenMultiple(@PathParam("schema") final String schema,

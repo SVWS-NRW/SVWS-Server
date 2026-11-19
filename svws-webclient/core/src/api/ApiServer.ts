@@ -15082,6 +15082,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 400: Die Liste der IDs ist null oder enthält null-Werte.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leistungsdaten zu entfernen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
