@@ -359,20 +359,25 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		int anzahl = manager.zaehleHalbjahresbelegungen(gw, GostHalbjahr.getQualifikationsphase());
 		final boolean istErsatzfachRE = (anzahlErsatzfachRE > 0) && (anzahl - anzahlErsatzfachRE >= 0);
 		final boolean nimmAlsDurchgaengigeGW = !hatGWDurchgaengig && (anzahl == 4);
+		boolean istErsatzDurchPflichtkurse = false;
 		if (nimmAlsDurchgaengigeGW) {
 			hatGWDurchgaengig = true;
 		}
 		if (gw.abiturFach != null) {
 			kurseUntereGrenze += 4;
 			anzahl -= 4;
+			istErsatzDurchPflichtkurse = istErsatzfachRE;
 		} else if (hatPjkAbi && (gw.fachID == referenzfach.id)) {
 			kurseUntereGrenze += 2;
 			anzahl -= 2;
+			istErsatzDurchPflichtkurse = istErsatzfachRE;
 		}
 		if (nimmAlsDurchgaengigeGW) {
 			kurseUntereGrenze += anzahl;
 		} else {
-			if (istErsatzfachRE) {
+			// Die Kurse als Abiturfach bzw. die Q1-Kurse als Referenzfach erfüllen zugleich die Pflicht für das Ersatzfach von Religion
+			// und werden nicht doppelt gezählt
+			if (istErsatzfachRE && !istErsatzDurchPflichtkurse) {
 				kurseUntereGrenze += anzahlErsatzfachRE;
 				kurseOberereGrenze += anzahlErsatzfachRE;
 			}

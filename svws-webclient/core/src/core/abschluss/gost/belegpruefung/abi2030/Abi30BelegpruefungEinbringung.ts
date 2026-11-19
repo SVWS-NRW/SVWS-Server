@@ -356,21 +356,24 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		let anzahl: number = this.manager.zaehleHalbjahresbelegungen(gw, ...GostHalbjahr.getQualifikationsphase());
 		const istErsatzfachRE: boolean = (anzahlErsatzfachRE > 0) && (anzahl - anzahlErsatzfachRE >= 0);
 		const nimmAlsDurchgaengigeGW: boolean = !this.hatGWDurchgaengig && (anzahl === 4);
+		let istErsatzDurchPflichtkurse: boolean = false;
 		if (nimmAlsDurchgaengigeGW) {
 			this.hatGWDurchgaengig = true;
 		}
 		if (gw.abiturFach !== null) {
 			this.kurseUntereGrenze += 4;
 			anzahl -= 4;
+			istErsatzDurchPflichtkurse = istErsatzfachRE;
 		} else
 			if (this.hatPjkAbi && (gw.fachID === this.referenzfach.id)) {
 				this.kurseUntereGrenze += 2;
 				anzahl -= 2;
+				istErsatzDurchPflichtkurse = istErsatzfachRE;
 			}
 		if (nimmAlsDurchgaengigeGW) {
 			this.kurseUntereGrenze += anzahl;
 		} else {
-			if (istErsatzfachRE) {
+			if (istErsatzfachRE && !istErsatzDurchPflichtkurse) {
 				this.kurseUntereGrenze += anzahlErsatzfachRE;
 				this.kurseOberereGrenze += anzahlErsatzfachRE;
 			}
