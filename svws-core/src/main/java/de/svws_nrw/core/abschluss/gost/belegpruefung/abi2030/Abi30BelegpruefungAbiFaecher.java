@@ -298,6 +298,10 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		}
 		// Prüfe, ob es sich um eine durchgängige Grundkursbelegung handelt
 		if (manager.pruefeBelegungMitKursart(ab5, GostKursart.GK, GostHalbjahr.Q22)) {
+			// Bei einer externen besonderen Lernleistung gelten die Vorgaben zur Schriftlichkeit nicht für deren Fach (§ 12 (4) S. 2)
+			if (GostBesondereLernleistung.EXTERNE.is(manager.daten().besondereLernleistung)) {
+				return;
+			}
 			if (!pruefeSchriftlichkeitVorQ22(ab5)) {
 				addFehler(GostBelegungsfehler.GOST30_ABI_29);
 			}

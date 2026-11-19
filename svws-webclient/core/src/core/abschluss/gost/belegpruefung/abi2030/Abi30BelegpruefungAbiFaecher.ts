@@ -5,8 +5,8 @@ import type { JavaSet } from '../../../../../java/util/JavaSet';
 import { GostAbiturFach } from '../../../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt } from '../../../../../core/abschluss/gost/GostBelegpruefungsArt';
-import { ArrayList } from '../../../../../java/util/ArrayList';
 import { GostBesondereLernleistung } from '../../../../../core/types/gost/GostBesondereLernleistung';
+import { ArrayList } from '../../../../../java/util/ArrayList';
 import { ArrayMap } from '../../../../../core/adt/map/ArrayMap';
 import { GostBelegpruefung } from '../../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../../core/abschluss/gost/AbiturdatenManager';
@@ -260,6 +260,9 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			return;
 		}
 		if (this.manager.pruefeBelegungMitKursart(ab5, GostKursart.GK, GostHalbjahr.Q22)) {
+			if (GostBesondereLernleistung.EXTERNE.is(this.manager.daten().besondereLernleistung)) {
+				return;
+			}
 			if (!this.pruefeSchriftlichkeitVorQ22(ab5)) {
 				this.addFehler(GostBelegungsfehler.GOST30_ABI_29);
 			}
