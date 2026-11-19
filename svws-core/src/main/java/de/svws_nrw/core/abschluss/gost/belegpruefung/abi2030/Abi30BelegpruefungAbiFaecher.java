@@ -14,6 +14,7 @@ import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
+import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -327,6 +328,12 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			if (!leitfaecher.isEmpty()) {
 				pruefeProjektkursReferenzfaecherAB5(leitfaecher);
 			}
+			return;
+		}
+		// Das 5. Abiturfach ist weder in Q2.2 als Grundkurs noch als Projektkurs belegt. Bei einer externen besonderen Lernleistung
+		// muss das Fach der besonderen Lernleistung nicht belegt sein (§ 12 (4) S. 2).
+		if (!GostBesondereLernleistung.EXTERNE.is(manager.daten().besondereLernleistung)) {
+			addFehler(GostBelegungsfehler.GOST30_ABI_31);
 		}
 	}
 

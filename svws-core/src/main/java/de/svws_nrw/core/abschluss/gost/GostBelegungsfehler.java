@@ -114,6 +114,11 @@ public enum GostBelegungsfehler {
 			"In Q2.2 muss das 5. Abiturfach mündlich belegt sein.",
 			null),
 
+	/** BelegungsfehlerArt ABI_31 */
+	GOST30_ABI_31("ABI_31", GostBelegungsfehlerArt.BELEGUNG,
+			"Das 5. Abiturfach muss von Q1.1 bis Q2.2 als Grundkurs belegt sein.",
+			null),
+
 
 	/** BelegungsfehlerArt ABI_18: In der Einführungsphase müssen in jedem Halbjahr mindestens 10 Fächer belegt werden. Vertiefungskurse werden bei der Zählung nicht berücksichtigt.
 	 *  <br>In EF.1 müssen mindestens 10 Kurse belegt werden. Bei der Kurszählung werden Vertiefungskurse nicht mitgezählt. */
