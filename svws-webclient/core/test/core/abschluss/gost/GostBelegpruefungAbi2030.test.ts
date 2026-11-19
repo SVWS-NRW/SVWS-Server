@@ -39,6 +39,21 @@ describe("Laufbahnplanung Tests", () => {
 		}
 	}
 
+	/**
+	 * Übernimmt die optionalen Vorgaben zu einem Testfall aus der Datei Testschule_[Testfall]_Vorgaben.json,
+	 * die nicht in der Laufbahnplanungsdatei enthalten sind (z. B. die Art der besonderen Lernleistung).
+	 */
+	function setzeVorgaben(name: string, lpDaten: GostLaufbahnplanungDataHandler): void {
+		const vorgabenFile = files.find(f => f.includes(`${name}_Vorgaben`));
+		if (vorgabenFile === undefined) {
+			return;
+		}
+		const vorgaben = JSON.parse(readFileSync(resolve(test_dir, vorgabenFile), "utf8"));
+		if (typeof vorgaben.besondereLernleistung === "string") {
+			lpDaten.getAbiturdaten().besondereLernleistung = vorgaben.besondereLernleistung;
+		}
+	}
+
 	const abiturdaten: Record<string, GostLaufbahnplanungDataHandler> = {};
 	const belegpruefungsergebnisse_gesamt: Record<string, any> = {};
 	const belegpruefungsergebnisse_ef1: Record<string, any> = {};
@@ -66,6 +81,7 @@ describe("Laufbahnplanung Tests", () => {
 				const expected = GostBelegpruefungErgebnis.transpilerFromJSON(readFileSync(resolve(test_dir, ergebnisFile), "utf8"));
 
 				const lpDaten = await loadLpDaten(file);
+				setzeVorgaben(name, lpDaten);
 				const manager = new AbiturdatenManager(lpDaten.getAbiturdaten(), lpDaten.getGostJahrgangsdaten(), lpDaten.getFaecherManager(), GostBelegpruefungsArt.EF1);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				expect(expected.erfolgreich).toBe(ergebnis.erfolgreich);
@@ -92,6 +108,7 @@ describe("Laufbahnplanung Tests", () => {
 				const expected = GostBelegpruefungErgebnis.transpilerFromJSON(readFileSync(resolve(test_dir, ergebnisFile), "utf8"));
 
 				const lpDaten = await loadLpDaten(file);
+				setzeVorgaben(name, lpDaten);
 				const manager = new AbiturdatenManager(lpDaten.getAbiturdaten(), lpDaten.getGostJahrgangsdaten(), lpDaten.getFaecherManager(), GostBelegpruefungsArt.GESAMT);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				expect(expected.erfolgreich).toBe(ergebnis.erfolgreich);
