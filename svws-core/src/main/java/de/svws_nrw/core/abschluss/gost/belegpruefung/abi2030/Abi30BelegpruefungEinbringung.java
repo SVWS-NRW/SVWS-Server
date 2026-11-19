@@ -10,6 +10,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
+import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import jakarta.validation.constraints.NotNull;
@@ -35,6 +36,9 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 
 	/** Gibt an, ob der gewählte Projektkurs Abiturfach ist oder nicht. */
 	private boolean hatPjkAbi;
+
+	/** Gibt an, ob eine externe besondere Lernleistung vorliegt. Dann entfällt die Einbringungspflicht für das 5. Abiturfach (§ 26 (2) S. 3). */
+	private boolean hatBLLExtern;
 
 	/** Das Referenzfach des Projektkurses */
 	private @NotNull GostFach referenzfach = new GostFach();
@@ -77,6 +81,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		final AbiturFachbelegung referenzfachBelegung = (projektkurs == null) || (projektkurs.idReferenzfach == null) ? null
 				: manager.getFachbelegungByID(projektkurs.idReferenzfach);
 		hatPjkAbi = (projektkurs != null) && (projektkurs.abiturFach != null);
+		hatBLLExtern = GostBesondereLernleistung.EXTERNE.is(manager.daten().besondereLernleistung);
 		final GostFach refFach = manager.getFach(referenzfachBelegung);
 		if (refFach != null) {
 			referenzfach = refFach;
@@ -93,8 +98,23 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		// nichts zu tun
 	}
 
+	/**
+	 * Prüft, ob die Fachbelegung als Abiturfach einbringungspflichtig ist. Bei einer externen besonderen Lernleistung
+	 * entfällt dies für das 5. Abiturfach (§ 26 (2) S. 3).
+	 *
+	 * @param belegung   die Fachbelegung
+	 *
+	 * @return true, wenn die Fachbelegung als Abiturfach einbringungspflichtig ist
+	 */
+	private boolean istAbifachEinbringungspflichtig(final @NotNull AbiturFachbelegung belegung) {
+		return (belegung.abiturFach != null) && !(hatBLLExtern && (belegung.abiturFach == 5));
+	}
+
 	private boolean hatAbifachGWOhnePJK() {
 		for (final @NotNull GostAbiturFach abifach : GostAbiturFach.values()) {
+			if (hatBLLExtern && (abifach == GostAbiturFach.AB5)) {
+				continue;
+			}
 			final AbiturFachbelegung bel = pruefungAbiFaecher.getAbiturfach(abifach);
 			final GostFach fach = manager.getFach(bel);
 			if (fach == null) {
@@ -108,7 +128,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 	}
 
 	private void pruefeSport() {
-		final boolean hatSportAbi = (sport.size() == 1) && (sport.get(0).abiturFach != null);
+		final boolean hatSportAbi = (sport.size() == 1) && istAbifachEinbringungspflichtig(sport.get(0));
 		final boolean hatSportAbiPJK = hatPjkAbi && GostFachbereich.SPORT.hat(referenzfach);
 		if (hatSportAbi) {
 			kurseUntereGrenze += 4;
@@ -136,7 +156,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		for (final AbiturFachbelegung nwNeu : listNwNeu) {
 			final int anzahl = manager.zaehleHalbjahresbelegungen(nwNeu, GostHalbjahr.getQualifikationsphase());
 			anzahlKurseNw += anzahl;
-			if ((anzahl == 4) && (nwNeu.abiturFach != null)) {
+			if ((anzahl == 4) && istAbifachEinbringungspflichtig(nwNeu)) {
 				hatNwNeuAbi = true;
 				anzahlNwAbi++;
 			} else if (hatPjkAbi && (nwNeu.fachID == referenzfach.id)) {
@@ -149,7 +169,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		for (final AbiturFachbelegung nwKl : listNwKl) {
 			final int anzahl = manager.zaehleHalbjahresbelegungen(nwKl, GostHalbjahr.getQualifikationsphase());
 			anzahlKurseNw += anzahl;
-			if ((anzahl == 4) && (nwKl.abiturFach != null)) {
+			if ((anzahl == 4) && istAbifachEinbringungspflichtig(nwKl)) {
 				anzahlNwAbi++;
 			} else if (hatPjkAbi && (nwKl.fachID == referenzfach.id)) {
 				anzahlKurseNwPjkAbi += anzahl;
@@ -164,7 +184,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		for (final AbiturFachbelegung fs : listFS) {
 			final int anzahl = manager.zaehleHalbjahresbelegungen(fs, GostHalbjahr.getQualifikationsphase());
 			anzahlKurseFs += anzahl;
-			if ((anzahl == 4) && (fs.abiturFach != null)) {
+			if ((anzahl == 4) && istAbifachEinbringungspflichtig(fs)) {
 				anzahlFsAbi++;
 			}
 			if (hatPjkAbi && (fs.fachID == referenzfach.id)) {
@@ -226,7 +246,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		for (final AbiturFachbelegung kml : kumuli) {
 			final int anzahl = manager.zaehleHalbjahresbelegungen(kml, GostHalbjahr.getQualifikationsphase());
 			anzahlKurseKML += anzahl;
-			if ((anzahl == 4) && (kml.abiturFach != null)) {
+			if ((anzahl == 4) && istAbifachEinbringungspflichtig(kml)) {
 				anzahlKMLAbi++;
 			}
 		}
@@ -246,7 +266,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		final @NotNull List<AbiturFachbelegung> listRE = manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
 		boolean istREAbi = false;
 		for (final @NotNull AbiturFachbelegung religion : listRE)  {
-			if (religion.abiturFach != null) {
+			if (istAbifachEinbringungspflichtig(religion)) {
 				istREAbi = true;
 			}
 		}
@@ -273,7 +293,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		final boolean istPLDurchgaengig = (!hatGWDurchgaengig) && (anzahlPL == 4) && !istGEDurchgaengig && !istSWDurchgaengig;
 		if (listPL.size() == 1) {
 			final @NotNull AbiturFachbelegung philosophie = listPL.getFirst();
-			if (((anzahlPL == 4) && (philosophie.abiturFach != null))) {
+			if (((anzahlPL == 4) && istAbifachEinbringungspflichtig(philosophie))) {
 				kurseUntereGrenze += 4;
 			} else if (hatPjkAbi && (philosophie.fachID == referenzfach.id)) {
 				if (istPLDurchgaengig) {
@@ -306,7 +326,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		boolean istErsatzfachRE = false;
 		boolean istGEAbi = false;
 		for (final @NotNull AbiturFachbelegung ge : geschichte)  {
-			if (ge.abiturFach != null) {
+			if (istAbifachEinbringungspflichtig(ge)) {
 				istGEAbi = true;
 			}
 		}
@@ -333,7 +353,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		boolean istErsatzfachRE = false;
 		boolean istSWAbi = false;
 		for (final @NotNull AbiturFachbelegung sw : sozialwissenschaften)  {
-			if (sw.abiturFach != null) {
+			if (istAbifachEinbringungspflichtig(sw)) {
 				istSWAbi = true;
 			}
 		}
@@ -363,7 +383,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		if (nimmAlsDurchgaengigeGW) {
 			hatGWDurchgaengig = true;
 		}
-		if (gw.abiturFach != null) {
+		if (istAbifachEinbringungspflichtig(gw)) {
 			kurseUntereGrenze += 4;
 			anzahl -= 4;
 			istErsatzDurchPflichtkurse = istErsatzfachRE;
