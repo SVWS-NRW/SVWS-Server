@@ -98,10 +98,10 @@
 	import { useAuthState } from "@wenom/states/AuthState";
 	import { computed, nextTick, onMounted, ref, watch, watchEffect } from "vue";
 
-	import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
 	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
 
 	import type { LoginProps } from "./SLoginProps";
+
 
 	const props = defineProps<LoginProps>();
 	const auth = useAuthState();
@@ -175,16 +175,12 @@
 	});
 
 	onMounted(async () => {
-		await initCoreTypes();
 		server.value = await auth.checkVersion();
 		await nextTick();
 		usernameInput.value?.focus();
 	});
 
-	async function initCoreTypes() {
-		const reader = new JsonCoreTypeReaderStatic();
-		reader.readAll();
-	}
+
 
 	async function doLogin() {
 		try {

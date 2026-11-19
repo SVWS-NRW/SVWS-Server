@@ -4,6 +4,7 @@ import Components from "unplugin-vue-components/vite";
 import Markdown from 'unplugin-vue-markdown/vite';
 import { resolve } from "node:path";
 import tailwindcss from '@tailwindcss/vite';
+import { coreTypeGuard } from "../vite/coreTypeGuard";
 
 export default defineConfig({
 	server: { port: 3002 },
@@ -12,6 +13,7 @@ export default defineConfig({
 	plugins: [
 		Vue({ include: [/\.vue$/, /\.md$/] }),
 		tailwindcss(),
+		coreTypeGuard(),
 		Markdown({}),
 		Components({
 			globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{md,vue}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],

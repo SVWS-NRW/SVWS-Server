@@ -52,6 +52,7 @@
 				status.value = e.message;
 			} else {
 				status.value = "Es gab einen Fehler beim Import der Laufbahnplanungsdaten";
+				console.log(e);
 			}
 		}
 		loading.value = false;
