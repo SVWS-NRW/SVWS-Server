@@ -61,6 +61,17 @@ class TestGostBelegpruefungAbi2030 {
 	/** Eine Map mit den Gesamt-Abitur-Belegprüfungsergebnissen von Schülern der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static Map<String, GostBelegpruefungErgebnis> testBelegpruefungsergebnisseGesamt = new HashMap<>();
 
+	/**
+	 * Zusätzliche Vorgaben zu einem Testfall, die nicht in der Laufbahnplanungsdatei enthalten sind. Sie werden optional
+	 * aus der Datei Testschule_[Testfall]_Vorgaben.json gelesen.
+	 */
+	static final class Vorgaben {
+
+		/** Die Art der besonderen Lernleistung (K - keine, E - extern, P - im Projektkurs) */
+		public String besondereLernleistung = "K";
+
+	}
+
 
 
 	static GostLaufbahnplanungExportV2 decodeLpFile(final byte[] encoded) throws CompressionException {
@@ -112,6 +123,18 @@ class TestGostBelegpruefungAbi2030 {
 		System.out.println("- Lade die Laufbahnplanungsdaten aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
 		testLaufbahnen = ladeTestfaelleLaufbahnplanung();
 		assert (testLaufbahnen != null) && (testLaufbahnen.size() != 0) : "Fehler beim Laden der Laufbahnplanungsdateien!";
+		System.out.println("  FERTIG!");
+
+		System.out.println("- Lade die optionalen Vorgaben zu den Testfällen aus den JSON-Resourcen...");
+		final Map<String, Vorgaben> tempVorgaben =
+				ResourceUtils.json2Classes(TestGostBelegpruefungAbi2030.class.getPackageName(), "Testschule_", "_Vorgaben", Vorgaben.class);
+		for (final Map.Entry<String, Vorgaben> entry : tempVorgaben.entrySet()) {
+			final Matcher matcher = pattern.matcher(entry.getKey());
+			if (!matcher.find() || !testLaufbahnen.containsKey(matcher.group(1))) {
+				fail("Fehler beim Laden der Vorgaben - kein passender Testfall: Testschule_" + entry.getKey() + "_Vorgaben");
+			}
+			testLaufbahnen.get(matcher.group(1)).getAbiturdaten().besondereLernleistung = entry.getValue().besondereLernleistung;
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Gesamt-Belegprüfungsergebnisse aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
