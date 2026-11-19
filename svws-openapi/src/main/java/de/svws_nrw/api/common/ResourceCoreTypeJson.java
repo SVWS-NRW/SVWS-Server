@@ -29,6 +29,7 @@ public final class ResourceCoreTypeJson {
 			Map.entry("BerufskollegAnlage", "de/svws_nrw/asd/types/schule/BerufskollegAnlage.json"),
 			Map.entry("AllgemeinbildendOrganisationsformen", "de/svws_nrw/asd/types/schule/AllgemeinbildendOrganisationsformen.json"),
 			Map.entry("BerufskollegOrganisationsformen", "de/svws_nrw/asd/types/schule/BerufskollegOrganisationsformen.json"),
+			Map.entry("BeruflichesGymnasiumPruefungsordnungAnlage", "de/svws_nrw/asd/types/schule/BeruflichesGymnasiumPruefungsordnungAnlage.json"),
 			Map.entry("WeiterbildungskollegOrganisationsformen", "de/svws_nrw/asd/types/schule/WeiterbildungskollegOrganisationsformen.json"),
 			Map.entry("SchulabschlussAllgemeinbildend", "de/svws_nrw/asd/types/schule/SchulabschlussAllgemeinbildend.json"),
 			Map.entry("SchulabschlussBerufsbildend", "de/svws_nrw/asd/types/schule/SchulabschlussBerufsbildend.json"),

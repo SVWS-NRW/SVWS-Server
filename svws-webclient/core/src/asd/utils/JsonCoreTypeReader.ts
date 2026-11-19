@@ -38,6 +38,7 @@ import { BildungsgangTypKatalogEintrag } from "../data/schule/BildungsgangTypKat
 import { FoerderschwerpunktKatalogEintrag } from "../data/schule/FoerderschwerpunktKatalogEintrag";
 import { KindergartenbesuchKatalogEintrag } from "../data/schule/KindergartenbesuchKatalogEintrag";
 import { OrganisationsformKatalogEintrag } from "../data/schule/OrganisationsformKatalogEintrag";
+import { BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag } from "../data/schule/BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag";
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from "../data/schule/SchulabschlussAllgemeinbildendKatalogEintrag";
 import { SchulabschlussBerufsbildendKatalogEintrag } from "../data/schule/SchulabschlussBerufsbildendKatalogEintrag";
 import { SchulformKatalogEintrag } from "../data/schule/SchulformKatalogEintrag";
@@ -83,6 +84,7 @@ import { AllgemeinbildendOrganisationsformen } from "../types/schule/Allgemeinbi
 import { BerufskollegAnlage } from "../types/schule/BerufskollegAnlage";
 import { BerufskollegBildungsgangTyp } from "../types/schule/BerufskollegBildungsgangTyp";
 import { BerufskollegOrganisationsformen } from "../types/schule/BerufskollegOrganisationsformen";
+import { BeruflichesGymnasiumPruefungsordnungAnlage } from "../types/schule/BeruflichesGymnasiumPruefungsordnungAnlage";
 import { Foerderschwerpunkt } from "../types/schule/Foerderschwerpunkt";
 import { Kindergartenbesuch } from "../types/schule/Kindergartenbesuch";
 import { Religion } from "../types/schule/Religion";
@@ -170,6 +172,7 @@ export class JsonCoreTypeReader {
 		{ key: "BerufskollegAnlage", entry: BerufskollegAnlageKatalogEintrag, type: BerufskollegAnlage },
 		{ key: "AllgemeinbildendOrganisationsformen", entry: OrganisationsformKatalogEintrag, type: AllgemeinbildendOrganisationsformen },
 		{ key: "BerufskollegOrganisationsformen", entry: OrganisationsformKatalogEintrag, type: BerufskollegOrganisationsformen },
+		{ key: "BeruflichesGymnasiumPruefungsordnungAnlage", entry: BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag, type: BeruflichesGymnasiumPruefungsordnungAnlage },
 		{ key: "WeiterbildungskollegOrganisationsformen", entry: OrganisationsformKatalogEintrag, type: WeiterbildungskollegOrganisationsformen },
 		{ key: "SchulabschlussAllgemeinbildend", entry: SchulabschlussAllgemeinbildendKatalogEintrag, type: SchulabschlussAllgemeinbildend },
 		{ key: "SchulabschlussBerufsbildend", entry: SchulabschlussBerufsbildendKatalogEintrag, type: SchulabschlussBerufsbildend },
