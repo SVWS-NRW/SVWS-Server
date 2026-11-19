@@ -307,7 +307,6 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 					if (anzahlPL > 0) {
 						if (istPLDurchgaengig) {
 							this.kurseUntereGrenze += 4;
-							istErsatzfachRE = true;
 							this.hatGWDurchgaengig = true;
 						} else
 							if (anzahlErsatzfachRE > 0) {

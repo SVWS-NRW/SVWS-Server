@@ -306,8 +306,9 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 				}
 			} else if (anzahlPL > 0) {
 				if (istPLDurchgaengig) {
+					// Philosophie ist hier die durchgehend belegte Gesellschaftswissenschaft und kann daher nicht zugleich Ersatzfach
+					// für Religion sein (§ 8 (4) S. 2). Der Ersatz erfolgt durch eine weitere Gesellschaftswissenschaft.
 					kurseUntereGrenze += 4;
-					istErsatzfachRE = true; // Philosophie ist ggf. Ersatzfach, wenn es nicht Abiturfach ist, es fließt hier aber nicht extra in die Einbringungspflicht mit rein
 					hatGWDurchgaengig = true;
 				} else if (anzahlErsatzfachRE > 0) {
 					kurseUntereGrenze += anzahlErsatzfachRE; // Wert ist ja negativ...
