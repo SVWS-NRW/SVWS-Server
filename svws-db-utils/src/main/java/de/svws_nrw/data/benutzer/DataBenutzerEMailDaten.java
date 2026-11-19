@@ -126,11 +126,15 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 					throw new ApiOperationException(Status.BAD_REQUEST);
 				}
 			}),
-			Map.entry("name", (conn, dto, value, map) -> dto.EmailName = JSONMapper.convertToString(value, true, false, 255)),
-			Map.entry("address", (conn, dto, value, map) -> dto.Email = JSONMapper.convertToString(value, true, false, 255)),
-			Map.entry("usernameSMTP", (conn, dto, value, map) -> dto.SMTPUsername = JSONMapper.convertToString(value, true, false, 255)),
+			Map.entry("name", (conn, dto, value, map) -> dto.EmailName = JSONMapper.convertToString(value, true, true, 255)),
+			Map.entry("address", (conn, dto, value, map) -> dto.Email = JSONMapper.convertToString(value, true, true, 255)),
+			Map.entry("usernameSMTP", (conn, dto, value, map) -> dto.SMTPUsername = JSONMapper.convertToString(value, true, true, 255)),
 			Map.entry("passwordSMTP", (conn, dto, value, map) -> {
-				final String password = JSONMapper.convertToString(value, true, false, 127);
+				final String password = JSONMapper.convertToString(value, false, true, 127);
+				if (password.isEmpty()) {
+					dto.SMTPPassword = "";
+					return;
+				}
 				final AES aes = conn.getUser().getAES();
 				if (aes == null) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Konnte kein AES-Verschlüsselungsobjekt für den Benutzer finden.");
@@ -141,7 +145,7 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Verschlüsseln des SMTP-Kennwortes");
 				}
 			}),
-			Map.entry("signatur", (conn, dto, value, map) -> dto.EMailSignature = JSONMapper.convertToString(value, true, false, 2047)));
+			Map.entry("signatur", (conn, dto, value, map) -> dto.EMailSignature = JSONMapper.convertToString(value, true, true, 2047)));
 
 
 	@Override

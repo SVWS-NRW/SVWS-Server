@@ -115,7 +115,7 @@ export class ApiConnection {
 			this._schema = schema;
 			this._api = new ApiServer(this._url, username, password);
 			this._apiExternal = new ApiExternal(this._url, username, password);
-			await benutzerStateImpl.init(username, password);
+			await benutzerStateImpl.init();
 
 			await this.configState.init();
 		} catch (error) {

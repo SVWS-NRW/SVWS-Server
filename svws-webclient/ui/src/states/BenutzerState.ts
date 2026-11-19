@@ -6,7 +6,6 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
 import { AppContext } from "@ui/AppContext";
-import type { AES } from "@ui/utils/crypto/aes";
 
 /**
  * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
@@ -54,12 +53,6 @@ export interface BenutzerState {
 	 * @returns das Set der IDs
 	 */
 	get kompetenzenAbiturjahrgaenge(): Set<number>;
-
-	/** Der AES-Schlüssel des Benutzers
-	 *
-	 * @returns der AES-Schlüssel des Benutzers
-	 */
-	get aes(): AES;
 
 	/**
 	 * Prüft, ob der angemeldete Benutzer die angegebene Kompetenz hat oder
@@ -145,8 +138,9 @@ export interface BenutzerState {
 	 *
 	 * @param data   die Mail-Benutzerdaten des Benutzers, die geändert werden sollen
 	 *
+	 * @returns true, wenn der Patch erfolgreich war, und ansonsten false
 	 */
-	patchBenutzerEMailDaten(data: Partial<BenutzerEMailDaten>): Promise<void>;
+	patchBenutzerEMailDaten(data: Partial<BenutzerEMailDaten>): Promise<boolean>;
 
 }
 

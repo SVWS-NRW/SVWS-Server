@@ -1,12 +1,10 @@
 import type { BenutzerDaten } from "@core/core/data/benutzer/BenutzerDaten";
-import type { BenutzerEMailDaten } from "@core/core/data/benutzer/BenutzerEMailDaten";
+import { BenutzerEMailDaten } from "@core/core/data/benutzer/BenutzerEMailDaten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
 import type { BenutzerState } from "@ui/states/BenutzerState";
 import { StateManager } from "@ui/ui/StateManager";
-import { AES } from "@ui/utils/crypto/aes";
-import { AESAlgo } from "@ui/utils/crypto/aesAlgo";
 
 import { api } from "~/router/Api";
 
@@ -16,9 +14,6 @@ interface BenutzerReactiveState {
 
 	// Die Benutzerdaten des angemeldeten Benutzers
 	benutzerdaten: BenutzerDaten | undefined;
-
-	// Das benutzerspezifische AES-Objekt zur Verschlüsselung
-	aes: AES | undefined;
 
 	// Gibt an, ob der Benutzer Administrator-Rechte hat oder nicht (direkt oder indirekt über eine Gruppen-Zugehörigkeit)
 	istAdmin: boolean;
@@ -49,7 +44,6 @@ export class BenutzerStateImpl extends StateManager<BenutzerReactiveState> imple
 		super({
 			authenticated: false,
 			benutzerdaten: undefined,
-			aes: undefined,
 			istAdmin: false,
 			kompetenzen: new Set(),
 			kompetenzenKlasse: new Set(),
@@ -59,17 +53,15 @@ export class BenutzerStateImpl extends StateManager<BenutzerReactiveState> imple
 		});
 	}
 
-	public async init(username: string, password: string): Promise<void> {
+	public async init(): Promise<void> {
 		const benutzerdaten = await api.server.getBenutzerDatenEigene(api.schema);
 		const istAdmin = this.getIstAdmin(benutzerdaten);
 		const kompetenzen = this.getKompetenzen(benutzerdaten);
 		const kompetenzenKlasse = this.getKompetenzenKlasse(benutzerdaten);
 		const kompetenzenAbiturjahrgaenge = this.getKompetenzenAbiturjahrgaenge(benutzerdaten);
-		const aesKey = await AES.getKey256(password, username);
-		const aes = new AES(AESAlgo.CBC, aesKey);
 		const benutzerEMailDaten = await api.server.getBenutzerEmailDaten(api.schema);
 
-		this.setPatchedDefaultState({ benutzerdaten, authenticated: true, istAdmin, kompetenzen, kompetenzenKlasse, kompetenzenAbiturjahrgaenge, aes, benutzerEMailDaten });
+		this.setPatchedDefaultState({ benutzerdaten, authenticated: true, istAdmin, kompetenzen, kompetenzenKlasse, kompetenzenAbiturjahrgaenge, benutzerEMailDaten });
 	}
 
 	// Gibt den Status zurück, ob der Benutzer authentifiziert wurde
@@ -92,14 +84,6 @@ export class BenutzerStateImpl extends StateManager<BenutzerReactiveState> imple
 		}
 		return this.state.benutzerEMailDaten;
 	}
-	// Gibt ein Promise zurück mit einem AES-Schlüssel
-	get aes(): AES {
-		if (this.state.aes === undefined) {
-			throw new DeveloperNotificationException("Das AES-Objekt ist nicht definiert");
-		}
-		return this.state.aes;
-	}
-
 	// Gibt an, sofern ein Login stattgefunden hat, ob es sich bei dem angemeldeten Benutzer um einen Administrator handelt oder nicht
 	get istAdmin(): boolean {
 		return this.state.istAdmin;
@@ -280,8 +264,17 @@ export class BenutzerStateImpl extends StateManager<BenutzerReactiveState> imple
 		}
 	};
 
-	public async patchBenutzerEMailDaten(data: Partial<BenutzerEMailDaten>) {
-		await api.server.patchBenutzerEmailDaten(data, api.schema);
+	public async patchBenutzerEMailDaten(data: Partial<BenutzerEMailDaten>): Promise<boolean> {
+		try {
+			await api.server.patchBenutzerEmailDaten(data, api.schema);
+			const benutzerEMailDaten = (data.passwordSMTP === undefined)
+				? Object.assign(new BenutzerEMailDaten(), this.benutzerEMailDaten, data)
+				: await api.server.getBenutzerEmailDaten(api.schema);
+			this.setPatchedState({ benutzerEMailDaten });
+			return true;
+		} catch {
+			return false;
+		}
 	};
 
 }
