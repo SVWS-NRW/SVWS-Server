@@ -6,6 +6,7 @@ import { GostAbiturFach } from '../../../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt } from '../../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { ArrayList } from '../../../../../java/util/ArrayList';
+import { GostBesondereLernleistung } from '../../../../../core/types/gost/GostBesondereLernleistung';
 import { ArrayMap } from '../../../../../core/adt/map/ArrayMap';
 import { GostBelegpruefung } from '../../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../../core/abschluss/gost/AbiturdatenManager';
@@ -288,6 +289,10 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			if (!leitfaecher.isEmpty()) {
 				this.pruefeProjektkursReferenzfaecherAB5(leitfaecher);
 			}
+			return;
+		}
+		if (!GostBesondereLernleistung.EXTERNE.is(this.manager.daten().besondereLernleistung)) {
+			this.addFehler(GostBelegungsfehler.GOST30_ABI_31);
 		}
 	}
 
