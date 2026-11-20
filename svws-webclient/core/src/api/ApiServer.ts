@@ -14260,8 +14260,7 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: SchuelerStammdaten
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.
-	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden oder der angegebene Ort bzw. Ortsteil existiert nicht
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<SchuelerStammdaten>} data - der Request-Body für die HTTP-Methode
