@@ -13,12 +13,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @TranspilerDTO
 public class GostStatistikFachwahlHalbjahr {
 
-	/** Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs. */
-	@Schema(description = "die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs", example = "42")
+	/** Die Anzahl der Wahlen als mündlicher Grundkurs, Vertiefungskurs oder Projektkurs (vor dem Abitur 2030). */
+	@Schema(description = "die Anzahl der Wahlen als mündlicher Grundkurs, Vertiefungskurs oder Projektkurs (vor dem Abitur 2030)", example = "42")
 	public int wahlenGKMuendlich = 0;
 
-	/** Die Anzahl der Wahlen als schriftlicher Grundkurs. */
-	@Schema(description = "die Anzahl der Wahlen als schriftlicher Grundkurs", example = "42")
+	/** Die Anzahl der Wahlen als schriftlicher Grundkurs oder Projektkurs (ab dem Abitur 2030). */
+	@Schema(description = "die Anzahl der Wahlen als schriftlicher Grundkurs oder Projektkurs (ab dem Abitur 2030)", example = "42")
 	public int wahlenGKSchriftlich = 0;
 
 	/** Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs. */

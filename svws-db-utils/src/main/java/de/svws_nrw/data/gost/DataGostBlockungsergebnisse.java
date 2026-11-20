@@ -968,8 +968,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				final GostKursart kursart = GostKursart.fromID(kurs.kursart);
 				leistung.KursartAllg = kursart.kuerzel;
 
-				// Anpassen der speziellen Kursart im Falle eines Vertiefungs- oder Projektkurses
-				if ((kursart == GostKursart.VTF) || ((kursart == GostKursart.PJK) && (!"AB5".equals(leistung.Kursart)))) {
+				// Anpassen der speziellen Kursart im Falle eines Vertiefungs- oder Projektkurses (ein Projektkurs ist auch als 5. Abiturfach PJK)
+				if ((kursart == GostKursart.VTF) || (kursart == GostKursart.PJK)) {
 					leistung.Kursart = kursart.kuerzel;
 				}
 

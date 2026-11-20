@@ -27,7 +27,7 @@ public enum GostKursart {
 
 	/** Grundkurs = GK */
 	GK(2, "GK", "Grundkurs", Arrays.asList(
-			ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.EFSP
+			ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.AB5, ZulaessigeKursart.EFSP
 	)),
 
 	/** Zusatzkurs = ZK */

@@ -105,6 +105,8 @@ export class SchuelerLeistungsdatenModelProxy extends ModelProxy<SchuelerLeistun
 			this.proxy.abifach = 3;
 		} else if (kursart === ZulaessigeKursart.AB4) {
 			this.proxy.abifach = 4;
+		} else if (kursart === ZulaessigeKursart.AB5) {
+			this.proxy.abifach = 5;
 		}
 		await this.patch();
 	};

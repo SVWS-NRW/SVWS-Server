@@ -121,6 +121,9 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 						kursart = ZulaessigeKursart.AB3;
 					} else if ("4".equals(dto.AbiFach)) {
 						kursart = ZulaessigeKursart.AB4;
+					} else if ("5".equals(dto.AbiFach)) {
+						// Das 5. Abiturfach ist als Grundkurs schriftlich, die Kursart AB5 gibt es erst ab dem Schuljahr 2028/29
+						kursart = (ZulaessigeKursart.AB5.daten(abschnitt.schuljahr) == null) ? ZulaessigeKursart.GKS : ZulaessigeKursart.AB5;
 					}
 					dto.Kursart = kursart.daten(abschnitt.schuljahr).kuerzel;
 				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten(abschnitt.schuljahr).kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1

@@ -196,12 +196,12 @@ public class GostFachwahlService {
 			// Prüfe, ob Fachwahl mündlich passt
 			if (("M".equals(fw)) && ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF)
 					|| ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKM)
-							|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr == GostHalbjahr.Q22)))))) {
+							|| (((zulkursart == ZulaessigeKursart.AB4) || (zulkursart == ZulaessigeKursart.AB5)) && (halbjahr == GostHalbjahr.Q22)))))) {
 				return;
 			}
 			// Prüfe, ob Fachwahl schriftlich passt
 			if (("S".equals(fw)) && ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKS) || (zulkursart == ZulaessigeKursart.AB3)
-					|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr != GostHalbjahr.Q22))))) {
+					|| (((zulkursart == ZulaessigeKursart.AB4) || (zulkursart == ZulaessigeKursart.AB5)) && (halbjahr != GostHalbjahr.Q22))))) {
 				return;
 			}
 			// Prüfe, ob Fachwahl Leistungskurs passt
@@ -247,13 +247,13 @@ public class GostFachwahlService {
 			}
 			// Prüfe, ob Fachwahl mündlich passt
 			if (("M".equals(fw)) && ((kursart == GostKursart.VTF) || ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKM)
-					|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr == GostHalbjahr.Q22)))))) {
+					|| (((zulkursart == ZulaessigeKursart.AB4) || (zulkursart == ZulaessigeKursart.AB5)) && (halbjahr == GostHalbjahr.Q22)))))) {
 				return;
 			}
 			// Prüfe, ob Fachwahl schriftlich passt
 			if (("S".equals(fw)) && ((kursart == GostKursart.PJK)
 					|| ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKS) || (zulkursart == ZulaessigeKursart.AB3)
-							|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr != GostHalbjahr.Q22)))))) {
+							|| (((zulkursart == ZulaessigeKursart.AB4) || (zulkursart == ZulaessigeKursart.AB5)) && (halbjahr != GostHalbjahr.Q22)))))) {
 				return;
 			}
 			// Prüfe, ob Fachwahl Leistungskurs passt

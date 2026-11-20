@@ -14,6 +14,7 @@ import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.enm.v1.ENMv1Ankreuzkompetenz;
 import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
 import de.svws_nrw.core.data.enm.v1.ENMv1Fach;
@@ -350,10 +351,12 @@ public final class EnmV1GetService {
 	 * @param kursart   die Kursart des Kurses
 	 * @param klasse    das ASD-Kürzel der Klasse
 	 * @param halbjahr  das Halbjahr des Kurses
+	 * @param schuljahr das Schuljahr des Lernabschnitts
 	 *
 	 * @return true, wenn der Kurs sicher schriftlich ist.
 	 */
-	private static boolean pruefeKursSchriftlichkeit(final Long idKurs, final ZulaessigeKursart kursart, final String klasse, final int halbjahr) {
+	static boolean pruefeKursSchriftlichkeit(final Long idKurs, final ZulaessigeKursart kursart, final String klasse, final int halbjahr,
+			final int schuljahr) {
 		// Wenn es sich bei den Leistungsdaten nicht um eine Kurs handelt, so wird die Schriftlichkeit hier nicht geprüft
 		if ((idKurs == null) || (kursart == null)) {
 			return false;
@@ -364,9 +367,14 @@ public final class EnmV1GetService {
 			return true;
 		}
 
-		// Das 4. Abiturfach ist schriftlich, außer im letzten Halbjahr der Q2 (mündliche Prüfung)
-		if (kursart == ZulaessigeKursart.AB4) {
+		// Das 4. und das 5. Abiturfach (GK) sind schriftlich, außer im letzten Halbjahr der Q2 (mündliche Prüfung)
+		if ((kursart == ZulaessigeKursart.AB4) || (kursart == ZulaessigeKursart.AB5)) {
 			return !("Q2".equals(klasse) && halbjahr == 2);
+		}
+
+		// Ein Projektkurs ist ab dem Abitur 2030 schriftlich (Produkte im Beurteilungsbereich „Schriftliche Arbeiten“, § 14 APO-GOSt)
+		if (kursart == ZulaessigeKursart.PJK) {
+			return AbiturdatenManager.istAbitur2030(schuljahr + ("Q2".equals(klasse) ? 1 : 2));
 		}
 
 		return false;
@@ -386,7 +394,7 @@ public final class EnmV1GetService {
 	 */
 	private ENMv1Leistung addSchuelerLeistungsdaten(final DTOSchuelerLeistungsdaten leistung,
 			final ZulaessigeKursart kursart, final ENMv1Klasse enmKlasse, final ENMv1Schueler enmSchueler, final ENMv1Lerngruppe enmLerngruppe) {
-		final boolean istSchriftlich = pruefeKursSchriftlichkeit(leistung.Kurs_ID, kursart, enmKlasse.kuerzel, kontext.getHalbjahr());
+		final boolean istSchriftlich = pruefeKursSchriftlichkeit(leistung.Kurs_ID, kursart, enmKlasse.kuerzel, kontext.getHalbjahr(), kontext.getSchuljahr());
 
 		final Integer abiFach = Optional.ofNullable(leistung.AbiFach).map(Integer::valueOf).filter(v -> (v >= 1) && (v <= 5)).orElse(null);
 		final boolean istGemahnt = (leistung.Warnung != null) && leistung.Warnung;

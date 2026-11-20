@@ -22,6 +22,7 @@ import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
+import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -377,13 +378,15 @@ public class GostLaufbahnplanungImportV1Service {
 				if (fachwahl == null) {
 					fachwahl = new DTOGostSchuelerFachbelegungen(dtoSchueler.ID, idFach);
 				}
+				// Ein Projektkurs ist ab dem Abitur 2030 schriftlich (Produkte, § 14 APO-GOSt), davor mündlich
+				final String kursartPJK = AbiturdatenManager.istAbitur2030(laufbahnplanungsdaten.abiturjahr) ? "S" : "M";
 				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 					final String dateiKursart = datei.kursart[halbjahr.id];
 					final String kursart = (dateiKursart == null) ? null
 							: ("AT".equals(dateiKursart) ? "AT"
 									: (GostKursart.LK.kuerzel.equals(dateiKursart) ? "LK"
 											: (GostKursart.ZK.kuerzel.equals(dateiKursart) ? "ZK"
-													: (GostKursart.PJK.kuerzel.equals(dateiKursart) ? "M"
+													: (GostKursart.PJK.kuerzel.equals(dateiKursart) ? kursartPJK
 															: (GostKursart.VTF.kuerzel.equals(dateiKursart) ? "M"
 																	: (datei.schriftlich[halbjahr.id] ? "S" : "M"))))));
 					switch (halbjahr) {
