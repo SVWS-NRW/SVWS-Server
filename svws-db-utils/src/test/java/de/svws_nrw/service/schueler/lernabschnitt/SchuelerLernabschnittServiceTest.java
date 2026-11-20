@@ -114,7 +114,6 @@ class SchuelerLernabschnittServiceTest {
 	@Mock
 	private EigeneSchuleService eigeneSchuleService;
 
-	private SchuelerLernabschnittsdatenRepos repos;
 	private SchuelerLernabschnittService service;
 
 	private static final int SCHULJAHR = 2024;
@@ -137,18 +136,20 @@ class SchuelerLernabschnittServiceTest {
 		entity = createEntity(ID_LERNABSCHNITT, ID_SCHULJAHRESABSCHNITT);
 		apiModel = createApiModel(ID_LERNABSCHNITT);
 
-		repos = new SchuelerLernabschnittsdatenRepos(repository, schuelerRepository, bemerkungRepository,
-				schuljahresabschnitteRepo, leistungsdatenRepository,
-				lehrerRepository, klassenRepository, foerderschwerpunktRepository, fachklasseRepository, jahrgangRepository,
-				schuelerschwerpunktRepository);
-		service = new SchuelerLernabschnittService(repos, mapper, SchuelerLeistungsdatenMapper.INSTANCE,
-				SchuelerLernabschnittBemerkungenMapper.INSTANCE, eigeneSchuleService, benutzerKompetenzService);
+		final var repos = new SchuelerLernabschnittsdatenRepos(repository, schuelerRepository, bemerkungRepository,
+				schuljahresabschnitteRepo, lehrerRepository, klassenRepository, foerderschwerpunktRepository, fachklasseRepository,
+				jahrgangRepository, schuelerschwerpunktRepository);
+		// Die Hilfsklassen werden echt instanziiert, gemockt sind nur ihre Repositories
+		final var kontextLoader = new SchuelerLernabschnittMappingContextLoader(bemerkungRepository, leistungsdatenRepository,
+				SchuelerLeistungsdatenMapper.INSTANCE, SchuelerLernabschnittBemerkungenMapper.INSTANCE);
+		service = new SchuelerLernabschnittService(repos, mapper, SchuelerLernabschnittBemerkungenMapper.INSTANCE, kontextLoader,
+				new SchuelerLernabschnittEpJahre(repository), eigeneSchuleService, benutzerKompetenzService);
 
-		// Default-Stubs für den ContextLoader — keine Bemerkungen, keine Leistungen
+		// Default-Stubs für den MappingContextLoader — keine Bemerkungen, keine Leistungen
 		lenient().when(eigeneSchuleService.getSchulform()).thenReturn(SCHULFORM);
-		lenient().when(repos.bemerkungRepository().findMapByLernabschnittID(anyCollection())).thenReturn(Map.of());
+		lenient().when(bemerkungRepository.findMapByLernabschnittID(anyCollection())).thenReturn(Map.of());
 		// wie das echte Repository: für jede übergebene ID ein Eintrag mit leerer Liste
-		lenient().when(repos.leistungsdatenRepository().getMapListByLernabschnittsIds(anyCollection())).thenAnswer(invocation -> {
+		lenient().when(leistungsdatenRepository.getMapListByLernabschnittsIds(anyCollection())).thenAnswer(invocation -> {
 			final Collection<Long> ids = invocation.getArgument(0);
 			final Map<Long, List<DTOSchuelerLeistungsdaten>> result = new HashMap<>();
 			ids.forEach(id -> result.put(id, new ArrayList<>()));
@@ -187,7 +188,7 @@ class SchuelerLernabschnittServiceTest {
 	}
 
 	private void stubToApi(final SchuelerLernabschnittsdaten result) {
-		when(repos.schuljahresabschnitteRepo().findListByIds(anyCollection()))
+		when(schuljahresabschnitteRepo.findListByIds(anyCollection()))
 				.thenReturn(List.of(createSchuljahresabschnitt(ID_SCHULJAHRESABSCHNITT)));
 		when(mapper.toApi(any(DTOSchuelerLernabschnittsdaten.class), anyInt(), any(Schulform.class),
 				any(SchuelerLernabschnittsdatenMappingContext.class)))
@@ -233,7 +234,7 @@ class SchuelerLernabschnittServiceTest {
 		@Test
 		@DisplayName("Schülerlernabschnitt mit der ID nicht gefunden")
 		void get_notFound() {
-			when(repos.repository().findById(99L)).thenReturn(Optional.empty());
+			when(repository.findById(99L)).thenReturn(Optional.empty());
 
 			assertThatThrownBy(() -> service.get(99L)).isInstanceOf(ApiOperationException.class)
 					.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND)
@@ -243,7 +244,7 @@ class SchuelerLernabschnittServiceTest {
 		@Test
 		@DisplayName("Schülerlernabschnitt mit der ID gefunden")
 		void get_Found() {
-			when(repos.repository().findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
+			when(repository.findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
 			stubToApi(apiModel);
 
 			final var result = service.get(ID_LERNABSCHNITT);
@@ -255,7 +256,7 @@ class SchuelerLernabschnittServiceTest {
 		@Test
 		@DisplayName("Schuljahresabschnitt zum Schülerlernabschnitt mit der ID nicht gefunden")
 		void get_schuljahresabschnittNotFound() {
-			when(repos.repository().findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
+			when(repository.findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
 			when(schuljahresabschnitteRepo.findListByIds(List.of(ID_SCHULJAHRESABSCHNITT))).thenReturn(List.of());
 
 			assertThatThrownBy(() -> service.get(ID_LERNABSCHNITT))
@@ -267,13 +268,13 @@ class SchuelerLernabschnittServiceTest {
 		@Test
 		@DisplayName("Bemerkungen zum Schülerlernabschnitt werden in den Kontext übernommen")
 		void get_bemerkungen() {
-			when(repos.repository().findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
+			when(repository.findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
 
 			final var bemerkung = new DTOSchuelerPSFachBemerkungen(5L, ID_LERNABSCHNITT);
 			bemerkung.ASV = "asv";
 			bemerkung.LELS = "lels";
 			bemerkung.BemerkungVersetzung = "versetzt";
-			when(repos.bemerkungRepository().findMapByLernabschnittID(List.of(ID_LERNABSCHNITT)))
+			when(bemerkungRepository.findMapByLernabschnittID(List.of(ID_LERNABSCHNITT)))
 					.thenReturn(Map.of(ID_LERNABSCHNITT, bemerkung));
 
 			stubToApi(apiModel);
@@ -289,10 +290,10 @@ class SchuelerLernabschnittServiceTest {
 		@Test
 		@DisplayName("Leistungsdaten zum Schülerlernabschnitt werden gemappt in den Kontext übernommen")
 		void get_leistungen() {
-			when(repos.repository().findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
+			when(repository.findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
 
 			final var leistung = new DTOSchuelerLeistungsdaten(100L, ID_LERNABSCHNITT, 7L);
-			when(repos.leistungsdatenRepository().getMapListByLernabschnittsIds(List.of(ID_LERNABSCHNITT)))
+			when(leistungsdatenRepository.getMapListByLernabschnittsIds(List.of(ID_LERNABSCHNITT)))
 					.thenReturn(Map.of(ID_LERNABSCHNITT, List.of(leistung)));
 
 			stubToApi(apiModel);
@@ -318,7 +319,7 @@ class SchuelerLernabschnittServiceTest {
 		@Test
 		@DisplayName("Keine Lernabschnitte zum Schüler im Schuljahresabschnitt - leere Liste")
 		void getList_leer() {
-			when(repos.repository().findListBySchuelerAndSchuljahresabschnitt(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT))
+			when(repository.findListBySchuelerAndSchuljahresabschnitt(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT))
 					.thenReturn(List.of());
 
 			final var result = service.getListBySchuelerAndSchuljahresabschnitt(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
@@ -333,9 +334,9 @@ class SchuelerLernabschnittServiceTest {
 		void getList_reihenfolge() {
 			final var abschnitt5 = createEntity(5L, ID_SCHULJAHRESABSCHNITT);
 			final var abschnitt7 = createEntity(7L, ID_SCHULJAHRESABSCHNITT);
-			when(repos.repository().findListBySchuelerAndSchuljahresabschnitt(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT))
+			when(repository.findListBySchuelerAndSchuljahresabschnitt(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT))
 					.thenReturn(List.of(abschnitt5, abschnitt7));
-			when(repos.schuljahresabschnitteRepo().findListByIds(anyCollection()))
+			when(schuljahresabschnitteRepo.findListByIds(anyCollection()))
 					.thenReturn(List.of(createSchuljahresabschnitt(ID_SCHULJAHRESABSCHNITT)));
 			when(mapper.toApi(any(DTOSchuelerLernabschnittsdaten.class), anyInt(), any(Schulform.class),
 					any(SchuelerLernabschnittsdatenMappingContext.class)))

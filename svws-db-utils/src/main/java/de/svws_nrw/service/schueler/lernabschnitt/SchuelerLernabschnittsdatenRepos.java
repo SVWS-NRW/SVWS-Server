@@ -3,7 +3,6 @@ package de.svws_nrw.service.schueler.lernabschnitt;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
-import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
@@ -19,7 +18,6 @@ import de.svws_nrw.repo.schule.kataloge.schuelerschwerpunkt.SchuelerschwerpunktR
  * @param schuelerRepository             das Repository für die Schüler
  * @param bemerkungRepository            das Repository für die Bemerkungen zu den Lernabschnitten
  * @param schuljahresabschnitteRepo      das Repository für die Schuljahresabschnitte
- * @param leistungsdatenRepository       das Repository für die Leistungsdaten zu den Lernabschnitten
  * @param lehrerRepository               das Repository für die Lehrer (Tutor, Sonderpädagoge)
  * @param klassenRepository              das Repository für die Klassen (Folgeklasse)
  * @param foerderschwerpunktRepository   das Repository für die Förderschwerpunkte
@@ -32,7 +30,6 @@ public record SchuelerLernabschnittsdatenRepos(
 		SchuelerRepository schuelerRepository,
 		SchuelerLernabschnittBemerkungRepository bemerkungRepository,
 		SchuljahresabschnitteRepository schuljahresabschnitteRepo,
-		SchuelerLeistungsdatenRepository leistungsdatenRepository,
 		LehrerRepository lehrerRepository,
 		KlassenRepository klassenRepository,
 		FoerderschwerpunktRepository foerderschwerpunktRepository,

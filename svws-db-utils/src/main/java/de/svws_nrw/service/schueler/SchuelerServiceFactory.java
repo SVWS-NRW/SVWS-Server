@@ -34,6 +34,8 @@ import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenReposit
 import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenService;
 import de.svws_nrw.service.schueler.liste.SchuelerListeEintragService;
 import de.svws_nrw.service.schueler.liste.SchuelerListeService;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittEpJahre;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittMappingContextLoader;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenRepos;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
@@ -258,12 +260,13 @@ public final class SchuelerServiceFactory {
 	 * @return ein neuer {@code SchuelerLernabschnittService} mit allen erforderlichen Abhängigkeiten
 	 */
 	public SchuelerLernabschnittService getSchuelerLernabschnittService() {
+		final var lernabschnittRepository = schuelerRepositoryFactory.getSchuelerLernabschnittRepository();
+		final var bemerkungRepository = schuelerRepositoryFactory.getSchuelerLernabschnittBemerkungenRepository();
 		final var repos = new SchuelerLernabschnittsdatenRepos(
-				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
+				lernabschnittRepository,
 				schuelerRepositoryFactory.getSchuelerRepository(),
-				schuelerRepositoryFactory.getSchuelerLernabschnittBemerkungenRepository(),
+				bemerkungRepository,
 				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
-				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				LehrerRepositoryFactory.getNewInstance().getLehrerRepository(),
 				KlassenRepositoryFactory.getNewInstance().getKlassenRepository(),
 				katalogRepositoryFactory.getFoerderschwerpunktRepository(),
@@ -271,11 +274,18 @@ public final class SchuelerServiceFactory {
 				katalogRepositoryFactory.getJahrgangRepository(),
 				katalogRepositoryFactory.getSchuelerschwerpunktRepository()
 		);
+		final var kontextLoader = new SchuelerLernabschnittMappingContextLoader(
+				bemerkungRepository,
+				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
+				SchuelerLeistungsdatenMapper.INSTANCE,
+				SchuelerLernabschnittBemerkungenMapper.INSTANCE);
+
 		return new SchuelerLernabschnittService(
 				repos,
 				SchuelerLernabschnittsdatenMapper.INSTANCE,
-				SchuelerLeistungsdatenMapper.INSTANCE,
 				SchuelerLernabschnittBemerkungenMapper.INSTANCE,
+				kontextLoader,
+				new SchuelerLernabschnittEpJahre(lernabschnittRepository),
 				eigeneSchuleServiceFactory.getSchuleService(),
 				BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory).getBenutzerKompetenzService()
 		);

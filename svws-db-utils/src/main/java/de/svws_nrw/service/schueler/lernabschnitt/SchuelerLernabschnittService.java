@@ -5,13 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.OptionalInt;
-import java.util.Set;
-import java.util.function.Supplier;
+import java.util.function.LongFunction;
+import java.util.function.LongPredicate;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
-import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.types.fach.BilingualeSprache;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
@@ -22,19 +19,15 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.CollectionUtils;
 import de.svws_nrw.data.TransactionSupport;
-import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.mapper.schueler.leistungsdaten.SchuelerLeistungsdatenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittBemerkungenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdatenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdatenMappingContext;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
-import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
@@ -53,11 +46,15 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class SchuelerLernabschnittService {
 
+	private static final String DATEN_NOT_FOUND_BY_ID = "Keine Lernabschnittsdaten zur Abschnitt-ID %d gefunden.";
+
+	/** Die Meldung für eine nicht existierende Referenz, z. B. "Es existiert kein Lehrer mit der ID 1." */
+	private static final String REFERENZ_NOT_FOUND_BY_ID = "Es existiert %s mit der ID %d.";
+
 	private final SchuelerLernabschnittRepository repository;
 	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittBemerkungRepository bemerkungRepository;
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepo;
-	private final SchuelerLeistungsdatenRepository leistungsdatenRepository;
 	private final LehrerRepository lehrerRepository;
 	private final KlassenRepository klassenRepository;
 	private final FoerderschwerpunktRepository foerderschwerpunktRepository;
@@ -65,41 +62,35 @@ public final class SchuelerLernabschnittService {
 	private final JahrgangRepository jahrgangRepository;
 	private final SchuelerschwerpunktRepository schuelerschwerpunktRepository;
 	private final SchuelerLernabschnittsdatenMapper mapper;
-	private final SchuelerLeistungsdatenMapper leistungsdatenMapper;
 	private final SchuelerLernabschnittBemerkungenMapper bemerkungenMapper;
+	private final SchuelerLernabschnittMappingContextLoader kontextLoader;
+	private final SchuelerLernabschnittEpJahre epJahre;
 	private final EigeneSchuleService eigeneSchuleService;
 	private final BenutzerKompetenzService benutzerKompetenzService;
-
-	private static final String DATEN_NOT_FOUND_BY_ID = "Keine Lernabschnittsdaten zur Abschnitt-ID %d gefunden.";
-
-	/** Die ASD-Jahrgänge der Schuleingangsphase, in denen die EP-Jahre geändert werden dürfen */
-	private static final Set<String> ASD_JAHRGAENGE_EINGANGSPHASE = Set.of("01", "02");
-
-	/** Die ASD-Jahrgänge, in denen die EP-Jahre schreibgeschützt sind und aus der Eingangsphase fortgeschrieben werden */
-	private static final Set<String> ASD_JAHRGAENGE_FORTSCHREIBUNG_EP_JAHRE = Set.of("03", "04");
 
 	/**
 	 * Erstellt einen neuen {@code SchuelerLernabschnittService}.
 	 *
-	 * @param repos                  die vom Service benötigten Repositories
-	 * @param mapper                 der Mapper zur Konvertierung zwischen Entity und API-Modell
-	 * @param leistungsdatenMapper   der Mapper zur Konvertierung zwischen Entity und API-Modell für Leistungsdaten
-	 * @param bemerkungenMapper      der Mapper für die Bemerkungen (Patch und Konvertierung ins API-Modell)
-	 * @param eigeneSchuleService    der Service für die eigene Schule (liefert die Schulform)
-	 * @param benutzerKompetenzService    der Service für die Benutzerkompetenzen
+	 * @param repos                      die vom Service benötigten Repositories
+	 * @param mapper                     der Mapper zur Konvertierung zwischen Entity und API-Modell
+	 * @param bemerkungenMapper          der Mapper für den Patch der Bemerkungen
+	 * @param kontextLoader              der Loader für die Zusatzdaten (Bemerkungen, Leistungsdaten) beim Mapping
+	 * @param epJahre                    die Regeln zu den EP-Jahren (Prüfung und Fortschreibung)
+	 * @param eigeneSchuleService        der Service für die eigene Schule (liefert die Schulform)
+	 * @param benutzerKompetenzService   der Service für die Benutzerkompetenzen
 	 */
 	public SchuelerLernabschnittService(
 			final SchuelerLernabschnittsdatenRepos repos,
 			final SchuelerLernabschnittsdatenMapper mapper,
-			final SchuelerLeistungsdatenMapper leistungsdatenMapper,
 			final SchuelerLernabschnittBemerkungenMapper bemerkungenMapper,
+			final SchuelerLernabschnittMappingContextLoader kontextLoader,
+			final SchuelerLernabschnittEpJahre epJahre,
 			final EigeneSchuleService eigeneSchuleService,
 			final BenutzerKompetenzService benutzerKompetenzService) {
 		this.repository = repos.repository();
 		this.schuelerRepository = repos.schuelerRepository();
 		this.bemerkungRepository = repos.bemerkungRepository();
 		this.schuljahresabschnitteRepo = repos.schuljahresabschnitteRepo();
-		this.leistungsdatenRepository = repos.leistungsdatenRepository();
 		this.lehrerRepository = repos.lehrerRepository();
 		this.klassenRepository = repos.klassenRepository();
 		this.foerderschwerpunktRepository = repos.foerderschwerpunktRepository();
@@ -107,8 +98,9 @@ public final class SchuelerLernabschnittService {
 		this.jahrgangRepository = repos.jahrgangRepository();
 		this.schuelerschwerpunktRepository = repos.schuelerschwerpunktRepository();
 		this.mapper = mapper;
-		this.leistungsdatenMapper = leistungsdatenMapper;
 		this.bemerkungenMapper = bemerkungenMapper;
+		this.kontextLoader = kontextLoader;
+		this.epJahre = epJahre;
 		this.eigeneSchuleService = eigeneSchuleService;
 		this.benutzerKompetenzService = benutzerKompetenzService;
 	}
@@ -119,17 +111,9 @@ public final class SchuelerLernabschnittService {
 	 * @param id   die ID des Lernabschnitts
 	 *
 	 * @return die {@link SchuelerLernabschnittsdaten} zu der ID
-	 *
-	 * @throws ApiOperationException   NOT_FOUND, wenn kein Lernabschnitt mit der ID existiert,
-	 *                                 BAD_REQUEST, wenn der zugehörige Schuljahresabschnitt nicht existiert
 	 */
 	public SchuelerLernabschnittsdaten get(final long id) {
-		final var entity = repository.findById(id)
-				.orElseThrow(() -> new ApiOperationException(
-						Status.NOT_FOUND,
-						DATEN_NOT_FOUND_BY_ID.formatted(id)
-				));
-		return toApi(entity);
+		return toApi(loadLernabschnitt(id));
 	}
 
 	/**
@@ -141,12 +125,10 @@ public final class SchuelerLernabschnittService {
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 *
 	 * @return die Liste der {@link SchuelerLernabschnittsdaten}, ggf. leer
-	 *
-	 * @throws ApiOperationException   BAD_REQUEST, wenn der Schuljahresabschnitt eines Lernabschnitts nicht existiert
 	 */
 	public List<SchuelerLernabschnittsdaten> getListBySchuelerAndSchuljahresabschnitt(final long idSchueler, final long idSchuljahresabschnitt) {
 		final var entities = repository.findListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt);
-		return toApi(entities);
+		return toApi(entities, true);
 	}
 
 	/**
@@ -157,8 +139,6 @@ public final class SchuelerLernabschnittService {
 	 * @param idsSchueler   die IDs der Schüler
 	 *
 	 * @return die Liste der {@link SchuelerLernabschnittsdaten} ohne Leistungsdaten, ggf. leer
-	 *
-	 * @throws ApiOperationException   BAD_REQUEST, wenn der Schuljahresabschnitt eines Lernabschnitts nicht existiert
 	 */
 	public List<SchuelerLernabschnittsdaten> getListBySchuelerIDsOhneLeistungsdaten(final Collection<Long> idsSchueler) {
 		final var entities = repository.findListBySchuelerIDs(idsSchueler);
@@ -172,27 +152,16 @@ public final class SchuelerLernabschnittService {
 	 * @param dto   der Request mit den Daten des neuen Lernabschnitts
 	 *
 	 * @return der neu angelegte {@link SchuelerLernabschnittsdaten}
-	 *
-	 * @throws ApiOperationException   FORBIDDEN, wenn der Benutzer keine Rechte auf die Klasse hat,
-	 *                                 CONFLICT, wenn der Schüler in dem Schuljahresabschnitt bereits einen Lernabschnitt hat,
-	 *                                 BAD_REQUEST, wenn der Schüler, der Schuljahresabschnitt oder eine referenzierte ID (z. B. Lehrer, Klasse,
-	 *                                 Jahrgang, Förderschwerpunkt, Schwerpunkt, Fachklasse) oder ein Katalogwert nicht existiert,
-	 *                                 die Klasse nicht zum Schuljahresabschnitt oder nicht zum Jahrgang passt, das Enddatum
-	 *                                 vor dem Anfangsdatum liegt oder die unentschuldigten Fehlstunden die gesamten
-	 *                                 Fehlstunden übersteigen
 	 */
 	public SchuelerLernabschnittsdaten create(final SchuelerLernabschnittCreateRequest dto) {
 		return TransactionSupport.transactional(() -> {
-			final int schuljahr = getSchuljahrByIdAbschnitt(List.of(dto.schuljahresabschnitt)).get(dto.schuljahresabschnitt);
-			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(dto.klassenID);
-			validateIdSchueler(dto.schuelerID);
-			validateKeinLernabschnittVorhanden(dto.schuelerID, dto.schuljahresabschnitt);
-			final Schulform schulform = eigeneSchuleService.getSchulform();
-			validateRequest(dto, schuljahr, schulform);
-			final var entity = mapper.toDomain(dto, schuljahr, schulform);
-			validateAndResolveASDJahrgang(dto, entity);
-			final var neu = repository.create(entity);
-			propagateEpJahre(neu, schulform, hasLaufbahnChange(dto));
+			final int schuljahr = loadSchuljahr(dto.schuljahresabschnitt);
+			checkKompetenz(dto);
+			validateSchuelerOhneLernabschnitt(dto.schuelerID, dto.schuljahresabschnitt);
+			final var schulform = eigeneSchuleService.getSchulform();
+			validateCreateRequest(dto, schuljahr, schulform);
+			final var neu = createLernabschnitt(dto, schuljahr, schulform);
+			epJahre.propagate(neu, schulform, hasLaufbahnChange(dto));
 			return toApi(neu);
 		});
 	}
@@ -205,115 +174,18 @@ public final class SchuelerLernabschnittService {
 	 * @param dto   der Patch-Request mit den zu ändernden Feldern
 	 *
 	 * @return die aktualisierten {@link SchuelerLernabschnittsdaten}
-	 *
-	 * @throws ApiOperationException   NOT_FOUND, wenn kein Lernabschnitt mit der ID existiert,
-	 *                                 FORBIDDEN, wenn der Benutzer keine Rechte auf die bisherige oder neue Klasse hat,
-	 *                                 BAD_REQUEST, wenn eine referenzierte ID (z. B. Lehrer, Klasse, Jahrgang,
-	 *                                 Förderschwerpunkt, Schwerpunkt, Fachklasse) oder ein Katalogwert nicht existiert,
-	 *                                 die Klasse nicht zum Schuljahresabschnitt oder nicht zum Jahrgang passt, das Enddatum
-	 *                                 vor dem Anfangsdatum liegt oder die unentschuldigten Fehlstunden die gesamten
-	 *                                 Fehlstunden übersteigen
 	 */
 	public SchuelerLernabschnittsdaten patch(final long id, final SchuelerLernabschnittsdatenPatchRequest dto) {
 		return TransactionSupport.transactional(() -> {
-			final var entity = repository.findById(id)
-					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, DATEN_NOT_FOUND_BY_ID.formatted(id)));
-			pruefeKompetenz(dto, entity);
-			final int schuljahr = getSchuljahrByIdAbschnitt(List.of(entity.Schuljahresabschnitts_ID)).get(entity.Schuljahresabschnitts_ID);
-			final Schulform schulform = eigeneSchuleService.getSchulform();
-			validateRequest(dto, schuljahr, schulform, entity);
-			mapper.patch(dto, entity, schuljahr, schulform);
-			validateAndResolveASDJahrgang(dto, entity);
-			propagateEpJahre(entity, schulform, hasLaufbahnChange(dto));
+			final var entity = loadLernabschnitt(id);
+			checkKompetenz(dto, entity);
+			final int schuljahr = loadSchuljahr(entity.Schuljahresabschnitts_ID);
+			final var schulform = eigeneSchuleService.getSchulform();
+			validatePatchRequest(dto, schuljahr, schulform, entity);
+			applyPatch(dto, entity, schuljahr, schulform);
+			epJahre.propagate(entity, schulform, hasLaufbahnChange(dto));
 			return toApi(entity);
 		});
-	}
-
-	/**
-	 * Ermittelt zu den übergebenen Schuljahresabschnitt-IDs das jeweilige Schuljahr.
-	 *
-	 * @param schuljahresabschnittIds   die IDs der Schuljahresabschnitte (Duplikate sind erlaubt)
-	 *
-	 * @return die Map von der Schuljahresabschnitt-ID auf das Schuljahr (z. B. 2024)
-	 *
-	 * @throws ApiOperationException   BAD_REQUEST, wenn zu einer ID kein Schuljahresabschnitt existiert
-	 */
-	private Map<Long, Integer> getSchuljahrByIdAbschnitt(final List<Long> schuljahresabschnittIds) {
-		if (CollectionUtils.isEmpty(schuljahresabschnittIds)) {
-			return Collections.emptyMap();
-		}
-
-		final var uniqueSchuljahresabschnittIds = schuljahresabschnittIds.stream()
-				.distinct()
-				.toList();
-		final var result = schuljahresabschnitteRepo.findListByIds(uniqueSchuljahresabschnittIds).stream()
-				.collect(Collectors.toMap(
-						dto -> dto.ID,
-						dto -> dto.Jahr
-				));
-		validateAbschnitteForAllIdsWhereFound(uniqueSchuljahresabschnittIds, result);
-		return result;
-	}
-
-	private void validateIdSchueler(final Long idSchueler) {
-		if (!schuelerRepository.existsById(idSchueler)) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein Schüler mit der ID %d.".formatted(idSchueler));
-		}
-	}
-
-	private void validateKeinLernabschnittVorhanden(final long idSchueler, final long idSchuljahresabschnitt) {
-		// Das Anlegen vergibt immer die Wechsel-Nr. 0, der Unique-Index auf Schüler, Abschnitt und Wechsel-Nr. würde sonst verletzt
-		final boolean vorhanden = repository.findListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt).stream()
-				.anyMatch(lernabschnitt -> (lernabschnitt.WechselNr != null) && (lernabschnitt.WechselNr == 0));
-		if (vorhanden) {
-			throw new ApiOperationException(Status.CONFLICT,
-					"Der Schüler mit der ID %d hat im Schuljahresabschnitt mit der ID %d bereits einen Lernabschnitt.".formatted(idSchueler, idSchuljahresabschnitt));
-		}
-	}
-
-	private void validateIdKlasse(final Long idKlasse) {
-		if (idKlasse == null) {
-			return;
-		}
-		if (!klassenRepository.existsById(idKlasse)) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert keine Klasse mit der ID %d.".formatted(idKlasse));
-		}
-	}
-
-	private void validateKlasseImSchuljahresabschnitt(final Long idKlasse, final Long idSchuljahresabschnitt) {
-		if (idKlasse == null) {
-			return;
-		}
-		klassenRepository.findById(idKlasse)
-				.filter(klasse -> klasse.Schuljahresabschnitts_ID != idSchuljahresabschnitt)
-				.ifPresent(klasse -> {
-					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Die Klasse mit der ID %d gehört nicht zum Schuljahresabschnitt des Lernabschnitts.".formatted(idKlasse));
-				});
-	}
-
-	private void validateAndResolveASDJahrgang(
-			final SchuelerLernabschnittsdatenPatchRequest dto,
-			final DTOSchuelerLernabschnittsdaten entity
-	) {
-		if (dto.klassenID.isPresent() || dto.jahrgangID.isPresent()) {
-			validateKlasseUndJahrgangKompatibel(entity);
-		}
-		if (dto.jahrgangID.isPresent()) {
-			entity.ASDJahrgang = getASDJahrgang(entity.Jahrgang_ID);
-		}
-	}
-
-	private void validateAndResolveASDJahrgang(
-			final SchuelerLernabschnittCreateRequest dto,
-			final DTOSchuelerLernabschnittsdaten entity
-	) {
-		if ((dto.klassenID != null) || (dto.jahrgangID != null)) {
-			validateKlasseUndJahrgangKompatibel(entity);
-		}
-		if (dto.jahrgangID != null) {
-			entity.ASDJahrgang = getASDJahrgang(entity.Jahrgang_ID);
-		}
 	}
 
 	/**
@@ -324,31 +196,53 @@ public final class SchuelerLernabschnittService {
 	 *
 	 * @param id    die ID des Lernabschnitts
 	 * @param dto   der Patch-Request mit den zu ändernden Bemerkungen
-	 *
-	 * @throws ApiOperationException   NOT_FOUND, wenn kein Lernabschnitt mit der ID existiert,
-	 *                                 FORBIDDEN, wenn der Benutzer keine Rechte auf die Klasse des Lernabschnitts hat
 	 */
 	public void patchBemerkungen(final long id, final SchuelerLernabschnittBemerkungenPatchRequest dto) {
 		TransactionSupport.transactional(() -> {
-			final var entity = repository.findById(id)
-					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, DATEN_NOT_FOUND_BY_ID.formatted(id)));
-			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(entity.Klassen_ID);
+			final var entity = loadLernabschnitt(id);
+			checkKompetenz(entity);
 			bemerkungenMapper.patchBemerkungen(dto, entity);
-			if (!enthaeltFachBemerkungen(dto)) {
-				return;
+			if (containsFachBemerkungen(dto)) {
+				patchFachBemerkungen(id, dto);
 			}
-			final var fachBem = bemerkungRepository.findMapByLernabschnittID(List.of(id)).get(id);
-			if (fachBem != null) {
-				bemerkungenMapper.patchFachBemerkungen(dto, fachBem);
-				return;
-			}
-			final var neu = new DTOSchuelerPSFachBemerkungen(-1, id);
-			bemerkungenMapper.patchFachBemerkungen(dto, neu);
-			bemerkungRepository.create(neu);
 		});
 	}
 
-	private static boolean enthaeltFachBemerkungen(final SchuelerLernabschnittBemerkungenPatchRequest dto) {
+	private DTOSchuelerLernabschnittsdaten loadLernabschnitt(final long id) {
+		return repository.findById(id)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, DATEN_NOT_FOUND_BY_ID.formatted(id)));
+	}
+
+	private DTOSchuelerLernabschnittsdaten createLernabschnitt(final SchuelerLernabschnittCreateRequest dto, final int schuljahr,
+			final Schulform schulform) {
+		final var entity = mapper.toDomain(dto, schuljahr, schulform);
+		validateAndResolveJahrgang(entity, isKlasseOderJahrgangGesetzt(dto), dto.jahrgangID != null);
+		return repository.create(entity);
+	}
+
+	private void applyPatch(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity,
+			final int schuljahr, final Schulform schulform) {
+		mapper.patch(dto, entity, schuljahr, schulform);
+		validateAndResolveJahrgang(entity, isKlasseOderJahrgangGesetzt(dto), dto.jahrgangID.isPresent());
+	}
+
+	private void checkKompetenz(final SchuelerLernabschnittCreateRequest dto) {
+		benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(dto.klassenID);
+	}
+
+	private void checkKompetenz(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity) {
+		if (dto.klassenID.isPresent() && (dto.klassenID.get() != null)) {
+			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(entity.Klassen_ID, dto.klassenID.get());
+		} else {
+			checkKompetenz(entity);
+		}
+	}
+
+	private void checkKompetenz(final DTOSchuelerLernabschnittsdaten entity) {
+		benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(entity.Klassen_ID);
+	}
+
+	private static boolean containsFachBemerkungen(final SchuelerLernabschnittBemerkungenPatchRequest dto) {
 		return dto.zeugnisASV.isPresent()
 				|| dto.zeugnisLELS.isPresent()
 				|| dto.zeugnisAUE.isPresent()
@@ -357,49 +251,35 @@ public final class SchuelerLernabschnittService {
 				|| dto.versetzungsentscheidung.isPresent();
 	}
 
-	private void validateRequest(
-			final SchuelerLernabschnittsdatenPatchRequest dto,
-			final int schuljahr,
-			final Schulform schulform,
-			final DTOSchuelerLernabschnittsdaten entity
-	) {
-		dto.tutorID.ifPresent(this::validateIdLehrer);
-		dto.sonderpaedagogeID.ifPresent(this::validateIdLehrer);
-		dto.folgeklassenID.ifPresent(this::validateIdKlasse);
-		dto.klassenID.ifPresent(this::validateIdKlasse);
-		dto.foerderschwerpunkt1ID.ifPresent(this::validateIdFoerderschwerpunkt);
-		dto.foerderschwerpunkt2ID.ifPresent(this::validateIdFoerderschwerpunkt);
-		dto.schwerpunktID.ifPresent(this::validateIdSchuelerschwerpunkt);
-		dto.idKlassenart.ifPresent(this::validateIdKlassenart);
-		dto.idBetreuung.ifPresent(this::validateIdBetreuung);
-		dto.idSchulgliederung.ifPresent(this::validateIdSchulgliederung);
-		dto.idOrganisationsform.ifPresent(id -> validateIdOrganisationsform(id, schulform));
-		dto.idEpJahre.ifPresent(this::validateIdEpJahre);
-		dto.fachklasseID.ifPresent(this::validateIdFachklasse);
-		dto.idVersetzungsvermerk.ifPresent(id -> validateIdVersetzungsvermerk(id, schuljahr, schulform));
-		dto.bilingualerZweig.ifPresent(kuerzel -> validateBilingualerZweig(kuerzel, schuljahr, schulform));
-		dto.jahrgangID.ifPresent(this::validateIdJahrgang);
-		dto.klassenID.ifPresent(klassenID -> validateKlasseImSchuljahresabschnitt(klassenID, entity.Schuljahresabschnitts_ID));
-		dto.idEpJahre.ifPresent(idEpJahre -> validateEpJahreAenderbar(idEpJahre, getIdEpJahre(entity), schulform, () -> getASDJahrgang(dto, entity)));
-
-		if (dto.datumAnfang.isPresent() || dto.datumEnde.isPresent()) {
-			validateDatumEndeNichtVorAnfang(dto.datumAnfang.orElse(entity.DatumVon), dto.datumEnde.orElse(entity.DatumBis));
+	private void patchFachBemerkungen(final long idLernabschnitt, final SchuelerLernabschnittBemerkungenPatchRequest dto) {
+		final var vorhanden = bemerkungRepository.findMapByLernabschnittID(List.of(idLernabschnitt)).get(idLernabschnitt);
+		if (vorhanden == null) {
+			createFachBemerkungen(idLernabschnitt, dto);
+		} else {
+			bemerkungenMapper.patchFachBemerkungen(dto, vorhanden);
 		}
-		if (dto.fehlstundenGesamt.isPresent() || dto.fehlstundenUnentschuldigt.isPresent()) {
-			validateFehlstundenUnentschuldigtNichtUeberGesamt(dto.fehlstundenGesamt.orElse(entity.SumFehlStd),
-					dto.fehlstundenUnentschuldigt.orElse(entity.SumFehlStdU));
-		}
-
 	}
 
-	private void validateRequest(final SchuelerLernabschnittCreateRequest dto, final int schuljahr, final Schulform schulform) {
+	private void createFachBemerkungen(final long idLernabschnitt, final SchuelerLernabschnittBemerkungenPatchRequest dto) {
+		final var neu = new DTOSchuelerPSFachBemerkungen(-1, idLernabschnitt);
+		bemerkungenMapper.patchFachBemerkungen(dto, neu);
+		bemerkungRepository.create(neu);
+	}
+
+	// Request-spezifische Einstiege: lesen nur aus, welche Felder gesetzt sind, und delegieren an die gemeinsamen Prüfungen
+
+	private void validateCreateRequest(final SchuelerLernabschnittCreateRequest dto, final int schuljahr, final Schulform schulform) {
 		validateReferenzen(dto, schuljahr, schulform);
 		validateKlasseImSchuljahresabschnitt(dto.klassenID, dto.schuljahresabschnitt);
-		if (dto.idEpJahre != null) {
-			validateEpJahreAenderbar(dto.idEpJahre, null, schulform, () -> getASDJahrgang(dto.jahrgangID));
-		}
+		validateEpJahreAenderbar(dto, schulform);
 		validateDatumEndeNichtVorAnfang(dto.datumAnfang, dto.datumEnde);
 		validateFehlstundenUnentschuldigtNichtUeberGesamt(dto.fehlstundenGesamt, dto.fehlstundenUnentschuldigt);
+	}
+
+	private void validateEpJahreAenderbar(final SchuelerLernabschnittCreateRequest dto, final Schulform schulform) {
+		if (dto.idEpJahre != null) {
+			epJahre.validateAenderbar(dto.idEpJahre, null, schulform, () -> getASDJahrgang(dto.jahrgangID));
+		}
 	}
 
 	private void validateReferenzen(final SchuelerLernabschnittCreateRequest dto, final int schuljahr, final Schulform schulform) {
@@ -421,159 +301,219 @@ public final class SchuelerLernabschnittService {
 		validateIdJahrgang(dto.jahrgangID);
 	}
 
-	/**
-	 * Prüft, ob die EP-Jahre (Besuchsjahre in der Schuleingangsphase) geändert werden dürfen. Das ist nur an Schulen mit
-	 * Primarbereich und nur in den Jahrgängen 1 und 2 erlaubt. Maßgeblich ist der Jahrgang, den der Lernabschnitt nach dem
-	 * Request haben wird. Wird ein unveränderter Wert übermittelt (z. B. weil der Client das gesamte Objekt sendet), so
-	 * wird dieser ignoriert und nicht als Änderung gewertet. Andernfalls gibt es einen Fehler mit dem Status BAD_REQUEST.
-	 *
-	 * @param idEpJahre         die im Request übermittelte ID der EP-Jahre, ggf. {@code null}
-	 * @param idEpJahreBisher   die ID der EP-Jahre vor der Anwendung des Requests, ggf. {@code null}
-	 * @param schulform         die Schulform der eigenen Schule
-	 * @param asdJahrgang       liefert den ASD-Jahrgang, den der Lernabschnitt nach dem Request haben wird, ggf. {@code null}
-	 */
-	private static void validateEpJahreAenderbar(final Long idEpJahre, final Long idEpJahreBisher, final Schulform schulform,
-			final Supplier<String> asdJahrgang) {
-		if (Objects.equals(idEpJahreBisher, idEpJahre)) {
-			return;
-		}
-		if (!schulform.hatPrimarbereich()) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die Besuchsjahre in der Schuleingangsphase können nur an Schulen mit Primarbereich geändert werden.");
-		}
-		if (!istInJahrgaengen(ASD_JAHRGAENGE_EINGANGSPHASE, asdJahrgang.get())) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die Besuchsjahre in der Schuleingangsphase können nur in den Jahrgängen 1 und 2 geändert werden.");
+	private void validatePatchRequest(final SchuelerLernabschnittsdatenPatchRequest dto, final int schuljahr, final Schulform schulform,
+			final DTOSchuelerLernabschnittsdaten entity) {
+		validateReferenzen(dto, schuljahr, schulform);
+		dto.klassenID.ifPresent(idKlasse -> validateKlasseImSchuljahresabschnitt(idKlasse, entity.Schuljahresabschnitts_ID));
+		validateEpJahreAenderbar(dto, schulform, entity);
+		validateDatum(dto, entity);
+		validateFehlstunden(dto, entity);
+	}
+
+	private void validateEpJahreAenderbar(final SchuelerLernabschnittsdatenPatchRequest dto, final Schulform schulform,
+			final DTOSchuelerLernabschnittsdaten entity) {
+		dto.idEpJahre.ifPresent(idEpJahre -> epJahre.validateAenderbar(idEpJahre, entity.EPJahre, schulform,
+				() -> getASDJahrgangNachPatch(dto, entity)));
+	}
+
+	private static void validateDatum(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity) {
+		if (dto.datumAnfang.isPresent() || dto.datumEnde.isPresent()) {
+			validateDatumEndeNichtVorAnfang(dto.datumAnfang.orElse(entity.DatumVon), dto.datumEnde.orElse(entity.DatumBis));
 		}
 	}
 
-	private static Long getIdEpJahre(final DTOSchuelerLernabschnittsdaten entity) {
-		return (entity.EPJahre == null) ? null : Long.valueOf(entity.EPJahre);
+	private static void validateFehlstunden(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity) {
+		if (dto.fehlstundenGesamt.isPresent() || dto.fehlstundenUnentschuldigt.isPresent()) {
+			validateFehlstundenUnentschuldigtNichtUeberGesamt(dto.fehlstundenGesamt.orElse(entity.SumFehlStd),
+					dto.fehlstundenUnentschuldigt.orElse(entity.SumFehlStdU));
+		}
 	}
 
-	private String getASDJahrgang(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity) {
+	private void validateReferenzen(final SchuelerLernabschnittsdatenPatchRequest dto, final int schuljahr, final Schulform schulform) {
+		dto.tutorID.ifPresent(this::validateIdLehrer);
+		dto.sonderpaedagogeID.ifPresent(this::validateIdLehrer);
+		dto.folgeklassenID.ifPresent(this::validateIdKlasse);
+		dto.klassenID.ifPresent(this::validateIdKlasse);
+		dto.foerderschwerpunkt1ID.ifPresent(this::validateIdFoerderschwerpunkt);
+		dto.foerderschwerpunkt2ID.ifPresent(this::validateIdFoerderschwerpunkt);
+		dto.schwerpunktID.ifPresent(this::validateIdSchuelerschwerpunkt);
+		dto.idKlassenart.ifPresent(SchuelerLernabschnittService::validateIdKlassenart);
+		dto.idBetreuung.ifPresent(SchuelerLernabschnittService::validateIdBetreuung);
+		dto.idSchulgliederung.ifPresent(SchuelerLernabschnittService::validateIdSchulgliederung);
+		dto.idOrganisationsform.ifPresent(id -> validateIdOrganisationsform(id, schulform));
+		dto.idEpJahre.ifPresent(SchuelerLernabschnittService::validateIdEpJahre);
+		dto.fachklasseID.ifPresent(this::validateIdFachklasse);
+		dto.idVersetzungsvermerk.ifPresent(id -> validateIdVersetzungsvermerk(id, schuljahr, schulform));
+		dto.bilingualerZweig.ifPresent(kuerzel -> validateBilingualerZweig(kuerzel, schuljahr, schulform));
+		dto.jahrgangID.ifPresent(this::validateIdJahrgang);
+	}
+
+	private String getASDJahrgangNachPatch(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity) {
 		return dto.jahrgangID.isPresent() ? getASDJahrgang(dto.jahrgangID.get()) : entity.ASDJahrgang;
 	}
 
-	private static boolean istInJahrgaengen(final Set<String> asdJahrgaenge, final String asdJahrgang) {
-		return (asdJahrgang != null) && asdJahrgaenge.contains(asdJahrgang);
+	private static boolean isKlasseOderJahrgangGesetzt(final SchuelerLernabschnittCreateRequest dto) {
+		return (dto.klassenID != null) || (dto.jahrgangID != null);
 	}
 
-	private static boolean hasLaufbahnChange(final SchuelerLernabschnittsdatenPatchRequest dto) {
-		return dto.idEpJahre.isPresent() || dto.jahrgangID.isPresent();
+	private static boolean isKlasseOderJahrgangGesetzt(final SchuelerLernabschnittsdatenPatchRequest dto) {
+		return dto.klassenID.isPresent() || dto.jahrgangID.isPresent();
 	}
 
 	private static boolean hasLaufbahnChange(final SchuelerLernabschnittCreateRequest dto) {
 		return (dto.idEpJahre != null) || (dto.jahrgangID != null);
 	}
 
-	/**
-	 * Schreibt die EP-Jahre (Besuchsjahre in der Schuleingangsphase) auf die Lernabschnitte der Jahrgänge 3 und 4 des
-	 * Schülers fort, da diese dort schreibgeschützt sind. Alle diese Lernabschnitte erhalten das Maximum der EP-Jahre
-	 * aus den Lernabschnitten der Jahrgänge 1 und 2. Die Fortschreibung erfolgt nur an Schulen mit Primarbereich und
-	 * nur, wenn der Request die EP-Jahre oder den Jahrgang ändert, also die Laufbahn betrifft. Liegen in den
-	 * Jahrgängen 1 und 2 keine EP-Jahre vor, so bleiben die Lernabschnitte unverändert.
-	 *
-	 * @param geaendert           der angelegte bzw. geänderte Lernabschnitt
-	 * @param schulform           die Schulform der eigenen Schule
-	 * @param hasLaufbahnChange   gibt an, ob der Request die EP-Jahre oder den Jahrgang enthält
-	 */
-	private void propagateEpJahre(final DTOSchuelerLernabschnittsdaten geaendert, final Schulform schulform,
-			final boolean hasLaufbahnChange) {
-		if (!schulform.hatPrimarbereich() || !hasLaufbahnChange) {
+	private static boolean hasLaufbahnChange(final SchuelerLernabschnittsdatenPatchRequest dto) {
+		return dto.idEpJahre.isPresent() || dto.jahrgangID.isPresent();
+	}
+
+	// Gemeinsame Prüfungen für Create und Patch
+
+	private void validateSchuelerOhneLernabschnitt(final Long idSchueler, final Long idSchuljahresabschnitt) {
+		validateSchuelerExists(idSchueler);
+		validateKeinLernabschnittVorhanden(idSchueler, idSchuljahresabschnitt);
+	}
+
+	private void validateSchuelerExists(final Long idSchueler) {
+		if (!schuelerRepository.existsById(idSchueler)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, REFERENZ_NOT_FOUND_BY_ID.formatted("kein Schüler", idSchueler));
+		}
+	}
+
+	private void validateKeinLernabschnittVorhanden(final long idSchueler, final long idSchuljahresabschnitt) {
+		// Das Anlegen vergibt immer die Wechsel-Nr. 0, der Unique-Index auf Schüler, Abschnitt und Wechsel-Nr. würde sonst verletzt
+		final boolean vorhanden = repository.findListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt).stream()
+				.anyMatch(lernabschnitt -> (lernabschnitt.WechselNr != null) && (lernabschnitt.WechselNr == 0));
+		if (vorhanden) {
+			throw new ApiOperationException(Status.CONFLICT,
+					"Der Schüler mit der ID %d hat im Schuljahresabschnitt mit der ID %d bereits einen Lernabschnitt.".formatted(idSchueler, idSchuljahresabschnitt));
+		}
+	}
+
+	private void validateKlasseImSchuljahresabschnitt(final Long idKlasse, final Long idSchuljahresabschnitt) {
+		if (idKlasse == null) {
 			return;
 		}
-		final var lernabschnitte = loadLernabschnitteMitAktuellemStand(geaendert);
-		determineMaxEpJahreEingangsphase(lernabschnitte)
-				.ifPresent(maximum -> setEpJahreInFolgeabschnitten(lernabschnitte, maximum));
+		klassenRepository.findById(idKlasse)
+				.filter(klasse -> klasse.Schuljahresabschnitts_ID != idSchuljahresabschnitt)
+				.ifPresent(klasse -> {
+					throw new ApiOperationException(Status.BAD_REQUEST,
+							"Die Klasse mit der ID %d gehört nicht zum Schuljahresabschnitt des Lernabschnitts.".formatted(idKlasse));
+				});
 	}
 
-	private List<DTOSchuelerLernabschnittsdaten> loadLernabschnitteMitAktuellemStand(final DTOSchuelerLernabschnittsdaten geaendert) {
-		// Der geänderte Lernabschnitt wird immer mit seinem aktuellen Stand berücksichtigt
-		return repository.findListBySchuelerIDs(List.of(geaendert.Schueler_ID)).stream()
-				.map(lernabschnitt -> (lernabschnitt.ID == geaendert.ID) ? geaendert : lernabschnitt)
-				.toList();
-	}
-
-	private static OptionalInt determineMaxEpJahreEingangsphase(final List<DTOSchuelerLernabschnittsdaten> lernabschnitte) {
-		return lernabschnitte.stream()
-				.filter(lernabschnitt -> istInJahrgaengen(ASD_JAHRGAENGE_EINGANGSPHASE, lernabschnitt.ASDJahrgang))
-				.map(lernabschnitt -> lernabschnitt.EPJahre)
-				.filter(Objects::nonNull)
-				.mapToInt(Integer::intValue)
-				.max();
-	}
-
-	private static void setEpJahreInFolgeabschnitten(final List<DTOSchuelerLernabschnittsdaten> lernabschnitte, final int epJahre) {
-		lernabschnitte.stream()
-				.filter(lernabschnitt -> istInJahrgaengen(ASD_JAHRGAENGE_FORTSCHREIBUNG_EP_JAHRE, lernabschnitt.ASDJahrgang))
-				.forEach(lernabschnitt -> lernabschnitt.EPJahre = epJahre);
-	}
-
-	private void pruefeKompetenz(final SchuelerLernabschnittsdatenPatchRequest dto, final DTOSchuelerLernabschnittsdaten entity) {
-		if (dto.klassenID.isPresent() && (dto.klassenID.get() != null)) {
-			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(entity.Klassen_ID, dto.klassenID.get());
-		} else {
-			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(entity.Klassen_ID);
+	/**
+	 * Prüft nach der Anwendung des Requests, ob Klasse und Jahrgang zueinander passen, und übernimmt bei einem geänderten
+	 * Jahrgang dessen ASD-Jahrgang in den Lernabschnitt.
+	 *
+	 * @param entity                       der Lernabschnitt nach der Anwendung des Requests
+	 * @param isKlasseOderJahrgangGesetzt  gibt an, ob der Request die Klasse oder den Jahrgang enthält
+	 * @param isJahrgangGesetzt            gibt an, ob der Request den Jahrgang enthält
+	 */
+	private void validateAndResolveJahrgang(final DTOSchuelerLernabschnittsdaten entity, final boolean isKlasseOderJahrgangGesetzt,
+			final boolean isJahrgangGesetzt) {
+		if (isKlasseOderJahrgangGesetzt) {
+			validateKlasseUndJahrgangKompatibel(entity);
 		}
+		if (isJahrgangGesetzt) {
+			entity.ASDJahrgang = getASDJahrgang(entity.Jahrgang_ID);
+		}
+	}
+
+	private void validateKlasseUndJahrgangKompatibel(final DTOSchuelerLernabschnittsdaten entity) {
+		if ((entity.Klassen_ID == null) || (entity.Jahrgang_ID == null)) {
+			return;
+		}
+		final var klasse = klassenRepository.findById(entity.Klassen_ID).orElse(null);
+		if ((klasse == null) || (klasse.Jahrgang_ID == null)) {
+			return;
+		}
+		// Derselbe Jahrgang ist immer kompatibel, dafür muss der Katalog nicht befragt werden
+		if (Objects.equals(klasse.Jahrgang_ID, entity.Jahrgang_ID)) {
+			return;
+		}
+		final var asdJahrgangKlasse = getASDJahrgang(klasse.Jahrgang_ID);
+		final var asdJahrgangLernabschnitt = getASDJahrgang(entity.Jahrgang_ID);
+		if (!Objects.equals(asdJahrgangKlasse, asdJahrgangLernabschnitt)) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Der Jahrgang mit der ID %d ist für die Klasse mit der ID %d nicht zulässig.".formatted(entity.Jahrgang_ID, entity.Klassen_ID));
+		}
+	}
+
+	private String getASDJahrgang(final Long idJahrgang) {
+		if (idJahrgang == null) {
+			return null;
+		}
+		return jahrgangRepository.findById(idJahrgang)
+				.map(jahrgang -> jahrgang.ASDJahrgang)
+				.orElse(null);
 	}
 
 	private void validateIdLehrer(final Long idLehrer) {
-		if (idLehrer == null) {
-			return;
-		}
-		if (!lehrerRepository.existsById(idLehrer)) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein Lehrer mit der ID %d.".formatted(idLehrer));
-		}
+		validateExists(idLehrer, lehrerRepository::existsById, "kein Lehrer");
+	}
+
+	private void validateIdKlasse(final Long idKlasse) {
+		validateExists(idKlasse, klassenRepository::existsById, "keine Klasse");
 	}
 
 	private void validateIdFoerderschwerpunkt(final Long idFoerderschwerpunkt) {
-		if (idFoerderschwerpunkt == null) {
-			return;
-		}
-		if (!foerderschwerpunktRepository.existsById(idFoerderschwerpunkt)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Es existiert kein Förderschwerpunkt mit der ID %d.".formatted(idFoerderschwerpunkt));
-		}
+		validateExists(idFoerderschwerpunkt, foerderschwerpunktRepository::existsById, "kein Förderschwerpunkt");
 	}
 
 	private void validateIdSchuelerschwerpunkt(final Long idSchuelerschwerpunkt) {
-		if (idSchuelerschwerpunkt == null) {
-			return;
-		}
-		if (!schuelerschwerpunktRepository.existsById(idSchuelerschwerpunkt)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Es existiert kein Schülerschwerpunkt mit der ID %d.".formatted(idSchuelerschwerpunkt));
+		validateExists(idSchuelerschwerpunkt, schuelerschwerpunktRepository::existsById, "kein Schülerschwerpunkt");
+	}
+
+	private void validateIdFachklasse(final Long idFachklasse) {
+		validateExists(idFachklasse, fachklasseRepository::existsById, "keine Fachklasse");
+	}
+
+	private void validateIdJahrgang(final Long idJahrgang) {
+		validateExists(idJahrgang, jahrgangRepository::existsById, "kein Jahrgang");
+	}
+
+	private static void validateIdKlassenart(final Long idKlassenart) {
+		validateKatalogEintrag(idKlassenart, id -> Klassenart.data().getEintragByID(id), "keine gültige Klassenart");
+	}
+
+	private static void validateIdBetreuung(final Long idBetreuung) {
+		validateKatalogEintrag(idBetreuung, id -> Betreuungsart.data().getEintragByID(id), "keine gültige Betreuungsart");
+	}
+
+	private static void validateIdSchulgliederung(final Long idSchulgliederung) {
+		validateKatalogEintrag(idSchulgliederung, id -> Schulgliederung.data().getEintragByID(id), "keine gültige Schulgliederung");
+	}
+
+	private static void validateIdEpJahre(final Long idEpJahre) {
+		validateKatalogEintrag(idEpJahre, id -> PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintragByID(id),
+				"keine gültige Anzahl an Besuchsjahren in der Schuleingangsphase");
+	}
+
+	/**
+	 * Prüft, ob zu der ID ein Datensatz existiert. Bei der ID {@code null} gibt es nichts zu prüfen.
+	 *
+	 * @param id            die zu prüfende ID, ggf. {@code null}
+	 * @param existsById    die Prüfung auf Existenz, i. d. R. die Methode {@code existsById} des Repositories
+	 * @param bezeichnung   die Bezeichnung für die Fehlermeldung, z. B. "kein Lehrer"
+	 */
+	private static void validateExists(final Long id, final LongPredicate existsById, final String bezeichnung) {
+		if ((id != null) && !existsById.test(id)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, REFERENZ_NOT_FOUND_BY_ID.formatted(bezeichnung, id));
 		}
 	}
 
-	private void validateIdKlassenart(final Long idKlassenart) {
-		if (idKlassenart == null) {
-			return;
-		}
-		if (Klassenart.data().getEintragByID(idKlassenart) == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Es existiert keine gültige Klassenart mit der ID %d.".formatted(idKlassenart));
-		}
-	}
-
-	private void validateIdBetreuung(final Long idBetreuung) {
-		if (idBetreuung == null) {
-			return;
-		}
-		if (Betreuungsart.data().getEintragByID(idBetreuung) == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Es existiert keine gültige Betreuungsart mit der ID %s.".formatted(idBetreuung));
-		}
-	}
-
-	private void validateIdSchulgliederung(final Long idSchulgliederung) {
-		if (idSchulgliederung == null) {
-			return;
-		}
-		if (Schulgliederung.data().getEintragByID(idSchulgliederung) == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Es existiert keine gültige Schulgliederung mit der ID %d.".formatted(idSchulgliederung));
+	/**
+	 * Prüft, ob zu der ID ein Eintrag im Core-Type-Katalog existiert. Bei der ID {@code null} gibt es nichts zu prüfen.
+	 *
+	 * @param id               die zu prüfende ID, ggf. {@code null}
+	 * @param getEintragByID   liefert den Katalogeintrag zu der ID oder {@code null}
+	 * @param bezeichnung      die Bezeichnung für die Fehlermeldung, z. B. "keine gültige Klassenart"
+	 */
+	private static void validateKatalogEintrag(final Long id, final LongFunction<?> getEintragByID, final String bezeichnung) {
+		if ((id != null) && (getEintragByID.apply(id) == null)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, REFERENZ_NOT_FOUND_BY_ID.formatted(bezeichnung, id));
 		}
 	}
 
@@ -585,26 +525,6 @@ public final class SchuelerLernabschnittService {
 		if (organisationsform == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Es existiert keine gültige Organisationsform mit der ID %d für die Schulform %s.".formatted(idOrganisationsform, schulform.name()));
-		}
-	}
-
-	private void validateIdEpJahre(final Long idEpJahre) {
-		if (idEpJahre == null) {
-			return;
-		}
-		if (PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintragByID(idEpJahre) == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Es existiert keine gültige Anzahl an Besuchsjahren in der Schuleingangsphase mit der ID %d.".formatted(idEpJahre));
-		}
-	}
-
-	private void validateIdFachklasse(final Long idFachklasse) {
-		if (idFachklasse == null) {
-			return;
-		}
-		if (!fachklasseRepository.existsById(idFachklasse)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Es existiert keine Fachklasse mit der ID %d.".formatted(idFachklasse));
 		}
 	}
 
@@ -632,89 +552,70 @@ public final class SchuelerLernabschnittService {
 		}
 	}
 
-	private void validateIdJahrgang(final Long idJahrgang) {
-		if (idJahrgang == null) {
-			return;
-		}
-		if (!jahrgangRepository.existsById(idJahrgang)) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein Jahrgang mit der ID %d.".formatted(idJahrgang));
-		}
-	}
-
-	private String getASDJahrgang(final Long idJahrgang) {
-		if (idJahrgang == null) {
-			return null;
-		}
-		return jahrgangRepository.findById(idJahrgang)
-				.map(jahrgang -> jahrgang.ASDJahrgang)
-				.orElse(null);
-	}
-
-	private void validateKlasseUndJahrgangKompatibel(final DTOSchuelerLernabschnittsdaten entity) {
-		if ((entity.Klassen_ID == null) || (entity.Jahrgang_ID == null)) {
-			return;
-		}
-		final DTOKlassen klasse = klassenRepository.findById(entity.Klassen_ID).orElse(null);
-		if ((klasse == null) || (klasse.Jahrgang_ID == null)) {
-			return;
-		}
-		// Derselbe Jahrgang ist immer kompatibel, dafür muss der Katalog nicht befragt werden
-		if (Objects.equals(klasse.Jahrgang_ID, entity.Jahrgang_ID)) {
-			return;
-		}
-		final String asdJahrgangKlasse = getASDJahrgang(klasse.Jahrgang_ID);
-		final String asdJahrgangLernabschnitt = getASDJahrgang(entity.Jahrgang_ID);
-		if (!Objects.equals(asdJahrgangKlasse, asdJahrgangLernabschnitt)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Der Jahrgang mit der ID %d ist für die Klasse mit der ID %d nicht zulässig.".formatted(entity.Jahrgang_ID, entity.Klassen_ID));
-		}
-	}
-
 	private static void validateDatumEndeNichtVorAnfang(final String datumVon, final String datumBis) {
-		if ((StringUtils.isNotBlank(datumVon)) && (StringUtils.isNotBlank(datumBis))	 && (datumBis.compareTo(datumVon) < 0)) {
+		if (StringUtils.isNotBlank(datumVon) && StringUtils.isNotBlank(datumBis) && (datumBis.compareTo(datumVon) < 0)) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Das Enddatum %s darf nicht vor dem Anfangsdatum %s liegen.".formatted(datumBis, datumVon));
 		}
 	}
 
-	private static void validateFehlstundenUnentschuldigtNichtUeberGesamt(final Integer fehlstundenGesamt, final Integer fehltstundenUnentschuldigt) {
-		if ((fehlstundenGesamt != null)
-				&& (fehltstundenUnentschuldigt != null)
-				&& (fehltstundenUnentschuldigt > fehlstundenGesamt)) {
+	private static void validateFehlstundenUnentschuldigtNichtUeberGesamt(final Integer fehlstundenGesamt, final Integer fehlstundenUnentschuldigt) {
+		if ((fehlstundenGesamt != null) && (fehlstundenUnentschuldigt != null) && (fehlstundenUnentschuldigt > fehlstundenGesamt)) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die unentschuldigten Fehlstunden (%d) dürfen die gesamten Fehlstunden (%d) nicht übersteigen."
-							.formatted(fehltstundenUnentschuldigt, fehlstundenGesamt));
+							.formatted(fehlstundenUnentschuldigt, fehlstundenGesamt));
 		}
 	}
 
+	// Schuljahr und Mapping ins API-Modell
+
+	private int loadSchuljahr(final long idSchuljahresabschnitt) {
+		return loadSchuljahrByIdAbschnitt(List.of(idSchuljahresabschnitt)).get(idSchuljahresabschnitt);
+	}
+
 	/**
-	 * Wandelt eine einzelne Entity in das API-Modell um.
+	 * Ermittelt zu den übergebenen Schuljahresabschnitt-IDs das jeweilige Schuljahr. Alle Schuljahresabschnitte müssen existieren.
 	 *
-	 * @param entity   die Entity des Lernabschnitts
+	 * @param idsSchuljahresabschnitte   die IDs der Schuljahresabschnitte (Duplikate sind erlaubt)
 	 *
-	 * @return das API-Modell
+	 * @return die Map von der Schuljahresabschnitt-ID auf das Schuljahr (z. B. 2024)
 	 */
+	private Map<Long, Integer> loadSchuljahrByIdAbschnitt(final List<Long> idsSchuljahresabschnitte) {
+		if (CollectionUtils.isEmpty(idsSchuljahresabschnitte)) {
+			return Collections.emptyMap();
+		}
+
+		final var uniqueIds = idsSchuljahresabschnitte.stream()
+				.distinct()
+				.toList();
+		final var schuljahrByIdAbschnitt = schuljahresabschnitteRepo.findListByIds(uniqueIds).stream()
+				.collect(Collectors.toMap(
+						abschnitt -> abschnitt.ID,
+						abschnitt -> abschnitt.Jahr
+				));
+		validateAllAbschnitteFound(uniqueIds, schuljahrByIdAbschnitt);
+		return schuljahrByIdAbschnitt;
+	}
+
+	private static void validateAllAbschnitteFound(final List<Long> uniqueIds, final Map<Long, Integer> schuljahrByIdAbschnitt) {
+		final var missing = uniqueIds.stream()
+				.filter(id -> !schuljahrByIdAbschnitt.containsKey(id))
+				.toList();
+		if (!missing.isEmpty()) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Schuljahresabschnitte gefunden für IDs: " + missing);
+		}
+	}
+
 	private SchuelerLernabschnittsdaten toApi(final DTOSchuelerLernabschnittsdaten entity) {
-		return toApi(List.of(entity)).getFirst();
+		return toApi(List.of(entity), true).getFirst();
 	}
 
 	/**
-	 * Wandelt eine Liste von Entities inklusive Leistungsdaten in API-Modelle um.
+	 * Wandelt eine Liste von Entities in API-Modelle um. Schuljahre, Schulform und Zusatzdaten werden dabei gebündelt
+	 * für alle Entities geladen, um einzelne Datenbankabfragen pro Lernabschnitt zu vermeiden.
 	 *
-	 * @param entities   die Entities der Lernabschnitte
-	 *
-	 * @return die API-Modelle in der Reihenfolge der Entities, leer bei leerer Entity-Liste
-	 */
-	private List<SchuelerLernabschnittsdaten> toApi(final List<DTOSchuelerLernabschnittsdaten> entities) {
-		return toApi(entities, true);
-	}
-
-	/**
-	 * Wandelt eine Liste von Entities in API-Modelle um. Schuljahre, Schulform, Bemerkungen und ggf. Leistungsdaten werden dabei
-	 * gebündelt für alle Entities geladen, um einzelne Datenbankabfragen pro Lernabschnitt zu vermeiden.
-	 *
-	 * @param entities             die Entities der Lernabschnitte
-	 * @param mitLeistungsdaten    gibt an, ob die Leistungsdaten geladen werden sollen
+	 * @param entities            die Entities der Lernabschnitte
+	 * @param mitLeistungsdaten   gibt an, ob die Leistungsdaten geladen werden sollen
 	 *
 	 * @return die API-Modelle in der Reihenfolge der Entities, leer bei leerer Entity-Liste
 	 */
@@ -723,106 +624,23 @@ public final class SchuelerLernabschnittService {
 			return List.of();
 		}
 
-		final var schuljahresabschnittIds = entities.stream()
-				.map(e -> e.Schuljahresabschnitts_ID)
+		final var idsSchuljahresabschnitte = entities.stream()
+				.map(entity -> entity.Schuljahresabschnitts_ID)
 				.toList();
-
-		final var schuljahrByIdAbschnitt = getSchuljahrByIdAbschnitt(schuljahresabschnittIds);
+		final var schuljahrByIdAbschnitt = loadSchuljahrByIdAbschnitt(idsSchuljahresabschnitte);
 		final var schulform = eigeneSchuleService.getSchulform();
-
-		final var ctxById = ContextLoader.load(
-				entities,
-				bemerkungRepository,
-				leistungsdatenRepository,
-				leistungsdatenMapper,
-				bemerkungenMapper,
-				schuljahrByIdAbschnitt,
-				mitLeistungsdaten
-		);
+		final var kontextById = kontextLoader.load(entities, schuljahrByIdAbschnitt, mitLeistungsdaten);
 
 		return entities.stream()
-				.map(entity -> {
-					final var schuljahr = schuljahrByIdAbschnitt.get(entity.Schuljahresabschnitts_ID);
-					final var ctx = ctxById.getOrDefault(entity.ID, SchuelerLernabschnittsdatenMappingContext.empty());
-					return mapper.toApi(entity, schuljahr, schulform, ctx);
-				})
+				.map(entity -> toApi(entity, schuljahrByIdAbschnitt, schulform, kontextById))
 				.toList();
 	}
 
-	/**
-	 * Prüft, ob zu allen angefragten Schuljahresabschnitt-IDs ein Schuljahresabschnitt gefunden wurde.
-	 *
-	 * @param uniqueSchuljahresabschnittIds   die angefragten IDs ohne Duplikate
-	 * @param result                          die gefundenen Schuljahre je Schuljahresabschnitt-ID
-	 *
-	 * @throws ApiOperationException   BAD_REQUEST mit den fehlenden IDs, wenn nicht alle gefunden wurden
-	 */
-	private void validateAbschnitteForAllIdsWhereFound(final List<Long> uniqueSchuljahresabschnittIds, final Map<Long, Integer> result) {
-		final var missing = uniqueSchuljahresabschnittIds.stream()
-				.filter(id -> !result.containsKey(id))
-				.toList();
-
-		if (!missing.isEmpty()) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Schuljahresabschnitte gefunden für IDs: " + missing);
-		}
+	private SchuelerLernabschnittsdaten toApi(final DTOSchuelerLernabschnittsdaten entity, final Map<Long, Integer> schuljahrByIdAbschnitt,
+			final Schulform schulform, final Map<Long, SchuelerLernabschnittsdatenMappingContext> kontextById) {
+		final var schuljahr = schuljahrByIdAbschnitt.get(entity.Schuljahresabschnitts_ID);
+		final var kontext = kontextById.getOrDefault(entity.ID, SchuelerLernabschnittsdatenMappingContext.empty());
+		return mapper.toApi(entity, schuljahr, schulform, kontext);
 	}
 
-	/**
-	 * Lädt die Zusatzdaten (Bemerkungen und Leistungsdaten) für mehrere Lernabschnitte mit jeweils einer Abfrage
-	 * und stellt sie als {@link SchuelerLernabschnittsdatenMappingContext} für den Mapper bereit.
-	 */
-	private static final class ContextLoader {
-
-		private ContextLoader() {
-
-		}
-
-		/**
-		 * Erstellt für jeden Lernabschnitt den Mapping-Kontext mit den bereits gemappten Bemerkungen und Leistungsdaten.
-		 *
-		 * @param entities                   die Entities der Lernabschnitte
-		 * @param bemerkungRepository        das Repository für die Bemerkungen
-		 * @param leistungsdatenRepository   das Repository für die Leistungsdaten
-		 * @param leistungsdatenMapper       der Mapper für die Leistungsdaten
-		 * @param bemerkungenMapper          der Mapper für die Bemerkungen
-		 * @param schuljahrByIdAbschnitt     die Schuljahre je Schuljahresabschnitt-ID
-		 * @param mitLeistungsdaten          gibt an, ob die Leistungsdaten geladen werden sollen
-		 *
-		 * @return die Map von der Lernabschnitt-ID auf den Mapping-Kontext, leer bei leerer Entity-Liste
-		 */
-		static Map<Long, SchuelerLernabschnittsdatenMappingContext> load(
-				final List<DTOSchuelerLernabschnittsdaten> entities,
-				final SchuelerLernabschnittBemerkungRepository bemerkungRepository,
-				final SchuelerLeistungsdatenRepository leistungsdatenRepository,
-				final SchuelerLeistungsdatenMapper leistungsdatenMapper,
-				final SchuelerLernabschnittBemerkungenMapper bemerkungenMapper,
-				final Map<Long, Integer> schuljahrByIdAbschnitt,
-				final boolean mitLeistungsdaten) {
-
-			if (CollectionUtils.isEmpty(entities)) {
-				return Collections.emptyMap();
-			}
-			final var ids = entities.stream().map(e -> e.ID).toList();
-			final var bemerkungenById = bemerkungRepository.findMapByLernabschnittID(ids);
-			final Map<Long, List<DTOSchuelerLeistungsdaten>> leistungenById = mitLeistungsdaten
-					? leistungsdatenRepository.getMapListByLernabschnittsIds(ids)
-					: Collections.emptyMap();
-
-			return entities.stream()
-					.collect(Collectors.toMap(
-							e -> e.ID,
-							e -> {
-								final int schuljahr = schuljahrByIdAbschnitt.get(e.Schuljahresabschnitts_ID);
-								final List<SchuelerLeistungsdaten> leistungen = leistungenById.getOrDefault(e.ID, List.of()).stream()
-										.map(dto -> leistungsdatenMapper.toApi(dto, schuljahr))
-										.toList();
-								final DTOSchuelerPSFachBemerkungen bemerkung = bemerkungenById.get(e.ID);
-								return new SchuelerLernabschnittsdatenMappingContext(
-										(bemerkung == null) ? new SchuelerLernabschnittBemerkungen() : bemerkungenMapper.toApi(bemerkung),
-										leistungen
-								);
-							}
-					));
-		}
-	}
 }
