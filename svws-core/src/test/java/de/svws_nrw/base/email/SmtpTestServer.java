@@ -169,6 +169,10 @@ final class SmtpTestServer implements AutoCloseable {
 			geschlossen.await();
 			return;
 		}
+		// Ein schon wartendes accept übernimmt später gesetzte Versionen nicht. Der Handshake beginnt erst mit der ersten Antwort, daher wirken sie hier noch.
+		if ((socket instanceof final SSLSocket sslSocket) && (protokolle != null)) {
+			sslSocket.setEnabledProtocols(protokolle);
+		}
 		BufferedReader in = oeffneEingabe(socket);
 		Writer out = oeffneAusgabe(socket);
 		boolean verschluesselt = socket instanceof SSLSocket;
