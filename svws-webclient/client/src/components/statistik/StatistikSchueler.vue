@@ -52,7 +52,6 @@
 
 	import type { SchuelerStatistikGesamt } from "@core/asd/data/statistik/SchuelerStatistikGesamt";
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
-	import type { Validator } from "@core/asd/validate/Validator";
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -125,24 +124,34 @@
 		],
 	});
 
-	watch(() => gridManager.focusRow, async () => {
-		if (gridManager.focusRow === null) {
-			return null;
+	watch([() => gridManager.daten, () => gridManager.focusRow], async () => {
+		let index = gridManager.focusRow;
+		const datenSize = gridManager.daten.size();
+		if ((index === null) || (datenSize === 0)) {
+			return;
 		}
-		const [eintrag, fehler] = gridManager.daten.get(gridManager.focusRow);
-		if (eintrag === null) {
-			return null;
+		if (index >= datenSize) {
+			index = (datenSize - 1);
+			gridManager.doFocusRowIfNotFocussed(index);
+		} else {
+			gridManager.doFocus(true);
+		}
+		const [eintrag, fehler] = gridManager.daten.get(index);
+		if ((eintrag === null) || (eintrag.id === schuelerAuswahlState.idSelected)) {
+			return;
 		}
 		await statistikState.setSchueler(eintrag.id);
 		let tab = tabManager.getTab("SS");
 		if (fehler !== null) {
-			const validator = fehler.getValidator() as Validator;
-			const key = validator.getFehlercodePraefix().slice(0, 2);
-			if (tabManager.existsTab(key)) {
-				tab = tabManager.getTab(key);
+			const validator = fehler.getValidator();
+			if (validator !== null) {
+				const key = validator.getFehlercodePraefix().slice(0, 2);
+				if (tabManager.existsTab(key)) {
+					tab = tabManager.getTab(key);
+				}
 			}
+			await tabManager.setTab(tab);
 		}
-		await tabManager.setTab(tab);
 	});
 
 	const tabs = [

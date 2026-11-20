@@ -71,7 +71,7 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 	 */
 	public get stammdaten(): SchuleStammdaten {
 		if (this.state.stammdaten === null) {
-			throw new DeveloperNotificationException("Der Benutzer muss angemeldet sein und die Stammdaten der Schule müssen erfolgreich geladen sein.");
+			throw new DeveloperNotificationException("Der Benutzer muss angemeldet und die Stammdaten der Schule erfolgreich geladen sein.");
 		}
 		return this.state.stammdaten;
 	}
@@ -83,7 +83,7 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 	 */
 	public get validatorKontext(): ValidatorKontext {
 		if (this.state.kontext === null) {
-			throw new DeveloperNotificationException("Der Benutzer muss angemeldet sein und der Validator-Kontext muss erfolgreich erstellt sein.");
+			throw new DeveloperNotificationException("Der Benutzer muss angemeldet und der Validator-Kontext erfolgreich erstellt sein.");
 		}
 		return this.state.kontext;
 	}
@@ -96,7 +96,7 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 	public get schulform(): Schulform {
 		const schulform = Schulform.data().getWertByKuerzel(this.stammdaten.schulform);
 		if (schulform === null) {
-			throw new DeveloperNotificationException("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
+			throw new DeveloperNotificationException("In den Stammdaten der Schule ist eine ungültige Schulform eingetragen.");
 		}
 		return schulform;
 	}
@@ -128,7 +128,7 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 	 */
 	get abschnitt(): Schuljahresabschnitt {
 		if (this.state.abschnitt === null) {
-			throw new DeveloperNotificationException("In den Schul-Stammdaten ist kein gültiger Schulabschnitt eingetragen.");
+			throw new DeveloperNotificationException("In den Stammdaten der Schule ist kein gültiger Schulabschnitt eingetragen.");
 		}
 		return this.state.abschnitt;
 	}

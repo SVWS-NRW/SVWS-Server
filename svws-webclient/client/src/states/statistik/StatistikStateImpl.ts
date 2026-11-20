@@ -65,6 +65,8 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		this.setPatchedState({ mapLehrer, mapSchueler, statistikGesamt });
 	}
 
+	public reload = () => this.init();
+
 	public get statistikGesamt(): StatistikGesamt {
 		return this.state.statistikGesamt;
 	}
@@ -88,25 +90,23 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 	}
 
 	public setLehrer = async (id: number) => {
-		const daten = await api.server.getLehrerStammdaten(api.schema, id);
-		lehrerAuswahlStateImpl.setDatenDirekt(daten);
-		await lehrerAuswahlStateImpl.loadPersonaldaten();
+		const eintrag = lehrerAuswahlStateImpl.getEntry(id);
+		await lehrerAuswahlStateImpl.setDaten(eintrag);
 	};
 
 	public setSchueler = async (id: number) => {
-		const daten = await api.server.getSchuelerStammdaten(api.schema, id);
-		schuelerAuswahlStateImpl.setDatenDirekt(daten);
-		schuelerAuswahlStateImpl.commit();
+		const eintrag = schuelerAuswahlStateImpl.getEntry(id);
+		await schuelerAuswahlStateImpl.setDaten(eintrag);
 	};
 
 	public setKurs = async (id: number) => {
-		const daten = await api.server.getKurs(api.schema, id);
-		kurseAuswahlStateImpl.setDatenDirekt(daten);
+		const eintrag = kurseAuswahlStateImpl.getEntry(id);
+		await kurseAuswahlStateImpl.setDaten(eintrag);
 	};
 
 	public setKlasse = async (id: number) => {
-		const daten = await api.server.getKlasse(api.schema, id);
-		klassenAuswahlStateImpl.setDatenDirekt(daten);
+		const eintrag = klassenAuswahlStateImpl.getEntry(id);
+		await klassenAuswahlStateImpl.setDaten(eintrag);
 	};
 
 	/**

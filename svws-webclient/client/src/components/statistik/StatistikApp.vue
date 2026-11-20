@@ -1,4 +1,7 @@
 <template>
+	<Teleport to=".svws-ui-header--actions" defer>
+		<svws-ui-button type="secondary" @click="statistikState.reload"><span class="icon i-ri-loop-left-line" /> Daten aktualisieren</svws-ui-button>
+	</Teleport>
 	<header class="svws-ui-header">
 		<div class="svws-ui-header--title">
 			<div class="svws-headline-wrapper">
@@ -24,6 +27,7 @@
 <script setup lang="ts">
 
 	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useStatistikState } from "@ui/states/statistik/StatistikState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	import type { StatistikAppProps } from "./StatistikAppProps";
@@ -32,5 +36,6 @@
 
 	const props = defineProps<StatistikAppProps>();
 	const schuleState = useSchuleState();
+	const statistikState = useStatistikState();
 
 </script>

@@ -293,18 +293,6 @@ export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, T
 		return this.idSelected;
 	}
 
-
-	/**
-	 * Setzt die Einzelauswahl direkt mit den übergebenen Stammdaten, ohne diese oder die Daten der hinterlegten
-	 * Callbacks zu laden (z.B. nach dem Anlegen eines Eintrags, dessen Daten bereits vorliegen).
-	 *
-	 * @param daten   die Stammdaten des gewählten Eintrags
-	 */
-	public setDatenDirekt(daten: TDaten): void {
-		this.stammdaten.setDaten(daten);
-		this.setPatchedState({ idSelected: this.stammdaten.id } as Partial<R>);
-	}
-
 	/**
 	 * Setzt die Auswahl in der Liste und lädt die Daten zu der Auswahl.
 	 *

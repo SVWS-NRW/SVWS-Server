@@ -10,7 +10,7 @@
 		<tbody>
 			<template v-for="(row, index) in manager().daten" :key="manager().getRowKey(row)">
 				<tr :class="[{ 'hover:bg-ui-hover': showRowHighlight,'bg-ui-selected': !hideSelection && (manager().focusRow === index) }, 'group']"
-					@click="rowClicked(row, index)">
+					@click="rowClicked(index)">
 					<slot :row :index />
 				</tr>
 			</template>
@@ -25,7 +25,7 @@
 	</table>
 </template>
 
-<script setup lang="ts" generic="T,U extends PropertyKey">
+<script setup lang="ts" generic="T, U extends PropertyKey">
 
 	import { computed } from 'vue';
 
@@ -37,14 +37,14 @@
 		widths: string[];
 	}
 
-	function rowClicked(row: T, index: number) {
+	function rowClicked(index: number) {
 		props.manager().doFocusRowIfNotFocussed(index);
 	}
 
 	const props = withDefaults(defineProps<{
 		headerCount?: number,
 		footerCount?: number,
-		name?: string | undefined,
+		name?: string,
 		manager: () => GridManager<U, T, Collection<T> | T[]>,
 		hideSelection?: boolean,
 		showRowHighlight?: boolean,

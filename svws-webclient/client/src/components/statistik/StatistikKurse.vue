@@ -50,7 +50,6 @@
 
 	import type { KursStatistikGesamt } from '@core/asd/data/statistik/KursStatistikGesamt';
 	import { Fach } from '@core/asd/types/fach/Fach';
-	import type { Validator } from '@core/asd/validate/Validator';
 	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
 	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart';
 	import { ArrayList } from '@core/java/util/ArrayList';
@@ -112,24 +111,34 @@
 		],
 	});
 
-	watch(() => gridManager.focusRow, async () => {
-		if (gridManager.focusRow === null) {
-			return null;
+	watch([() => gridManager.daten, () => gridManager.focusRow], async () => {
+		let index = gridManager.focusRow;
+		const datenSize = gridManager.daten.size();
+		if ((index === null) || (datenSize === 0)) {
+			return;
 		}
-		const [eintrag, fehler] = gridManager.daten.get(gridManager.focusRow);
-		if (eintrag === null) {
-			return null;
+		if (index >= datenSize) {
+			index = (datenSize - 1);
+			gridManager.doFocusRowIfNotFocussed(index);
+		} else {
+			gridManager.doFocus(true);
+		}
+		const [eintrag, fehler] = gridManager.daten.get(index);
+		if ((eintrag === null) || (eintrag.id === kurseAuswahlState.idSelected)) {
+			return;
 		}
 		await statistikState.setKurs(eintrag.id);
 		let tab = tabManager.getTab("UF");
 		if (fehler !== null) {
-			const validator = fehler.getValidator() as Validator;
-			const key = validator.getFehlercodePraefix().slice(0, 2);
-			if (tabManager.existsTab(key)) {
-				tab = tabManager.getTab(key);
+			const validator = fehler.getValidator();
+			if (validator !== null) {
+				const key = validator.getFehlercodePraefix().slice(0, 2);
+				if (tabManager.existsTab(key)) {
+					tab = tabManager.getTab(key);
+				}
 			}
+			await tabManager.setTab(tab);
 		}
-		await tabManager.setTab(tab);
 	});
 
 	const tabs = [
