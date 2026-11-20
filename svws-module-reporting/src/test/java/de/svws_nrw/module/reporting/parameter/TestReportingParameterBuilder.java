@@ -2,11 +2,14 @@ package de.svws_nrw.module.reporting.parameter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -29,12 +32,14 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
+import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
 import de.svws_nrw.core.utils.reporting.ReportingReportvorlageUtils;
 import de.svws_nrw.db.Benutzer;
+import de.svws_nrw.db.DBEntityManager;
 
 class TestReportingParameterBuilder {
 
@@ -200,6 +205,60 @@ class TestReportingParameterBuilder {
 		ReportingParameterBuilder.setzeUnerlaubtePrivateEmailZurueck(request, parameterMitPrivaterEmail(false, false));
 
 		assertNull(request.eMailDaten, "Ohne E-Mail-Daten im Request gibt es nichts abzuschalten.");
+	}
+
+	@Test
+	void testEmpfaengerTypKommtAusDerVorlage() {
+		final ReportingParameter request = parameterMitPrivaterEmail(false, false);
+		request.eMailDaten.empfaengerTyp = ReportingEMailEmpfaengerTyp.SCHUELER.getId();
+		final ReportingParameter soll = parameterMitPrivaterEmail(false, false);
+		soll.eMailDaten.empfaengerTyp = ReportingEMailEmpfaengerTyp.LEHRER.getId();
+
+		ReportingParameterBuilder.setzeEmpfaengerTypDerVorlage(request, soll);
+
+		assertEquals(ReportingEMailEmpfaengerTyp.LEHRER.getId(), request.eMailDaten.empfaengerTyp,
+				"Ein abweichender Empfänger-Typ im Request darf einen Bericht nicht an eine andere Person lenken.");
+	}
+
+	@Test
+	void testOhneEmailDatenDerVorlageGibtEsKeinenEmpfaengerTyp() {
+		final ReportingParameter request = parameterMitPrivaterEmail(false, false);
+		request.eMailDaten.empfaengerTyp = ReportingEMailEmpfaengerTyp.SCHUELER.getId();
+		final ReportingParameter soll = new ReportingParameter();
+		soll.eMailDaten = null;
+
+		ReportingParameterBuilder.setzeEmpfaengerTypDerVorlage(request, soll);
+
+		assertEquals(ReportingEMailEmpfaengerTyp.UNDEFINED.getId(), request.eMailDaten.empfaengerTyp);
+	}
+
+	@Test
+	void testBaueUebernimmtDenEmpfaengerTypDerVorlage() {
+		final ReportingReportvorlage vorlage = Arrays.stream(ReportingReportvorlage.values())
+				.filter(v -> v.getReportingParameter().ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId()))
+				.findFirst().orElseThrow();
+		final int sollTyp = vorlage.getReportingParameter().eMailDaten.empfaengerTyp;
+		final ReportingParameter request = vorlage.getReportingParameter();
+		request.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
+		request.eMailDaten.empfaengerTyp = (sollTyp == ReportingEMailEmpfaengerTyp.SCHUELER.getId())
+				? ReportingEMailEmpfaengerTyp.LEHRER.getId()
+				: ReportingEMailEmpfaengerTyp.SCHUELER.getId();
+
+		// Ohne gespeicherte Einstellungen liest der Builder nur die Vorgaben der Vorlage.
+		builder.baue(request, vorlage, mock(DBEntityManager.class));
+
+		assertEquals(sollTyp, request.eMailDaten.empfaengerTyp);
+	}
+
+	@Test
+	void testJedeVorlageMitEmailVersandLegtDenEmpfaengerTypFest() {
+		for (final ReportingReportvorlage vorlage : ReportingReportvorlage.values()) {
+			final ReportingParameter soll = vorlage.getReportingParameter();
+			if (soll.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) {
+				assertNotEquals(ReportingEMailEmpfaengerTyp.UNDEFINED, ReportingEMailEmpfaengerTyp.getByID(soll.eMailDaten.empfaengerTyp),
+						"Die Vorlage %s bietet den E-Mail-Versand an, legt aber keinen Empfänger-Typ fest.".formatted(vorlage.getBezeichnung()));
+			}
+		}
 	}
 
 

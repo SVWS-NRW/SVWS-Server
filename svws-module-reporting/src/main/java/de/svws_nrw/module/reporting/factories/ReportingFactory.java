@@ -110,6 +110,12 @@ public final class ReportingFactory {
 				throw new ApiOperationException(Status.BAD_REQUEST,
 						"### FEHLER: Die Reportvorlage '%s' ist nicht bekannt.".formatted(ReportingParameterLogUtils.maskiert(vorlagenname)));
 			}
+			// Nur Vorlagen, die den E-Mail-Versand anbieten, dürfen versendet werden. Sonst ginge jeder Bericht, den der Benutzer drucken darf, per E-Mail hinaus.
+			if ((reportingAusgabeformat == ReportingAusgabeformat.EMAIL)
+					&& !reportvorlage.getReportingParameter().ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) {
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"### FEHLER: Die Reportvorlage '%s' sieht keinen Versand per E-Mail vor.".formatted(reportvorlage.getBezeichnung()));
+			}
 
 			// Validiere Hauptdaten-Angabe
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Hauptdaten.");

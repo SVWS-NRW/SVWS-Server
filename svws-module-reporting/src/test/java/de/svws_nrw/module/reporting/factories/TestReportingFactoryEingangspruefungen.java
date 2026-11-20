@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -18,6 +19,7 @@ import org.mockito.MockedStatic;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
+import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingServerUtils;
@@ -173,6 +175,40 @@ class TestReportingFactoryEingangspruefungen {
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
 		abbruchgrund(aoe);
+	}
+
+	/**
+	 * Lässt die Factory den E-Mail-Versand für die erste Vorlage aufbauen, die den Versand anbietet oder nicht anbietet.
+	 *
+	 * @param mitEmail ob die Vorlage den E-Mail-Versand anbieten soll
+	 *
+	 * @return Die geworfene Exception.
+	 */
+	private static ApiOperationException abbruchBeimEmailVersand(final boolean mitEmail) {
+		final ReportingReportvorlage vorlage = Arrays.stream(ReportingReportvorlage.values())
+				.filter(v -> v.getReportingParameter().ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId()) == mitEmail)
+				.findFirst().orElseThrow();
+		final ReportingParameter parameter = parameterMitVorlage(vorlage.getBezeichnung());
+		parameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
+		final DBEntityManager conn = mock(DBEntityManager.class);
+		return abbruchBeimAufbau(() -> new ReportingFactory(conn, parameter, ReportingAusgabeformat.EMAIL));
+	}
+
+	@Test
+	void testEineVorlageOhneEmailVersandWirdNichtVersendet() {
+		final ApiOperationException aoe = abbruchBeimEmailVersand(false);
+
+		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
+		assertTrue(abbruchgrund(aoe).contains("keinen Versand per E-Mail"), "Die Meldung muss den fehlenden E-Mail-Versand der Vorlage nennen.");
+	}
+
+	@Test
+	void testEineVorlageMitEmailVersandBestehtDiePruefungDesFormats() {
+		// Ohne echte Datenbank scheitert der Aufbau später. Der Aufbau muss aber den Schritt nach der Prüfung des Formats erreichen.
+		final ApiOperationException aoe = abbruchBeimEmailVersand(true);
+
+		final List<String> log = ((SimpleOperationResponse) aoe.getBody()).log.stream().map(String::strip).toList();
+		assertTrue(log.contains("Validiere Hauptdaten."), "Der Aufbau muss die Prüfung des Formats bestehen: " + log);
 	}
 
 }

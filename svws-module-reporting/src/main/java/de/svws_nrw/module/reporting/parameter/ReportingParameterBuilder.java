@@ -23,6 +23,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
+import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageKonfigurationBenutzerweit;
 import de.svws_nrw.core.utils.reporting.ReportingReportvorlageUtils;
@@ -396,6 +397,7 @@ public class ReportingParameterBuilder {
 		setzeUnerlaubteSortierungZurueck(reportingParameter, sollParameter);
 		setzeUnerlaubteFilterungZurueck(reportingParameter, sollParameter);
 		setzeUnerlaubtePrivateEmailZurueck(reportingParameter, sollParameter);
+		setzeEmpfaengerTypDerVorlage(reportingParameter, sollParameter);
 	}
 
 	/**
@@ -413,6 +415,22 @@ public class ReportingParameterBuilder {
 		if (!zulaessig) {
 			reportingParameter.eMailDaten.istPrivateEmailAlternative = false;
 		}
+	}
+
+	/**
+	 * Übernimmt den Empfänger-Typ der E-Mail aus der Reportvorlage. Der Typ legt fest, als wessen ID die Daten-IDs gelten. Ein Typ aus dem Request könnte einen
+	 * Bericht sonst an eine andere Person mit derselben ID lenken, etwa die Zugangsdaten einer Lehrkraft an einen Schüler.
+	 *
+	 * @param reportingParameter das Reporting-Parameter-Objekt mit den übermittelten E-Mail-Daten (wird verändert)
+	 * @param sollParameter      die Parameter der Reportvorlage mit dem Empfänger-Typ
+	 */
+	static void setzeEmpfaengerTypDerVorlage(final ReportingParameter reportingParameter, final ReportingParameter sollParameter) {
+		if (reportingParameter.eMailDaten == null) {
+			return;
+		}
+		reportingParameter.eMailDaten.empfaengerTyp = (sollParameter.eMailDaten == null)
+				? ReportingEMailEmpfaengerTyp.UNDEFINED.getId()
+				: sollParameter.eMailDaten.empfaengerTyp;
 	}
 
 	/**
