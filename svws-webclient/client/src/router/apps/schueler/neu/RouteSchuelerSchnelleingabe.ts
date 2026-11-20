@@ -18,7 +18,7 @@ export class RouteSchuelerSchnelleingabe extends RouteNode<RouteDataSchuelerSchn
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.schnelleingabe", "schnelleingabe", SchuelerSchnelleingabe, new RouteDataSchuelerSchnelleingabe());
 		super.types = new Set([ViewType.NEU]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schnelleingabe";
 		this.setCheckpoint = true;

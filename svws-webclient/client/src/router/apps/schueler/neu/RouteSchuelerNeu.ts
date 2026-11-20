@@ -18,7 +18,7 @@ export class RouteSchuelerNeu extends RouteNode<RouteDataSchuelerNeu, RouteSchue
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.neu", "neu", SchuelerNeu, new RouteDataSchuelerNeu());
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler Neu";
 		super.setCheckpoint = true;

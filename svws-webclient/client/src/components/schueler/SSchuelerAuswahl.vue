@@ -53,7 +53,7 @@
 							Zur Schnelleingabeansicht wechseln
 						</template>
 					</svws-ui-tooltip>
-					<svws-ui-tooltip v-if="serverState.hasDev && hatKompetenzAendern" position="bottom">
+					<svws-ui-tooltip v-if="hatKompetenzAendern" position="bottom">
 						<svws-ui-button :disabled="((schuelerAuswahlState.navigator.activeViewType === ViewType.HINZUFUEGEN) || (schuelerAuswahlState.navigator.activeViewType === ViewType.NEU))" type="icon" @click="startCreationMode"
 							:has-focus="schuelerAuswahlState.filter.visible.isEmpty()">
 							<span class="icon i-ri-add-line" />
@@ -101,7 +101,6 @@
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
-	import { useServerState } from "@ui/states/ServerState";
 	import type { SortByAndOrder } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
@@ -112,7 +111,6 @@
 
 	const props = defineProps<SchuelerAuswahlProps>();
 	const benutzerState = useBenutzerState();
-	const serverState = useServerState();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
@@ -123,7 +121,7 @@
 
 	const showModalGruppenaktionen = ref<boolean>(false);
 
-	const showSchnelleingabe = computed(() => serverState.hasDev && schuelerAuswahlState.stammdaten.hasDaten
+	const showSchnelleingabe = computed(() => schuelerAuswahlState.stammdaten.hasDaten
 		&& (schuelerAuswahlState.selected.status === SchuelerStatus.NEUAUFNAHME.daten(abschnittState.auswahl.schuljahr)?.id)
 		&& hatKompetenzAendern.value);
 
