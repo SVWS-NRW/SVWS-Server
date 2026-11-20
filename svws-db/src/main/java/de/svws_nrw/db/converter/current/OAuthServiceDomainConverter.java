@@ -17,7 +17,7 @@ public final class OAuthServiceDomainConverter extends DBAttributeConverter<OAut
 
 	@Override
 	public String convertToDatabaseColumn(final OAuthServiceDomain typ) {
-		return typ.getDbValue();
+		return (typ == null) ? null : typ.getDbValue();
 	}
 
 	@Override

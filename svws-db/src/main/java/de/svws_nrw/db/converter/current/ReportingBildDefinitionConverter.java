@@ -23,7 +23,7 @@ public final class ReportingBildDefinitionConverter extends DBAttributeConverter
 
 	@Override
 	public String convertToDatabaseColumn(final ReportingBildDefinition bildDef) {
-		return bildDef.getKennung();
+		return (bildDef == null) ? null : bildDef.getKennung();
 	}
 
 	@Override

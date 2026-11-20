@@ -27,7 +27,7 @@ public final class KursFortschreibungsartConverter extends DBAttributeConverter<
 
 	@Override
 	public String convertToDatabaseColumn(final KursFortschreibungsart attribute) {
-		return attribute.kuerzel;
+		return (attribute == null) ? null : attribute.kuerzel;
 	}
 
 	@Override

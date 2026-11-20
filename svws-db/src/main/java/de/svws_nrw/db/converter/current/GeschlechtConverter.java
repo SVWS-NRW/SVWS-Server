@@ -28,7 +28,7 @@ public final class GeschlechtConverter extends DBAttributeConverter<Geschlecht, 
 
 	@Override
 	public Integer convertToDatabaseColumn(final Geschlecht geschlecht) {
-		return geschlecht.id;
+		return (geschlecht == null) ? null : geschlecht.id;
 	}
 
 	@Override

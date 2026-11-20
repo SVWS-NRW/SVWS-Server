@@ -31,7 +31,7 @@ public final class GostLaufbahnplanungFachkombinationTypConverter extends DBAttr
 
 	@Override
 	public GostLaufbahnplanungFachkombinationTyp convertToEntityAttribute(final Integer dbData) {
-		return GostLaufbahnplanungFachkombinationTyp.fromValue(dbData);
+		return (dbData == null) ? null : GostLaufbahnplanungFachkombinationTyp.fromValue(dbData);
 	}
 
 	@Override

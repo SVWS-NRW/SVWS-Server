@@ -35,7 +35,12 @@ public final class DatumUhrzeitConverterSerializer extends StdSerializer<String>
 
 	@Override
 	public void serialize(final String value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
-		gen.writeString(DatumUhrzeitConverter.instance.convertToDatabaseColumn(value).toString());
+		final Timestamp timestamp = DatumUhrzeitConverter.instance.convertToDatabaseColumn(value);
+		if (timestamp == null) {
+			gen.writeNull();
+			return;
+		}
+		gen.writeString(timestamp.toString());
 	}
 
 }
