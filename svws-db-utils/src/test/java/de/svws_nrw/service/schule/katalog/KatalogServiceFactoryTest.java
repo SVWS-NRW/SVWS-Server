@@ -7,6 +7,7 @@ import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartReposit
 import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.repo.schule.kataloge.haltestelle.HaltestelleRepository;
+import de.svws_nrw.repo.schule.kataloge.fahrschuelerart.FahrschuelerartRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
@@ -24,6 +25,7 @@ import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrg
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzService;
 import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
+import de.svws_nrw.service.schule.katalog.fahrschuelerart.FahrschuelerartService;
 import de.svws_nrw.service.schule.katalog.haltestelle.HaltestelleService;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformService;
@@ -752,6 +754,49 @@ class KatalogServiceFactoryTest {
 			underTest.getEinwilligungsartService();
 
 			verify(katalogRepositoryFactory).getEinwilligungsartRepository();
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// getFahrschuelerartService()
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getFahrschuelerartService()")
+	class GetFahrschuelerartService {
+
+		@Mock
+		private FahrschuelerartRepository fahrschuelerartRepository;
+
+		@BeforeEach
+		void setUp() {
+			when(katalogRepositoryFactory.getFahrschuelerartRepository())
+					.thenReturn(fahrschuelerartRepository);
+		}
+
+		@Test
+		@DisplayName("gibt eine nicht-null FahrschuelerartService-Instanz zurück")
+		void shouldReturnNonNullService() {
+			final FahrschuelerartService service = underTest.getFahrschuelerartService();
+
+			assertThat(service).isNotNull();
+		}
+
+		@Test
+		@DisplayName("gibt eine neue Instanz bei jedem Aufruf zurück")
+		void shouldReturnNewInstanceOnEachCall() {
+			final FahrschuelerartService service1 = underTest.getFahrschuelerartService();
+			final FahrschuelerartService service2 = underTest.getFahrschuelerartService();
+
+			assertThat(service1).isNotSameAs(service2);
+		}
+
+		@Test
+		@DisplayName("ruft getFahrschuelerartRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToRepositoryFactory() {
+			underTest.getFahrschuelerartService();
+
+			verify(katalogRepositoryFactory).getFahrschuelerartRepository();
 		}
 	}
 

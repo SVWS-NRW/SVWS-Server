@@ -7,6 +7,7 @@ import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfig
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzMapper;
 import de.svws_nrw.mapper.schule.katalog.einwilligungsart.EinwilligungsartMapper;
 import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
+import de.svws_nrw.mapper.schule.katalog.fahrschuelerart.FahrschuelerartMapper;
 import de.svws_nrw.mapper.schule.katalog.haltestelle.HaltestelleMapper;
 import de.svws_nrw.mapper.schule.katalog.jahrgang.JahrgangMapper;
 import de.svws_nrw.mapper.schule.katalog.lernplattform.LernplattformMapper;
@@ -34,6 +35,7 @@ import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfi
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzService;
 import de.svws_nrw.service.schule.katalog.einwilligungsart.EinwilligungsartService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
+import de.svws_nrw.service.schule.katalog.fahrschuelerart.FahrschuelerartService;
 import de.svws_nrw.service.schule.katalog.haltestelle.HaltestelleService;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import de.svws_nrw.service.schule.katalog.lernplattform.LernplattformService;
@@ -290,4 +292,17 @@ public final class KatalogServiceFactory {
 				AnkreuzkompetenzKonfigurationMapper.INSTANCE
 		);
 	}
+
+	/**
+	 * Erstellt eine neue Instanz des FahrschuelerartService.
+	 *
+	 * @return eine neue Instanz des FahrschuelerartService.
+	 */
+	public FahrschuelerartService getFahrschuelerartService() {
+		return new FahrschuelerartService(
+				katalogRepositoryFactory.getFahrschuelerartRepository(),
+				FahrschuelerartMapper.INSTANCE
+		);
+	}
 }
+

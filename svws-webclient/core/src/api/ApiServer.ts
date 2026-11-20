@@ -14879,8 +14879,8 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Die Fahrschülerarten wurden erfolgreich entfernt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 400: Die Liste der IDs ist null oder enthält null-Werte.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
-	 *   Code 404: Fahrschülerarten nicht vorhanden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode

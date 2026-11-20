@@ -18,6 +18,7 @@ import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.controller.schueler.SchuelerControllerFactory;
+import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerEinwilligung;
@@ -35,7 +36,6 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
-import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
 import de.svws_nrw.data.schueler.DataKatalogHerkuenfte;
 import de.svws_nrw.data.schueler.DataKatalogHerkunftsarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
@@ -62,6 +62,8 @@ import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenBatchPatchRequest;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenPatchRequest;
+import de.svws_nrw.service.schule.katalog.fahrschuelerart.FahrschuelerartCreateRequest;
+import de.svws_nrw.service.schule.katalog.fahrschuelerart.FahrschuelerartPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1920,8 +1922,10 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Fahrschülerart-Katalog-Einträge gefunden")
 	public Response getFahrschuelerarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).getAllAsResponse(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getFahrschuelerartController()
+				.getAll();
 	}
 
 
@@ -1929,7 +1933,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Hinzufügen einer neuen Fahrschülerart.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der Input-Stream mit den Daten der Fahrschülerart
+	 * @param dto       die Daten der neuen Fahrschülerart
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der erstellten Fahrschülerart
@@ -1945,10 +1949,13 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addFahrschuelerart(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden Fahrschülerart ohne ID, da diese automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Fahrschuelerart.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Fahrschuelerart.class))) final FahrschuelerartCreateRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).addAsResponse(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getFahrschuelerartController()
+				.create(dto);
 	}
 
 	/**
@@ -1956,7 +1963,7 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der Fahrschülerart
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch für die Fahrschülerart
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -1975,17 +1982,20 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchFahrschuelerart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Fahrschülerart", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Fahrschuelerart.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Fahrschuelerart.class))) final FahrschuelerartPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataFahrschuelerarten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getFahrschuelerartController()
+				.patch(id, patch);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Fahrschülerarten.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        die IDs der Fahrschülerarten
+	 * @param ids       die IDs der Fahrschülerarten
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -1996,16 +2006,18 @@ public class APISchueler {
 			description = "Entfernt mehrere Fahrschülerarten, insofern, die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Fahrschülerarten wurden erfolgreich entfernt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "400", description = "Die Liste der IDs ist null oder enthält null-Werte.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Fahrschülerarten nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteFahrschuelerarten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Fahrschülerarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataFahrschuelerarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids, @Context final HttpServletRequest request) {
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
+				.getFahrschuelerartController()
+				.deleteMultiple(ids);
 	}
+
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Förderempfehlungen eines Schüler-Lernabschnitts.
 	 *

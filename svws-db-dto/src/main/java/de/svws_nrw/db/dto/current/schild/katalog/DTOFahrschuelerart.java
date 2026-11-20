@@ -26,66 +26,66 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_FahrschuelerArt")
-@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
+@JsonPropertyOrder({"id", "bezeichnung", "sortierung", "istSichtbar", "istAenderbar"})
 public final class DTOFahrschuelerart {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOFahrschuelerart e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOFahrschuelerart e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOFahrschuelerart e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFahrschuelerart e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFahrschuelerart e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFahrschuelerart e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFahrschuelerart e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOFahrschuelerart e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOFahrschuelerart e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOFahrschuelerart e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOFahrschuelerart e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOFahrschuelerart e WHERE e.Bezeichnung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOFahrschuelerart e WHERE e.bezeichnung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOFahrschuelerart e WHERE e.Bezeichnung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOFahrschuelerart e WHERE e.bezeichnung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFahrschuelerart e WHERE e.Sortierung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFahrschuelerart e WHERE e.sortierung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOFahrschuelerart e WHERE e.Sortierung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOFahrschuelerart e WHERE e.sortierung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOFahrschuelerart e WHERE e.Sichtbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSichtbar */
+	public static final String QUERY_BY_ISTSICHTBAR = "SELECT e FROM DTOFahrschuelerart e WHERE e.istSichtbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOFahrschuelerart e WHERE e.Sichtbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSichtbar */
+	public static final String QUERY_LIST_BY_ISTSICHTBAR = "SELECT e FROM DTOFahrschuelerart e WHERE e.istSichtbar IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
-	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOFahrschuelerart e WHERE e.Aenderbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istAenderbar */
+	public static final String QUERY_BY_ISTAENDERBAR = "SELECT e FROM DTOFahrschuelerart e WHERE e.istAenderbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
-	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOFahrschuelerart e WHERE e.Aenderbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istAenderbar */
+	public static final String QUERY_LIST_BY_ISTAENDERBAR = "SELECT e FROM DTOFahrschuelerart e WHERE e.istAenderbar IN ?1";
 
 	/** ID der Fahrschülerart */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** Bezeichnung der Fahrschülerart */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
-	public String Bezeichnung;
+	public String bezeichnung;
 
 	/** Sortierung der Fahrschülerart */
 	@Column(name = "Sortierung")
 	@JsonProperty
-	public Integer Sortierung;
+	public Integer sortierung;
 
 	/** Sichbarkeit der Fahrschülerart */
 	@Column(name = "Sichtbar")
@@ -93,7 +93,7 @@ public final class DTOFahrschuelerart {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Sichtbar;
+	public Boolean istSichtbar;
 
 	/** Änderbarkeit der Fahrschülerart */
 	@Column(name = "Aenderbar")
@@ -101,7 +101,7 @@ public final class DTOFahrschuelerart {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Aenderbar;
+	public Boolean istAenderbar;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOFahrschuelerart ohne eine Initialisierung der Attribute.
@@ -112,15 +112,15 @@ public final class DTOFahrschuelerart {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOFahrschuelerart ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
+	 * @param id   der Wert für das Attribut id
+	 * @param bezeichnung   der Wert für das Attribut bezeichnung
 	 */
-	public DTOFahrschuelerart(final long ID, final String Bezeichnung) {
-		this.ID = ID;
-		if (Bezeichnung == null) {
-			throw new NullPointerException("Bezeichnung must not be null");
+	public DTOFahrschuelerart(final long id, final String bezeichnung) {
+		this.id = id;
+		if (bezeichnung == null) {
+			throw new NullPointerException("bezeichnung must not be null");
 		}
-		this.Bezeichnung = Bezeichnung;
+		this.bezeichnung = bezeichnung;
 	}
 
 
@@ -136,14 +136,14 @@ public final class DTOFahrschuelerart {
 			return false;
 		}
 		DTOFahrschuelerart other = (DTOFahrschuelerart) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -155,7 +155,7 @@ public final class DTOFahrschuelerart {
 	 */
 	@Override
 	public String toString() {
-		return "DTOFahrschuelerart(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ")";
+		return "DTOFahrschuelerart(id=" + this.id + ", bezeichnung=" + this.bezeichnung + ", sortierung=" + this.sortierung + ", istSichtbar=" + this.istSichtbar + ", istAenderbar=" + this.istAenderbar + ")";
 	}
 
 }

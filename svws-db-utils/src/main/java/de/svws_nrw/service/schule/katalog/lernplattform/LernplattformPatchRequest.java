@@ -1,11 +1,10 @@
 package de.svws_nrw.service.schule.katalog.lernplattform;
 
-import org.openapitools.jackson.nullable.JsonNullable;
-
 import de.svws_nrw.validation.constraints.NoLeadingOrTrailingWhitespaces;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 /**
  * Der Request zum partiellen Aktualisieren einer Lernplattform im Katalog.
