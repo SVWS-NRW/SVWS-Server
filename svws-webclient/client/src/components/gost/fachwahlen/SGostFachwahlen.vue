@@ -146,7 +146,7 @@
 			return true;
 		}
 		if (bereich === "Abitur") {
-			return (row.wahlenAB3 !== 0) || (row.wahlenAB4 !== 0);
+			return (row.wahlenAB3 !== 0) || (row.wahlenAB4 !== 0) || (istAbi2030.value && (row.wahlenAB5 !== 0));
 		}
 		if (bereich === "ZK") {
 			return getData(row, "ZK", "") !== "";
