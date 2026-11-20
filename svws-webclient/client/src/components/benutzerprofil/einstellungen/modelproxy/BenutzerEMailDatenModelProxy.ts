@@ -40,7 +40,6 @@ export class BenutzerEMailDatenModelProxy extends ModelProxy<BenutzerEMailDaten>
 
 		// Signatur
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.signatur, null, 2047), "signatur");
-		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.signatur, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "signatur");
 	}
 
 }
