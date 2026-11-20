@@ -285,4 +285,44 @@ class OrtMapperTest {
 			assertThat(entity.id).isEqualTo(42L);
 		}
 	}
+
+	// -------------------------------------------------------------------------
+	// toFilterCatalogValue
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("toFilterCatalogValue")
+	class ToFilterCatalogValue {
+
+		private DTOOrt createEntity(final long id, final String plz, final String ortsname) {
+			final var entity = new DTOOrt(id, "", "");
+			entity.plz = plz;
+			entity.ortsname = ortsname;
+			return entity;
+		}
+
+		@Test
+		@DisplayName("Übernimmt die ID und bildet die Bezeichnung aus PLZ und Ortsname")
+		void toFilterCatalogValue_mapptIdUndBezeichnung() {
+			final var result = mapper.toFilterCatalogValue(createEntity(42L, "53840", "Troisdorf"));
+
+			assertThat(result)
+					.extracting(value -> value.id, value -> value.bezeichnung)
+					.containsExactly(42L, "53840 Troisdorf");
+		}
+
+		@Test
+		@DisplayName("Lässt fehlende Bestandteile der Bezeichnung aus")
+		void toFilterCatalogValue_laesstFehlendeBestandteileAus() {
+			assertThat(mapper.toFilterCatalogValue(createEntity(1L, null, "Troisdorf")).bezeichnung).isEqualTo("Troisdorf");
+			assertThat(mapper.toFilterCatalogValue(createEntity(2L, "53840", " ")).bezeichnung).isEqualTo("53840");
+			assertThat(mapper.toFilterCatalogValue(createEntity(3L, null, null)).bezeichnung).isEmpty();
+		}
+
+		@Test
+		@DisplayName("Entfernt Leerzeichen um die Bestandteile der Bezeichnung")
+		void toFilterCatalogValue_entferntLeerzeichen() {
+			assertThat(mapper.toFilterCatalogValue(createEntity(1L, " 53840 ", " Troisdorf ")).bezeichnung).isEqualTo("53840 Troisdorf");
+		}
+	}
 }

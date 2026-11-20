@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("FilterAttribute-Implementierungen")
 class FilterAttributeTest {
@@ -38,11 +39,19 @@ class FilterAttributeTest {
 	@Test
 	@DisplayName("CatalogFilterAttribute | liefert den Typ CATALOG und den Namen des Katalogs als Quelle")
 	void catalogFilterAttribute() {
-		final var cut = new CatalogFilterAttribute(KEY, "Test", "TestKatalog", KEY_CATEGORY, TARGET);
+		final var cut = new CatalogFilterAttribute(KEY, "Test", FilterCatalog.ORTE, KEY_CATEGORY, TARGET);
 
 		assertThat(cut)
 				.returns(FilterAttributeType.CATALOG, FilterAttribute::getType)
-				.returns("TestKatalog", FilterAttribute::getSource)
-				.returns("TestKatalog", CatalogFilterAttribute::getCatalogName);
+				.returns("Orte", FilterAttribute::getSource)
+				.returns(FilterCatalog.ORTE, CatalogFilterAttribute::getCatalog);
+	}
+
+	@Test
+	@DisplayName("CatalogFilterAttribute | wirft NullPointerException, wenn der Katalog null ist")
+	void catalogFilterAttributeWithoutCatalog() {
+		assertThatThrownBy(() -> new CatalogFilterAttribute(KEY, "Test", null, KEY_CATEGORY, TARGET))
+				.isInstanceOf(NullPointerException.class)
+				.hasMessageContaining("Katalog");
 	}
 }

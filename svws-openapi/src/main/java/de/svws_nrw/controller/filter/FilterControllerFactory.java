@@ -6,7 +6,9 @@ import java.util.Set;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.filter.FilterAttributeServiceFactory;
+import de.svws_nrw.service.filter.FilterCatalogServiceFactory;
 import de.svws_nrw.service.filter.FilterCategoryServiceFactory;
 import de.svws_nrw.core.types.filter.FilterDomain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,15 +28,22 @@ public final class FilterControllerFactory {
 
 	private final FilterAttributeServiceFactory filterAttributeServiceFactory;
 
+	private final FilterCatalogServiceFactory filterCatalogServiceFactory;
+
 	private FilterControllerFactory(final FilterCategoryServiceFactory filterCategoryServiceFactory,
-			final FilterAttributeServiceFactory filterAttributeServiceFactory) {
+			final FilterAttributeServiceFactory filterAttributeServiceFactory,
+			final FilterCatalogServiceFactory filterCatalogServiceFactory) {
 		this.filterCategoryServiceFactory = filterCategoryServiceFactory;
 		this.filterAttributeServiceFactory = filterAttributeServiceFactory;
+		this.filterCatalogServiceFactory = filterCatalogServiceFactory;
 	}
 
 	private static FilterControllerFactory getNewInstance(final HttpServletRequest request, final Set<BenutzerKompetenz> requiredKompetenzen) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, requiredKompetenzen.toArray(new BenutzerKompetenz[0]));
-		return new FilterControllerFactory(FilterCategoryServiceFactory.getNewInstance(), FilterAttributeServiceFactory.getNewInstance());
+		return new FilterControllerFactory(
+				FilterCategoryServiceFactory.getNewInstance(),
+				FilterAttributeServiceFactory.getNewInstance(),
+				FilterCatalogServiceFactory.getNewInstance(KatalogRepositoryFactory.getNewInstance()));
 	}
 
 	/**
@@ -47,6 +56,17 @@ public final class FilterControllerFactory {
 	 */
 	public static FilterControllerFactory withReadAccessByDomain(final HttpServletRequest request, final FilterDomain domain) {
 		return getNewInstance(request, READ_KOMPETENZEN_BY_DOMAIN.get(domain));
+	}
+
+	/**
+	 * Erstellt eine Factory-Instanz mit Leseberechtigung ohne Bezug zu einer Domain. Es ist keine besondere Benutzerkompetenz erforderlich.
+	 *
+	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 *
+	 * @return eine {@link FilterControllerFactory}-Instanz mit Leseberechtigung
+	 */
+	public static FilterControllerFactory withReadAccess(final HttpServletRequest request) {
+		return getNewInstance(request, Set.of(BenutzerKompetenz.KEINE));
 	}
 
 	/**
@@ -65,6 +85,15 @@ public final class FilterControllerFactory {
 	 */
 	public FilterAttributeController getFilterAttributeController() {
 		return new FilterAttributeControllerImpl(filterAttributeServiceFactory.getService());
+	}
+
+	/**
+	 * Erzeugt einen neuen {@link FilterCatalogController}.
+	 *
+	 * @return ein neuer {@link FilterCatalogControllerImpl}
+	 */
+	public FilterCatalogController getFilterCatalogController() {
+		return new FilterCatalogControllerImpl(filterCatalogServiceFactory.getService());
 	}
 
 }

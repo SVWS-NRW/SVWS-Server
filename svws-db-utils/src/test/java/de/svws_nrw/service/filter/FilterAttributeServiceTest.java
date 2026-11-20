@@ -66,7 +66,7 @@ class FilterAttributeServiceTest {
 			final var category = new FilterCategoryKey("schueler.test");
 			final FilterAttribute first = new EnumFilterAttribute(new FilterAttributeKey("schueler.erstes"), "Erstes", "ErsterEnum", category,
 					AttributeTarget.of("Entity", "erstes"));
-			final FilterAttribute second = new CatalogFilterAttribute(new FilterAttributeKey("schueler.zweites"), "Zweites", "Orte", category,
+			final FilterAttribute second = new CatalogFilterAttribute(new FilterAttributeKey("schueler.zweites"), "Zweites", FilterCatalog.ORTE, category,
 					AttributeTarget.of("Entity", "zweites"));
 			when(filterRegistry.getAttributesByDomain(FilterDomain.SCHUELER)).thenReturn(List.of(first, second));
 

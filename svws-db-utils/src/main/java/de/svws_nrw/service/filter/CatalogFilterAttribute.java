@@ -1,5 +1,7 @@
 package de.svws_nrw.service.filter;
 
+import java.util.Objects;
+
 import de.svws_nrw.core.types.filter.FilterAttributeType;
 
 /**
@@ -9,7 +11,7 @@ public class CatalogFilterAttribute implements FilterAttribute {
 
 	private final FilterAttributeKey key;
 	private final String label;
-	private final String catalogName;
+	private final FilterCatalog catalog;
 
 	private final FilterCategoryKey keyCategory;
 
@@ -20,15 +22,21 @@ public class CatalogFilterAttribute implements FilterAttribute {
 	 *
 	 * @param key Schlüssel des Attributes
 	 * @param label Anzeigename des Attributes
-	 * @param catalogName Name des Katalogs
+	 * @param catalog der Katalog, aus dem die Werte stammen
 	 * @param keyCategory Schlüssel der Kategorie
 	 * @param target Zuordnung zum Entity-Feld, aus dem der zu filternde Wert ermittelt wird
+	 *
+	 * @throws NullPointerException wenn der Katalog {@code null} ist
 	 */
-	public CatalogFilterAttribute(final FilterAttributeKey key, final String label, final String catalogName, final FilterCategoryKey keyCategory,
+	public CatalogFilterAttribute(
+			final FilterAttributeKey key,
+			final String label,
+			final FilterCatalog catalog,
+			final FilterCategoryKey keyCategory,
 			final AttributeTarget target) {
 		this.key = key;
 		this.label = label;
-		this.catalogName = catalogName;
+		this.catalog = Objects.requireNonNull(catalog, "Der Katalog darf nicht null sein.");
 		this.keyCategory = keyCategory;
 		this.target = target;
 	}
@@ -80,7 +88,7 @@ public class CatalogFilterAttribute implements FilterAttribute {
 	 */
 	@Override
 	public String getSource() {
-		return this.catalogName;
+		return this.catalog.getName();
 	}
 
 	/**
@@ -97,11 +105,11 @@ public class CatalogFilterAttribute implements FilterAttribute {
 	}
 
 	/**
-	 * Liefert den Namen des Katalogs zurück.
+	 * Liefert den Katalog zurück, aus dem die Werte stammen.
 	 *
-	 * @return Name des Katalogs
+	 * @return der Katalog
 	 */
-	public String getCatalogName() {
-		return catalogName;
+	public FilterCatalog getCatalog() {
+		return catalog;
 	}
 }

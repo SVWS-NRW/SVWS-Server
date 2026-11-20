@@ -56,6 +56,7 @@ import { FachKatalogEintrag } from '../asd/data/fach/FachKatalogEintrag';
 import { FachklasseEintrag } from '../core/data/schule/FachklasseEintrag';
 import { Fahrschuelerart } from '../core/data/schule/Fahrschuelerart';
 import { FilterAttributeResponse } from '../core/data/filter/FilterAttributeResponse';
+import { FilterCatalogValue } from '../core/data/filter/FilterCatalogValue';
 import { FilterCategoryResponse } from '../core/data/filter/FilterCategoryResponse';
 import { Floskel } from '../core/data/schule/Floskel';
 import { Floskelgruppe } from '../core/data/schule/Floskelgruppe';
@@ -26604,6 +26605,40 @@ Einer Kategorie können beliebig viele Filterattribute zugeordnet sein.
 		obj.forEach((elem: any) => {
 			const text: string = JSON.stringify(elem);
 			ret.add(FilterCategoryResponse.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getFilterCatalogValues für den Zugriff auf die URL https://{hostname}/db/{schema}/v1/filter/catalogs/{name}
+	 *
+	 * Liefert alle auswählbaren Werte des Katalogs mit dem angegebenen Namen, z. B. Orte.
+Der Name entspricht der Quelle eines Filterattributs vom Typ catalog.
+Alle Kataloge werden mit demselben Schema aus ID und Bezeichnung ausgeliefert.
+
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Liste mit den Werten des Katalogs
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<FilterCatalogValue>
+	 *   Code 404: Es gibt keinen Katalog mit dem angegebenen Namen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} name - der Pfad-Parameter name
+	 *
+	 * @returns Liste mit den Werten des Katalogs
+	 */
+	public async getFilterCatalogValues(schema: string, name: string): Promise<List<FilterCatalogValue>> {
+		const path = "/db/{schema}/v1/filter/catalogs/{name}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{name\s*(:[^{}]+({[^{}]+})*)?}/g, name);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<FilterCatalogValue>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FilterCatalogValue.transpilerFromJSON(text));
 		});
 		return ret;
 	}

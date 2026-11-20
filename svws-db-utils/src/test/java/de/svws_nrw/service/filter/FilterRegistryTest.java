@@ -215,6 +215,21 @@ class FilterRegistryTest {
 
 
 		@Test
+		@DisplayName("verweist beim Katalog-Attribut Wohnort auf den Katalog der Orte")
+		void wohnortUsesCatalogOrte() {
+			final var result = FilterRegistry.defaults().getAttributesByDomain(FilterDomain.SCHUELER);
+
+			final var catalogAttributes = result.stream()
+					.filter(CatalogFilterAttribute.class::isInstance)
+					.map(CatalogFilterAttribute.class::cast)
+					.toList();
+
+			assertThat(catalogAttributes)
+					.extracting(FilterAttribute::getKey, CatalogFilterAttribute::getCatalog)
+					.containsExactly(tuple(FilterAttributeKeys.SCHUELER_WOHNORT, FilterCatalog.ORTE));
+		}
+
+		@Test
 		@DisplayName("liefert immer dieselbe Instanz")
 		void isSingleton() {
 			final FilterRegistry first = FilterRegistry.defaults();

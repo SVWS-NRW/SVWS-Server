@@ -126,7 +126,7 @@ final class FilterRegistry {
 				new CatalogFilterAttribute(
 						FilterAttributeKeys.SCHUELER_WOHNORT,
 						"Ort",
-						"Orte",
+						FilterCatalog.ORTE,
 						FilterCategoryKeys.SCHUELER_INDIVIDUALDATEN,
 						AttributeTarget.of(DTOSchueler.class.getName(), "Ort_ID")
 				)

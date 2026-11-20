@@ -4,12 +4,17 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.filter.FilterDomain;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.quality.Strictness;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,11 +22,30 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("FilterControllerFactory")
 class FilterControllerFactoryTest {
+
+	private MockedStatic<KatalogRepositoryFactory> katalogRepositoryFactoryMock;
+
+	private KatalogRepositoryFactory katalogRepositoryFactory;
+
+	@BeforeEach
+	void setUp() {
+		katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
+		katalogRepositoryFactoryMock = mockStatic(KatalogRepositoryFactory.class, withSettings().strictness(Strictness.LENIENT));
+		katalogRepositoryFactoryMock.when(KatalogRepositoryFactory::getNewInstance).thenReturn(katalogRepositoryFactory);
+	}
+
+	@AfterEach
+	void tearDown() {
+		katalogRepositoryFactoryMock.close();
+	}
 
 	@Test
 	@DisplayName("withReadAccessByDomain | SCHUELER: DBBenutzerUtils wird mit SCHUELER_INDIVIDUALDATEN_ANSEHEN aufgerufen")
@@ -78,6 +102,51 @@ class FilterControllerFactoryTest {
 			assertThat(first).isInstanceOf(FilterAttributeControllerImpl.class);
 			assertThat(second).isInstanceOf(FilterAttributeControllerImpl.class).isNotSameAs(first);
 			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), any(BenutzerKompetenz[].class)), times(1));
+		}
+	}
+
+	@Test
+	@DisplayName("withReadAccess | DBBenutzerUtils wird ohne besondere Kompetenz (KEINE) aufgerufen")
+	void withReadAccessWithoutKompetenz() {
+		final HttpServletRequest request = mock(HttpServletRequest.class);
+		try (MockedStatic<DBBenutzerUtils> dbUtilsMock = mockStatic(DBBenutzerUtils.class)) {
+			final FilterControllerFactory factory = FilterControllerFactory.withReadAccess(request);
+
+			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), eq(BenutzerKompetenz.KEINE)), times(1));
+			assertThat(factory).isNotNull();
+		}
+	}
+
+	@Test
+	@DisplayName("getFilterCatalogController | liefert bei jedem Aufruf einen neuen FilterCatalogControllerImpl")
+	void getFilterCatalogController() {
+		final HttpServletRequest request = mock(HttpServletRequest.class);
+		final var ortRepo = mock(OrtRepository.class);
+		when(katalogRepositoryFactory.getOrtRepository()).thenReturn(ortRepo);
+		try (MockedStatic<DBBenutzerUtils> dbUtilsMock = mockStatic(DBBenutzerUtils.class)) {
+			final FilterControllerFactory factory = FilterControllerFactory.withReadAccess(request);
+
+			final FilterCatalogController first = factory.getFilterCatalogController();
+			final FilterCatalogController second = factory.getFilterCatalogController();
+
+			assertThat(first).isInstanceOf(FilterCatalogControllerImpl.class);
+			assertThat(second).isInstanceOf(FilterCatalogControllerImpl.class).isNotSameAs(first);
+			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), any(BenutzerKompetenz[].class)), times(1));
+			katalogRepositoryFactoryMock.verify(KatalogRepositoryFactory::getNewInstance, times(1));
+		}
+	}
+
+	@Test
+	@DisplayName("withReadAccess | Berechtigungsfehler wird nicht verschluckt und die Katalog-Repositories werden nicht angelegt")
+	void withReadAccessDeniedCreatesNoRepositories() {
+		final HttpServletRequest request = mock(HttpServletRequest.class);
+		final IllegalStateException error = new IllegalStateException("kein Zugriff");
+		try (MockedStatic<DBBenutzerUtils> dbUtilsMock = mockStatic(DBBenutzerUtils.class)) {
+			dbUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), any(BenutzerKompetenz[].class)))
+					.thenThrow(error);
+
+			assertThatThrownBy(() -> FilterControllerFactory.withReadAccess(request)).isSameAs(error);
+			katalogRepositoryFactoryMock.verify(KatalogRepositoryFactory::getNewInstance, never());
 		}
 	}
 }

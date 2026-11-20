@@ -1,8 +1,12 @@
 package de.svws_nrw.mapper.schule.katalog.ort;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.svws_nrw.asd.types.schule.Laender;
+import de.svws_nrw.core.data.filter.FilterCatalogValue;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.mapper.JsonNullableMapper;
@@ -53,6 +57,32 @@ public interface OrtMapper {
 		return Optional.ofNullable(Laender.data().getEintragBySchuljahrUndSchluessel(schuljahr, schluesselBundesland))
 				.map(s -> s.id)
 				.orElse(null);
+	}
+
+	/**
+	 * Mappt eine {@link DTOOrt}-Entity auf einen {@link FilterCatalogValue}. Die Bezeichnung besteht aus Postleitzahl und Ortsname.
+	 *
+	 * @param entity die Quell-Entity
+	 *
+	 * @return der Wert für die Auswahl in Filtern
+	 */
+	@Mapping(target = "bezeichnung", source = "entity", qualifiedByName = "mapFilterBezeichnung")
+	FilterCatalogValue toFilterCatalogValue(DTOOrt entity);
+
+	/**
+	 * Ermittelt die Bezeichnung eines Ortes für die Auswahl in Filtern aus Postleitzahl und Ortsname. Fehlende Bestandteile werden ausgelassen.
+	 *
+	 * @param entity die Entity des Ortes
+	 *
+	 * @return die Bezeichnung, z. B. {@code 53840 Troisdorf}
+	 */
+	@Named("mapFilterBezeichnung")
+	default String mapFilterBezeichnung(final DTOOrt entity) {
+		return Stream.of(entity.plz, entity.ortsname)
+				.filter(Objects::nonNull)
+				.map(String::strip)
+				.filter(teil -> !teil.isEmpty())
+				.collect(Collectors.joining(" "));
 	}
 
 	/**

@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import de.svws_nrw.controller.filter.FilterControllerFactory;
 import de.svws_nrw.core.data.filter.FilterAttributeResponse;
+import de.svws_nrw.core.data.filter.FilterCatalogValue;
 import de.svws_nrw.core.data.filter.FilterCategoryResponse;
 import de.svws_nrw.core.types.filter.FilterDomain;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -123,6 +124,48 @@ public class APIFilter {
 		return FilterControllerFactory.withReadAccessByDomain(request, filterDomain)
 				.getFilterAttributeController()
 				.getByDomain(filterDomain);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage aller auswählbaren Werte eines Katalogs.
+	 *
+	 * @param schema Das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param name Der Name des Katalogs, z. B. {@code Orte}
+	 * @param request Der HTTP-Request
+	 *
+	 * @return Liste der Werte des Katalogs
+	 */
+	@GET
+	@Path("catalogs/{name}")
+	@Operation(
+			summary = "Liefert alle auswählbaren Werte eines Katalogs.",
+			description = """
+					Liefert alle auswählbaren Werte des Katalogs mit dem angegebenen Namen, z. B. Orte.
+					Der Name entspricht der Quelle eines Filterattributs vom Typ catalog.
+					Alle Kataloge werden mit demselben Schema aus ID und Bezeichnung ausgeliefert.
+					"""
+	)
+	@ApiResponse(
+			responseCode = "200",
+			description = "Liste mit den Werten des Katalogs",
+			content = @Content(
+					mediaType = "application/json",
+					array = @ArraySchema(
+							schema = @Schema(
+									implementation = FilterCatalogValue.class
+							)
+					)
+			)
+	)
+	@ApiResponse(
+			responseCode = "404",
+			description = "Es gibt keinen Katalog mit dem angegebenen Namen."
+	)
+	public Response getFilterCatalogValues(@PathParam("schema") final String schema, @PathParam("name") final String name,
+			@Context final HttpServletRequest request) {
+		return FilterControllerFactory.withReadAccess(request)
+				.getFilterCatalogController()
+				.getByName(name);
 	}
 
 	/**

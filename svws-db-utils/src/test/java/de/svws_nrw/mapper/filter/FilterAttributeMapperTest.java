@@ -4,6 +4,7 @@ import de.svws_nrw.service.filter.AttributeTarget;
 import de.svws_nrw.service.filter.CatalogFilterAttribute;
 import de.svws_nrw.service.filter.CoreTypeFilterAttribute;
 import de.svws_nrw.service.filter.EnumFilterAttribute;
+import de.svws_nrw.service.filter.FilterCatalog;
 import de.svws_nrw.service.filter.FilterAttribute;
 import de.svws_nrw.service.filter.FilterAttributeKey;
 import de.svws_nrw.service.filter.FilterCategoryKey;
@@ -47,7 +48,7 @@ class FilterAttributeMapperTest {
 	@Test
 	@DisplayName("toApi: Katalog-Attribut übernimmt Typ catalog und den Namen des Katalogs als Quelle")
 	void toApi_mapsCatalogAttribute() {
-		final FilterAttribute domain = new CatalogFilterAttribute(KEY, "Ort", "Orte", KEY_CATEGORY, TARGET);
+		final FilterAttribute domain = new CatalogFilterAttribute(KEY, "Ort", FilterCatalog.ORTE, KEY_CATEGORY, TARGET);
 
 		final var result = mapper.toApi(domain);
 
