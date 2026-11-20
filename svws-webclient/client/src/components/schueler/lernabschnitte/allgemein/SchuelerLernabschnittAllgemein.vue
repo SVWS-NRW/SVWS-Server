@@ -6,27 +6,27 @@
 					v-model="model.klasse.value"
 					:manager="klasseManager"
 					:validation="() => model.getFehler('klassenID')"
-					:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
+					:readonly="!hatUpdateKompetenz" statistics required :removable="false" />
 				<ui-select label="Jahrgang"
 					v-model="model.jahrgang.value"
 					:manager="jahrgangManager"
 					:validation="() => model.getFehler('jahrgangID')"
-					:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
+					:readonly="!hatUpdateKompetenz" statistics required :removable="false" />
 				<ui-select v-if="istPrimarSchulform" label="EP-Jahre"
 					v-model="model.epJahre.value"
 					:manager="epJahrManager"
 					:validation="() => model.getFehler('idEpJahre')"
-					:disabled="epJahreReadonly" statistics required :removable="false" />
+					:readonly="epJahreReadonly" statistics required :removable="false" />
 			</div>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Datum von" type="date"
 					v-model="model.proxy.datumAnfang"
 					:validation="() => model.getFehler('datumAnfang')"
-					:disabled="!hatUpdateKompetenz" />
+					:readonly="!hatUpdateKompetenz" />
 				<svws-ui-text-input placeholder="Datum bis" type="date"
 					v-model="model.proxy.datumEnde"
 					:validation="() => model.getFehler('datumEnde')"
-					:disabled="!hatUpdateKompetenz" />
+					:readonly="!hatUpdateKompetenz" />
 				<svws-ui-spacing />
 				<div>
 					<span class="font-bold" :class="{'opacity-50': !klassenlehrer.length}"> Klassenlehrer </span>
@@ -39,11 +39,11 @@
 					<ui-select label="Tutor"
 						v-model="model.tutor.value"
 						:manager="tutorManager"
-						:disabled="!hatUpdateKompetenz" />
+						:readonly="!hatUpdateKompetenz" />
 					<ui-select label="Sonderpädagoge"
 						v-model="model.sonderpaedagoge.value"
 						:manager="sonderpaedagogeManager"
-						:disabled="!hatUpdateKompetenz" />
+						:readonly="!hatUpdateKompetenz" />
 				</div>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="2">
@@ -51,25 +51,25 @@
 						v-model="model.gliederung.value"
 						:manager="gliederungManager"
 						:validation="() => model.getFehler('idSchulgliederung')"
-						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
+						:readonly="!hatUpdateKompetenz" statistics required :removable="false" />
 					<svws-ui-text-input placeholder="Prüfungsordnung"
 						v-model="model.proxy.pruefungsOrdnung"
 						:validation="() => model.getFehler('pruefungsOrdnung')"
-						:disabled="!hatUpdateKompetenz" required :max-len="20" />
+						:readonly="!hatUpdateKompetenz" required :max-len="20" />
 					<ui-select label="Organisationsform"
 						v-model="model.organisationsform.value"
 						:manager="organisationsformManager"
 						:validation="() => model.getFehler('idOrganisationsform')"
-						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
+						:readonly="!hatUpdateKompetenz" statistics required :removable="false" />
 					<ui-select v-if="![Schulform.BK, Schulform.SB, Schulform.WB].includes(schuleState.schulform)"
 						label="Betreuungsart" statistics
 						v-model="model.betreuungsart.value"
 						:manager="betreuungsartManager"
-						:disabled="!hatUpdateKompetenz" />
+						:readonly="!hatUpdateKompetenz" />
 					<ui-select label="Bilingualer Zweig"
 						v-model="model.bilingualerZweig.value"
 						:manager="bilingualerZweigManager"
-						:disabled="!hatUpdateKompetenz" />
+						:readonly="!hatUpdateKompetenz" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2">
@@ -78,22 +78,22 @@
 						v-model="model.klassenart.value"
 						:manager="klassenartManager"
 						:validation="() => model.getFehler('idKlassenart')"
-						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
+						:readonly="!hatUpdateKompetenz" statistics required :removable="false" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2">
 					<ui-select label="Förderschwerpunkt"
 						v-model="model.foerderschwerpunkt.value"
 						:manager="foerderschwerpunktManager"
-						:disabled="!hatUpdateKompetenz" statistics />
+						:readonly="!hatUpdateKompetenz" statistics />
 					<ui-select label="Weiterer Förderschwerpunkt"
 						v-model="model.foerderschwerpunkt2.value"
 						:manager="foerderschwerpunktManager"
-						:disabled="!hatUpdateKompetenz" statistics />
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="model.proxy.hatSchwerbehinderungsNachweis" statistics span="full">Schwerstbehinderung</svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="model.proxy.hatAutismus" span="full"> Autismus </svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="model.proxy.hatAOSF" span="full"> AOSF </svws-ui-checkbox>
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="model.proxy.hatZieldifferentenUnterricht" span="full"> Zieldifferentes Lernen </svws-ui-checkbox>
+						:readonly="!hatUpdateKompetenz" statistics />
+					<svws-ui-checkbox :readonly="!hatUpdateKompetenz" v-model="model.proxy.hatSchwerbehinderungsNachweis" statistics span="full">Schwerstbehinderung</svws-ui-checkbox>
+					<svws-ui-checkbox :readonly="!hatUpdateKompetenz" v-model="model.proxy.hatAutismus" span="full"> Autismus </svws-ui-checkbox>
+					<svws-ui-checkbox :readonly="!hatUpdateKompetenz" v-model="model.proxy.hatAOSF" span="full"> AOSF </svws-ui-checkbox>
+					<svws-ui-checkbox :readonly="!hatUpdateKompetenz" v-model="model.proxy.hatZieldifferentenUnterricht" span="full"> Zieldifferentes Lernen </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
