@@ -27,7 +27,7 @@ public final class PersonalTypConverter extends DBAttributeConverter<PersonalTyp
 
 	@Override
 	public String convertToDatabaseColumn(final PersonalTyp attribute) {
-		return attribute.kuerzel;
+		return (attribute == null) ? null : attribute.kuerzel;
 	}
 
 	@Override

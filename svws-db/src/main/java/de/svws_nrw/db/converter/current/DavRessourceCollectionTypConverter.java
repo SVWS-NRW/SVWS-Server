@@ -24,7 +24,7 @@ public final class DavRessourceCollectionTypConverter extends DBAttributeConvert
 
 	@Override
 	public Integer convertToDatabaseColumn(final DavRessourceCollectionTyp typ) {
-		return typ.id;
+		return (typ == null) ? null : typ.id;
 	}
 
 	@Override

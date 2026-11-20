@@ -23,12 +23,12 @@ public final class LehrerLeitungsfunktionConverter extends DBAttributeConverter<
 
 	@Override
 	public Integer convertToDatabaseColumn(final BenutzerTyp typ) {
-		return typ.id;
+		return (typ == null) ? null : typ.id;
 	}
 
 	@Override
 	public BenutzerTyp convertToEntityAttribute(final Integer dbData) {
-		return BenutzerTyp.getByID(dbData);
+		return (dbData == null) ? null : BenutzerTyp.getByID(dbData);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public final class OAuthServerModeConverter extends DBAttributeConverter<OAuthSe
 
 	@Override
 	public String convertToDatabaseColumn(final OAuthServerMode mode) {
-		return mode.getDbValue();
+		return (mode == null) ? null : mode.getDbValue();
 	}
 
 	@Override

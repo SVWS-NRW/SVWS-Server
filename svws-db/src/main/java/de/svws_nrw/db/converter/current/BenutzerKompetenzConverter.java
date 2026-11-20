@@ -24,12 +24,12 @@ public final class BenutzerKompetenzConverter extends DBAttributeConverter<Benut
 
 	@Override
 	public Long convertToDatabaseColumn(final BenutzerKompetenz kompetenz) {
-		return kompetenz.daten.id;
+		return (kompetenz == null) ? null : kompetenz.daten.id;
 	}
 
 	@Override
 	public BenutzerKompetenz convertToEntityAttribute(final Long dbData) {
-		return BenutzerKompetenz.getByID(dbData);
+		return (dbData == null) ? null : BenutzerKompetenz.getByID(dbData);
 	}
 
 	@Override

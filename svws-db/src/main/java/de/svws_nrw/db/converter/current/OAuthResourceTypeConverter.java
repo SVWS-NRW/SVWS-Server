@@ -12,7 +12,7 @@ public final class OAuthResourceTypeConverter extends DBAttributeConverter<OAuth
 
 	@Override
 	public String convertToDatabaseColumn(final OAuthResourceType type) {
-		return type.getDbValue();
+		return (type == null) ? null : type.getDbValue();
 	}
 
 	@Override

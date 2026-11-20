@@ -30,7 +30,7 @@ public final class GeschlechtConverterFromString extends DBAttributeConverter<Ge
 
 	@Override
 	public String convertToDatabaseColumn(final Geschlecht geschlecht) {
-		return "" + geschlecht.id;
+		return (geschlecht == null) ? null : ("" + geschlecht.id);
 	}
 
 	@Override
