@@ -25,7 +25,7 @@ import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 public final class GostKursBelegungService {
 
 	private static final Set<ZulaessigeKursart> SCHRIFTLICHE_GK_KURSARTEN_BIS_Q21 = Set.of(
-			ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.GKS);
+			ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.AB5, ZulaessigeKursart.GKS);
 	private static final Set<ZulaessigeKursart> SCHRIFTLICHE_GK_KURSARTEN_Q22 = Set.of(ZulaessigeKursart.AB3);
 	private static final Set<GostHalbjahr> GOST_HALBJAHRE_BIS_Q21 = EnumSet.of(
 			GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21);

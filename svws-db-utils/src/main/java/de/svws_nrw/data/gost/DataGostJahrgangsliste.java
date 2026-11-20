@@ -17,6 +17,7 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -242,8 +243,8 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 						continue;
 					}
 					final HashMap<Long, DTOGostSchuelerFachbelegungen> fachbelegungen = new HashMap<>();
-					final DTOGostSchuelerFachbelegungen[] abifach = new DTOGostSchuelerFachbelegungen[4];
-					final GostHalbjahr[] abifachHalbjahr = new GostHalbjahr[4];
+					final DTOGostSchuelerFachbelegungen[] abifach = new DTOGostSchuelerFachbelegungen[5];
+					final GostHalbjahr[] abifachHalbjahr = new GostHalbjahr[5];
 					for (final DTOSchuelerLernabschnittsdaten sla : slas) {
 						final List<DTOSchuelerLeistungsdaten> slds = mapLeistungsdaten.get(sla.ID);
 						if ((slds == null) || (slds.isEmpty())) {
@@ -271,7 +272,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 							// letzten Eintrag in den Halbjahren
 							try {
 								final int abifachNr = Integer.parseInt(sld.AbiFach);
-								if (((abifachNr > 0) && (abifachNr < 5))
+								if (((abifachNr > 0) && (abifachNr <= abifach.length))
 										&& ((abifachHalbjahr[abifachNr - 1] == null) || (abifachHalbjahr[abifachNr - 1].id < halbjahr.id))) {
 									abifach[abifachNr - 1] = fachbelegung;
 									abifachHalbjahr[abifachNr - 1] = halbjahr;
@@ -282,33 +283,33 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 							// Setze Fachwahl für das Halbjahr
 							switch (halbjahr) {
 								case EF1 -> {
-									fachbelegung.EF1_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.EF1_Kursart = getKursart(sld, halbjahr, abiturjahr);
 									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case EF2 -> {
-									fachbelegung.EF2_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.EF2_Kursart = getKursart(sld, halbjahr, abiturjahr);
 									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case Q11 -> {
-									fachbelegung.Q11_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q11_Kursart = getKursart(sld, halbjahr, abiturjahr);
 									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case Q12 -> {
-									fachbelegung.Q12_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q12_Kursart = getKursart(sld, halbjahr, abiturjahr);
 									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case Q21 -> {
-									fachbelegung.Q21_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q21_Kursart = getKursart(sld, halbjahr, abiturjahr);
 									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 								case Q22 -> {
-									fachbelegung.Q22_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q22_Kursart = getKursart(sld, halbjahr, abiturjahr);
 									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, schuljahresabschnitt.schuljahr);
 								}
 							}
 						}
 					}
-					for (int i = 1; i <= 4; i++) {
+					for (int i = 1; i <= abifach.length; i++) {
 						if (abifach[i - 1] != null) {
 							abifach[i - 1].AbiturFach = i;
 						}
@@ -349,27 +350,35 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		};
 	};
 
-	private final BiFunction<DTOSchuelerLeistungsdaten, GostHalbjahr, String> funcGetKursart =
-			(final DTOSchuelerLeistungsdaten sld, final GostHalbjahr halbjahr) -> {
-				final GostKursart kursart = GostKursart.fromKuerzel(sld.KursartAllg);
-				final ZulaessigeKursart zulkursart = ZulaessigeKursart.data().getWertByKuerzel(sld.Kursart);
-				if ((kursart == null) || (zulkursart == null)) {
-					return null;
-				}
-				if (((kursart == GostKursart.LK) || (kursart == GostKursart.GK)) && (Note.data().getWertByKuerzel(sld.NotenKrz) == Note.ATTEST)) {
-					return "AT";
-				}
-				return switch (kursart) {
-					case LK -> "LK";
-					case GK -> ((zulkursart == ZulaessigeKursart.GKS)
-							|| (zulkursart == ZulaessigeKursart.AB3)
-							|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr != GostHalbjahr.Q22))) ? "S"
-									: "M";
-					case ZK -> "ZK";
-					case PJK -> "M";
-					case VTF -> "M";
-				};
-			};
+	/**
+	 * Bestimmt aus den Leistungsdaten die Kursart der Fachwahl in der Laufbahnplanung.
+	 *
+	 * @param sld          die Leistungsdaten
+	 * @param halbjahr     das Halbjahr der gymnasialen Oberstufe
+	 * @param abiturjahr   der Abiturjahrgang
+	 *
+	 * @return die Kursart der Fachwahl (S, M, LK, ZK oder AT) oder null, wenn sie nicht bestimmt werden kann
+	 */
+	static String getKursart(final DTOSchuelerLeistungsdaten sld, final GostHalbjahr halbjahr, final int abiturjahr) {
+		final GostKursart kursart = GostKursart.fromKuerzel(sld.KursartAllg);
+		final ZulaessigeKursart zulkursart = ZulaessigeKursart.data().getWertByKuerzel(sld.Kursart);
+		if ((kursart == null) || (zulkursart == null)) {
+			return null;
+		}
+		if (((kursart == GostKursart.LK) || (kursart == GostKursart.GK)) && (Note.data().getWertByKuerzel(sld.NotenKrz) == Note.ATTEST)) {
+			return "AT";
+		}
+		return switch (kursart) {
+			case LK -> "LK";
+			case GK -> ((zulkursart == ZulaessigeKursart.GKS)
+					|| (zulkursart == ZulaessigeKursart.AB3)
+					|| (((zulkursart == ZulaessigeKursart.AB4) || (zulkursart == ZulaessigeKursart.AB5)) && (halbjahr != GostHalbjahr.Q22))) ? "S"
+							: "M";
+			case ZK -> "ZK";
+			case PJK -> AbiturdatenManager.istAbitur2030(abiturjahr) ? "S" : "M";
+			case VTF -> "M";
+		};
+	}
 
 
 	/**

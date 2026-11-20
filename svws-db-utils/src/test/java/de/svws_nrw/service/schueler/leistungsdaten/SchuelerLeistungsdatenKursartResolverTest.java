@@ -49,13 +49,14 @@ class SchuelerLeistungsdatenKursartResolverTest {
 				"E,   null, E,   null",
 				"G,   null, G,   null",
 				"DK,  null, G,   null",
-				// Grundkurse berücksichtigen das Abiturfach 3 und 4, die Abiturfächer 1 und 2 werden entfernt
+				// Grundkurse berücksichtigen die Abiturfächer 3 bis 5, die Abiturfächer 1 und 2 werden entfernt
 				"GK,  null, GKM, null",
 				"GK,  1,    GKM, null",
 				"GK,  2,    GKM, null",
 				"GK,  3,    AB3, 3",
 				"GK,  4,    AB4, 4",
-				"GK,  5,    GKM, 5",
+				// vor Einführung der Kursart AB5 (Schuljahr 2028/29) wird das schriftliche 5. Abiturfach als GKS eingetragen
+				"GK,  5,    GKS, 5",
 				// Leistungskurse berücksichtigen das Abiturfach 2, ohne Abiturfach wird 1 gesetzt
 				"LK,  null, LK1, 1",
 				"LK,  1,    LK1, 1",
@@ -80,6 +81,19 @@ class SchuelerLeistungsdatenKursartResolverTest {
 					.hasFieldOrPropertyWithValue("AbiFach", erwartetesAbifach)
 					.hasFieldOrPropertyWithValue("Kurs_ID", ID_KURS)
 					.hasFieldOrPropertyWithValue("Fachlehrer_ID", ID_KURSLEHRER);
+		}
+
+		@Test
+		@DisplayName("Grundkurs mit Abiturfach 5 ab dem Schuljahr 2028/29 - Kursart AB5")
+		void grundkursAbiturfach5() {
+			final var entity = createLeistungsdaten("alt", "5");
+
+			SchuelerLeistungsdatenKursartResolver.assignKurs(entity, createKurs("GK"), 2028);
+
+			assertThat(entity)
+					.hasFieldOrPropertyWithValue("Kursart", "AB5")
+					.hasFieldOrPropertyWithValue("KursartAllg", "GK")
+					.hasFieldOrPropertyWithValue("AbiFach", "5");
 		}
 
 		@Test

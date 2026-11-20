@@ -282,7 +282,16 @@ public class GostJahrgangFachwahlService {
 							}
 						}
 						case LK -> statfw.fachwahlen[halbjahr.id].wahlenLK++;
-						case PJK, VTF -> {
+						case PJK -> {
+							// ab dem Abitur 2030 ist ein Projektkurs schriftlich (Fachwahl S), davor mündlich
+							statfw.fachwahlen[halbjahr.id].wahlenGK++;
+							if (wahl.istSchriftlich) {
+								statfw.fachwahlen[halbjahr.id].wahlenGKSchriftlich++;
+							} else {
+								statfw.fachwahlen[halbjahr.id].wahlenGKMuendlich++;
+							}
+						}
+						case VTF -> {
 							statfw.fachwahlen[halbjahr.id].wahlenGK++;
 							statfw.fachwahlen[halbjahr.id].wahlenGKMuendlich++;
 						}

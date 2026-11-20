@@ -697,7 +697,7 @@ public class GostAbiturdatenService {
 		belegung.istSchriftlich = (kursart == GostKursart.LK)
 				|| ((kursart == GostKursart.GK) && (("GKS".equals(leistung.Kursart))
 						|| ("AB3".equals(leistung.Kursart))
-						|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))))
+						|| (("AB4".equals(leistung.Kursart) || "AB5".equals(leistung.Kursart)) && (halbjahr != GostHalbjahr.Q22))))
 				|| (AbiturdatenManager.istAbitur2030(abiturjahr) && (kursart == GostKursart.PJK));
 		belegung.bilingualeSprache = gostFach.biliSprache;
 		belegung.wochenstunden = (leistung.Wochenstunden == null)

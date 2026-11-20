@@ -14,6 +14,7 @@ final class SchuelerLeistungsdatenKursartResolver {
 	private static final String ABIFACH_2 = "2";
 	private static final String ABIFACH_3 = "3";
 	private static final String ABIFACH_4 = "4";
+	private static final String ABIFACH_5 = "5";
 
 	private SchuelerLeistungsdatenKursartResolver() {
 		// Nur statische Methoden
@@ -80,17 +81,21 @@ final class SchuelerLeistungsdatenKursartResolver {
 		if (ABIFACH_1.equals(entity.AbiFach) || ABIFACH_2.equals(entity.AbiFach)) {
 			entity.AbiFach = null;
 		}
-		final var kursart = determineGrundkursartByAbifach(entity.AbiFach);
+		final var kursart = determineGrundkursartByAbifach(entity.AbiFach, schuljahr);
 
 		return kursart.daten(schuljahr).kuerzel;
 	}
 
-	private static ZulaessigeKursart determineGrundkursartByAbifach(final String abifach) {
+	private static ZulaessigeKursart determineGrundkursartByAbifach(final String abifach, final int schuljahr) {
 		if (ABIFACH_3.equals(abifach)) {
 			return ZulaessigeKursart.AB3;
 		}
 		if (ABIFACH_4.equals(abifach)) {
 			return ZulaessigeKursart.AB4;
+		}
+		// Das 5. Abiturfach ist als Grundkurs schriftlich, die Kursart AB5 gibt es erst ab dem Schuljahr 2028/29
+		if (ABIFACH_5.equals(abifach)) {
+			return (ZulaessigeKursart.AB5.daten(schuljahr) == null) ? ZulaessigeKursart.GKS : ZulaessigeKursart.AB5;
 		}
 
 		return ZulaessigeKursart.GKM;

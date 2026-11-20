@@ -24,10 +24,10 @@ public class ReportingGostFachwahlstatistikHalbjahr extends ReportingBaseType {
 	/** Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs. */
 	protected int wahlenGK;
 
-	/** Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs. */
+	/** Die Anzahl der Wahlen als mündlicher Grundkurs, Vertiefungskurs oder Projektkurs (vor dem Abitur 2030). */
 	protected int wahlenGKMuendlich;
 
-	/** Die Anzahl der Wahlen als schriftlicher Grundkurs. */
+	/** Die Anzahl der Wahlen als schriftlicher Grundkurs oder Projektkurs (ab dem Abitur 2030). */
 	protected int wahlenGKSchriftlich;
 
 	/** Die Anzahl der Wahlen als drittes Abiturfach. */
@@ -54,8 +54,8 @@ public class ReportingGostFachwahlstatistikHalbjahr extends ReportingBaseType {
 	 * @param gostHalbjahr Das Halbjahr der GOSt, dem diese Fachwahlstatistik zugeordnet ist.
 	 * @param wahlenLK Die Gesamtzahl der Wahlen als Leistungskurs.
 	 * @param wahlenGK Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs.
-	 * @param wahlenGKMuendlich Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs.
-	 * @param wahlenGKSchriftlich Die Anzahl der Wahlen als schriftlicher Grundkurs.
+	 * @param wahlenGKMuendlich Die Anzahl der Wahlen als mündlicher Grundkurs, Vertiefungskurs oder Projektkurs (vor dem Abitur 2030).
+	 * @param wahlenGKSchriftlich Die Anzahl der Wahlen als schriftlicher Grundkurs oder Projektkurs (ab dem Abitur 2030).
 	 * @param wahlenAB3 Die Anzahl der Wahlen als drittes Abiturfach.
 	 * @param wahlenAB4 Die Anzahl der Wahlen als viertes Abiturfach.
 	 * @param wahlenZK Die Anzahl der Wahlen als Zusatzkurs.
@@ -130,7 +130,7 @@ public class ReportingGostFachwahlstatistikHalbjahr extends ReportingBaseType {
 	}
 
 	/**
-	 * Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs.
+	 * Die Anzahl der Wahlen als mündlicher Grundkurs, Vertiefungskurs oder Projektkurs (vor dem Abitur 2030).
 	 *
 	 * @return Inhalt des Feldes wahlenGKMuendlich
 	 */
@@ -139,7 +139,7 @@ public class ReportingGostFachwahlstatistikHalbjahr extends ReportingBaseType {
 	}
 
 	/**
-	 * Die Anzahl der Wahlen als schriftlicher Grundkurs.
+	 * Die Anzahl der Wahlen als schriftlicher Grundkurs oder Projektkurs (ab dem Abitur 2030).
 	 *
 	 * @return Inhalt des Feldes wahlenGKSchriftlich
 	 */

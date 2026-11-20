@@ -26,7 +26,7 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	/**
 	 * Grundkurs = GK
 	 */
-	public static readonly GK: GostKursart = new GostKursart("GK", 1, 2, "GK", "Grundkurs", Arrays.asList(ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.EFSP));
+	public static readonly GK: GostKursart = new GostKursart("GK", 1, 2, "GK", "Grundkurs", Arrays.asList(ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.AB5, ZulaessigeKursart.EFSP));
 
 	/**
 	 * Zusatzkurs = ZK
