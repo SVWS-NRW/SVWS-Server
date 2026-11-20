@@ -4,6 +4,8 @@ import de.svws_nrw.controller.schueler.create.SchuelerCreateController;
 import de.svws_nrw.controller.schueler.create.SchuelerCreateControllerImpl;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungControllerImpl;
+import de.svws_nrw.controller.schueler.kaoa.SchuelerKAoAController;
+import de.svws_nrw.controller.schueler.kaoa.SchuelerKAoAControllerImpl;
 import de.svws_nrw.controller.schueler.leistungsdaten.SchuelerLeistungsdatenController;
 import de.svws_nrw.controller.schueler.leistungsdaten.SchuelerLeistungsdatenControllerImpl;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
@@ -137,6 +139,19 @@ public final class SchuelerControllerFactory {
 	}
 
 	/**
+	 * Erstellt eine Factory-Instanz mit Schreibberechtigung für KAoA-Daten.
+	 * <p>
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN}.
+	 * </p>
+	 *
+	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 * @return eine SchuelerControllerFactory-Instanz mit Schreibberechtigung für KAoA-Daten
+	 */
+	public static SchuelerControllerFactory withKAoAWriteAccess(final HttpServletRequest request) {
+		return getNewInstance(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN);
+	}
+
+	/**
 	 * Erstellt eine neue BisherigeSchulenController-Instanz.
 	 *
 	 * @return ein neuer BisherigeSchulenController mit dem konfigurierten BisherigeSchulenService
@@ -206,6 +221,15 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerEinwilligungController getSchuelerEinwilligungController() {
 		return new SchuelerEinwilligungControllerImpl(schuelerServiceFactory.getSchuelerEinwilligungService());
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerKAoAController}.
+	 *
+	 * @return ein neuer {@code SchuelerKAoAController} mit dem konfigurierten Service
+	 */
+	public SchuelerKAoAController getSchuelerKAoAController() {
+		return new SchuelerKAoAControllerImpl(schuelerServiceFactory.getSchuelerKAoAService());
 	}
 
 	/**

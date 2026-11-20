@@ -6,6 +6,7 @@ import de.svws_nrw.mapper.gost.GostJahrgangMapper;
 import de.svws_nrw.mapper.schueler.SchuelerListeEintragMapper;
 import de.svws_nrw.mapper.schueler.einwilligung.SchuelerEinwilligungMapper;
 import de.svws_nrw.mapper.schueler.foto.SchuelerFotoMapper;
+import de.svws_nrw.mapper.schueler.kaoa.SchuelerKAoAMapper;
 import de.svws_nrw.mapper.schueler.leistungsdaten.SchuelerLeistungsdatenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittBemerkungenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdatenMapper;
@@ -30,6 +31,7 @@ import de.svws_nrw.service.kurse.KursServiceFactory;
 import de.svws_nrw.service.schueler.create.SchuelerCreateService;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
+import de.svws_nrw.service.schueler.kaoa.SchuelerKAoAService;
 import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenRepositories;
 import de.svws_nrw.service.schueler.leistungsdaten.SchuelerLeistungsdatenService;
 import de.svws_nrw.service.schueler.liste.SchuelerListeEintragService;
@@ -347,6 +349,21 @@ public final class SchuelerServiceFactory {
 				katalogRepositoryFactory.getLernplattformRepository(),
 				katalogRepositoryFactory.getLernplattformCredentialRepository(),
 				SchuelerLernplattformMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerKAoAService}.
+	 *
+	 * @return ein neuer {@code SchuelerKAoAService} mit allen erforderlichen Abhängigkeiten
+	 */
+	public SchuelerKAoAService getSchuelerKAoAService() {
+		return new SchuelerKAoAService(
+				schuelerRepositoryFactory.getSchuelerKAoARepository(),
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
+				eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
+				SchuelerKAoAMapper.INSTANCE
 		);
 	}
 

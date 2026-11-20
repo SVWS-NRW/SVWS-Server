@@ -13702,7 +13702,9 @@ export class ApiServer extends BaseApi {
 	 * Ändert einen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die KAOADaten des Schülers wurden erfolgreich gepatcht
+	 *   Code 200: Die aktualisierten KAOADaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerKAoADaten
 	 *   Code 400: Fehler bei der Datenvalidierung
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
 	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
@@ -13713,14 +13715,18 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} skid - der Pfad-Parameter skid
+	 *
+	 * @returns Die aktualisierten KAOADaten des Schülers
 	 */
-	public async patchKAoADaten(data: Partial<SchuelerKAoADaten>, schema: string, id: number, skid: number): Promise<void> {
+	public async patchKAoADaten(data: Partial<SchuelerKAoADaten>, schema: string, id: number, skid: number): Promise<SchuelerKAoADaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
 		const body: string = SchuelerKAoADaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return SchuelerKAoADaten.transpilerFromJSON(text);
 	}
 
 
@@ -13730,21 +13736,26 @@ export class ApiServer extends BaseApi {
 	 * Löscht einen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die KAOADaten des Schülers wurden gelöscht
+	 *   Code 200: Die KAOADaten des Schülers wurden gelöscht
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
 	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} skid - der Pfad-Parameter skid
+	 *
+	 * @returns Die KAOADaten des Schülers wurden gelöscht
 	 */
-	public async deleteKAoAdaten(schema: string, id: number, skid: number): Promise<void> {
+	public async deleteKAoAdaten(schema: string, id: number, skid: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
-		await super.deleteJSON(path, null);
-		return;
+		const result: string = await super.deleteJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -13757,6 +13768,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 201: Die KAOADaten des Schülers
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SchuelerKAoADaten
+	 *   Code 400: Fehler bei der Datenvalidierung
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
 	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
 	 *

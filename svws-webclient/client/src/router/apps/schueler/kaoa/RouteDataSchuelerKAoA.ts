@@ -50,10 +50,10 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 	};
 
 	patch = async (data: Partial<SchuelerKAoADaten>, idKaoaEntry: number): Promise<boolean> => {
-		await api.server.patchKAoADaten(data, api.schema, this.auswahl.id, idKaoaEntry);
+		const result = await api.server.patchKAoADaten(data, api.schema, this.auswahl.id, idKaoaEntry);
 		const kaoaDaten = this.manager.kAoADatenById.get(idKaoaEntry);
 		if (kaoaDaten !== null) {
-			Object.assign(kaoaDaten, data);
+			Object.assign(kaoaDaten, result);
 		}
 		this.commit();
 		return true;

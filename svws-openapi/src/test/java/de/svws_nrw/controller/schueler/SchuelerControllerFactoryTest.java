@@ -2,6 +2,7 @@ package de.svws_nrw.controller.schueler;
 
 import de.svws_nrw.controller.schueler.create.SchuelerCreateController;
 import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
+import de.svws_nrw.controller.schueler.kaoa.SchuelerKAoAController;
 import de.svws_nrw.controller.schueler.leistungsdaten.SchuelerLeistungsdatenController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
@@ -166,6 +167,26 @@ class SchuelerControllerFactoryTest {
 		assertNotNull(factory);
 
 		final SchuelerEinwilligungController controller = factory.getSchuelerEinwilligungController();
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("withKAoAWriteAccess | DBBenutzerUtils wird mit SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN aufgerufen")
+	void withKAoAWriteAccess() {
+		final var factory = SchuelerControllerFactory.withKAoAWriteAccess(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), any(ServerMode.class), eq(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
+	@DisplayName("withKAoAWriteAccess | getSchuelerKAoAController gibt einen Controller zurück")
+	void getSchuelerKAoAController() {
+		final var factory = SchuelerControllerFactory.withKAoAWriteAccess(request);
+
+		final SchuelerKAoAController controller = factory.getSchuelerKAoAController();
+
 		assertNotNull(controller);
 	}
 

@@ -5,6 +5,7 @@ import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerKAoADaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
@@ -35,6 +36,8 @@ import de.svws_nrw.repo.schueler.einwilligung.SchuelerEinwilligungRepository;
 import de.svws_nrw.repo.schueler.einwilligung.SchuelerEinwilligungRepositoryImpl;
 import de.svws_nrw.repo.schueler.foto.SchuelerFotoRepository;
 import de.svws_nrw.repo.schueler.foto.SchuelerFotoRepositoryImpl;
+import de.svws_nrw.repo.schueler.kaoa.SchuelerKAoARepository;
+import de.svws_nrw.repo.schueler.kaoa.SchuelerKAoARepositoryImpl;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepositoryImpl;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepository;
@@ -278,6 +281,15 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerMerkmalRepository getSchuelerMerkmaleRepository() {
 		return this.getOrCreate(SchuelerMerkmalRepository.class, () -> new SchuelerMerkmalRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerKAoADaten}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerKAoARepository getSchuelerKAoARepository() {
+		return this.getOrCreate(SchuelerKAoARepository.class, () -> new SchuelerKAoARepositoryImpl(this.conn));
 	}
 
 	/**

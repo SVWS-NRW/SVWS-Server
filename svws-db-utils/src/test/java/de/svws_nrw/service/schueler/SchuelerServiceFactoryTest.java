@@ -23,6 +23,7 @@ import de.svws_nrw.repo.kurse.KurseRepository;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schueler.kaoa.SchuelerKAoARepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.einwilligung.SchuelerEinwilligungRepository;
@@ -136,6 +137,27 @@ class SchuelerServiceFactoryTest {
 		verify(schuelerRepositoryFactory).getSchuelerEinwilligungRepository();
 		verify(schuelerRepositoryFactory).getSchuelerRepository();
 		verify(katalogRepositoryFactory).getEinwilligungsartRepository();
+	}
+
+	@Test
+	@DisplayName("getSchuelerKAoAService | Erstellt den Service und ruft alle benötigten Repositories und Services ab")
+	void getSchuelerKAoAService_success() {
+		final var kaoaRepository = mock(SchuelerKAoARepository.class);
+		final var schuelerRepository = mock(SchuelerRepository.class);
+		final var lernabschnittRepository = mock(SchuelerLernabschnittRepository.class);
+		final var schuljahresabschnittService = mock(SchuljahresabschnittService.class);
+		when(schuelerRepositoryFactory.getSchuelerKAoARepository()).thenReturn(kaoaRepository);
+		when(schuelerRepositoryFactory.getSchuelerRepository()).thenReturn(schuelerRepository);
+		when(schuelerRepositoryFactory.getSchuelerLernabschnittRepository()).thenReturn(lernabschnittRepository);
+		when(eigeneSchuleServiceFactory.getSchuljahresabschnittService()).thenReturn(schuljahresabschnittService);
+
+		final var service = factory.getSchuelerKAoAService();
+
+		assertThat(service).isNotNull();
+		verify(schuelerRepositoryFactory).getSchuelerKAoARepository();
+		verify(schuelerRepositoryFactory).getSchuelerRepository();
+		verify(schuelerRepositoryFactory).getSchuelerLernabschnittRepository();
+		verify(eigeneSchuleServiceFactory).getSchuljahresabschnittService();
 	}
 
 	@Test
