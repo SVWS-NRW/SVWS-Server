@@ -34,8 +34,8 @@ class Config {
     // Gibt an, ob die Anwendung im Debug-Modus betrieben wird oder nicht
     protected bool $debugMode = false;
 
-    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 5 min)
-    protected int $lifetimeAccessToken = 300;
+    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 10 min)
+    protected int $lifetimeAccessToken = 600;
 
     // Das Zeitfenster, in welchem ein Access-Token vor Ablauf gültig ist, um ein Refresh zu triggern (Default: 30 sec)
     protected int $lifetimeAccessTokenRefreshWindow = 30;

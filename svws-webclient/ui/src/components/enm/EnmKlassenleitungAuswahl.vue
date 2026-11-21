@@ -17,8 +17,9 @@
 
 <script setup lang="ts">
 
-	import { computed, onBeforeMount, ref } from 'vue';
+	import { computed, ref, watch } from 'vue';
 
+	import { ENMLehrerFunktion } from '@core/core/data/enm/ENMLehrerFunktion';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
@@ -32,15 +33,37 @@
 
 	const columns = [{ key: "kuerzelAnzeige", label: "Klasse" }];
 
-	onBeforeMount(() => props.setAuswahlEinzel(getFirst()));
+	const klassenAuswahl = computed(() => {
+		const manager = props.enmManager();
+		const klassen: ENMv2Klasse[] = [];
+		for (const klasse of manager.listKlassenKlassenlehrer) {
+			if ((manager.lehrerFunktion !== ENMLehrerFunktion.KLASSENLEITUNG) || manager.klasseIstKlassenleitung(klasse.id)) {
+				klassen.push(klasse);
+			}
+		}
+		return klassen;
+	});
+
+	watch(klassenAuswahl, (klassen) => {
+		const ids = new Set(klassen.map(klasse => klasse.id));
+		const auswahlEinzel = props.auswahlEinzel();
+		const auswahlMehrfach = props.auswahlMehrfach();
+		const einzelIstZulaessig = (auswahlEinzel !== null) && ids.has(auswahlEinzel.id);
+		const mehrfachIstZulaessig = auswahlMehrfach.every(klasse => ids.has(klasse.id));
+		if (einzelIstZulaessig || ((auswahlMehrfach.length > 0) && mehrfachIstZulaessig)) {
+			return;
+		}
+		props.setAuswahlMehrfach([]);
+		props.setAuswahlEinzel(klassen[0] ?? null);
+	}, { immediate: true });
 
 	const rowsFiltered = computed<Iterable<ENMv2Klasse>>(() => {
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
 		if (searchValueLowerCase === "") {
-			return props.enmManager().listKlassenKlassenlehrer;
+			return klassenAuswahl.value;
 		}
 		const list = new ArrayList<ENMv2Klasse>();
-		for (const e of props.enmManager().listKlassenKlassenlehrer) {
+		for (const e of klassenAuswahl.value) {
 			if (((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(searchValueLowerCase))
 				|| (e.kuerzelAnzeige !== null && e.kuerzelAnzeige.toLocaleLowerCase().includes(searchValueLowerCase))) {
 				list.add(e);
@@ -50,11 +73,7 @@
 	});
 
 	function getFirst(): ENMv2Klasse | null {
-		const list = props.enmManager().listKlassenKlassenlehrer;
-		if (list.isEmpty()) {
-			return null;
-		}
-		return list.getFirst();
+		return klassenAuswahl.value[0] ?? null;
 	}
 
 	function setMehrfachauswahl(items: Array<ENMv2Klasse>) {

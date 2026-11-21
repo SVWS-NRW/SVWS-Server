@@ -30,12 +30,14 @@
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name !== 'einstellungen'">
-							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)" @keydown.enter="startSetApp(item)">
+							<svws-ui-menu-item :active="is_active(item)" :disabled="isAppDisabled(item)" @click="startSetApp(item)" @keydown.enter="startSetApp(item)">
 								<template #icon>
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'leistungen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'teilleistungen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'ankreuzkompetenzen'" />
 									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'klassenleitung'" />
+									<span class="inline-block icon-lg i-ri-book-2-line" v-if="item.name === 'schuelerfaecher'" />
+									<span class="inline-block icon-lg i-ri-presentation-line" v-if="item.name === 'konferenzuebersicht'" />
 								</template>
 								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
 							</svws-ui-menu-item>
@@ -178,6 +180,28 @@
 		return true;
 	}
 
+	function isAppDisabled(item: TabData): boolean {
+		if (item.name === 'klassenleitung') {
+			const manager = props.enmManager();
+			for (const klasse of manager.listKlassenKlassenlehrer) {
+				if (manager.klasseIstKlassenleitung(klasse.id)) {
+					return false;
+				}
+			}
+			return true;
+		}
+		if (item.name !== 'schuelerfaecher' && item.name !== 'konferenzuebersicht') {
+			return false;
+		}
+		const manager = props.enmManager();
+		for (const klasse of manager.listKlassenKlassenlehrer) {
+			if (manager.klasseIstKlassenleitung(klasse.id) || manager.klasseIstAbteilungsleitung(klasse.id)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	const hideAuswahlliste = new Set<string>(["statistik"]);
 
 	function showAuswahlliste(): boolean {
@@ -185,6 +209,9 @@
 	}
 
 	async function startSetApp(app: TabData) {
+		if (isAppDisabled(app)) {
+			return;
+		}
 		pendingSetApp.value = app.text;
 		await props.setApp(app);
 		pendingSetApp.value = '';
