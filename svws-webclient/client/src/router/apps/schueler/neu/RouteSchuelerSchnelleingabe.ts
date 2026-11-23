@@ -8,7 +8,6 @@ import { ViewType } from "@ui/ui/nav/ViewType";
 import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps";
 import { RouteDataSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteDataSchuelerSchnelleingabe";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
 
 const SchuelerSchnelleingabe = () => import("~/components/schueler/neuanlage/SchuelerSchnelleingabe.vue");
@@ -31,16 +30,11 @@ export class RouteSchuelerSchnelleingabe extends RouteNode<RouteDataSchuelerSchn
 	public getProps(to: RouteLocationNormalized): SchuelerSchnelleingabeProps {
 		return {
 			manager: () => this.data.manager,
-			patchSchueler: routeSchuelerSchnelleingabe.data.patchSchueler,
 			getErzieher: () => routeSchuelerSchnelleingabe.data.getErzieher,
 			addErzieher: routeSchuelerSchnelleingabe.data.addErzieher,
 			patchErzieher: routeSchuelerSchnelleingabe.data.patchErzieher,
 			patchErzieherAnPosition: routeSchuelerSchnelleingabe.data.patchErzieherAnPosition,
 			deleteErzieher: routeSchuelerSchnelleingabe.data.deleteErzieher,
-			getTelefone: () => routeSchuelerSchnelleingabe.data.getTelefone,
-			addTelefon: routeSchuelerSchnelleingabe.data.addTelefon,
-			patchTelefon: routeSchuelerSchnelleingabe.data.patchTelefon,
-			deleteTelefone: routeSchuelerSchnelleingabe.data.deleteTelefone,
 			getVermerke: () => routeSchuelerSchnelleingabe.data.getVermerke,
 			addVermerk: routeSchuelerSchnelleingabe.data.addVermerk,
 			patchVermerk: routeSchuelerSchnelleingabe.data.patchVermerk,

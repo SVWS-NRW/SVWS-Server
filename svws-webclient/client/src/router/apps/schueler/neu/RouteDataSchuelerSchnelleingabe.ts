@@ -1,8 +1,6 @@
 import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
-import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
-import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
@@ -18,14 +16,12 @@ interface RouteStateDataSchuelerSchnelleingabe extends RouteStateInterface {
 	manager: SchuelerSchnelleingabeManager | undefined;
 	erzieher: List<ErzieherStammdaten>;
 	vermerke: List<SchuelerVermerke>;
-	telefone: List<SchuelerTelefon>;
 }
 
 const defaultState = <RouteStateDataSchuelerSchnelleingabe> {
 	manager: undefined,
 	erzieher: new ArrayList(),
 	vermerke: new ArrayList(),
-	telefone: new ArrayList(),
 };
 
 export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSchuelerSchnelleingabe> {
@@ -68,14 +64,12 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 	}
 
 	private async createListen(idSchueler: number) {
-		const [telefone, erzieher, vermerke] = await Promise.all([
-			api.server.getSchuelerTelefone(api.schema, idSchueler),
+		const [erzieher, vermerke] = await Promise.all([
 			api.server.getSchuelerErzieher(api.schema, idSchueler),
 			api.server.getVermerkdaten(api.schema, idSchueler),
 		]);
 
 		this._state.value.erzieher = erzieher;
-		this._state.value.telefone = telefone;
 		this._state.value.vermerke = vermerke;
 	}
 
@@ -98,19 +92,23 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		return this._state.value.manager;
 	}
 
-	patchSchueler = async (data: Partial<SchuelerStammdaten>, id: number): Promise<void> => {
-		await api.server.patchSchuelerStammdaten(data, api.schema, id);
-		this.commit();
-	};
-
-	patchLernabschnittsdaten = async (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number): Promise<void> => {
+	patchLernabschnittsdaten = async (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number): Promise<boolean> => {
 		await api.server.patchSchuelerLernabschnittsdaten(data, api.schema, idEintrag);
+		Object.assign(this.manager.lernabschnittsdaten, data);
+		if (data.klassenID !== undefined) {
+			// Die Klasse steht auch im Eintrag der Schülerliste und muss dort nachgezogen werden
+			const idKlasse = data.klassenID ?? -1;
+			useSchuelerAuswahlState().updateEntry(this.manager.stammdaten.id, eintrag => eintrag.idKlasse = idKlasse);
+		}
 		this.commit();
+		return true;
 	};
 
-	patchSchulbesuchsdaten = async (data: Partial<SchuelerSchulbesuchsdaten>, idEintrag: number): Promise<void> => {
+	patchSchulbesuchsdaten = async (data: Partial<SchuelerSchulbesuchsdaten>, idEintrag: number): Promise<boolean> => {
 		await api.server.patchSchuelerSchulbesuch(data, api.schema, idEintrag);
+		Object.assign(this.manager.schulbesuchsdaten, data);
 		this.commit();
+		return true;
 	};
 
 	// --- Erzieher ---
@@ -121,19 +119,20 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		return list;
 	}
 
-	addErzieher = async (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number): Promise<ErzieherStammdaten> => {
-		const result = await api.server.addSchuelerErzieher(data, api.schema, idEintrag, pos);
+	addErzieher = async (data: Partial<ErzieherStammdaten>, pos: number): Promise<ErzieherStammdaten> => {
+		const idSchueler = this.manager.stammdaten.id;
+		const result = await api.server.addSchuelerErzieher(data, api.schema, idSchueler, pos);
 		const erzieher = this.getErzieher;
 		erzieher.add(result);
 		this.setPatchedState({ erzieher });
 		return result;
 	};
 
-	patchErzieher = async (data: Partial<ErzieherStammdaten>, idEintrag: number): Promise<boolean> => {
-		await api.server.patchErzieherStammdaten(data, api.schema, idEintrag);
+	patchErzieher = async (data: Partial<ErzieherStammdaten>, id: number): Promise<boolean> => {
+		await api.server.patchErzieherStammdaten(data, api.schema, id);
 		const erzieher = this.getErzieher;
 		for (const e of erzieher) {
-			if (e.id === idEintrag) {
+			if (e.id === id) {
 				Object.assign(e, data);
 				break;
 			}
@@ -142,14 +141,15 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		return true;
 	};
 
-	patchErzieherAnPosition = async (data: Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number): Promise<boolean> => {
-		await api.server.patchErzieherStammdatenZweitePosition(data, api.schema, idEintrag, pos);
+	patchErzieherAnPosition = async (data: Partial<ErzieherStammdaten>, id: number, pos: number): Promise<boolean> => {
+		const idSchueler = this.manager.stammdaten.id;
+		await api.server.patchErzieherStammdatenZweitePosition(data, api.schema, id, pos);
 		const erzieher = await api.server.getSchuelerErzieher(api.schema, idSchueler);
 		this.setPatchedState({ erzieher });
 		return true;
 	};
 
-	deleteErzieher = async (ids: List<number>): Promise<void> => {
+	deleteErzieher = async (ids: List<number>): Promise<boolean> => {
 		await api.server.deleteErzieherStammdaten(ids, api.schema);
 		const erzieher = this.getErzieher;
 		for (const id of ids) {
@@ -162,6 +162,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			}
 		}
 		this.setPatchedState({ erzieher });
+		return true;
 	};
 
 	// --- Vermerke ---
@@ -179,7 +180,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		this.setPatchedState({ vermerke });
 	};
 
-	patchVermerk = async (data: Partial<SchuelerVermerke>, idEintrag: number): Promise<void> => {
+	patchVermerk = async (data: Partial<SchuelerVermerke>, idEintrag: number): Promise<boolean> => {
 		await api.server.patchSchuelerVermerke(data, api.schema, idEintrag);
 		const vermerke = this.getVermerke;
 		for (const l of vermerke) {
@@ -189,6 +190,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			}
 		}
 		this.setPatchedState({ vermerke });
+		return true;
 	};
 
 	deleteVermerke = async (idsEintraege: List<number>): Promise<void> => {
@@ -204,48 +206,6 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			}
 		}
 		this.setPatchedState({ vermerke });
-	};
-
-	// --- Telefone ---
-
-	get getTelefone(): List<SchuelerTelefon> {
-		const list = new ArrayList<SchuelerTelefon>();
-		list.addAll(this._state.value.telefone);
-		return list;
-	}
-
-	addTelefon = async (data: Partial<SchuelerTelefon>, idSchueler: number): Promise<void> => {
-		const result = await api.server.addSchuelerTelefon(data, api.schema, idSchueler);
-		const telefone = this.getTelefone;
-		telefone.add(result);
-		this.setPatchedState({ telefone });
-	};
-
-	patchTelefon = async (data: Partial<SchuelerTelefon>, idEintrag: number): Promise<void> => {
-		await api.server.patchSchuelerTelefon(data, api.schema, idEintrag);
-		const telefone = this.getTelefone;
-		for (const l of telefone) {
-			if (l.id === idEintrag) {
-				Object.assign(l, data);
-				break;
-			}
-		}
-		this.setPatchedState({ telefone });
-	};
-
-	deleteTelefone = async (idsEintraege: List<number>): Promise<void> => {
-		await api.server.deleteSchuelerTelefone(idsEintraege, api.schema);
-		const telefone = this.getTelefone;
-		for (const id of idsEintraege) {
-			for (let i = 0; i < telefone.size(); i++) {
-				const eintrag = telefone.get(i);
-				if (eintrag.id === id) {
-					telefone.removeElementAt(i);
-					break;
-				}
-			}
-		}
-		this.setPatchedState({ telefone });
 	};
 
 }

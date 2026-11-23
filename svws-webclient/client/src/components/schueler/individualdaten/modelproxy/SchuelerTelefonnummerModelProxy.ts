@@ -37,6 +37,7 @@ export class SchuelerTelefonnummerModelProxy extends ModelProxy<SchuelerTelefon>
 
 		// Bemerkung
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bemerkung, null, 50), "bemerkung");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bemerkung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "bemerkung");
 	}
 
 	public telefonart = computed<Telefonart | null>({

@@ -51,7 +51,8 @@ export class SchuelerIndividualdatenModelProxy extends ModelProxy<SchuelerStammd
 		data: () => SchuelerStammdaten,
 		validatorKontext: () => ValidatorKontext,
 		schuljahr: () => number,
-		patch?: (data: Partial<SchuelerStammdaten>) => Promise<boolean>
+		patch?: (data: Partial<SchuelerStammdaten>) => Promise<boolean>,
+		listOfDisabledPropValidations: Iterable<keyof SchuelerStammdaten> = []
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerStammdaten> = ["geschlecht", "status", "fahrschuelerArtID",
 			"haltestelleID", "idStaatsangehoerigkeit", "idStaatsangehoerigkeit2", "religionID", "idGeburtsland",
@@ -59,7 +60,7 @@ export class SchuelerIndividualdatenModelProxy extends ModelProxy<SchuelerStammd
 			"keineAuskunftAnDritte", "istSchulpflichtErfuellt", "istBerufsschulpflichtErfuellt", "hatMasernimpfnachweis",
 			"erhaeltSchuelerBAFOEG", "druckeKonfessionAufZeugnisse", "hatMigrationshintergrund", "externeSchulNr", "istJva",
 		];
-		super({ data, patch, listOfAutopatchProps });
+		super({ data, patch, listOfAutopatchProps, listOfDisabledPropValidations });
 
 		this.schuljahr = schuljahr;
 		this.addAsdValidatoren(validatorKontext());

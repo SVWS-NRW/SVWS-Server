@@ -23,7 +23,7 @@
 						<ui-select label="Vermerkart"
 							v-model="vermerkModel.vermerkart.value"
 							:manager="vermerkartenManager"
-							:readonly />
+							:readonly :removable="false" />
 						<div class="w-full flex justify-between">
 							<div>
 								<p class="text-headline-md my-1">{{ vermerkModel.proxy.angelegtVon }}</p>
@@ -104,7 +104,9 @@
 		(vermerk) => vermerk.id,
 		(vermerk) => new SchuelerVermerkeModelProxy(
 			() => vermerk,
-			(data) => props.patch(data, vermerk.id)
+			true,
+			(data) => props.patch(data, vermerk.id),
+			["idVermerkart"]
 		)
 	);
 

@@ -47,7 +47,7 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.titel, null, 10), "titel");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.titel, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "titel");
 
-		// Name
+		// Nachname
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.nachname), "nachname");
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.nachname, null, 120), "nachname");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.nachname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "nachname");
@@ -59,7 +59,6 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 
 		// E-Mail
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.eMail, null, 100), "eMail");
-		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.eMail, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "eMail");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.eMail, StringPattern.IS_EMAIL), "eMail");
 
 		// Adresse

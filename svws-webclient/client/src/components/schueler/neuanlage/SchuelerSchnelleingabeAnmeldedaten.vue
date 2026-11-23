@@ -2,9 +2,11 @@
 	<svws-ui-content-card title="Anmeldedaten" class="col-span-full">
 		<svws-ui-input-wrapper :grid="4">
 			<ui-select label="Status"
-				v-model="status"
+				v-model="stammdatenModel.status.value"
 				:manager="statusManager"
-				:removable="false" />
+				:validation="() => stammdatenModel.getFehler('status')"
+				:removable="false" required
+				:readonly />
 			<svws-ui-text-input placeholder="Schuljahresabschnitt"
 				:model-value="schuljahresabschnitt"
 				readonly required />
@@ -12,29 +14,30 @@
 				:model-value="jahrgang"
 				readonly required />
 			<ui-select label="Klasse"
-				v-model="klasse"
+				v-model="lernabschnittModel.klasse.value"
 				:manager="klassenManager"
-				searchable />
+				searchable
+				:readonly />
 			<svws-ui-spacing />
 			<ui-select label="Einschulungsart" v-if="schulenMitPrimaerstufe"
-				v-model="einschulungsart"
+				v-model="schulbesuchModel.idEinschulungsartGrundschule.value"
 				:manager="einschulungsartManager"
-				:removable="false" />
+				:readonly />
 			<svws-ui-text-input placeholder="Anmeldedatum" type="date"
-				:model-value="manager().stammdaten.anmeldedatum"
-				@change="patchAnmeldedatum"
+				v-model="stammdatenModel.proxy.anmeldedatum"
+				@change="stammdatenModel.patch"
 				:readonly />
 			<svws-ui-text-input placeholder="Aufnahmedatum" type="date"
-				:model-value="manager().stammdaten.aufnahmedatum"
-				@change="patchAufnahmedatum"
+				v-model="stammdatenModel.proxy.aufnahmedatum"
+				@change="stammdatenModel.patch"
 				:readonly />
 			<svws-ui-text-input placeholder="Beginn Bildungsgang" type="date" v-if="schulenMitBKoderSK"
-				:model-value="manager().stammdaten.beginnBildungsgang"
-				@change="patchBeginnBildungsgang"
+				v-model="stammdatenModel.proxy.beginnBildungsgang"
+				@change="stammdatenModel.patch"
 				:readonly />
 			<svws-ui-input-number placeholder="Dauer Bildungsgang" v-if="schulenMitBKoderSK"
-				:model-value="manager().stammdaten.dauerBildungsgang"
-				@change="dauerBildungsgang => patchSchueler({ dauerBildungsgang }, manager().stammdaten.id)"
+				v-model="stammdatenModel.proxy.dauerBildungsgang"
+				@change="stammdatenModel.patch"
 				:readonly />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
@@ -44,12 +47,6 @@
 
 	import { computed } from "vue";
 
-	import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
-	import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
-	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
-	import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
-	import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
-	import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
 	import { Einschulungsart } from "@core/asd/types/schueler/Einschulungsart";
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
 	import { Schulform } from "@core/asd/types/schule/Schulform";
@@ -60,37 +57,31 @@
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 
+	import type { SchuelerIndividualdatenModelProxy } from "../individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
+	import type { SchuelerLernabschnittAllgemeinModelProxy } from "../lernabschnitte/allgemein/modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
+	import type { SchuelerSchulbesuchModelProxy } from "../schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
+
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;
-		patchSchueler: (patchObject: Partial<SchuelerStammdaten>, id: number) => Promise<void>;
-		patchSchulbesuchsdaten: (data: Partial<SchuelerSchulbesuchsdaten>, idSchueler: number) => Promise<void>;
-		patchLernabschnittsdaten: (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number) => Promise<void>;
-		readonly: boolean;
+		stammdatenModel: SchuelerIndividualdatenModelProxy;
+		schulbesuchModel: SchuelerSchulbesuchModelProxy;
+		lernabschnittModel: SchuelerLernabschnittAllgemeinModelProxy;
 		schulenMitPrimaerstufe: boolean;
+		readonly: boolean;
 	}>();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
 	const jahrgaengeState = useJahrgaengeState();
 
-	const manager = () => props.manager();
 	const schulenMitBKoderSK = computed(() => (schuleState.schulform === Schulform.BK) || (schuleState.schulform === Schulform.SK));
-	const schuljahresabschnitte = computed(() => Array.from(props.manager().schuljahresabschnitte));
 
 	const klassen = computed(() => {
 		return [...props.manager().klassenAktuell]
-			.filter(k => k.idJahrgang === manager().lernabschnittsdaten.jahrgangID);
-	});
-
-	const status = computed<SchuelerStatusKatalogEintrag | null>({
-		get: () => SchuelerStatus.data().getWertByKuerzel('' + props.manager().stammdaten.status)?.daten(abschnittState.auswahl.schuljahr) ?? null,
-		set: (value: SchuelerStatusKatalogEintrag | null) => {
-			props.manager().stammdaten.status = value?.id ?? -1;
-			void props.patchSchueler({ status: value?.id }, manager().stammdaten.id);
-		},
+			.filter(k => k.idJahrgang === props.lernabschnittModel.proxy.jahrgangID);
 	});
 
 	const schuljahresabschnitt = computed<string>(() => {
-		const abschnitt = schuljahresabschnitte.value.find(i => i.id === manager().lernabschnittsdaten.schuljahresabschnitt) ?? null;
+		const abschnitt = [...props.manager().schuljahresabschnitte].find(i => i.id === props.lernabschnittModel.proxy.schuljahresabschnitt) ?? null;
 		if (abschnitt === null) {
 			return '';
 		}
@@ -98,23 +89,7 @@
 	});
 
 	const jahrgang = computed<string | null>(() => Array.from(jahrgaengeState.jahrgaenge.list)
-		.find(i => i.id === (manager().lernabschnittsdaten.jahrgangID))?.kuerzel ?? null);
-
-	const klasse = computed<KlassenDaten | null>({
-		get: () => klassen.value.find(i => i.id === (manager().lernabschnittsdaten.klassenID)) ?? null,
-		set: (value: KlassenDaten | null) => {
-			void props.patchLernabschnittsdaten({ klassenID: value?.id ?? null }, manager().lernabschnittsdaten.id);
-			manager().lernabschnittsdaten.klassenID = value?.id ?? -1;
-		},
-	});
-
-	const einschulungsart = computed({
-		get: () => Einschulungsart.data().getEintragByID(props.manager().schulbesuchsdaten.idEinschulungsartGrundschule ?? -1),
-		set: (value: EinschulungsartKatalogEintrag) => {
-			props.manager().schulbesuchsdaten.idEinschulungsartGrundschule = value.id;
-			void props.patchSchulbesuchsdaten({ idEinschulungsartGrundschule: value.id }, manager().stammdaten.id);
-		},
-	});
+		.find(i => i.id === (props.lernabschnittModel.proxy.jahrgangID))?.kuerzel ?? null);
 
 	const statusManager = new CoreTypeSelectManager({
 		clazz: SchuelerStatus.class,
@@ -136,19 +111,5 @@
 		optionDisplayText: i => i.text,
 		selectionDisplayText: i => i.text,
 	});
-
-	// --- validation ---
-
-	async function patchAnmeldedatum(anmeldedatum: string | null) {
-		await props.patchSchueler({ anmeldedatum }, manager().stammdaten.id);
-	}
-
-	async function patchAufnahmedatum(aufnahmedatum: string | null) {
-		await props.patchSchueler({ aufnahmedatum }, manager().stammdaten.id);
-	}
-
-	async function patchBeginnBildungsgang(beginnBildungsgang: string | null) {
-		await props.patchSchueler({ beginnBildungsgang }, manager().stammdaten.id);
-	}
 
 </script>

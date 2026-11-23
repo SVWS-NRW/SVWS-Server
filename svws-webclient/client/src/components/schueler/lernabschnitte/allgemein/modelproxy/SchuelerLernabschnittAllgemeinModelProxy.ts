@@ -45,7 +45,8 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 		klassen: () => KlassenDaten[],
 		jahrgaenge: () => JahrgangsDaten[],
 		foerderschwerpunkte: () => FoerderschwerpunktEintrag[],
-		patch?: (data: Partial<SchuelerLernabschnittsdaten>) => Promise<boolean>
+		patch?: (data: Partial<SchuelerLernabschnittsdaten>) => Promise<boolean>,
+		listOfDisabledPropValidations: Iterable<keyof SchuelerLernabschnittsdaten> = []
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerLernabschnittsdaten> = [
 			"klassenID", "jahrgangID", "tutorID", "sonderpaedagogeID",
@@ -55,7 +56,7 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 			"hatZieldifferentenUnterricht", "datumAnfang", "datumEnde", "idEpJahre",
 			"noteLernbereichNW", "noteLernbereichGSbzwAL", "idBetreuung",
 		];
-		super({ data, patch, listOfAutopatchProps });
+		super({ data, patch, listOfAutopatchProps, listOfDisabledPropValidations });
 		this.lehrer = lehrer;
 		this.klassen = klassen;
 		this.jahrgaenge = jahrgaenge;

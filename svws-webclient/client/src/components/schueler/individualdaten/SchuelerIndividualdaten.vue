@@ -44,6 +44,7 @@
 				<ui-select label="Geschlecht"
 					v-model="model.geschlecht.value"
 					:manager="geschlechtManager"
+					:validation="() => model.getFehler('geschlecht')"
 					:readonly required statistics :removable="false" />
 				<svws-ui-text-input placeholder="Geburtsdatum" :readonly
 					v-model="model.proxy.geburtsdatum"
@@ -71,6 +72,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Status"
 					v-model="model.status.value"
+					:validation="() => model.getFehler('status')"
 					:manager="statusManager"
 					:readonly :removable="false" required statistics focus-class-content />
 				<ui-select v-if="model.proxy.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id"
@@ -79,16 +81,13 @@
 					:manager="stammschuleManager"
 					:readonly searchable />
 				<div v-else />
-				<template v-if="serverState.hasDev">
-					<svws-ui-text-input placeholder="Schülerausweis-Nummer"
-						v-model="model.proxy.idSchuelerausweis"
-						:validation="() => model.getFehler('idSchuelerausweis')"
-						@change="model.patch"
-						:max-len="30"
-						:readonly />
-					<div v-if="!istSchulformBerufskolleg" />
-				</template>
-				<div v-if="!serverState.hasDev" />
+				<svws-ui-text-input placeholder="Schülerausweis-Nummer"
+					v-model="model.proxy.idSchuelerausweis"
+					:validation="() => model.getFehler('idSchuelerausweis')"
+					@change="model.patch"
+					:max-len="30"
+					:readonly />
+				<div v-if="!istSchulformBerufskolleg" />
 				<svws-ui-text-input v-if="istSchulformBerufskolleg" placeholder="Beruf"
 					v-model="model.proxy.beruf"
 					:validation="() => model.getFehler('beruf')"
@@ -190,6 +189,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="1. Staatsangehörigkeit"
 					v-model="model.staatsangehoerigkeit1.value"
+					:validation="() => model.getFehler('idStaatsangehoerigkeit')"
 					:manager="staatsangehoerigkeitManager"
 					:readonly required searchable statistics focus-class-content :removable="false" />
 				<ui-select label="2. Staatsangehörigkeit"
@@ -198,6 +198,7 @@
 					:readonly searchable />
 				<ui-select label="Konfession"
 					v-model="model.religion.value"
+					:validation="() => model.getFehler('religionID')"
 					:manager="religionManager"
 					:readonly required statistics :removable="false" />
 				<div class="flex items-center pl-2">
@@ -216,7 +217,7 @@
 					type="date" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<schueler-telefonnummern v-if="serverState.hasDev && hatKompetenzAnsehen && zeigeAlles"
+		<schueler-telefonnummern v-if="hatKompetenzAnsehen && zeigeAlles"
 			:readonly
 			:id-schueler="model.proxy.id" />
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
@@ -286,7 +287,6 @@
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useReportingState } from "@ui/states/ReportingState";
 	import { useSchuleState } from "@ui/states/SchuleState";
-	import { useServerState } from "@ui/states/ServerState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
@@ -304,7 +304,6 @@
 	const fahrschuelerartenState = useFahrschuelerartenState();
 	const reportingState = useReportingState();
 	const schuleState = useSchuleState();
-	const serverState = useServerState();
 	const religionenState = useReligionenState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 	const herkunftschulenState = useHerkunftschulenState();

@@ -54,7 +54,9 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	constructor(
 		data: () => SchuelerSchulbesuchsdaten,
 		schuljahr: () => number,
-		patch?: (data: Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>) {
+		patch?: (data: Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>,
+		listOfDisabledPropValidations: Iterable<keyof SchuelerSchulbesuchsdaten> = []
+	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerSchulbesuchsdaten> =
 			["idVorherigeSchule", "entlassdatumVorherigeSchule", "kuerzelEntlassjahrgangVorherigeSchule", "idEntlassgrundVorherigeSchule",
 				"idHerkunftsartVersetzungVorherigeSchule", "entlassdatumDieseSchule", "idEntlassjahrgangDieseSchule",
@@ -64,7 +66,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 				"berufsabschlussVorhandenVorherigeSchule", "schluesselAbschlussartAllgemeinbildendDieseSchule", "schluesselAbschlussartBerufsbildendDieseSchule",
 				"idSchulgliederungVorherigeSchule", "schluesselCoreTypeFachklasseVorherigeSchule", "idHerkunftSchulformVorherigeSchule",
 				"schluesselAbschlussartAllgemeinbildendVorherigeSchule", "idHerkunftSonstigeVorherigeSchule", "idHochschulabschluss"];
-		super({ data, patch, listOfAutopatchProps });
+		super({ data, patch, listOfAutopatchProps, listOfDisabledPropValidations });
 		this.schuljahr = schuljahr;
 		this.addValidatoren();
 		this.validate();

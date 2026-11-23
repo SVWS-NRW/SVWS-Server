@@ -2,125 +2,134 @@
 	<svws-ui-content-card title="Persönliche Daten" class="col-span-full">
 		<svws-ui-input-wrapper :grid="4">
 			<svws-ui-text-input placeholder="Nachname"
-				:model-value="manager().stammdaten.nachname"
-				@change="patchNachname"
-				:valid="nachnameIsValid"
-				:min-len="1" :max-len="120" :readonly required />
+				v-model="stammdatenModel.proxy.nachname"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('nachname')"
+				:max-len="120" :readonly required />
 			<svws-ui-text-input placeholder="Rufname"
-				:model-value="manager().stammdaten.vorname"
-				@change="patchVorname"
-				:valid="vornameIsValid"
-				:min-len="1" :max-len="80" :readonly required />
+				v-model="stammdatenModel.proxy.vorname"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('vorname')"
+				:max-len="80" :readonly required />
 			<svws-ui-text-input placeholder="Alle Vornamen"
-				:model-value="manager().stammdaten.alleVornamen"
-				@change="patchAlleVornamen"
-				:valid="alleVornamenIsValid"
+				v-model="stammdatenModel.proxy.alleVornamen"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('alleVornamen')"
 				:max-len="255" :readonly />
 			<ui-select label="Geschlecht"
-				v-model="geschlecht"
+				v-model="stammdatenModel.geschlecht.value"
+				:validation="() => stammdatenModel.getFehler('geschlecht')"
 				:manager="geschlechtManager"
-				:removable="false" :readonly required />
+				:removable="false" required :readonly />
 			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Straße"
-				:model-value="strasse"
-				@change="patchStrasse"
-				:valid="adresseIsValid"
-				:max-len="50" :readonly />
+				v-model="stammdatenModel.strasse.value"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('strassenname')"
+				:max-len="55" :readonly />
 			<ui-select label="Wohnort"
-				v-model="wohnort"
+				v-model="stammdatenModel.wohnort.value"
 				:manager="wohnortManager"
-				searchable :readonly />
+				:readonly />
 			<ui-select label="Ortsteil"
-				v-model="ortsteil"
+				v-model="stammdatenModel.ortsteil.value"
 				:manager="ortsteilManager"
-				searchable :readonly />
+				:disabled="istOrtsteilDisabled"
+				:readonly />
 			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Geburtsdatum" type="date"
-				:model-value="manager().stammdaten.geburtsdatum"
-				@change="patchGeburtsdatum"
-				:valid="geburtsdatumIsValid"
+				v-model="stammdatenModel.proxy.geburtsdatum"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('geburtsdatum')"
 				required :readonly />
 			<svws-ui-text-input placeholder="Geburtsort"
-				:model-value="manager().stammdaten.geburtsort"
-				@change="patchGeburtsort"
-				:valid="geburtsortIsValid"
+				v-model="stammdatenModel.proxy.geburtsort"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('geburtsort')"
 				:max-len="100" :readonly />
 			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Telefon" type="tel"
-				:model-value="manager().stammdaten.telefon"
-				@change="patchTelefon"
-				:valid="telefonIsValid"
+				v-model="stammdatenModel.proxy.telefon"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('telefon')"
 				:max-len="20" :readonly />
 			<svws-ui-text-input placeholder="Mobil/Fax" type="tel"
-				:model-value="manager().stammdaten.telefonMobil"
-				@change="patchTelefonMobil"
-				:valid="telefonIsValid"
+				v-model="stammdatenModel.proxy.telefonMobil"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('telefonMobil')"
 				:max-len="20" :readonly />
 			<svws-ui-text-input placeholder="E-Mail" type="email"
-				:model-value="manager().stammdaten.emailPrivat"
-				@change="patchEmailPrivat"
-				:valid="emailPrivatIsValid"
+				v-model="stammdatenModel.proxy.emailPrivat"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('emailPrivat')"
 				:max-len="100" :readonly />
 			<svws-ui-spacing />
 			<ui-select label="1. Staatsangehörigkeit"
-				v-model="staatsangehoerigkeit"
+				v-model="stammdatenModel.staatsangehoerigkeit1.value"
+				:validation="() => stammdatenModel.getFehler('idStaatsangehoerigkeit')"
 				:manager="staatsangehoerigkeitenManager"
-				searchable :readonly />
+				:readonly
+				required :removable="false" />
 			<ui-select label="2. Staatsangehörigkeit"
-				v-model="staatsangehoerigkeit2"
+				v-model="stammdatenModel.staatsangehoerigkeit2.value"
 				:manager="staatsangehoerigkeitenManager"
-				searchable :readonly />
+				:readonly />
 			<ui-select label="Konfession"
-				v-model="religion"
+				v-model="stammdatenModel.religion.value"
 				:manager="religionManager"
-				:removable="false" :readonly />
+				:validation="() => stammdatenModel.getFehler('religionID')"
+				:removable="false" required
+				:readonly />
 			<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht"
-				:model-value="manager().stammdaten.religionabmeldung"
-				@change="patchReligionAbmeldung"
+				v-model="stammdatenModel.proxy.religionabmeldung"
+				@change="stammdatenModel.patch"
 				type="date" :readonly />
-			<svws-ui-checkbox v-model="hatMigrationshintergrund" :readonly>
+			<svws-ui-checkbox v-model="stammdatenModel.proxy.hatMigrationshintergrund" :readonly>
 				Migrationshintergrund vorhanden
 			</svws-ui-checkbox>
 			<svws-ui-input-number placeholder="Zuzugsjahr"
-				v-model="zuzugsjahr"
-				:valid="zuzugsjahrIsValid"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" />
+				v-model="stammdatenModel.proxy.zuzugsjahr"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('zuzugsjahr')"
+				:disabled="(!stammdatenModel.proxy.hatMigrationshintergrund || readonly)"
+				:steps="false" :min :max />
 			<ui-select label="Geburtsland"
-				v-model="geburtsland"
+				v-model="stammdatenModel.geburtsland.value"
 				:manager="geburtslandManager"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" />
+				:disabled="(!stammdatenModel.proxy.hatMigrationshintergrund || readonly)" />
 			<svws-ui-spacing />
 			<ui-select label="Geburtsland Mutter"
-				v-model="geburtslandMutter"
+				v-model="stammdatenModel.geburtslandMutter.value"
 				:manager="geburtslandManager"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" />
+				:disabled="(!stammdatenModel.proxy.hatMigrationshintergrund || readonly)" />
 			<ui-select label="Geburtsland Vater"
-				v-model="geburtslandVater"
+				v-model="stammdatenModel.geburtslandVater.value"
 				:manager="geburtslandManager"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" />
+				:disabled="(!stammdatenModel.proxy.hatMigrationshintergrund || readonly)" />
 			<ui-select label="Verkehrssprache"
-				v-model="verkehrssprache"
+				v-model="stammdatenModel.verkehrspracheFamilie.value"
 				:manager="verkehrsspracheManager"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" />
+				:disabled="(!stammdatenModel.proxy.hatMigrationshintergrund || readonly)" />
 			<svws-ui-spacing />
 			<ui-select label="Fahrschüler"
-				v-model="fahrschuelerart"
+				v-model="stammdatenModel.fahrschuelerArt.value"
 				:manager="fahrschuelerartManager"
-				:removable="false" :readonly />
+				:readonly />
 			<ui-select label="Haltestelle"
-				v-model="haltestelle"
+				v-model="stammdatenModel.haltestelle.value"
 				:manager="haltestellenManager"
-				:removable="false" :readonly />
+				:readonly />
 			<svws-ui-spacing />
 			<ui-select label="Ext. ID-Nr."
-				v-model="externeSchulNr"
+				v-model="stammdatenModel.externeSchulNr.value"
 				:manager="schulenManager"
-				:removable="false" :readonly />
+				:readonly />
 			<svws-ui-text-input placeholder="Schülerausweis-Nummer"
-				:model-value="manager().stammdaten.idSchuelerausweis"
-				@change="patchIdSchuelerausweis"
+				v-model="stammdatenModel.proxy.idSchuelerausweis"
+				@change="stammdatenModel.patch"
+				:validation="() => stammdatenModel.getFehler('idSchuelerausweis')"
 				:max-len="30" :readonly />
-			<svws-ui-checkbox v-model="schwerbehinderung">
+			<svws-ui-checkbox v-model="lernabschnittModel.proxy.hatSchwerbehinderungsNachweis" :readonly>
 				Schwerstbehinderung
 			</svws-ui-checkbox>
 		</svws-ui-input-wrapper>
@@ -131,17 +140,11 @@
 
 	import { computed } from "vue";
 
-	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
-	import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
 	import type { VerkehrsspracheKatalogEintrag } from "@core/asd/data/schule/VerkehrsspracheKatalogEintrag";
 	import { Geschlecht } from "@core/asd/types/Geschlecht";
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 	import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
-	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
-	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
-	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
-	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
@@ -150,17 +153,18 @@
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 
-	import { emailIsValid, mandatoryInputIsValid, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+	import type { SchuelerIndividualdatenModelProxy } from "../individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
+	import type { SchuelerLernabschnittAllgemeinModelProxy } from "../lernabschnitte/allgemein/modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
 
 	const props = defineProps<{
-		manager: () => SchuelerSchnelleingabeManager;
-		patchSchueler: (patchObject: Partial<SchuelerStammdaten>, id: number) => Promise<void>;
-		patchLernabschnittsdaten: (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number) => Promise<void>;
+		stammdatenModel: SchuelerIndividualdatenModelProxy;
+		lernabschnittModel: SchuelerLernabschnittAllgemeinModelProxy;
 		readonly: boolean;
 	}>();
+
+	// --- States ---
 
 	const abschnittState = useAbschnittState();
 	const orteState = useOrteState();
@@ -169,134 +173,12 @@
 	const haltestellenState = useHaltestellenState();
 	const herkunftschulenState = useHerkunftschulenState();
 
-	const manager = () => props.manager();
+	// --- Zuzugsjahr ---
 
-	const geschlecht = computed<Geschlecht | null>({
-		get: () => Geschlecht.fromValue(manager().stammdaten.geschlecht),
-		set: (value: Geschlecht | null) => {
-			manager().stammdaten.geschlecht = value?.id ?? -1;
-			void props.patchSchueler({ geschlecht: value?.id }, manager().stammdaten.id);
-		},
-	});
+	const max = new Date().getFullYear() + 1;
+	const min = max - 100;
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(manager().stammdaten.strassenname ?? "",
-		manager().stammdaten.hausnummer ?? "", manager().stammdaten.hausnummerZusatz ?? ""));
-
-	const wohnort = computed({
-		get: () => orteState.orte.byId.get(props.manager().stammdaten.wohnortID ?? -1) ?? null,
-		set: (value) => {
-			props.manager().stammdaten.wohnortID = value?.id ?? -1;
-			void props.patchSchueler({ wohnortID: value?.id ?? null }, manager().stammdaten.id);
-		},
-	});
-
-	const ortsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => orteState.ortsteile.byId.get(props.manager().stammdaten.ortsteilID ?? -1) ?? null,
-		set: (value: OrtsteilKatalogEintrag | null) => {
-			props.manager().stammdaten.ortsteilID = value?.id ?? null;
-			void props.patchSchueler({ ortsteilID: value?.id ?? null }, manager().stammdaten.id);
-		},
-	});
-
-	const staatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.data().getWertByIDOrNull(props.manager().stammdaten.idStaatsangehoerigkeit)?.daten(abschnittState.auswahl.schuljahr) ?? null,
-		set: (value) => {
-			props.manager().stammdaten.idStaatsangehoerigkeit = value?.id ?? null;
-			void props.patchSchueler({ idStaatsangehoerigkeit: value?.id ?? null }, manager().stammdaten.id);
-		},
-	});
-
-	const staatsangehoerigkeit2 = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.data().getWertByIDOrNull(props.manager().stammdaten.idStaatsangehoerigkeit2)?.daten(abschnittState.auswahl.schuljahr) ?? null,
-		set: (value) => {
-			props.manager().stammdaten.idStaatsangehoerigkeit2 = value?.id ?? null;
-			void props.patchSchueler({ idStaatsangehoerigkeit2: value?.id ?? null }, manager().stammdaten.id);
-		},
-	});
-
-	const religion = computed({
-		get: () => religionenState.religionen.byId.get(props.manager().stammdaten.religionID ?? -1),
-		set: (value) => {
-			props.manager().stammdaten.religionID = value?.id ?? -1;
-			void props.patchSchueler({ religionID: value?.id ?? null }, manager().stammdaten.id);
-		},
-	});
-
-	const hatMigrationshintergrund = computed<boolean>({
-		get: () => manager().stammdaten.hatMigrationshintergrund,
-		set: (hatMigrationshintergrund: boolean) => {
-			manager().stammdaten.hatMigrationshintergrund = hatMigrationshintergrund;
-			return void props.patchSchueler({ hatMigrationshintergrund }, manager().stammdaten.id);
-		},
-	});
-
-	const zuzugsjahr = computed<number | null>({
-		get: () => manager().stammdaten.zuzugsjahr,
-		set: (value: number | null) => patchZuzugsjahr(value),
-	});
-
-	const geburtsland = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.data().getWertByIDOrNull(manager().stammdaten.idGeburtsland)?.daten(abschnittState.auswahl.schuljahr) ?? null,
-		set: (value) => {
-			manager().stammdaten.idGeburtsland = value?.id ?? null;
-			void props.patchSchueler({ idGeburtsland: value?.id }, manager().stammdaten.id);
-		},
-	});
-
-	const geburtslandMutter = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.data().getWertByIDOrNull(props.manager().stammdaten.idGeburtslandMutter)?.daten(abschnittState.auswahl.schuljahr) ?? null,
-		set: (value) => {
-			props.manager().stammdaten.idGeburtslandMutter = value?.id ?? null;
-			void props.patchSchueler({ idGeburtslandMutter: value?.id }, manager().stammdaten.id);
-		},
-	});
-
-	const geburtslandVater = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.data().getWertByIDOrNull(props.manager().stammdaten.idGeburtslandVater)?.daten(abschnittState.auswahl.schuljahr) ?? null,
-		set: (value) => {
-			props.manager().stammdaten.idGeburtslandVater = value?.id ?? null;
-			void props.patchSchueler({ idGeburtslandVater: value?.id }, manager().stammdaten.id);
-		},
-	});
-
-	const verkehrssprache = computed<VerkehrsspracheKatalogEintrag | null>({
-		get: () => Verkehrssprache.data().getWertByIDOrNull(props.manager().stammdaten.idVerkehrspracheFamilie)?.daten(abschnittState.auswahl.schuljahr) ?? null,
-		set: (value) => {
-			props.manager().stammdaten.idVerkehrspracheFamilie = value?.id ?? null;
-			void props.patchSchueler({ idVerkehrspracheFamilie: value?.id }, manager().stammdaten.id);
-		},
-	});
-
-	const fahrschuelerart = computed({
-		get: () => fahrschuelerartenState.fahrschuelerarten.byId.get(props.manager().stammdaten.fahrschuelerArtID ?? -1) ?? null,
-		set: (value) => {
-			const id = value?.id ?? null;
-			props.manager().stammdaten.fahrschuelerArtID = id;
-			void props.patchSchueler({ fahrschuelerArtID: id }, manager().stammdaten.id);
-		},
-	});
-
-	const haltestelle = computed({
-		get: () => haltestellenState.haltestellen.byId.get(props.manager().stammdaten.haltestelleID ?? -1) ?? null,
-		set: (value) => {
-			const id = value?.id ?? null;
-			props.manager().stammdaten.haltestelleID = id;
-			void props.patchSchueler({ haltestelleID: id }, manager().stammdaten.id);
-		},
-	});
-
-	const externeSchulNr = computed<SchulEintrag | null>({
-		get: () => props.manager().schulenByExterneSchulnummer.get(props.manager().stammdaten.externeSchulNr ?? "") ?? null,
-		set: (value: SchulEintrag | null) => {
-			props.manager().stammdaten.externeSchulNr = value?.schulnummerStatistik ?? null;
-			void props.patchSchueler({ externeSchulNr: value?.schulnummerStatistik }, manager().stammdaten.id);
-		},
-	});
-
-	const schwerbehinderung = computed<boolean>({
-		get: () => manager().lernabschnittsdaten.hatSchwerbehinderungsNachweis,
-		set: (hatSchwerbehinderungsNachweis) => void props.patchLernabschnittsdaten({ hatSchwerbehinderungsNachweis }, manager().lernabschnittsdaten.id),
-	});
+	const istOrtsteilDisabled = computed(() => (props.stammdatenModel.wohnort.value === null) && (props.stammdatenModel.ortsteil.value === null));
 
 	// --- manager ---
 
@@ -308,43 +190,55 @@
 
 	const wohnortManager = new SelectManager({
 		options: computed(() => orteState.orte.list),
-		optionDisplayText: i => `${i.plz} ${i.ortsname}`,
 		sort: orte_sort,
-		selectionDisplayText: i => `${i.plz} ${i.ortsname}`,
+		optionDisplayText: i => `${i.plz ?? ''} ${i.ortsname ?? ''}`.trim(),
+		selectionDisplayText: i => `${i.plz ?? ''} ${i.ortsname ?? ''}`.trim(),
 	});
 
 	const ortsteilManager = new SelectManager({
-		options: computed(() => orteState.ortsteile.listByOrtId(props.manager().stammdaten.wohnortID)),
+		options: computed(() => orteState.ortsteile.listByOrtId(props.stammdatenModel.proxy.wohnortID)),
 		sort: ortsteilSort,
 		optionDisplayText: i => i.ortsteil ?? '',
 		selectionDisplayText: i => i.ortsteil ?? '',
 	});
 
-	const staatsangehoerigkeitenManager = new CoreTypeSelectManager({
+	const staatsangehoerigkeitenManager = new CoreTypeSelectManager<NationalitaetenKatalogEintrag, Nationalitaeten>({
 		clazz: Nationalitaeten.class,
 		schuljahr: abschnittState.auswahl.schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		sort: (a, b) => {
+			if (a.staatsangehoerigkeit.length > 0 && b.staatsangehoerigkeit.length > 0) {
+				return a.staatsangehoerigkeit.localeCompare(b.staatsangehoerigkeit);
+			} else if (a.staatsangehoerigkeit.length > 0) {
+				return -1;
+			} else if (b.staatsangehoerigkeit.length > 0) {
+				return 1;
+			}
+			return 0;
+		},
+		optionDisplayText: i => i.staatsangehoerigkeit,
+		selectionDisplayText: i => i.staatsangehoerigkeit,
 	});
 
 	const religionManager = new SelectManager({
 		options: computed(() => religionenState.religionen.list),
-		optionDisplayText: i => i.bezeichnungZeugnis ?? '',
-		selectionDisplayText: i => i.bezeichnungZeugnis ?? '',
+		optionDisplayText: i => i.bezeichnung,
+		selectionDisplayText: i => i.bezeichnung,
 	});
 
-	const geburtslandManager = new CoreTypeSelectManager({
+	const geburtslandManager = new CoreTypeSelectManager<NationalitaetenKatalogEintrag, Nationalitaeten>({
 		clazz: Nationalitaeten.class,
 		schuljahr: abschnittState.auswahl.schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		sort: (a, b) => a.bezeichnung.localeCompare(b.bezeichnung),
+		optionDisplayText: i => `${i.bezeichnung} (${i.iso3})`,
+		selectionDisplayText: i => `${i.bezeichnung} (${i.iso3})`,
 	});
 
-	const verkehrsspracheManager = new CoreTypeSelectManager({
+	const verkehrsspracheManager = new CoreTypeSelectManager<VerkehrsspracheKatalogEintrag, Verkehrssprache>({
 		clazz: Verkehrssprache.class,
 		schuljahr: abschnittState.auswahl.schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		sort: (a, b) => a.text.localeCompare(b.text),
+		optionDisplayText: i => `${i.text} (${i.iso3})`,
+		selectionDisplayText: i => `${i.text} (${i.iso3})`,
 	});
 
 	const fahrschuelerartManager = new SelectManager({
@@ -364,133 +258,5 @@
 		optionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
 		selectionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
 	});
-
-	// --- validate ---
-
-	function nachnameIsValid(nachname: string | null): nachname is string {
-		return mandatoryInputIsValid(nachname, 120);
-	}
-
-	function vornameIsValid(vorname: string | null): vorname is string {
-		return mandatoryInputIsValid(vorname, 80);
-	}
-
-	function alleVornamenIsValid(alleVornamen: string | null) {
-		return optionalInputIsValid(alleVornamen, 255);
-	}
-
-	function adresseIsValid(v: string | null) {
-		const [strasse, hausnummer, hausnummerZusatz] = AdressenUtils.splitStrasse(v);
-		return optionalInputIsValid(strasse, 50)
-			&& optionalInputIsValid(hausnummer, 10)
-			&& optionalInputIsValid(hausnummerZusatz, 30);
-	}
-
-	function geburtsdatumIsValid(strDate: string | null) {
-		if (strDate === null) {
-			return true;
-		}
-		try {
-			const date = DateUtils.extractFromDateISO8601(strDate);
-			const curDate = new Date();
-			const diffYear = curDate.getFullYear() - date[0];
-			return (diffYear > 3) && (diffYear < 51);
-		} catch {
-			return false;
-		}
-	}
-
-	function geburtsortIsValid(value: string | null) {
-		return optionalInputIsValid(value, 100);
-	}
-
-	function telefonIsValid(value: string | null) {
-		return phoneNumberIsValid(value, 20);
-	}
-
-	function emailPrivatIsValid(value: string | null) {
-		return emailIsValid(value, 100);
-	}
-
-	function idSchuelerausweisIsValid(value: string | null) {
-		return optionalInputIsValid(value, 30);
-	}
-
-	function zuzugsjahrIsValid(value: number | null) {
-		return numberIsValid(value, false, 1900, 2999);
-	}
-
-	// --- patch ---
-
-	function patchNachname(nachname: string | null) {
-		if (nachnameIsValid(nachname)) {
-			void props.patchSchueler({ nachname }, manager().stammdaten.id);
-		}
-	}
-
-	function patchVorname(vorname: string | null) {
-		if (vornameIsValid(vorname)) {
-			void props.patchSchueler({ vorname }, manager().stammdaten.id);
-		}
-	}
-
-	function patchAlleVornamen(alleVornamen: string | null) {
-		if (alleVornamenIsValid(alleVornamen)) {
-			void props.patchSchueler({ alleVornamen: alleVornamen ?? "" }, manager().stammdaten.id);
-		}
-	}
-
-	async function patchStrasse(v: string | null) {
-		if (adresseIsValid(v)) {
-			const [strassenname, hausnummer, hausnummerZusatz] = AdressenUtils.splitStrasse(v);
-			await props.patchSchueler({ strassenname, hausnummer, hausnummerZusatz }, manager().stammdaten.id);
-		}
-	}
-
-	function patchGeburtsdatum(geburtsdatum: string | null) {
-		if (geburtsdatumIsValid(geburtsdatum)) {
-			void props.patchSchueler({ geburtsdatum }, manager().stammdaten.id);
-		}
-	}
-
-	function patchGeburtsort(geburtsort: string | null) {
-		if (geburtsortIsValid(geburtsort)) {
-			void props.patchSchueler({ geburtsort }, manager().stammdaten.id);
-		}
-	}
-
-	function patchTelefon(telefon: string | null) {
-		if (telefonIsValid(telefon)) {
-			void props.patchSchueler({ telefon }, manager().stammdaten.id);
-		}
-	}
-
-	function patchTelefonMobil(telefonMobil: string | null) {
-		if (telefonIsValid(telefonMobil)) {
-			void props.patchSchueler({ telefonMobil }, manager().stammdaten.id);
-		}
-	}
-
-	function patchEmailPrivat(emailPrivat: string | null) {
-		if (emailPrivatIsValid(emailPrivat)) {
-			void props.patchSchueler({ emailPrivat }, manager().stammdaten.id);
-		}
-	}
-
-	function patchReligionAbmeldung(religionabmeldung: string | null) {
-		return void props.patchSchueler({ religionabmeldung }, manager().stammdaten.id);
-	}
-
-	function patchZuzugsjahr(zuzugsjahr: number | null) {
-		if (zuzugsjahrIsValid(zuzugsjahr)) {
-			void props.patchSchueler({ zuzugsjahr }, manager().stammdaten.id);
-		}
-	}
-
-	function patchIdSchuelerausweis(idSchuelerausweis: string | null) {
-		if (idSchuelerausweisIsValid(idSchuelerausweis)) {
-			void props.patchSchueler({ idSchuelerausweis }, manager().stammdaten.id);
-		}
-	}
 
 </script>
