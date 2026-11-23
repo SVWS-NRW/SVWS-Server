@@ -125,6 +125,7 @@ import { KursLehrer } from '../asd/data/kurse/KursLehrer';
 import { LehrerAbgangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag';
 import { LehrerAnrechnungsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag';
 import { LehrerBeschaeftigungsartKatalogEintrag } from '../asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag';
+import { LehrerCredentialsOhneBenutzerEintrag } from '../core/data/benutzer/LehrerCredentialsOhneBenutzerEintrag';
 import { LehrerEinsatzstatusKatalogEintrag } from '../asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag';
 import { LehrerEinwilligung } from '../core/data/lehrer/LehrerEinwilligung';
 import { LehrerFachrichtungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag';
@@ -1234,6 +1235,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getLehrerCredentialsOhneBenutzer für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/lehrer/credentials/ohnebenutzer
+	 *
+	 * Liefert die bereits vorhandenen Credentials von Lehrern, denen noch kein Lehrer-Benutzer zugeordnet ist. Diese werden beim Anlegen eines Lehrer-Benutzers wiederverwendet. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der vorhandenen Credentials
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerCredentialsOhneBenutzerEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Credentials abzufragen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste der vorhandenen Credentials
+	 */
+	public async getLehrerCredentialsOhneBenutzer(schema: string): Promise<List<LehrerCredentialsOhneBenutzerEintrag>> {
+		const path = "/db/{schema}/benutzer/lehrer/credentials/ohnebenutzer"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerCredentialsOhneBenutzerEintrag>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerCredentialsOhneBenutzerEintrag.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createBenutzerAllgemein für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/new
 	 *
 	 * Erstellt einen neuen Benutzer und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.
@@ -1264,7 +1295,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode createBenutzerLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/new/lehrer
 	 *
-	 * Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.
+	 * Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück. Sind dem Lehrer bereits Credentials zugeordnet, so werden diese mit dem übergebenen Benutzernamen und Kennwort wiederverwendet. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Benutzer wurde erfolgreich angelegt.
