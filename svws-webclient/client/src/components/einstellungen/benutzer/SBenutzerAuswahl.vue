@@ -14,9 +14,12 @@
 				<template #actions>
 					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0"
 						:create-benutzer-allgemein
+						:create-benutzer-lehrer
 						:delete-benutzer-allgemein
 						:has-focus="rowsFiltered.size === 0"
-						:map-benutzer />
+						:map-benutzer
+						:list-lehrer
+						:map-lehrer-credentials-ohne-benutzer />
 				</template>
 			</svws-ui-table>
 		</div>

@@ -22,6 +22,7 @@ import de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzerLehrerCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
+import de.svws_nrw.core.data.benutzer.LehrerCredentialsOhneBenutzerEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
 import de.svws_nrw.data.DataManager;
@@ -236,6 +237,19 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	private void pruefeBenutzernameGueltig(final String benutzername) throws ApiOperationException {
+		pruefeBenutzernameFormat(benutzername);
+		pruefeBenutzernameFrei(benutzername, null);
+	}
+
+
+	/**
+	 * Überprüfe, ob der Benutzername gesetzt ist und keine unzulässigen Leerzeichen enthält.
+	 *
+	 * @param benutzername   der Benutzername
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private static void pruefeBenutzernameFormat(final String benutzername) throws ApiOperationException {
 		// Überprüfe, ob der Benutzername gesetzt ist
 		if ((benutzername == null) || (benutzername.isBlank())) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leerer Benutzername ist nicht zulässig!");
@@ -248,8 +262,21 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		if (!benutzername.matches("\\S+")) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Leerzeichen und Tabs sind im Benutzernamen nicht zulässig.");
 		}
-		// Überprüfe, ob der Benutzername nicht bereits vergeben ist.
-		final Set<String> benutzernamenLowerCase = conn.queryAll(DTOCredentials.class).stream().filter(cred -> cred.Benutzername != null)
+	}
+
+
+	/**
+	 * Überprüfe, ob der Benutzername nicht bereits vergeben ist. Dabei werden die Credentials mit
+	 * der übergebenen ID nicht berücksichtigt, z.B. wenn diese selbst umbenannt werden sollen.
+	 *
+	 * @param benutzername              der Benutzername
+	 * @param idCredentialsAusgenommen  die ID der nicht zu berücksichtigenden Credentials oder null
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private void pruefeBenutzernameFrei(final String benutzername, final Long idCredentialsAusgenommen) throws ApiOperationException {
+		final Set<String> benutzernamenLowerCase = conn.queryAll(DTOCredentials.class).stream()
+				.filter(cred -> (cred.Benutzername != null) && ((idCredentialsAusgenommen == null) || (cred.ID != idCredentialsAusgenommen)))
 				.map(cred -> cred.Benutzername.toLowerCase(Locale.GERMAN)).collect(Collectors.toSet());
 		if (benutzernamenLowerCase.contains(benutzername.toLowerCase(Locale.GERMAN))) {
 			throw new ApiOperationException(Status.CONFLICT,
@@ -267,11 +294,22 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	private void pruefeBenutzernameUndKennwortGueltig(final String benutzername, final String password) throws ApiOperationException {
-		// Überprüfe, ob das Kennwort gesetzt ist
+		pruefeKennwortGueltig(password);
+		pruefeBenutzernameGueltig(benutzername);
+	}
+
+
+	/**
+	 * Überprüfe, ob das Kennwort gesetzt ist.
+	 *
+	 * @param password   das Kennwort
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	private static void pruefeKennwortGueltig(final String password) throws ApiOperationException {
 		if ((password == null) || (password.isBlank())) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leeres Kennwort ist nicht zulässig!");
 		}
-		pruefeBenutzernameGueltig(benutzername);
 	}
 
 
@@ -345,8 +383,9 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 * @throws ApiOperationException   wenn ein Fehler auftritt
 	 */
 	public Response createBenutzerLehrer(final BenutzerLehrerCredentials cred) throws ApiOperationException {
-		// Überprüfe, ob der Benutzername und das Kennwort gesetzt sind und der Benutzername nicht bereits vergeben ist.
-		pruefeBenutzernameUndKennwortGueltig(cred.benutzername, cred.password);
+		// Überprüfe, ob das Kennwort und der Benutzername gesetzt sind und der Benutzername keine unzulässigen Leerzeichen enthält
+		pruefeKennwortGueltig(cred.password);
+		pruefeBenutzernameFormat(cred.benutzername);
 
 		// Bestimme den Lehrer mit der angegebenen ID aus der Datenbank
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, cred.idLehrer);
@@ -359,18 +398,25 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		if (benutzer != null) {
 			throw new ApiOperationException(Status.CONFLICT, "Es ist bereits ein Lehrer-Benutzer mit der angegebenen ID vorhanden!");
 		}
+
+		// Prüfe, ob der Benutzername nicht bereits vergeben ist. Bereits vorhandene Credentials des Lehrers werden dabei nicht berücksichtigt,
+		// da diese wiederverwendet werden und der Benutzername somit beibehalten oder geändert werden kann.
+		pruefeBenutzernameFrei(cred.benutzername, lehrer.CredentialID);
+
 		final long idBenutzer = conn.transactionGetNextID(DTOBenutzer.class);
 		benutzer = new DTOBenutzer(idBenutzer, BenutzerTyp.LEHRER, false);
 		benutzer.Lehrer_ID = cred.idLehrer;
 		conn.transactionPersist(benutzer);
 
-		// Prüfe, ob dem Benutzer bereits Credentials zugeordnet sind, wenn ja, dann werden diese überschrieben. Wenn nicht, dann werden neue angelegt
+		// Prüfe, ob dem Benutzer bereits Credentials zugeordnet sind, wenn ja, dann werden diese mit dem übergebenen Benutzernamen
+		// überschrieben. Wenn nicht, dann werden neue angelegt
 		DTOCredentials credential;
 		if (lehrer.CredentialID == null) {
 			final long idCredential = conn.transactionGetNextID(DTOCredentials.class);
 			credential = new DTOCredentials(idCredential, cred.benutzername);
 		} else {
 			credential = conn.queryByKey(DTOCredentials.class, lehrer.CredentialID);
+			credential.Benutzername = cred.benutzername;
 		}
 		credential.PasswordHash = Benutzer.erstellePasswortHash(cred.password);
 		conn.transactionPersist(credential);
@@ -383,6 +429,40 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		}
 
 		return get(idBenutzer);
+	}
+
+	/**
+	 * Bestimmt die bereits vorhandenen Credentials der Lehrer, denen noch kein Lehrer-Benutzer zugeordnet ist.
+	 * Diese werden beim Anlegen eines Lehrer-Benutzers wiederverwendet.
+	 *
+	 * @return die Liste der Einträge mit Lehrer-ID, Credential-ID und Benutzername
+	 */
+	public List<LehrerCredentialsOhneBenutzerEintrag> getLehrerCredentialsOhneBenutzer() {
+		final List<DTOLehrer> lehrerMitCredentials = conn.queryAll(DTOLehrer.class).stream().filter(l -> l.CredentialID != null).toList();
+		if (lehrerMitCredentials.isEmpty()) {
+			return new ArrayList<>();
+		}
+		final Set<Long> idsLehrerMitBenutzer = conn.queryList(DTOBenutzer.QUERY_LIST_BY_LEHRER_ID, DTOBenutzer.class,
+				lehrerMitCredentials.stream().map(l -> l.ID).toList()).stream().map(b -> b.Lehrer_ID).collect(Collectors.toSet());
+		final List<DTOLehrer> lehrerOhneBenutzer = lehrerMitCredentials.stream().filter(l -> !idsLehrerMitBenutzer.contains(l.ID)).toList();
+		if (lehrerOhneBenutzer.isEmpty()) {
+			return new ArrayList<>();
+		}
+		final Map<Long, DTOCredentials> mapCredentials = conn.queryByKeyList(DTOCredentials.class, lehrerOhneBenutzer.stream().map(l -> l.CredentialID).toList())
+				.stream().collect(Collectors.toMap(c -> c.ID, c -> c));
+		final List<LehrerCredentialsOhneBenutzerEintrag> result = new ArrayList<>();
+		for (final DTOLehrer lehrer : lehrerOhneBenutzer) {
+			final DTOCredentials credentials = mapCredentials.get(lehrer.CredentialID);
+			if ((credentials == null) || (credentials.Benutzername == null)) {
+				continue;
+			}
+			final LehrerCredentialsOhneBenutzerEintrag eintrag = new LehrerCredentialsOhneBenutzerEintrag();
+			eintrag.idLehrer = lehrer.ID;
+			eintrag.idCredentials = credentials.ID;
+			eintrag.benutzername = credentials.Benutzername;
+			result.add(eintrag);
+		}
+		return result;
 	}
 
 	/**

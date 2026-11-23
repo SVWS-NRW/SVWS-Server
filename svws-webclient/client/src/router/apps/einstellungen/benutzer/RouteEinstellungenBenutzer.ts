@@ -81,6 +81,9 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 			mapBenutzer: this.data.mapBenutzer,
 			gotoBenutzer: this.data.gotoBenutzer,
 			createBenutzerAllgemein: this.data.createBenutzerAllgemein,
+			createBenutzerLehrer: this.data.createBenutzerLehrer,
+			listLehrer: this.data.listLehrer,
+			mapLehrerCredentialsOhneBenutzer: this.data.mapLehrerCredentialsOhneBenutzer,
 			deleteBenutzerMenge: this.data.deleteBenutzerMenge,
 		};
 	}

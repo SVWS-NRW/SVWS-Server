@@ -1,7 +1,10 @@
 import { BenutzerAllgemeinCredentials } from "@core/core/data/benutzer/BenutzerAllgemeinCredentials";
 import { BenutzerDaten } from "@core/core/data/benutzer/BenutzerDaten";
 import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
+import { BenutzerLehrerCredentials } from "@core/core/data/benutzer/BenutzerLehrerCredentials";
 import { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+import type { LehrerCredentialsOhneBenutzerEintrag } from "@core/core/data/benutzer/LehrerCredentialsOhneBenutzerEintrag";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { BenutzerKompetenzGruppe } from "@core/core/types/benutzer/BenutzerKompetenzGruppe";
@@ -25,6 +28,8 @@ interface RouteStateEinstellungenBenutzer extends RouteStateInterface {
 	benutzerManager: BenutzerManager;
 	listBenutzergruppen: List<BenutzergruppeListeEintrag>;
 	daten: BenutzerDaten | undefined;
+	listLehrer: List<LehrerListeEintrag>;
+	mapLehrerCredentialsOhneBenutzer: Map<number, LehrerCredentialsOhneBenutzerEintrag>;
 }
 
 const defaultState = <RouteStateEinstellungenBenutzer> {
@@ -34,6 +39,8 @@ const defaultState = <RouteStateEinstellungenBenutzer> {
 	benutzerManager: new BenutzerManager(new BenutzerDaten()),
 	listBenutzergruppen: new ArrayList(),
 	daten: undefined,
+	listLehrer: new ArrayList(),
+	mapLehrerCredentialsOhneBenutzer: new Map<number, LehrerCredentialsOhneBenutzerEintrag>(),
 	view: routeEinstellungenBenutzerDaten,
 };
 
@@ -60,15 +67,26 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	}
 
 	public async ladeListe() {
-		this._state.value.listBenutzer = await api.server.getBenutzerliste(api.schema);
+		const [listBenutzer, listLehrer, listLehrerCredentialsOhneBenutzer] = await Promise.all([
+			api.server.getBenutzerliste(api.schema),
+			api.server.getLehrer(api.schema),
+			api.server.getLehrerCredentialsOhneBenutzer(api.schema),
+		]);
+		this._state.value.listBenutzer = listBenutzer;
 		const mapBenutzer = new Map<number, BenutzerListeEintrag>();
 		for (const l of this.listBenutzer) {
 			mapBenutzer.set(l.id, l);
 		}
 		this.mapBenutzer = mapBenutzer;
+		const mapLehrerCredentialsOhneBenutzer = new Map<number, LehrerCredentialsOhneBenutzerEintrag>();
+		for (const eintrag of listLehrerCredentialsOhneBenutzer) {
+			mapLehrerCredentialsOhneBenutzer.set(eintrag.idLehrer, eintrag);
+		}
 		this.setPatchedState({
 			mapBenutzer: this._state.value.mapBenutzer,
 			listBenutzer: this._state.value.listBenutzer,
+			listLehrer,
+			mapLehrerCredentialsOhneBenutzer,
 		});
 	}
 
@@ -84,7 +102,8 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 				benutzerManager: new BenutzerManager(new BenutzerDaten()),
 				listBenutzergruppen: new ArrayList(),
 				daten: undefined,
-
+				listLehrer: new ArrayList(),
+				mapLehrerCredentialsOhneBenutzer: new Map(),
 			});
 			await this.ladeListe();
 		}
@@ -154,6 +173,14 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 
 	set listBenutzergruppen(value: List<BenutzergruppeListeEintrag>) {
 		this._state.value.listBenutzergruppen = value;
+	}
+
+	get listLehrer(): List<LehrerListeEintrag> {
+		return this._state.value.listLehrer;
+	}
+
+	get mapLehrerCredentialsOhneBenutzer(): Map<number, LehrerCredentialsOhneBenutzerEintrag> {
+		return this._state.value.mapLehrerCredentialsOhneBenutzer;
 	}
 
 	get mapBenutzer(): Map<number, BenutzerListeEintrag> {
@@ -405,16 +432,50 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 		credential.benutzername = benutzername;
 		credential.password = passwort;
 		const result = await api.server.createBenutzerAllgemein(credential, api.schema);
-		const ble = new BenutzerListeEintrag();
-		ble.id = result.id;
-		ble.anzeigename = result.anzeigename;
-		ble.name = result.name;
-		ble.istAdmin = result.istAdmin;
-		ble.idCredentials = result.idCredentials;
-		this.listBenutzer.add(ble);
-		this.mapBenutzer.set(ble.id, ble);
-		await this.gotoBenutzer(ble);
+		await this.addBenutzerUndWechseln(result);
 	};
+
+	/**
+	 * Erstellt einen neuen Lehrer-Benutzer. Sind dem Lehrer bereits Credentials zugeordnet,
+	 * so werden diese vom Server mit dem übergebenen Benutzernamen wiederverwendet.
+	 *
+	 * @param idLehrer       die ID des Lehrers
+	 * @param benutzername   der Name des Benutzers für die Anmeldung
+	 * @param passwort       das Kennwort des Benutzers
+	 */
+	createBenutzerLehrer = async (idLehrer: number, benutzername: string, passwort: string) => {
+		const credential = new BenutzerLehrerCredentials();
+		credential.idLehrer = idLehrer;
+		credential.benutzername = benutzername;
+		credential.password = passwort;
+		const result = await api.server.createBenutzerLehrer(credential, api.schema);
+		const mapLehrerCredentialsOhneBenutzer = new Map(this.mapLehrerCredentialsOhneBenutzer);
+		mapLehrerCredentialsOhneBenutzer.delete(idLehrer);
+		this.setPatchedState({ mapLehrerCredentialsOhneBenutzer });
+		await this.addBenutzerUndWechseln(result);
+	};
+
+	/**
+	 * Fügt den neu angelegten Benutzer der Benutzerliste hinzu und wechselt zu diesem. Die Map der Benutzer
+	 * wird dabei neu erzeugt, damit abhängige Komponenten wie das Modal zum Anlegen von Benutzern aktualisiert werden.
+	 *
+	 * @param daten   die Daten des neu angelegten Benutzers
+	 */
+	private async addBenutzerUndWechseln(daten: BenutzerDaten) {
+		const ble = new BenutzerListeEintrag();
+		ble.id = daten.id;
+		ble.typ = daten.typ;
+		ble.typID = daten.typID;
+		ble.anzeigename = daten.anzeigename;
+		ble.name = daten.name;
+		ble.istAdmin = daten.istAdmin;
+		ble.idCredentials = daten.idCredentials;
+		this.listBenutzer.add(ble);
+		const mapBenutzer = new Map(this.mapBenutzer);
+		mapBenutzer.set(ble.id, ble);
+		this.setPatchedState({ mapBenutzer });
+		await this.gotoBenutzer(ble);
+	}
 
 	/**
 	 * Entfernt die ausgewählten Benutzer
@@ -431,19 +492,20 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 			benutzerIDs.add(benutzerEintrag.id);
 		}
 		await api.server.removeBenutzerMenge(benutzerIDs, api.schema);
-		// Aktualisiere die Liste der Benutzer und die zugehörige Map
+		// Aktualisiere die Liste der Benutzer und die zugehörige Map. Die Map wird dabei neu erzeugt, damit abhängige
+		// Komponenten wie das Modal zum Anlegen von Benutzern aktualisiert werden.
+		const mapBenutzer = new Map(this.mapBenutzer);
 		for (const benutzerID of benutzerIDs) {
-			const benutzer = this.mapBenutzer.get(benutzerID);
+			const benutzer = mapBenutzer.get(benutzerID);
 			if (benutzer !== undefined) {
 				this.listBenutzer.removeElementAt(this.listBenutzer.indexOf(benutzer));
-				this.mapBenutzer.delete(benutzerID);
+				mapBenutzer.delete(benutzerID);
 			}
 		}
-		// Aktualisiere entweder den gewählten Benutzer, falls dieser entfernt wurde oder triggere ein Refresh der Anzeige
+		this.setPatchedState({ mapBenutzer });
+		// Aktualisiere den gewählten Benutzer, falls dieser entfernt wurde
 		if (auswahl_gewaehlt) {
 			await this.gotoBenutzer(this.listBenutzer.get(0));
-		} else {
-			this.commit();
 		}
 	};
 

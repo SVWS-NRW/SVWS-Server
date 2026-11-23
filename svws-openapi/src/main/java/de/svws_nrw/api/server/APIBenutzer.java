@@ -12,6 +12,7 @@ import de.svws_nrw.core.data.benutzer.BenutzerLehrerCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeListeEintrag;
+import de.svws_nrw.core.data.benutzer.LehrerCredentialsOhneBenutzerEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -719,7 +720,8 @@ public class APIBenutzer {
 	@POST
 	@Path("/new/lehrer")
 	@Operation(summary = "Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück.",
-			description = "Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück."
+			description = "Erstellt einen neuen Lehrer-Benutzer und gibt ihn zurück. "
+					+ "Sind dem Lehrer bereits Credentials zugeordnet, so werden diese mit dem übergebenen Benutzernamen und Kennwort wiederverwendet. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.")
 	@ApiResponse(responseCode = "200", description = "Benutzer wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON,
 			schema = @Schema(implementation = BenutzerDaten.class)))
@@ -731,6 +733,33 @@ public class APIBenutzer {
 					schema = @Schema(implementation = BenutzerLehrerCredentials.class))) final BenutzerLehrerCredentials cred,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerDaten(conn).createBenutzerLehrer(cred),
+				request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der bereits vorhandenen Credentials von Lehrern, denen noch
+	 * kein Lehrer-Benutzer zugeordnet ist.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der Liste der vorhandenen Credentials
+	 */
+	@GET
+	@Path("/lehrer/credentials/ohnebenutzer")
+	@Operation(summary = "Liefert die vorhandenen Credentials von Lehrern ohne Lehrer-Benutzer.",
+			description = "Liefert die bereits vorhandenen Credentials von Lehrern, denen noch kein Lehrer-Benutzer zugeordnet ist. "
+					+ "Diese werden beim Anlegen eines Lehrer-Benutzers wiederverwendet. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der vorhandenen Credentials",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = LehrerCredentialsOhneBenutzerEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Credentials abzufragen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getLehrerCredentialsOhneBenutzer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+				.entity(new DataBenutzerDaten(conn).getLehrerCredentialsOhneBenutzer()).build(),
 				request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
 	}
 
