@@ -104,7 +104,7 @@ public final class DataGostSchuelerLaufbahnplanung {
 
 		// Führe für alle Schüler nacheinander die Belegprüfung durch
 		for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
-			final SchuelerStatus status = SchuelerStatus.data().getWertByID(dtoSchueler.idStatus == null ? null : dtoSchueler.idStatus.longValue());
+			final SchuelerStatus status = SchuelerStatus.data().getWertByID(Long.valueOf(dtoSchueler.idStatus));
 			if ((status != SchuelerStatus.AKTIV) && (status != SchuelerStatus.EXTERN) && (status != SchuelerStatus.NEUAUFNAHME)
 					&& (status != SchuelerStatus.WARTELISTE)) {
 				continue;

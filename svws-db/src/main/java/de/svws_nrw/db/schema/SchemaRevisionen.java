@@ -58,6 +58,8 @@ import de.svws_nrw.db.schema.revisionen.Revision77Updates;
 import de.svws_nrw.db.schema.revisionen.Revision80Updates;
 import de.svws_nrw.db.schema.revisionen.Revision84Updates;
 import de.svws_nrw.db.schema.revisionen.Revision85Updates;
+import de.svws_nrw.db.schema.revisionen.Revision87Updates;
+import de.svws_nrw.db.schema.revisionen.Revision88Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
 /**
@@ -399,21 +401,35 @@ public enum SchemaRevisionen {
 	REV_85(85, "2026-11-17"),
 
 	/** Tabelle EigeneSchule_Email um die Spalte SMTPZertifikatFingerabdruck ergänzt. Ist ein Fingerabdruck gesetzt, vertraut der SVWS-Server nur noch diesem einen Zertifikat des SMTP-Servers. */
-	REV_86(86, "2026-11-17");
+	REV_86(86, "2026-11-17"),
+
+	/**
+	 * Spalte Status der Tabelle Schueler (Schritt 1 von 2): Der Status wird in die Hilfsspalte StatusTmp kopiert, NULL-Werte werden
+	 * dabei auf 0 (Neuaufnahme) gesetzt. Anschließend werden die Spalte Status, der zugehörige Fremdschlüssel, der Index und der
+	 * DAV-Trigger t_UPDATE_DavSyncTokenSchueler_Schueler entfernt.
+	 */
+	REV_87(87, "2026-11-23"),
+
+	/**
+	 * Spalte Status der Tabelle Schueler (Schritt 2 von 2): Die Spalte Status wird mit NOT NULL und dem Default-Wert 0 neu angelegt
+	 * und aus der Hilfsspalte StatusTmp befüllt. Anschließend werden Fremdschlüssel, Index und DAV-Trigger neu angelegt und die
+	 * Hilfsspalte entfernt.
+	 */
+	REV_88(88, "2026-11-23");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_86;
+	public static final SchemaRevisionen maxRevision = REV_88;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_86;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_88;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -529,6 +545,8 @@ public enum SchemaRevisionen {
 				case REV_80 -> new Revision80Updates();
 				case REV_84 -> new Revision84Updates();
 				case REV_85 -> new Revision85Updates();
+				case REV_87 -> new Revision87Updates();
+				case REV_88 -> new Revision88Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

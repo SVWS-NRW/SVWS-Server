@@ -36,13 +36,12 @@ class SchuelerListeEintragMapperTest {
 	}
 
 	private static DTOSchueler createSchueler() {
-		final var schueler = new DTOSchueler(ID_SCHUELER, "GU-4711", false);
+		final var schueler = new DTOSchueler(ID_SCHUELER, "GU-4711", 8, false);
 		schueler.Nachname = "Mustermann";
 		schueler.Vorname = "Max";
 		schueler.Geschlecht = Geschlecht.W;
 		schueler.Geburtsdatum = "2010-05-17";
 		schueler.Schuljahresabschnitts_ID = ID_ABSCHNITT_SCHUELER;
-		schueler.idStatus = 8;
 		schueler.Duplikat = true;
 		schueler.ExterneSchulNr = "123456";
 		return schueler;
@@ -186,19 +185,6 @@ class SchuelerListeEintragMapperTest {
 		final var result = mapper.toSchuelerListeEintrag(createSchueler(), SCHULJAHR, abschnitt, createJahrgaenge(), Schulform.GY);
 
 		assertThat(result.idSchulgliederung).isEqualTo(-1L);
-	}
-
-	@Test
-	@DisplayName("Status null führt zu einer ApiOperationException mit Status 500")
-	void statusNull_wirftApiOperationException() {
-		final var schueler = createSchueler();
-		schueler.idStatus = null;
-
-		assertThatThrownBy(() -> mapper.toSchuelerListeEintrag(schueler, SCHULJAHR, null, null, null))
-				.isInstanceOfSatisfying(ApiOperationException.class, e -> {
-					assertThat(e.getStatus()).isEqualTo(Status.INTERNAL_SERVER_ERROR);
-					assertThat(e.getBody()).isEqualTo("Der Schüler mit der ID 4711 hat keinen Status.");
-				});
 	}
 
 	@Test

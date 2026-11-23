@@ -16,6 +16,9 @@ import de.svws_nrw.db.schema.SchemaTabelleTrigger;
  */
 public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 
+	/** Der Name des Triggers, der Änderungen an der Tabelle Schueler überwacht */
+	private static final String TRIGGER_NAME_UPDATE_SCHUELER = "t_UPDATE_DavSyncTokenSchueler_Schueler";
+
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
@@ -37,7 +40,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Schueler */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler_UNTIL_REV70 = addTrigger(
-			"t_UPDATE_DavSyncTokenSchueler_Schueler",
+			TRIGGER_NAME_UPDATE_SCHUELER,
 			DBDriver.MARIA_DB,
 			"""
 			AFTER UPDATE ON Schueler FOR EACH ROW
@@ -658,11 +661,8 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			.setVeraltet(SchemaRevisionen.REV_70);
 
 
-	/** Trigger t_UPDATE_DavSyncTokenSchueler_Schueler */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler = addTrigger(
-			"t_UPDATE_DavSyncTokenSchueler_Schueler",
-			DBDriver.MARIA_DB,
-			"""
+	/** Der SQL-Code des Triggers t_UPDATE_DavSyncTokenSchueler_Schueler ab Revision 70 */
+	private static final String SQL_TRIGGER_MARIADB_UPDATE_DAVSYNCTOKENSCHUELER_SCHUELER = """
 			AFTER UPDATE ON Schueler FOR EACH ROW
 			BEGIN
 			    DECLARE changed BOOLEAN;
@@ -686,9 +686,27 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			        END IF;
 			    END IF;
 			END
-			""",
+			""";
+
+	/**
+	 * Trigger t_UPDATE_DavSyncTokenSchueler_Schueler DEPRECATED, da die Spalte Schueler.Status in Revision 87 entfernt
+	 * und in Revision 88 neu angelegt wird. Der Trigger wird mit Revision 88 unverändert neu erstellt.
+	 */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler_UNTIL_REV87 = addTrigger(
+			TRIGGER_NAME_UPDATE_SCHUELER,
+			DBDriver.MARIA_DB,
+			SQL_TRIGGER_MARIADB_UPDATE_DAVSYNCTOKENSCHUELER_SCHUELER,
 			Schema.tab_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_70);
+			.setRevision(SchemaRevisionen.REV_70)
+			.setVeraltet(SchemaRevisionen.REV_87);
+
+	/** Trigger t_UPDATE_DavSyncTokenSchueler_Schueler */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler = addTrigger(
+			TRIGGER_NAME_UPDATE_SCHUELER,
+			DBDriver.MARIA_DB,
+			SQL_TRIGGER_MARIADB_UPDATE_DAVSYNCTOKENSCHUELER_SCHUELER,
+			Schema.tab_Schueler, Schema.tab_DavSyncTokenSchueler)
+			.setRevision(SchemaRevisionen.REV_88);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(

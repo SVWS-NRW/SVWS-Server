@@ -27,7 +27,7 @@ import org.mapstruct.factory.Mappers;
  * {@link #toSchuelerListeEintrag(DTOSchueler, int, DTOSchuelerLernabschnittsdaten, Map, Schulform)}
  * von Hand gesetzt, da hier Fachlogik zur Ermittlung der Schulgliederung nötig ist.
  * <p>
- * Ist {@link DTOSchueler#idStatus} oder {@link DTOSchueler#Duplikat} nicht gesetzt, so ist der Datensatz
+ * Ist {@link DTOSchueler#Duplikat} nicht gesetzt, so ist der Datensatz
  * fehlerhaft und das Mapping wird mit einer {@link ApiOperationException} mit dem
  * Status {@link Status#INTERNAL_SERVER_ERROR} abgebrochen. Ein fehlendes Geschlecht wird als leerer String abgebildet.
  */
@@ -95,17 +95,13 @@ public interface SchuelerListeEintragMapper {
 	SchuelerListeEintrag toSchuelerListeEintrag(DTOSchueler schueler);
 
 	/**
-	 * Prüft vor dem Mapping, ob die Pflichtfelder Status und Duplikat des Schüler-DTOs gesetzt sind.
+	 * Prüft vor dem Mapping, ob das Pflichtfeld Duplikat des Schüler-DTOs gesetzt ist. Ist dies nicht der Fall,
+	 * so wird eine {@link ApiOperationException} mit dem Status INTERNAL_SERVER_ERROR geworfen.
 	 *
 	 * @param schueler   das Schüler-DTO, welches gemappt werden soll
-	 *
-	 * @throws ApiOperationException   mit dem Status INTERNAL_SERVER_ERROR, falls Status oder Duplikat nicht gesetzt sind
 	 */
 	@BeforeMapping
 	default void pruefePflichtfelder(final DTOSchueler schueler) {
-		if (schueler.idStatus == null) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Schüler mit der ID %d hat keinen Status.".formatted(schueler.ID));
-		}
 		if (schueler.Duplikat == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 					"Der Schüler mit der ID %d hat keine Angabe, ob es sich um ein Duplikat handelt.".formatted(schueler.ID));

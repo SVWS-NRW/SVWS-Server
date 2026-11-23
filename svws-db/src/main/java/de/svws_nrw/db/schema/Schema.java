@@ -693,8 +693,8 @@ public final class Schema {
 	/** Tabelle SchuelerListe */
 	public static final Tabelle_SchuelerListe tab_SchuelerListe = add(new Tabelle_SchuelerListe());
 
-	/** Tabelle SchuelerStatus */
-	public static final Tabelle_SchuelerStatus_Keys tab_SchuelerStatus = add(new Tabelle_SchuelerStatus_Keys());
+	/** Tabelle SchuelerStatus_Keys */
+	public static final Tabelle_SchuelerStatus_Keys tab_SchuelerStatus_Keys = add(new Tabelle_SchuelerStatus_Keys());
 
 	/** Tabelle SchuleCredentials */
 	public static final Tabelle_SchuleCredentials tab_SchuleCredentials = add(new Tabelle_SchuleCredentials());

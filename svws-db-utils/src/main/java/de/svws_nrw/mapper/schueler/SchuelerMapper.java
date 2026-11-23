@@ -15,7 +15,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * MapStruct-Mapper für die Konvertierung eines {@link DTOSchueler} in das Core-DTO {@link Schueler}.
  * <p>
- * Ist {@link DTOSchueler#Geschlecht} oder {@link DTOSchueler#idStatus} nicht gesetzt, so ist der
+ * Ist {@link DTOSchueler#Geschlecht} nicht gesetzt, so ist der
  * Datensatz fehlerhaft und das Mapping wird mit einer {@link ApiOperationException} mit dem
  * Status {@link Status#INTERNAL_SERVER_ERROR} abgebrochen.
  */
@@ -56,19 +56,15 @@ public interface SchuelerMapper {
 	Schueler toSchueler(DTOSchueler dto, Integer abschlussjahrgang);
 
 	/**
-	 * Prüft vor dem Mapping, ob die Pflichtfelder Geschlecht und Status des Schüler-DTOs gesetzt sind.
+	 * Prüft vor dem Mapping, ob das Pflichtfeld Geschlecht des Schüler-DTOs gesetzt ist. Ist dies nicht der Fall,
+	 * so wird eine {@link ApiOperationException} mit dem Status INTERNAL_SERVER_ERROR geworfen.
 	 *
 	 * @param dto   das Schüler-DTO, welches gemappt werden soll
-	 *
-	 * @throws ApiOperationException   mit dem Status INTERNAL_SERVER_ERROR, falls Geschlecht oder Status nicht gesetzt sind
 	 */
 	@BeforeMapping
 	default void pruefePflichtfelder(final DTOSchueler dto) {
 		if (dto.Geschlecht == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Schüler mit der ID %d hat kein gültiges Geschlecht.".formatted(dto.ID));
-		}
-		if (dto.idStatus == null) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Schüler mit der ID %d hat keinen Status.".formatted(dto.ID));
 		}
 	}
 

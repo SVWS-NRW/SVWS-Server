@@ -16,11 +16,10 @@ class SchuelerMapperTest {
 	private final SchuelerMapper mapper = SchuelerMapper.INSTANCE;
 
 	private static DTOSchueler createEntity() {
-		final var entity = new DTOSchueler(4711L, "GU-4711", false);
+		final var entity = new DTOSchueler(4711L, "GU-4711", 8, false);
 		entity.Nachname = "Mustermann";
 		entity.Vorname = "Max";
 		entity.Geschlecht = Geschlecht.W;
-		entity.idStatus = 8;
 		entity.ExterneSchulNr = "123456";
 		return entity;
 	}
@@ -81,19 +80,6 @@ class SchuelerMapperTest {
 		final Schueler result = mapper.toSchueler(entity);
 
 		assertThat(result.externeSchulNr).isNull();
-	}
-
-	@Test
-	@DisplayName("toSchueler: Status null führt zu einer ApiOperationException mit Status 500")
-	void toSchuelerStatusNull_wirftApiOperationException() {
-		final var entity = createEntity();
-		entity.idStatus = null;
-
-		assertThatThrownBy(() -> mapper.toSchueler(entity))
-				.isInstanceOfSatisfying(ApiOperationException.class, e -> {
-					assertThat(e.getStatus()).isEqualTo(Status.INTERNAL_SERVER_ERROR);
-					assertThat(e.getBody()).isEqualTo("Der Schüler mit der ID 4711 hat keinen Status.");
-				});
 	}
 
 	@Test

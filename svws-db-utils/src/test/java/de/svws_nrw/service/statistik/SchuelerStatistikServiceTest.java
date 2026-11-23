@@ -89,10 +89,9 @@ class SchuelerStatistikServiceTest {
 		when(benutzer.schuleGetSchuljahresabschnittByIdOrDefault(anyLong())).thenReturn(abschnitt);
 		when(benutzer.schuleGetSchulform()).thenReturn(Schulform.GY);
 
-		final var schueler = new DTOSchueler(1L, "GU-1", false);
+		final var schueler = new DTOSchueler(1L, "GU-1", 2, false);
 		schueler.Geschlecht = Geschlecht.M;
 		schueler.Schuljahresabschnitts_ID = ID_ABSCHNITT;
-		schueler.idStatus = 2;
 		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(10L, 1L, ID_ABSCHNITT, true, false, idBetreuung);
 		lernabschnitt.Klassenart = "PK";
 		when(schuelerRepository.getMapByStatusAndSchuljahresabschnitt(anyLong(), anyCollection())).thenReturn(Map.of(1L, schueler));

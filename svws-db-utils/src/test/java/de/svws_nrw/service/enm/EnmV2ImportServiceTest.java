@@ -144,7 +144,7 @@ class EnmV2ImportServiceTest {
 		when(eigeneSchuleRepository.getFirst()).thenReturn(schule);
 
 		when(schuelerRepository.findMapByIds(ArgumentMatchers.anyCollection()))
-				.thenReturn(Map.of(ID_SCHUELER, new DTOSchueler(ID_SCHUELER, "guid", false)));
+				.thenReturn(Map.of(ID_SCHUELER, new DTOSchueler(ID_SCHUELER, "guid", 0, false)));
 		when(schuelerLernabschnittRepository.findMapByIds(ArgumentMatchers.anyCollection()))
 				.thenReturn(Map.of(ID_LERNABSCHNITT, new DTOSchuelerLernabschnittsdaten(ID_LERNABSCHNITT, ID_SCHUELER, 1L, false, false, 0L)));
 		when(schuelerLernabschnittTimestampRepository.findMapByIds(ArgumentMatchers.anyCollection()))

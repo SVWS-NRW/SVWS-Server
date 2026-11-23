@@ -180,11 +180,10 @@ class KlassenServiceTest {
 	}
 
 	private static DTOSchueler createSchueler(final long id, final boolean geloescht) {
-		final DTOSchueler schueler = new DTOSchueler(id, "GU-" + id, false);
+		final DTOSchueler schueler = new DTOSchueler(id, "GU-" + id, 2, false);
 		schueler.Nachname = "Nachname" + id;
 		schueler.Vorname = "Vorname" + id;
 		schueler.Geschlecht = Geschlecht.W;
-		schueler.idStatus = 2;
 		schueler.hatLoeschvermerk = geloescht;
 		return schueler;
 	}

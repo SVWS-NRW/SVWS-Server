@@ -132,11 +132,10 @@ class KursServiceTest {
 	}
 
 	private static DTOSchueler createSchueler(final long id, final Boolean hatLoeschvermerk) {
-		final var schueler = new DTOSchueler(id, "GU-" + id, false);
+		final var schueler = new DTOSchueler(id, "GU-" + id, 8, false);
 		schueler.Nachname = "Nachname" + id;
 		schueler.Vorname = "Vorname" + id;
 		schueler.Geschlecht = Geschlecht.W;
-		schueler.idStatus = 8;
 		schueler.hatLoeschvermerk = hatLoeschvermerk;
 		return schueler;
 	}

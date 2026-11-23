@@ -95,12 +95,11 @@ class SchuelerListeEintragServiceTest {
 	}
 
 	private static DTOSchueler schueler(final long id, final String nachname, final String vorname) {
-		final var s = new DTOSchueler(id, "GU-" + id, false);
+		final var s = new DTOSchueler(id, "GU-" + id, 2, false);
 		s.Nachname = nachname;
 		s.Vorname = vorname;
 		s.Geschlecht = Geschlecht.M;
 		s.Schuljahresabschnitts_ID = ID_ABSCHNITT_SCHUELER;
-		s.idStatus = 2;
 		s.Duplikat = false;
 		return s;
 	}

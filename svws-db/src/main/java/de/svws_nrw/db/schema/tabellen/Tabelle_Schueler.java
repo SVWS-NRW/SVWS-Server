@@ -45,11 +45,28 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_IDext = add("IDext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
 			.setJavaComment("externe ID");
 
-	/** Die Definition der Tabellenspalte Status */
-	public final SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.INT, false)
+	/** Die Definition der Tabellenspalte Status DEPRECATED, da die Spalte ab Revision 88 mit NOT NULL und dem Default-Wert 0 neu angelegt wird */
+	public final SchemaTabelleSpalte col_Status_Deprecated_Revision_87 = add("Status", SchemaDatentypen.INT, false)
 			.setJavaName("idStatus")
 			.setConverterRevision(SchemaRevisionen.REV_1)
-			.setJavaComment("Status des Schüler steuert die Einordnung in die Kästen Aktiv Neuaufnahme Abschluss usw.");
+			.setJavaComment("Status des Schüler steuert die Einordnung in die Kästen Aktiv Neuaufnahme Abschluss usw.")
+			.setVeraltet(SchemaRevisionen.REV_87);
+
+	/** Die Definition der Hilfsspalte StatusTmp, die den Status zwischen den Revisionen 87 und 88 zwischenspeichert */
+	public final SchemaTabelleSpalte col_StatusTmp = add("StatusTmp", SchemaDatentypen.INT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setJavaComment("Hilfsspalte für den Status des Schülers während der Umstellung der Spalte Status auf NOT NULL")
+			.setRevision(SchemaRevisionen.REV_87)
+			.setVeraltet(SchemaRevisionen.REV_88);
+
+	/** Die Definition der Tabellenspalte Status */
+	public final SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.INT, false)
+			.setNotNull()
+			.setDefault("0")
+			.setJavaName("idStatus")
+			.setJavaComment("Status des Schüler steuert die Einordnung in die Kästen Aktiv Neuaufnahme Abschluss usw.")
+			.setRevision(SchemaRevisionen.REV_88);
 
 	/** Die Definition der Tabellenspalte Name */
 	public final SchemaTabelleSpalte col_Name = add("Name", SchemaDatentypen.VARCHAR, false).setDatenlaenge(120)
@@ -872,13 +889,21 @@ public class Tabelle_Schueler extends SchemaTabelle {
 			new Pair<>(col_Sportbefreiung_ID, Schema.tab_K_Sportbefreiung.col_ID)
 	).setRevision(SchemaRevisionen.REV_2).setVeraltet(SchemaRevisionen.REV_51);
 
+	/** Die Definition des Fremdschlüssels Schueler_Status_FK DEPRECATED, da die Spalte Status ab Revision 88 neu angelegt wird */
+	public final SchemaTabelleFremdschluessel fk_Schueler_Status_FK_Deprecated_Revision_87 = addForeignKey(
+			"Schueler_Status_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			new Pair<>(col_Status_Deprecated_Revision_87, Schema.tab_SchuelerStatus_Keys.col_ID)
+	).setRevision(SchemaRevisionen.REV_2).setVeraltet(SchemaRevisionen.REV_87);
+
 	/** Die Definition des Fremdschlüssels Schueler_Status_FK */
 	public final SchemaTabelleFremdschluessel fk_Schueler_Status_FK = addForeignKey(
 			"Schueler_Status_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Status, Schema.tab_SchuelerStatus.col_ID)
-	).setRevision(SchemaRevisionen.REV_2);
+			new Pair<>(col_Status, Schema.tab_SchuelerStatus_Keys.col_ID)
+	).setRevision(SchemaRevisionen.REV_88);
 
 	/** Die Definition des Fremdschlüssels Schueler_Statkue_Nationalitaeten_1_FK */
 	public final SchemaTabelleFremdschluessel fk_Schueler_Statkue_Nationalitaeten_1_FK = addForeignKey(
@@ -927,12 +952,20 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	);
 
 
+	/** Die Definition des Non-Unique-Index Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID DEPRECATED, da die Spalte Status ab Revision 88 neu angelegt wird */
+	public final SchemaTabelleIndex index_Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID_Deprecated_Revision_87 = addIndex(
+			"Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID",
+			col_Geloescht,
+			col_Status_Deprecated_Revision_87,
+			col_Entlassjahrgang_ID
+	).setRevision(SchemaRevisionen.REV_12).setVeraltet(SchemaRevisionen.REV_87);
+
 	/** Die Definition des Non-Unique-Index Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID */
 	public final SchemaTabelleIndex index_Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID = addIndex("Schueler_IDX_Geloescht_Status_Entlassjahrgang_ID",
 			col_Geloescht,
 			col_Status,
 			col_Entlassjahrgang_ID
-	).setRevision(SchemaRevisionen.REV_12);
+	).setRevision(SchemaRevisionen.REV_88);
 
 
 	/**

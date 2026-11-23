@@ -244,7 +244,7 @@ class EnmV2GetServiceTest {
 		fach.IstFremdsprache = false;
 		when(fachRepository.getMap()).thenReturn(Map.of(ID_FACH, fach));
 
-		final DTOSchueler schueler = new DTOSchueler(ID_SCHUELER, "guid", false);
+		final DTOSchueler schueler = new DTOSchueler(ID_SCHUELER, "guid", 0, false);
 		schueler.Nachname = "Schüler";
 		schueler.Vorname = "Susi";
 		schueler.Geschlecht = Geschlecht.W;
