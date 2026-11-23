@@ -1,16 +1,27 @@
 package de.svws_nrw.module.reporting.types.ankreuzkompetenz;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Ankreuzkompetenz.
+ * <p>
+ * Der Text einer Kompetenz kann vor dem ersten Doppelpunkt eine Unterkategorie enthalten, etwa „Soziales Miteinander: hält sich an Regeln“.
+ * Die Unterkategorie steht bei jeder ihrer Kompetenzen; ein Eintrag nur aus Unterkategorie und Doppelpunkt ist nicht zulässig. Weitere
+ * Doppelpunkte gehören zum Kompetenztext. Ein „#“ im Text steht für einen erzwungenen Zeilenumbruch. Die berechneten Methoden zerlegen den Text danach, damit Vorlagen ihn nicht
+ * selbst auswerten müssen.
  */
 public class ReportingAnkreuzkompetenz extends ReportingBaseType {
+
+	/** Die Filterkonfiguration für {@link ReportingAnkreuzkompetenz}. */
+	public static final ReportingFilterung<ReportingAnkreuzkompetenz> FILTER = ReportingAnkreuzkompetenzFilter.FILTER;
 
 	/** Gibt an, in welchem Abschnitt (1. HJ(1), 2. HJ(2), beide(0)) die Ankreuzkompetenz benutzt wird. */
 	protected int abschnitt;
@@ -105,6 +116,45 @@ public class ReportingAnkreuzkompetenz extends ReportingBaseType {
 			return false;
 		}
 		return (id == other.id);
+	}
+
+
+	// ##### Berechnete Methoden #####
+
+	/**
+	 * Die Unterkategorie der Kompetenz: der Text vor dem ersten Doppelpunkt. Ein „#“ wird dabei zu einem Leerzeichen.
+	 *
+	 * @return Die Unterkategorie; nie {@code null}, ein leerer String, wenn der Text keinen Doppelpunkt enthält.
+	 */
+	public String unterkategorie() {
+		final int doppelpunkt = floskelText.indexOf(':');
+		if (doppelpunkt < 0) {
+			return "";
+		}
+		return String.join(" ", zeilen(floskelText.substring(0, doppelpunkt)));
+	}
+
+	/**
+	 * Der Text der Kompetenz ohne Unterkategorie, in einer Zeile. Ein „#“ wird dabei zu einem Leerzeichen.
+	 *
+	 * @return Der Text nach dem ersten Doppelpunkt oder der ganze Text, wenn er keinen Doppelpunkt enthält; nie {@code null}.
+	 */
+	public String kompetenzText() {
+		return String.join(" ", kompetenzZeilen());
+	}
+
+	/**
+	 * Der Text der Kompetenz ohne Unterkategorie, aufgeteilt an jedem „#“ in einzelne Zeilen. Leere Zeilen entfallen.
+	 *
+	 * @return Die Zeilen des Kompetenztextes; nie {@code null}, eine leere Liste, wenn kein Text vorhanden ist.
+	 */
+	public List<String> kompetenzZeilen() {
+		final int doppelpunkt = floskelText.indexOf(':');
+		return zeilen((doppelpunkt < 0) ? floskelText : floskelText.substring(doppelpunkt + 1));
+	}
+
+	private static List<String> zeilen(final String text) {
+		return Arrays.stream(text.split("#")).map(String::trim).filter(zeile -> !zeile.isEmpty()).toList();
 	}
 
 

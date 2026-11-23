@@ -1,0 +1,501 @@
+/* Seite */
+
+/* Der obere Rand bietet Platz für die Kopfzeile der Folgeseiten. Zusammen mit deren Abstand (padding-bottom in @top-left) hat der
+   Inhalt der Folgeseiten zum Strich der Kopfzeile denselben Abstand wie auf der ersten Seite der Text unter der Linie der Kopfdaten. */
+@Page {
+	size: A4 portrait;
+	margin: 13.1mm 10mm 12mm 10mm;
+}
+
+/* Kopfzeile der Folgeseiten (siehe .kopf-gerade, .kopf-ungerade). "start" zeigt den Wert, der zu Beginn einer Seite gilt.
+   Linke Seiten sind die geraden, rechte die ungeraden; jedes Zeugnis beginnt auf einer ungeraden Seite. */
+@page :left {
+	@top-left {
+		content: element(kopfGerade, start);
+		vertical-align: bottom;
+		padding-bottom: 5.1mm;
+	}
+}
+
+@page :right {
+	@top-left {
+		content: element(kopfUngerade, start);
+		vertical-align: bottom;
+		padding-bottom: 5.1mm;
+	}
+}
+
+body {
+	font-size: 10pt;
+}
+
+/* Schrift und gemeinsame Kante */
+
+.f-19 { font-size: 19pt; }
+.f-9  { font-size: 9pt; }
+
+/* 4.3mm ist die gemeinsame Textkante beider Seiten. Kopfdaten, Inhaltsbereiche und Unterschriftenblock verwenden denselben Wert. */
+.einzug {
+	margin-left: 4.3mm;
+}
+
+/* Kopfzeile der Folgeseiten: Die Elemente werden aus dem Fluss in den oberen Seitenrand verschoben (@top-left in @page :left/:right).
+   Die Seitenzahl kommt aus page-num-print; der Zähler beginnt je Zeugnis neu (reset-page-counter). */
+.kopf-gerade {
+	position: running(kopfGerade);
+}
+
+.kopf-ungerade {
+	position: running(kopfUngerade);
+}
+
+/* Durchgehender Strich unter der Kopfzeile; nur am Element mit Text, damit die erste Seite ohne Strich bleibt. */
+.kopf-linie {
+	border-bottom: 0.25mm solid #000000;
+	padding-bottom: 0.5mm;
+}
+
+/* Kopfbereich */
+
+.kopfbereich {
+	position: relative;
+	height: 32mm;
+}
+
+.zeugniskopfbild {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+.logo-links, .logo-rechts {
+	position: absolute;
+	top: 0;
+	z-index: 2;
+	width: 32mm;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.logo-links {
+	left: 0;
+}
+
+.logo-rechts {
+	right: 0;
+}
+
+.zeugniskopfbild img, .logo-links img, .logo-rechts img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	object-position: center;
+}
+
+.zeugniskopf-text {
+	position: relative;
+	z-index: 3;
+}
+
+/* Titel und Kopfdaten */
+
+.zeugnis-titel {
+	font-size: 24pt;
+	letter-spacing: 1.5mm;
+	margin-right: -1.5mm;
+	margin-top: 3.05mm;
+}
+
+.zeugnis-name {
+	font-size: 16.5pt;
+	margin-top: 0.67mm;
+}
+
+.kopfdaten {
+	margin-top: 1.15mm;
+}
+
+.kopfdaten th, .kopfdaten td {
+	font-size: 11pt;
+	padding: 1mm 4.3mm;
+	border-top: 0.3mm solid #000000;
+	border-bottom: 0.3mm solid #000000;
+}
+
+/* Leistungen */
+
+/* Große Abschnittsüberschriften: nur "Leistungen" und "Angaben zum Arbeits- und Sozialverhalten". Die übrigen Überschriften
+   (Weiterer Unterricht, Arbeitsgemeinschaften, Engagement, Bemerkungen, Versetzungsvermerk) sind fett in Grundschrift wie die
+   Fachnamen, wie im Zeugnis Klasse 4. */
+.zeugnis-abschnittstitel {
+	font-size: 12pt;
+	font-weight: bold;
+	line-height: 5.3mm;
+}
+
+.zeugnis-abschnittstitel-container {
+	page-break-after: avoid;
+}
+
+.spalte-halb {
+	width: 50%;
+}
+
+/* Notenblock (Parameter notenAlsBlock), übernommen aus dem Zeugnis Klasse 4: zwei Spalten mit Fachname und Note. */
+.notenblock {
+	margin-bottom: 3mm;
+}
+
+.spalte-notenblock-links {
+	width: 96mm;
+}
+
+.spalte-notenblock-fach {
+	width: 50mm;
+}
+
+.spalte-notenblock-note {
+	width: 29.5mm;
+}
+
+.links, .rechts {
+	vertical-align: top;
+}
+
+.table-faecher {
+	width: auto;
+	border-collapse: separate;
+	border-spacing: 0 0.35mm;
+}
+
+/* Ohne seitlichen Zellenabstand beginnen die Fachnamen an derselben Kante wie die Überschriften. */
+.table-faecher td {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.table-faecher td.indent-1 {
+	padding-left: 4.2mm;
+}
+
+.table-faecher .formularfeld {
+	min-width: 26.5mm;
+	padding: 0.625mm 1.5mm;
+	background-color: #c0c0c0;
+}
+
+/* 0.625mm Innenabstand plus halbe Zeilenhöhe, abzüglich halber Strichstärke, legt den Strich auf die Mitte des Feldes. */
+.table-faecher .formularfeld-strich {
+	top: 2.525mm;
+}
+
+/* Ein Fach (Fachname, Note und Bemerkung); der Abstand trennt die Fächer voneinander. */
+.fach {
+	margin-bottom: 2mm;
+}
+
+/* Ohne eigenes Padding erhielten die Zellen das Standard-Padding des Renderers (1px); Fachname, Note und Bemerkung stünden dann
+   leicht eingerückt gegenüber den Abschnittsüberschriften und der Kompetenztabelle (Vorname, "…"), die ohne seitliches Padding gesetzt sind. */
+.fach td {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/* Deutsch ohne eigene Bemerkung ist die Überschrift seiner Teilbereiche: kein Abstand nach unten, und es bleibt beim ersten Teilbereich. */
+.fach.fach-gruppe {
+	margin-bottom: 0;
+}
+
+.fach-gruppe-zeile {
+	page-break-after: avoid;
+}
+
+/* Zeile mit Fachname und Note; sie bleibt immer bei der Bemerkung darunter. */
+.fach-kopf {
+	page-break-after: avoid;
+}
+
+/* Parameter fbOhneUmbruch: Ein Fach bleibt zusammen (fach-als-block) oder die Bemerkung darf umbrechen (fach-umbrechbar).
+   Der Schlussblock mit Engagement und Bemerkungen bleibt ebenfalls zusammen und steht mit dem Unterschriftenblock auf der letzten Seite. */
+.fach-als-block, .schlussblock {
+	page-break-inside: avoid;
+}
+
+.fach-umbrechbar {
+	page-break-inside: auto;
+}
+
+/* Ankreuzkompetenzen (Fragment akTabelle): Text links, je Stufe eine schmale, zentrierte Spalte mit Kästchen. Kompakte Zeilen ohne Linien.
+   Der Kopf (Vorname, erreichtes Kompetenzniveau) wird bei einem Seitenumbruch wiederholt (thead) und bleibt über
+   fach-kopf bei der ersten Kompetenz. Umbruch über fach-als-block (akOhneUmbruch) oder fach-umbrechbar: bei den Fächern an der
+   Tabellenzeile, die die Kompetenztabelle enthält (sonst greift die globale Regel tr page-break-inside avoid und die Tabelle bricht nie
+   um), beim ASV am umgebenden Block. */
+.ak-block {
+	margin-top: 0.5mm;
+}
+
+.ak-tabelle th {
+	font-weight: normal;
+	line-height: 4.5mm;
+	padding: 0;
+}
+
+.ak-tabelle td {
+	line-height: 4.5mm;
+	padding: 0.25mm 0;
+	vertical-align: top;
+}
+
+/* Unterkategorie innerhalb eines Fachs: kleiner Abstand nach oben, damit sich die Gruppen absetzen. */
+.ak-tabelle td.ak-kategorie {
+	padding-top: 1.5mm;
+}
+
+.spalte-ak-stufe {
+	width: 7mm;
+}
+
+/* Kompetenztext mit hängendem Aufzählzeichen: Das Zeichen steht mit fester Breite links vor dem Text, umbrochene Folgezeilen beginnen
+   an derselben Kante wie die erste Textzeile. Die feste Breite ergibt zugleich den Abstand nach dem Zeichen.
+   Selektor mit .ak-tabelle td, damit der Einzug nicht vom allgemeinen Zellenabstand (.ak-tabelle td) überschrieben wird. */
+.ak-tabelle td.ak-text {
+	padding-left: 4mm;
+}
+
+.ak-zeichen {
+	display: inline-block;
+	width: 4mm;
+	margin-left: -4mm;
+}
+
+/* Kopfzeile der Kompetenztabelle: links der Vorname, rechts "erreichtes Kompetenzniveau" einzeilig und rechtsbündig über den
+   Stufenspalten. Beide stehen in einer Zelle über die ganze Breite, weil der Titel breiter als die Stufenspalten ist. */
+.ak-kopf-titel {
+	float: right;
+	white-space: nowrap;
+}
+
+/* Fußnote 2) auf derselben Seite wie 1) (Kompetenzen beim ASV): kein zweiter Strich, der Strich vor 1) gilt für beide. */
+.fussnote-seite.fussnote-ohne-strich::before {
+	display: none;
+}
+
+/* Das Fußnotenzeichen 2) steht sichtbar im Kopf der Tabelle; die Fußnote selbst steht vor der Tabelle und setzt kein eigenes Zeichen.
+   Doppelte Klasse, damit die Regel die später stehende Regel .fussnote-seite::footnote-call (Zeichen, Abstand) überschreibt. */
+/* noinspection CssInvalidPseudoSelector */
+.fussnote-seite.fussnote-ak::footnote-call { /* NOSONAR */
+	content: "";
+	margin: 0;
+}
+
+/* Abschnitte */
+
+.abschnitt {
+	margin-bottom: 0.6mm;
+}
+
+.abschnitt-folge {
+	margin-top: 2.5mm;
+}
+
+/* Abstand zwischen den Arbeitsgemeinschaften und dem Schlussblock; als Außenabstand unten fällt er mit dem Abstand des
+   letzten Fachs zusammen und entfällt bei einem Seitenumbruch. */
+.abschnitt-vor-schlussblock {
+	margin-bottom: 2.5mm;
+}
+
+.abschnitt-nach-faechern {
+	margin-top: 2.4mm;
+}
+
+/* Inhalt */
+
+/* Der Inhalt ist nicht begrenzt; er bricht bei Bedarf auf Folgeseiten um. */
+.inhalt-seite-1 {
+	margin: 6.2mm 4.3mm 0 4.3mm;
+}
+
+/* Die feste Zeilenhöhe hält die Freitexte auf einem Zeilenraster, auf das die Zeilenbegrenzungen abgestimmt sind. */
+.freitext {
+	line-height: 4.5mm;
+	overflow: hidden;
+}
+
+/* Begrenzung einzelner Freitexte auf eine Zeilenzahl (Zeilenhöhe 4.5mm). */
+.max-zeilen-8 {
+	max-height: 36mm;
+}
+
+.max-zeilen-15 {
+	max-height: 67.5mm;
+}
+
+/* Fußbereich */
+
+.unterschriften {
+	height: 26mm;
+	margin: 0 4.3mm;
+}
+
+.spalte-unterschrift {
+	width: 39%;
+}
+
+.spalte-siegel {
+	width: 22%;
+}
+
+.zeile-unterschrift {
+	height: 16mm;
+}
+
+.fussnoten-linie {
+	width: 37mm;
+	margin: 0 0 1.5mm 0;
+	border: 0;
+	border-top: 0.25mm solid #000000;
+}
+
+.fussnoten-linie-voll {
+	width: 100%;
+	margin-bottom: 0.6mm;
+}
+
+/* Das Fußnotenzeichen steht hängend vor dem Text, damit alle Textzeilen an derselben Kante beginnen. Zeichen und Text stehen an
+   denselben Kanten wie Nummer und Text der Hinweisliste darunter (.hinweise ol). Der Einzug läuft über den negativen Außenabstand
+   des Zeichens, weil der Renderer text-indent im Fußnotenbereich nicht anwendet. */
+.fussnote {
+	padding-left: 4.8mm;
+}
+
+/* Fußnotenzeichen im Text (2) und *); 1) über ::footnote-call). Feste Schriftgröße und Hochstellung in em der eigenen Schrift,
+   damit das Zeichen unabhängig von der Schrift ringsum (Überschrift oder kleine Beschriftung) überall gleich aussieht. */
+.fussnote-verweis {
+	font-size: 6pt;
+	font-weight: normal;
+	vertical-align: 0.6em;
+	margin-left: 1mm;
+}
+
+/* Hinweis: float: footnote sowie ::footnote-call und ::footnote-marker stammen aus CSS Generated Content for Paged Media und werden
+   von OpenHtmlToPDF ausgewertet. Die IDE kennt sie nicht; die Meldungen sind deshalb mit noinspection unterdrückt. */
+
+/* Seitengebundene Fußnote: Der Span steht im Text an der Stelle des Fußnotenzeichens. Der Renderer setzt dort das Zeichen
+   und den Text unten auf dieselbe Seite. Das Zeichen kommt aus data-zeichen, damit es unabhängig von der Reihenfolge fest bleibt.
+   Schriftgröße und Abstand nach unten kommen aus den Klassen f-very-tiny und m-b-2. Der Einzug (wie .fussnote) steht hier direkt,
+   weil der Renderer ihn über die zusätzliche Klasse fussnote im Fußnotenbereich nicht angewendet hat.
+   Die Trennlinie gehört zur Fußnote selbst (::before) und nicht zum Fußnotenbereich, damit über dem Unterschriftenblock keine Linie steht.
+   Zeichen und Text stehen wie bei .fussnote: das Zeichen hängend bei 1.1mm, der Text bei 4.3mm. */
+.fussnote-seite {
+	/*noinspection CssInvalidPropertyValue*/
+	float: footnote;
+	display: block;
+	padding-left: 4.3mm;
+}
+
+/* Kurzer Strich über der Fußnote, wie .fussnoten-linie. Der negative Außenabstand hebt den Einzug der Fußnote auf. */
+.fussnote-seite::before {
+	content: "";
+	display: block;
+	width: 37mm;
+	margin: 0 0 1.5mm -4.3mm;
+	border-top: 0.25mm solid #000000;
+}
+
+/* Gleiche Werte wie .fussnote-verweis, damit 1), 2) und *) im Text gleich aussehen. */
+/* noinspection CssInvalidPseudoSelector */
+.fussnote-seite::footnote-call { /* NOSONAR */
+	content: attr(data-zeichen);
+	font-size: 6pt;
+	font-weight: normal;
+	vertical-align: 0.6em;
+	margin-left: 1mm;
+}
+
+/* Das Zeichen hängt mit seiner Breite links vor dem Text, wie .fussnote-zeichen in .fussnote. */
+/* noinspection CssInvalidPseudoSelector */
+.fussnote-seite::footnote-marker { /* NOSONAR */
+	content: attr(data-zeichen);
+	display: inline-block;
+	width: 3.2mm;
+	margin-left: -3.2mm;
+}
+
+/* Unterschriften und Hinweise: Der Block ist als Fußnote ohne Zeichen gesetzt, damit er ohne Seitenumbruch an den Inhalt anschließt
+   und trotzdem am unteren Rand der Seite steht, auf der der Inhalt endet. */
+.fussbereich-letzte-seite {
+	/* noinspection CssInvalidPropertyValue */
+	float: footnote;
+}
+
+/* noinspection CssInvalidPseudoSelector */
+.fussbereich-letzte-seite::footnote-call { /* NOSONAR */
+	content: "";
+}
+
+/* noinspection CssInvalidPseudoSelector */
+.fussbereich-letzte-seite::footnote-marker { /* NOSONAR */
+	content: "";
+}
+
+/* Tabellen mit Seitenumbruch-Steuerung bringen den Renderer in einer Fußnote zum Absturz. */
+.fussbereich-letzte-seite table {
+	-fs-table-paginate: auto;
+}
+
+.fussnote-zeichen {
+	display: inline-block;
+	width: 3.44mm;
+	margin-left: -3.44mm;
+}
+
+.hinweise ol {
+	margin: 0;
+	padding-left: 4.8mm;
+}
+
+/* HTML-Vorschau im Browser. Laufende Kopfzeile, Fußnoten und Seitenränder wirken nur im PDF; OpenHtmlToPDF ignoriert @media screen.
+   Wie die globalen Kopf- und Fußzeilen (.pageTopLeft usw.) wird die Kopfzeile der Folgeseiten hier ausgeblendet. */
+@media screen {
+	.kopf-gerade, .kopf-ungerade {
+		display: none;
+	}
+
+	/* Fußnote 1): In der Vorschau steht nur das Zeichen hochgestellt an der Überschrift. */
+	.fussnote-seite {
+		display: inline;
+		padding: 0;
+		font-size: 0;
+	}
+
+	.fussnote-seite::before {
+		content: attr(data-zeichen);
+		display: inline;
+		width: auto;
+		margin: 0 0 0 1mm;
+		border: 0;
+		font-size: 6pt;
+		vertical-align: 0.6em;
+	}
+
+	/* Fußnote 2) zu den Kompetenzstufen: Das Zeichen steht schon im Kopf der Kompetenztabelle, der Anker davor bleibt in der Vorschau unsichtbar. */
+	.fussnote-ak {
+		display: none;
+	}
+
+	/* Der Unterschriftenblock steht im Quelltext am Anfang des Schlussblocks (Fußnotenanker für das PDF); in der Vorschau folgt er
+	   auf Engagement und Bemerkungen. */
+	.schlussblock {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.fussbereich-letzte-seite {
+		order: 1;
+	}
+}

@@ -5,8 +5,10 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.core.data.kataloge.AnkreuzkompetenzKonfiguration;
 import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ReportingAnkreuzkompetenzKonfiguration;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 /**
@@ -76,6 +78,20 @@ public class ProxyReportingSchule extends ReportingSchule {
 	 */
 	public ReportingContext reportingContext() {
 		return reportingContext;
+	}
+
+	/**
+	 * Die Konfiguration der Ankreuzkompetenzen der Schule: Anzahl und Texte der Stufen. Sie wird beim ersten Zugriff geladen.
+	 *
+	 * @return Inhalt des Feldes ankreuzkompetenzKonfiguration; nie {@code null}.
+	 */
+	@Override
+	public ReportingAnkreuzkompetenzKonfiguration ankreuzkompetenzKonfiguration() {
+		if (super.ankreuzkompetenzKonfiguration == null) {
+			final AnkreuzkompetenzKonfiguration konfiguration = this.reportingContext.repositoryKataloge().ankreuzkompetenzKonfiguration();
+			super.ankreuzkompetenzKonfiguration = new ReportingAnkreuzkompetenzKonfiguration(konfiguration.textStufen, konfiguration.textSonstiges);
+		}
+		return super.ankreuzkompetenzKonfiguration;
 	}
 
 	/**

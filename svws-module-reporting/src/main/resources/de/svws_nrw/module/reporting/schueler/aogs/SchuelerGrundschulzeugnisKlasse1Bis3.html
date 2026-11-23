@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}" xmlns="http://www.w3.org/1999/html">
+	<!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Zeugnis',
+		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4-hoch-minimal-rand.css')}">
+		<title></title>
+	</head>
+
+	<body th:with="mitNoten = ${VorlageParameter.get('mitNoten')},
+				   notenAlsBlock = ${VorlageParameter.get('notenAlsBlock')},
+				   fbOhneUmbruch = ${VorlageParameter.get('fbOhneUmbruch')},
+				   mitFachbemerkungen = ${VorlageParameter.get('mitFachbemerkungen')},
+				   mitAnkreuzkompetenzen = ${VorlageParameter.get('mitAnkreuzkompetenzen')},
+				   akOhneUmbruch = ${VorlageParameter.get('akOhneUmbruch')},
+				   broschuerendruck = ${VorlageParameter.get('broschuerendruck')},
+				   mitSchullogo = ${VorlageParameter.get('mitSchullogo')},
+				   mitSchultraegerlogo = ${VorlageParameter.get('mitSchultraegerlogo')},
+				   mitBildZeugniskopf = ${VorlageParameter.get('mitBildZeugniskopf')},
+				   mitTextZeugniskopf = ${VorlageParameter.get('mitTextZeugniskopf')},
+				   textSchulleitungUnterschrift = ${VorlageParameter.get('textSchulleitungUnterschrift')},
+				   textSchulleitungUnterschriftBezeichnung = ${VorlageParameter.get('textSchulleitungUnterschriftBezeichnung')},
+				   textKlassenlehrer1Unterschrift = ${VorlageParameter.get('textKlassenlehrer1Unterschrift')},
+				   textKlassenlehrer1UnterschriftBezeichnung = ${VorlageParameter.get('textKlassenlehrer1UnterschriftBezeichnung')},
+				   textKlassenlehrer2Unterschrift = ${VorlageParameter.get('textKlassenlehrer2Unterschrift')},
+				   textKlassenlehrer2UnterschriftBezeichnung = ${VorlageParameter.get('textKlassenlehrer2UnterschriftBezeichnung')},
+				   mitPersoenlichenUnterschriften = ${VorlageParameter.get('mitPersoenlichenUnterschriften')},
+				   mitZweiterKlassenlehrerUnterschrift = ${VorlageParameter.get('mitZweiterKlassenlehrerUnterschrift')},
+				   mitTerminElternsprechtag = ${VorlageParameter.get('mitTerminElternsprechtag')},
+				   terminElternsprechtag = ${VorlageParameter.get('terminElternsprechtag')},
+				   mitTerminWiederbeginnUnterricht = ${VorlageParameter.get('mitTerminWiederbeginnUnterricht')},
+				   terminWiederbeginnUnterricht = ${VorlageParameter.get('terminWiederbeginnUnterricht')}">
+
+		<th:block th:each="schueler : ${Schueler}"
+				  th:with="lernabschnitt = ${schueler.auswahlLernabschnitt()},
+						   hatTextSchulleitung = ${!#strings.isEmpty(textSchulleitungUnterschrift) || !#strings.isEmpty(textSchulleitungUnterschriftBezeichnung)},
+						   finalSchulleitungUnterschrift = ${hatTextSchulleitung ? textSchulleitungUnterschrift : (mitPersoenlichenUnterschriften ? ((Schule != null && Schule.schulleitung() != null) ? Schule.schulleitung().unterschriftfeld(true, true) : 'N. N.') : 'Schulleiter/in')},
+						   finalSchulleitungBezeichnung = ${hatTextSchulleitung ? textSchulleitungUnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? ((Schule != null && Schule.schulleitung() != null && Schule.schulleitung().schulleitungsfunktion() != null) ? '(' + Schule.schulleitung().schulleitungsfunktion().bezeichnung() + ')' : '(Schulleiter/in)') : '')},
+						   klassenlehrer1 = ${(lernabschnitt != null && lernabschnitt.klasse() != null && lernabschnitt.klasse().klassenlehrer().size() > 0) ? lernabschnitt.klasse().klassenlehrer().get(0) : null},
+						   klassenlehrer2 = ${(lernabschnitt != null && lernabschnitt.klasse() != null && lernabschnitt.klasse().klassenlehrer().size() > 1) ? lernabschnitt.klasse().klassenlehrer().get(1) : null},
+						   hatTextKlassenlehrer1 = ${!#strings.isEmpty(textKlassenlehrer1Unterschrift) || !#strings.isEmpty(textKlassenlehrer1UnterschriftBezeichnung)},
+						   finalKlassenlehrer1Unterschrift = ${hatTextKlassenlehrer1 ? textKlassenlehrer1Unterschrift : (mitPersoenlichenUnterschriften ? (klassenlehrer1 != null ? klassenlehrer1.unterschriftfeld(true, true) : 'N. N.') : 'Klassenlehrer/in')},
+						   finalKlassenlehrer1Bezeichnung = ${hatTextKlassenlehrer1 ? textKlassenlehrer1UnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (klassenlehrer1 == null ? '(Klassenlehrer/in)' : (klassenlehrer1.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? '(Klassenlehrerin)' : (klassenlehrer1.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? '(Klassenlehrer)' : '(Klassenlehrkraft)'))) : '')},
+						   hatTextKlassenlehrer2 = ${!#strings.isEmpty(textKlassenlehrer2Unterschrift) || !#strings.isEmpty(textKlassenlehrer2UnterschriftBezeichnung)},
+						   finalKlassenlehrer2Unterschrift = ${hatTextKlassenlehrer2 ? textKlassenlehrer2Unterschrift : (mitPersoenlichenUnterschriften ? (klassenlehrer2 != null ? klassenlehrer2.unterschriftfeld(true, true) : 'N. N.') : 'Klassenlehrer/in')},
+						   finalKlassenlehrer2Bezeichnung = ${hatTextKlassenlehrer2 ? textKlassenlehrer2UnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (klassenlehrer2 == null ? '(Klassenlehrer/in)' : (klassenlehrer2.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? '(Klassenlehrerin)' : (klassenlehrer2.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? '(Klassenlehrer)' : '(Klassenlehrkraft)'))) : '')},
+						   finalKlassenlehrerUnterschrift = ${mitZweiterKlassenlehrerUnterschrift ? finalKlassenlehrer2Unterschrift : finalKlassenlehrer1Unterschrift},
+						   finalKlassenlehrerBezeichnung = ${mitZweiterKlassenlehrerUnterschrift ? finalKlassenlehrer2Bezeichnung : finalKlassenlehrer1Bezeichnung},
+						   schullogo = ${Schule != null ? Schule.schullogoHtmlImageSource() : ''},
+						   schultraegerlogo = ${Schule != null ? Schule.bild(@de.svws_nrw.core.types.reporting.ReportingBildDefinition@SCHULTRAEGERLOGO_QUADRATISCH).htmlImageSource() : ''},
+						   zeugniskopfbild = ${Schule != null ? Schule.bild(@de.svws_nrw.core.types.reporting.ReportingBildDefinition@ZEUGNISKOPF).htmlImageSource() : ''},
+						   mitZeugniskopfbild = ${mitBildZeugniskopf && !#strings.isEmpty(zeugniskopfbild)},
+						   akKonfig = ${(mitAnkreuzkompetenzen && Schule != null) ? Schule.ankreuzkompetenzKonfiguration() : null},
+						   anzahlStufen = ${(akKonfig != null) ? akKonfig.anzahlStufen() : 0},
+						   akAktiv = ${mitAnkreuzkompetenzen && anzahlStufen > 0}">
+
+			<th:block th:if="${lernabschnitt != null}">
+
+			<!-- reset-page-counter: Jedes Zeugnis beginnt bei Seite 1, auch wenn mehrere Schüler in einer Datei stehen. -->
+			<div class="start-new-page reset-page-counter zeugnis-content">
+
+				<div class="kopfbereich">
+					<!-- Zeugniskopf mit Bild -->
+					<div th:if="${mitZeugniskopfbild}" class="zeugniskopfbild">
+						<img th:src="@{${zeugniskopfbild}}" alt="Zeugniskopf"/>
+					</div>
+					<!-- Zeugniskopf ohne Bild; ist kein Zeugniskopf hinterlegt, erscheinen die Logos, damit der Kopf nicht leer bleibt -->
+					<th:block th:unless="${mitZeugniskopfbild}">
+						<div class="logo-links" th:if="${mitSchullogo && !#strings.isEmpty(schullogo)}"><img th:src="@{${schullogo}}" alt="Schullogo"/></div>
+						<div class="logo-rechts" th:if="${mitSchultraegerlogo && !#strings.isEmpty(schultraegerlogo)}"><img th:src="@{${schultraegerlogo}}" alt="Schulträgerlogo"/></div>
+					</th:block>
+					<!-- Text-Zeugniskopf (optional), über Bild oder ohne Bild -->
+					<div class="zeugniskopf-text ta-c" th:if="${mitTextZeugniskopf}">
+						<div class="m-t-1 f-bold f-19" th:text="${Schule != null ? Schule.bezeichnungSchuleZeileEins() : ''}">Muster-Grundschule</div>
+						<div class="f-bold" th:if="${Schule != null && !#strings.isEmpty(Schule.bezeichnungSchuleZeileZwei())}"
+							 th:text="${Schule != null ? Schule.bezeichnungSchuleZeileZwei() : ''}">Gemeinschaftsgrundschule</div>
+					</div>
+				</div>
+
+				<!-- Zeugnis-Titel -->
+				<div class="ta-c">
+					<div class="zeugnis-titel f-bold">ZEUGNIS</div>
+					<div class="zeugnis-name f-bold" th:text="${schueler.vornamenNachname()}">Max Mustermann</div>
+				</div>
+
+				<!-- Allgemeiner Zeugniskopf mit/ohne Bild -->
+				<table class="kopfdaten fixed-100">
+					<tr>
+						<th class="ta-l" th:text="${'Klasse: ' + (lernabschnitt.klasse() != null ? lernabschnitt.klasse().kuerzel() : '')}">Klasse 4a</th>
+						<th class="ta-c" th:text="${'Geburtsdatum: ' + #convert.toDateDE(schueler.geburtsdatum())}">Geburtsdatum: 01.01.2000</th>
+						<th class="ta-r" th:text="${'Schuljahr: ' + (lernabschnitt.schuljahresabschnitt() != null ? lernabschnitt.schuljahresabschnitt().textSchuljahresabschnittLang() : '')}">Schuljahr: 2025/26 1. Halbjahr</th>
+					</tr>
+					<tr>
+						<td colspan="3" th:text="${'Versäumte Stunden: ' + lernabschnitt.fehlstundenGesamt() + ', davon unentschuldigt: ' + (lernabschnitt.fehlstundenUnentschuldigt() == 0 ? 'keine Stunde' : lernabschnitt.fehlstundenUnentschuldigt())}">Versäumte Stunden: 29, davon unentschuldigt: keine Stunde</td>
+					</tr>
+				</table>
+
+				<!-- Kopfzeile der Folgeseiten: Die Elemente werden in den oberen Seitenrand verschoben (position: running, siehe @page).
+				     Der Rand zeigt den Wert, der zu Beginn einer Seite gilt ("start"): auf der ersten Seite noch keinen (bzw. den leeren
+				     vom Ende des vorigen Zeugnisses), auf den Folgeseiten den Text. Am Ende des Zeugnisses folgen leere Elemente, damit
+				     das nächste Zeugnis ohne Kopfzeile beginnt.
+				     Gerade und ungerade Seiten haben je ein eigenes Element, damit die Ausrichtung wechseln kann: DIN A4 immer
+				     rechtsbündig, beim Broschürendruck (DIN A3, Ausgabeoption broschuerendruck) gerade Seiten links- und ungerade rechtsbündig,
+				     so dass die Kopfzeile in der Broschüre immer an der Außenkante steht. -->
+				<th:block th:with="kopfText = ${'des Zeugnisses für ' + schueler.vornamenNachname()
+												+ ', Klasse ' + (lernabschnitt.klasse() != null ? lernabschnitt.klasse().kuerzel() : '')
+												+ ', Schuljahr ' + (lernabschnitt.schuljahresabschnitt() != null ? #strings.substringBefore(lernabschnitt.schuljahresabschnitt().textSchuljahresabschnittLang(), ' ') : '')}">
+					<div class="kopf-gerade kopf-linie f-9" th:classappend="${broschuerendruck ? 'ta-l' : 'ta-r'}"><span class="page-num-print"></span>. Seite
+						<span th:text="${kopfText}">des Zeugnisses für Mia Musterkind, Klasse 02A, Schuljahr 2025/26</span></div>
+					<div class="kopf-ungerade kopf-linie f-9 ta-r"><span class="page-num-print"></span>. Seite
+						<span th:text="${kopfText}">des Zeugnisses für Mia Musterkind, Klasse 02A, Schuljahr 2025/26</span></div>
+				</th:block>
+
+				<!-- Textblöcke -->
+				<div class="inhalt-seite-1">
+				<!-- Fachvariablen und Kompetenz-Flags gelten für den ganzen Inhalt: Ob irgendwo Kompetenzen gedruckt werden, bestimmt auch die
+				     Nummer der Fußnote zum Engagement im Schlussblock. fnX gibt an, ob an Stelle X die Fußnote zu den Kompetenzstufen steht
+				     (erstes Vorkommen in Druckreihenfolge: ASV, Fächer). Nicht bewertete Kompetenzen sind bereits beim Laden über die Filtergruppe
+				     "Ankreuzkompetenzfilter" der Vorlage ausgefiltert. Weiterer Unterricht hat keine Ankreuzkompetenzen. -->
+				<th:block th:with="leistungDeutsch = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'Deutsch')},
+								  leistungDeutschFB = ${leistungDeutsch != null && !#strings.isEmpty(leistungDeutsch.textFachbezogeneLernentwicklung())},
+								  leistungSprachgebrauch = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'Sprachgebrauch')},
+								  leistungSprachgebrauchFB = ${leistungSprachgebrauch != null && !#strings.isEmpty(leistungSprachgebrauch.textFachbezogeneLernentwicklung())},
+								  leistungLesen = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'Lesen')},
+								  leistungLesenFB = ${leistungLesen != null && !#strings.isEmpty(leistungLesen.textFachbezogeneLernentwicklung())},
+								  leistungRechtschreibungLang = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'Rechtschreibung')},
+								  leistungRechtschreibung = ${leistungRechtschreibungLang != null ? leistungRechtschreibungLang : lernabschnitt.leistungsdatenZumStatistikfach('D', 'Rechtschreiben')},
+								  leistungRechtschreibungFB = ${leistungRechtschreibung != null && !#strings.isEmpty(leistungRechtschreibung.textFachbezogeneLernentwicklung())},
+								  leistungDGS = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'DGS')},
+								  leistungDGSFB = ${leistungDGS != null && !#strings.isEmpty(leistungDGS.textFachbezogeneLernentwicklung())},
+								  faecherMathematik = ${lernabschnitt.leistungsdatenZumStatistikfach('M')},
+								  leistungMathematik = ${faecherMathematik.isEmpty() ? null : faecherMathematik[0]},
+								  leistungMathematikFB = ${leistungMathematik != null && !#strings.isEmpty(leistungMathematik.textFachbezogeneLernentwicklung())},
+								  faecherSachunterricht = ${lernabschnitt.leistungsdatenZumStatistikfach('SU')},
+								  leistungSachunterricht = ${faecherSachunterricht.isEmpty() ? null : faecherSachunterricht[0]},
+								  leistungSachunterrichtFB = ${leistungSachunterricht != null && !#strings.isEmpty(leistungSachunterricht.textFachbezogeneLernentwicklung())},
+								  faecherEnglisch = ${lernabschnitt.leistungsdatenZumStatistikfach('E')},
+								  leistungEnglisch = ${faecherEnglisch.isEmpty() ? null : faecherEnglisch[0]},
+								  leistungEnglischFB = ${leistungEnglisch != null && !#strings.isEmpty(leistungEnglisch.textFachbezogeneLernentwicklung())},
+								  faecherKunst = ${lernabschnitt.leistungsdatenZumStatistikfach('KU')},
+								  leistungKunst = ${faecherKunst.isEmpty() ? null : faecherKunst[0]},
+								  leistungKunstFB = ${leistungKunst != null && !#strings.isEmpty(leistungKunst.textFachbezogeneLernentwicklung())},
+								  faecherMusik = ${lernabschnitt.leistungsdatenZumStatistikfach('MU')},
+								  leistungMusik = ${faecherMusik.isEmpty() ? null : faecherMusik[0]},
+								  leistungMusikFB = ${leistungMusik != null && !#strings.isEmpty(leistungMusik.textFachbezogeneLernentwicklung())},
+								  faecherSport = ${lernabschnitt.leistungsdatenZumStatistikfach('SP')},
+								  leistungSport = ${faecherSport.isEmpty() ? null : faecherSport[0]},
+								  leistungSportFB = ${leistungSport != null && !#strings.isEmpty(leistungSport.textFachbezogeneLernentwicklung())},
+								  leistungReligion = ${lernabschnitt.leistungsdatenZurFachgruppe(@de.svws_nrw.asd.types.fach.Fachgruppe@FG_RE)},
+								  leistungReligionFB = ${leistungReligion != null && !#strings.isEmpty(leistungReligion.textFachbezogeneLernentwicklung())},
+								  akASV = ${akAktiv && !lernabschnitt.ankreuzkompetenzenASV().isEmpty()},
+								  akDeutsch = ${akAktiv && leistungDeutsch != null && !leistungDeutsch.ankreuzkompetenzen().isEmpty()},
+								  akSprachgebrauch = ${akAktiv && leistungSprachgebrauch != null && !leistungSprachgebrauch.ankreuzkompetenzen().isEmpty()},
+								  akLesen = ${akAktiv && leistungLesen != null && !leistungLesen.ankreuzkompetenzen().isEmpty()},
+								  akRechtschreibung = ${akAktiv && leistungRechtschreibung != null && !leistungRechtschreibung.ankreuzkompetenzen().isEmpty()},
+								  akDGS = ${akAktiv && leistungDGS != null && !leistungDGS.ankreuzkompetenzen().isEmpty()},
+								  akMathematik = ${akAktiv && leistungMathematik != null && !leistungMathematik.ankreuzkompetenzen().isEmpty()},
+								  akSachunterricht = ${akAktiv && leistungSachunterricht != null && !leistungSachunterricht.ankreuzkompetenzen().isEmpty()},
+								  akEnglisch = ${akAktiv && leistungEnglisch != null && !leistungEnglisch.ankreuzkompetenzen().isEmpty()},
+								  akKunst = ${akAktiv && leistungKunst != null && !leistungKunst.ankreuzkompetenzen().isEmpty()},
+								  akMusik = ${akAktiv && leistungMusik != null && !leistungMusik.ankreuzkompetenzen().isEmpty()},
+								  akReligion = ${akAktiv && leistungReligion != null && !leistungReligion.ankreuzkompetenzen().isEmpty()},
+								  akSport = ${akAktiv && leistungSport != null && !leistungSport.ankreuzkompetenzen().isEmpty()},
+								  fnASV = ${akASV},
+								  fnDeutsch = ${akDeutsch && !(akASV)},
+								  akBisDeutsch = ${akASV || akDeutsch},
+								  fnSprachgebrauch = ${akSprachgebrauch && !(akBisDeutsch)},
+								  akBisSprachgebrauch = ${akBisDeutsch || akSprachgebrauch},
+								  fnLesen = ${akLesen && !(akBisSprachgebrauch)},
+								  akBisLesen = ${akBisSprachgebrauch || akLesen},
+								  fnRechtschreibung = ${akRechtschreibung && !(akBisLesen)},
+								  akBisRechtschreibung = ${akBisLesen || akRechtschreibung},
+								  fnDGS = ${akDGS && !(akBisRechtschreibung)},
+								  akBisDGS = ${akBisRechtschreibung || akDGS},
+								  fnMathematik = ${akMathematik && !(akBisDGS)},
+								  akBisMathematik = ${akBisDGS || akMathematik},
+								  fnSachunterricht = ${akSachunterricht && !(akBisMathematik)},
+								  akBisSachunterricht = ${akBisMathematik || akSachunterricht},
+								  fnEnglisch = ${akEnglisch && !(akBisSachunterricht)},
+								  akBisEnglisch = ${akBisSachunterricht || akEnglisch},
+								  fnKunst = ${akKunst && !(akBisEnglisch)},
+								  akBisKunst = ${akBisEnglisch || akKunst},
+								  fnMusik = ${akMusik && !(akBisKunst)},
+								  akBisMusik = ${akBisKunst || akMusik},
+								  fnReligion = ${akReligion && !(akBisMusik)},
+								  akBisReligion = ${akBisMusik || akReligion},
+								  fnSport = ${akSport && !(akBisReligion)},
+								  akBisSport = ${akBisReligion || akSport},
+								  akGedruckt = ${akBisSport},
+								  deutschHatInhalt = ${(mitFachbemerkungen && leistungDeutschFB) || akDeutsch}">
+
+					<!-- Arbeits- und Sozialverhalten (Fragment asvAbschnitt, siehe unten): ohne Notenblock hier vor den Lernbereichen,
+					     mit Notenblock (mitNoten und notenAlsBlock) direkt unter dem Notenblock. -->
+					<th:block th:unless="${mitNoten && notenAlsBlock}">
+						<div th:replace="~{::asvAbschnitt}"></div>
+					</th:block>
+
+					<!-- Lernbereiche/Fächer -->
+					<div class="abschnitt abschnitt-folge zeugnis-abschnittstitel zeugnis-abschnittstitel-container">Leistungen</div>
+
+					<div>
+
+						<!-- Notenblock (wie im Zeugnis Klasse 4): Bei notenAlsBlock stehen alle Noten gesammelt vor den Fachbemerkungen, die dann ohne
+						     Noten folgen. Sonst steht die Note jeweils beim Fach. Ohne mitNoten entfallen alle Noten. -->
+					<table class="mp-0 fixed-100 notenblock" th:if="${mitNoten && notenAlsBlock}">
+						<colgroup>
+							<col class="spalte-notenblock-links" />
+							<col />
+						</colgroup>
+						<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+						<tr>
+							<td class="links"><!-- linke Fächer-Tabelle -->
+								<table class="table-faecher">
+									<colgroup>
+										<col class="spalte-notenblock-fach" />
+										<col class="spalte-notenblock-note" />
+									</colgroup>
+									<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+									<tr>
+										<td th:with="fach = ${leistungDeutsch != null ? leistungDeutsch.fach() : null}" th:text="${fach == null ? 'Deutsch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Deutsch</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungDeutsch == null) || #strings.isEmpty(leistungDeutsch.noteKuerzel())) ? '' : leistungDeutsch.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td class="indent-1" th:with="fach = ${leistungSprachgebrauch != null ? leistungSprachgebrauch.fach() : null}" th:text="${fach == null ? 'Sprachgebrauch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Sprachgebrauch</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungSprachgebrauch == null) || #strings.isEmpty(leistungSprachgebrauch.noteKuerzel())) ? '' : leistungSprachgebrauch.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td class="indent-1" th:with="fach = ${leistungLesen != null ? leistungLesen.fach() : null}" th:text="${fach == null ? 'Lesen' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Lesen</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungLesen == null) || #strings.isEmpty(leistungLesen.noteKuerzel())) ? '' : leistungLesen.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td class="indent-1" th:with="fach = ${leistungRechtschreibung != null ? leistungRechtschreibung.fach() : null}" th:text="${fach == null ? 'Rechtschreibung' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Rechtschreibung</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungRechtschreibung == null) || #strings.isEmpty(leistungRechtschreibung.noteKuerzel())) ? '' : leistungRechtschreibung.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr th:if="${leistungDGS != null}">
+										<td class="indent-1" th:with="fach = ${leistungDGS.fach()}" th:text="${fach == null ? 'DGS' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">DGS</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungDGS == null) || #strings.isEmpty(leistungDGS.noteKuerzel())) ? '' : leistungDGS.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td th:with="fach = ${leistungMathematik != null ? leistungMathematik.fach() : null}" th:text="${fach == null ? 'Mathematik' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Mathematik</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungMathematik == null) || #strings.isEmpty(leistungMathematik.noteKuerzel())) ? '' : leistungMathematik.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td th:with="fach = ${leistungSachunterricht != null ? leistungSachunterricht.fach() : null}" th:text="${fach == null ? 'Sachunterricht' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Sachunterricht</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungSachunterricht == null) || #strings.isEmpty(leistungSachunterricht.noteKuerzel())) ? '' : leistungSachunterricht.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr th:if="${!faecherEnglisch.isEmpty()}">
+										<td th:with="fach = ${leistungEnglisch != null ? leistungEnglisch.fach() : null}" th:text="${fach == null ? 'Englisch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Englisch</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungEnglisch == null) || #strings.isEmpty(leistungEnglisch.noteKuerzel())) ? '' : leistungEnglisch.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+								</table>
+							</td>
+
+							<td class="rechts"><!-- rechte Fächer-Tabelle -->
+								<table class="table-faecher">
+									<colgroup>
+										<col class="spalte-notenblock-fach" />
+										<col class="spalte-notenblock-note" />
+									</colgroup>
+									<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+									<tr>
+										<td th:with="fach = ${leistungKunst != null ? leistungKunst.fach() : null}" th:text="${fach == null ? 'Kunst' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Kunst</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungKunst == null) || #strings.isEmpty(leistungKunst.noteKuerzel())) ? '' : leistungKunst.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td th:with="fach = ${leistungMusik != null ? leistungMusik.fach() : null}" th:text="${fach == null ? 'Musik' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Musik</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungMusik == null) || #strings.isEmpty(leistungMusik.noteKuerzel())) ? '' : leistungMusik.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td th:with="fach = ${leistungReligion != null ? leistungReligion.fach() : null}" th:text="${fach == null ? 'Religionslehre' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Religionslehre</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungReligion == null) || #strings.isEmpty(leistungReligion.noteKuerzel())) ? '' : leistungReligion.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td th:with="fach = ${leistungSport != null ? leistungSport.fach() : null}" th:text="${fach == null ? 'Sport' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Sport</td>
+										<td>
+											<span class="formularfeld ta-c f-ital"
+														th:with="note=${((leistungSport == null) || #strings.isEmpty(leistungSport.noteKuerzel())) ? '' : leistungSport.noteTextZeugnis()}">
+												<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+												<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+											</span>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+
+						<!-- Arbeits- und Sozialverhalten unter dem Notenblock -->
+						<th:block th:if="${mitNoten && notenAlsBlock}">
+							<div th:replace="~{::asvAbschnitt}"></div>
+						</th:block>
+
+						<!-- Überschrift der Fachbemerkungen, nur mit Notenblock: trennt sie vom Arbeits- und Sozialverhalten darüber -->
+						<div class="abschnitt abschnitt-folge f-bold zeugnis-abschnittstitel-container" th:if="${mitNoten && notenAlsBlock}">Fachbezogene Lernentwicklung</div>
+
+						<!-- Noten und Fachbemerkungen: äußere Tabelle, jedes Fach sitzt als eigene Tabelle in einer Zeile -->
+						<table class="mp-0 fixed-100">
+							<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th></tr></thead>
+							<tbody>
+
+								<!-- Deutsch: Ohne eigenen gedruckten Inhalt (Bemerkung oder bewertete Kompetenzen) ist Deutsch die Überschrift seiner Teilbereiche. Dann entfallen die leere Bemerkungszeile
+								     und der Abstand nach unten, so dass "- Sprachgebrauch" direkt folgt wie sonst die Bemerkung unter dem Fachnamen. -->
+								<tr th:classappend="${((mitFachbemerkungen && fbOhneUmbruch && !akDeutsch) ? 'fach-als-block' : 'fach-umbrechbar') + (deutschHatInhalt ? '' : ' fach-gruppe-zeile')}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach" th:classappend="${deutschHatInhalt ? '' : 'fach-gruppe'}">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungDeutsch != null ? leistungDeutsch.fach() : null}"
+														               th:text="${fach == null ? 'Deutsch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Deutsch</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungDeutsch == null) || #strings.isEmpty(leistungDeutsch.noteKuerzel())) ? '' : leistungDeutsch.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akDeutsch}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungDeutsch.ankreuzkompetenzen()}, ${fnDeutsch})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen && leistungDeutschFB}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungDeutsch.textFachbezogeneLernentwicklung()}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- Sprachgebrauch -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akSprachgebrauch) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungSprachgebrauch != null ? leistungSprachgebrauch.fach() : null}"
+														               th:text="${fach == null ? '- Sprachgebrauch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? '- ' + fach.bezeichnung() : '- ' + fach.bezeichnungZeugnis())}">- Sprachgebrauch</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungSprachgebrauch == null) || #strings.isEmpty(leistungSprachgebrauch.noteKuerzel())) ? '' : leistungSprachgebrauch.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akSprachgebrauch}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungSprachgebrauch.ankreuzkompetenzen()}, ${fnSprachgebrauch})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungSprachgebrauchFB ? leistungSprachgebrauch.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- Lesen -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akLesen) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungLesen != null ? leistungLesen.fach() : null}"
+														               th:text="${fach == null ? '- Lesen' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? '- ' + fach.bezeichnung() : '- ' + fach.bezeichnungZeugnis())}">- Lesen</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungLesen == null) || #strings.isEmpty(leistungLesen.noteKuerzel())) ? '' : leistungLesen.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akLesen}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungLesen.ankreuzkompetenzen()}, ${fnLesen})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungLesenFB ? leistungLesen.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- Rechtschreibung -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akRechtschreibung) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungRechtschreibung != null ? leistungRechtschreibung.fach() : null}"
+																	   th:text="${fach == null ? '- Rechtschreibung' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? '- ' + fach.bezeichnung() : '- ' + fach.bezeichnungZeugnis())}">- Rechtschreibung</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungRechtschreibung == null) || #strings.isEmpty(leistungRechtschreibung.noteKuerzel())) ? '' : leistungRechtschreibung.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akRechtschreibung}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungRechtschreibung.ankreuzkompetenzen()}, ${fnRechtschreibung})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungRechtschreibungFB ? leistungRechtschreibung.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- DGS -->
+								<th:block th:if="${leistungDGS != null}">
+									<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akDGS) ? 'fach-als-block' : 'fach-umbrechbar'}">
+										<td class="mp-0">
+											<table class="mp-0 fixed-100 fach">
+												<colgroup>
+													<col class="spalte-halb" />
+													<col class="spalte-halb" />
+												</colgroup>
+												<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+												<tbody>
+													<tr class="fach-kopf">
+														<td class="f-bold" th:with="fach = ${leistungDGS.fach()}"
+															               th:text="${fach == null ? '- DGS' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? '- ' + fach.bezeichnung() : '- ' + fach.bezeichnungZeugnis())}">- DGS</td>
+														<td class="ta-r">
+															<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${#strings.isEmpty(leistungDGS.noteKuerzel()) ? '' : leistungDGS.noteTextZeugnis()}">
+																<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+																<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+															</span>
+														</td>
+													</tr>
+													<tr th:if="${akDGS}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+														<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungDGS.ankreuzkompetenzen()}, ${fnDGS})}"></div></td>
+													</tr>
+													<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+														<td colspan="2" class="freitext ta-lt" th:text="${leistungDGSFB ? leistungDGS.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</th:block>
+
+								<!-- Mathematik -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akMathematik) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungMathematik != null ? leistungMathematik.fach() : null}"
+														               th:text="${fach == null ? 'Mathematik' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Mathematik</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungMathematik == null) || #strings.isEmpty(leistungMathematik.noteKuerzel())) ? '' : leistungMathematik.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akMathematik}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungMathematik.ankreuzkompetenzen()}, ${fnMathematik})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungMathematikFB ? leistungMathematik.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- Sachunterricht -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akSachunterricht) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungSachunterricht != null ? leistungSachunterricht.fach() : null}"
+														               th:text="${fach == null ? 'Sachunterricht' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Sachunterricht</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungSachunterricht == null) || #strings.isEmpty(leistungSachunterricht.noteKuerzel())) ? '' : leistungSachunterricht.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akSachunterricht}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungSachunterricht.ankreuzkompetenzen()}, ${fnSachunterricht})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungSachunterrichtFB ? leistungSachunterricht.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- Englisch -->
+								<th:block th:if="${!faecherEnglisch.isEmpty()}">
+									<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akEnglisch) ? 'fach-als-block' : 'fach-umbrechbar'}">
+										<td class="mp-0">
+											<table class="mp-0 fixed-100 fach">
+												<colgroup>
+													<col class="spalte-halb" />
+													<col class="spalte-halb" />
+												</colgroup>
+												<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+												<tbody>
+													<tr class="fach-kopf">
+														<td class="f-bold" th:with="fach = ${leistungEnglisch != null ? leistungEnglisch.fach() : null}"
+																		   th:text="${fach == null ? 'Englisch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Englisch</td>
+														<td class="ta-r">
+															<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungEnglisch == null) || #strings.isEmpty(leistungEnglisch.noteKuerzel())) ? '' : leistungEnglisch.noteTextZeugnis()}">
+																<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+																<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+															</span>
+														</td>
+													</tr>
+													<tr th:if="${akEnglisch}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+														<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungEnglisch.ankreuzkompetenzen()}, ${fnEnglisch})}"></div></td>
+													</tr>
+													<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+														<td colspan="2" class="freitext ta-lt" th:text="${leistungEnglischFB ? leistungEnglisch.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</th:block>
+
+								<!-- Kunst -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akKunst) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungKunst != null ? leistungKunst.fach() : null}"
+														               th:text="${fach == null ? 'Kunst' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Kunst</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungKunst == null) || #strings.isEmpty(leistungKunst.noteKuerzel())) ? '' : leistungKunst.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akKunst}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungKunst.ankreuzkompetenzen()}, ${fnKunst})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungKunstFB ? leistungKunst.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- Musik -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akMusik) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungMusik != null ? leistungMusik.fach() : null}"
+														               th:text="${fach == null ? 'Musik' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Musik</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungMusik == null) || #strings.isEmpty(leistungMusik.noteKuerzel())) ? '' : leistungMusik.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akMusik}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungMusik.ankreuzkompetenzen()}, ${fnMusik})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungMusikFB ? leistungMusik.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- Religion -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akReligion) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungReligion != null ? leistungReligion.fach() : null}"
+																	   th:text="${fach == null ? 'Religionslehre' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Religionslehre</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungReligion == null) || #strings.isEmpty(leistungReligion.noteKuerzel())) ? '' : leistungReligion.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akReligion}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungReligion.ankreuzkompetenzen()}, ${fnReligion})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungReligionFB ? leistungReligion.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+
+								<!-- Sport -->
+								<tr th:classappend="${(mitFachbemerkungen && fbOhneUmbruch && !akSport) ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td class="mp-0">
+										<table class="mp-0 fixed-100 fach">
+											<colgroup>
+												<col class="spalte-halb" />
+												<col class="spalte-halb" />
+											</colgroup>
+											<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+											<tbody>
+												<tr class="fach-kopf">
+													<td class="f-bold" th:with="fach = ${leistungSport != null ? leistungSport.fach() : null}"
+														               th:text="${fach == null ? 'Sport' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Sport</td>
+													<td class="ta-r">
+														<span class="formularfeld ta-c f-ital" th:if="${mitNoten && !notenAlsBlock}" th:with="note=${((leistungSport == null) || #strings.isEmpty(leistungSport.noteKuerzel())) ? '' : leistungSport.noteTextZeugnis()}">
+															<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+															<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+														</span>
+													</td>
+												</tr>
+												<tr th:if="${akSport}" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="mp-0"><div th:replace="~{::akTabelle(${leistungSport.ankreuzkompetenzen()}, ${fnSport})}"></div></td>
+												</tr>
+												<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+													<td colspan="2" class="freitext ta-lt" th:text="${leistungSportFB ? leistungSport.textFachbezogeneLernentwicklung() : ''}">Bemerkung</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<!-- Fragment asvAbschnitt: Angaben zum Arbeits- und Sozialverhalten mit Fußnote 1). Der umgebende Block wird nicht
+					     ausgegeben, er dient nur als Ablage für das Fragment. -->
+					<th:block th:if="${false}">
+						<div th:fragment="asvAbschnitt">
+							<div class="abschnitt abschnitt-folge zeugnis-abschnittstitel-container">
+								<span class="zeugnis-abschnittstitel">Angaben zum Arbeits- und Sozialverhalten</span><span class="fussnote-seite f-very-tiny" th:classappend="${fnASV ? '' : 'm-b-2'}" data-zeichen="1)">Nach Entscheidung der Schulkonferenz.</span>
+							</div>
+							<th:block th:if="${akASV}">
+								<div th:replace="~{::akTabelle(${lernabschnitt.ankreuzkompetenzenASV()}, ${fnASV})}"></div>
+							</th:block>
+							<div th:if="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisASVText())}" class="freitext max-zeilen-15" th:text="${lernabschnitt.zeugnisASVText()}"></div>
+							<div th:if="${!(lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisASVText())) && !akASV}" class="f-ital">- keine -</div>
+						</div>
+
+						<!-- Fragment akTabelle: Ankreuzkompetenzen einer Liste (Fach oder ASV). Die Liste enthält nur bewertete Kompetenzen: Die Filtergruppe
+						     "Ankreuzkompetenzfilter" der Vorlage lässt beim Laden nur Kompetenzen mit Kreuz in einer der Stufen 1 bis 5 und mit eigenem
+						     Kompetenztext zu. Die Reihenfolge folgt dem Katalog; wechselt die Unterkategorie ("Unterkategorie: Kompetenz"), steht davor eine
+						     fette Zwischenzeile. Ein "#" im Kompetenztext ergibt einen Zeilenumbruch.
+						     Bei mitFussnote steht die Erläuterung der Stufen als seitengebundene Fußnote 2) vor der Tabelle, nicht in ihr: Der Tabellenkopf
+						     wird bei einem Seitenumbruch wiederholt und würde die Fußnote sonst mit wiederholen. Das sichtbare Zeichen steht im Kopf.
+						     Vor jedem Kompetenztext steht "…" als hängendes Aufzählzeichen (ein vorhandenes "…" oder "..." am Textanfang wird dafür entfernt), damit er sich an den Vornamen
+						     im Kopf anschließt. Stehen ASV-Kompetenzen und damit Fußnote 1) und 2) auf derselben Seite, entfallen der Strich vor 2) und der Abstand nach 1). -->
+						<th:block th:fragment="akTabelle(akListe, mitFussnote)">
+							<div th:if="${akAktiv && !akListe.isEmpty()}" class="ak-block" th:classappend="${akOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}"
+								 th:with="akStufen = ${#numbers.sequence(1, anzahlStufen)}">
+								<span th:if="${mitFussnote}" class="fussnote-seite fussnote-ak f-very-tiny m-b-2" th:classappend="${fnASV ? 'fussnote-ohne-strich' : ''}" data-zeichen="2)">Für das in einer Kompetenz erreichte Niveau gilt von links nach rechts:
+									<th:block th:each="n, iterStufe : ${akStufen}" th:text="${akKonfig.textStufe(n) + (iterStufe.last ? '.' : ', ')}">sicher, </th:block></span>
+								<table class="mp-0 fixed-100 ak-tabelle">
+									<colgroup>
+										<col />
+										<col class="spalte-ak-stufe" th:each="n : ${akStufen}" />
+									</colgroup>
+									<thead>
+										<tr class="fach-kopf">
+											<th scope="colgroup" class="ta-l bo-b-black" th:colspan="${anzahlStufen + 1}"><span class="ak-kopf-titel">erreichtes Kompetenzniveau<sup th:if="${mitFussnote}" class="fussnote-verweis">2)</sup></span><span class="f-bold" th:text="${schueler.vorname()}">Mia</span></th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- Zwischenzeile, wenn die Unterkategorie gegenüber der vorherigen Kompetenz wechselt und nicht leer ist -->
+										<th:block th:each="ak, iterAk : ${akListe}"
+												  th:with="akKategorie = ${ak.ankreuzkompetenz().unterkategorie()},
+														   akKategorieVorher = ${iterAk.index > 0 ? akListe[iterAk.index - 1].ankreuzkompetenz().unterkategorie() : ''}">
+											<tr th:if="${!#strings.isEmpty(akKategorie) && !akKategorie.equals(akKategorieVorher)}" class="fach-kopf">
+												<td class="ta-lt f-bold ak-kategorie" th:colspan="${anzahlStufen + 1}" th:text="${akKategorie}">Soziales Miteinander</td>
+											</tr>
+											<tr>
+												<td class="ta-lt ak-text"><span class="ak-zeichen">…</span><th:block th:each="akZeile, iterZeile : ${ak.ankreuzkompetenz().kompetenzZeilen()}"><br th:unless="${iterZeile.first}" /><span th:text="${!iterZeile.first ? akZeile : (#strings.startsWith(akZeile, '…') ? #strings.trim(#strings.substring(akZeile, 1)) : (#strings.startsWith(akZeile, '...') ? #strings.trim(#strings.substring(akZeile, 3)) : akZeile))}">hält sich an Regeln.</span></th:block></td>
+												<td class="ta-ct" th:each="n : ${akStufen}" th:with="akStufeWert = ${n == 1 ? ak.stufe1() : (n == 2 ? ak.stufe2() : (n == 3 ? ak.stufe3() : (n == 4 ? ak.stufe4() : ak.stufe5())))}"><img th:src="${#convert.toCheckboxSVG(akStufeWert, 12)}" width="12" height="12" alt="[]" /></td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</div>
+						</th:block>
+					</th:block>
+
+					<!-- weiterer Unterricht -->
+					<div class="abschnitt abschnitt-nach-faechern f-bold zeugnis-abschnittstitel-container">Weiterer Unterricht</div>
+					<!-- Aufbau wie bei den Fächern: je Fach eine eigene Tabelle, Bezeichnung links, Note rechts, darunter der Text -->
+					<table class="mp-0 fixed-100 fach" th:each="leistung : ${lernabschnitt.leistungsdatenWeitererUnterricht()}"
+						   th:classappend="${(mitFachbemerkungen && fbOhneUmbruch) ? 'fach-als-block' : 'fach-umbrechbar'}">
+						<colgroup>
+							<col class="spalte-halb" />
+							<col class="spalte-halb" />
+						</colgroup>
+						<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+						<tbody>
+							<tr class="fach-kopf">
+								<td class="f-bold" th:with="fach = ${leistung.fach()}"
+												   th:text="${fach == null ? '' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Fach</td>
+								<td class="ta-r">
+									<span class="formularfeld ta-c f-ital" th:if="${mitNoten}" th:with="note=${#strings.isEmpty(leistung.noteKuerzel()) ? '' : leistung.noteTextZeugnis()}">
+										<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+										<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+									</span>
+								</td>
+							</tr>
+							<tr th:if="${mitFachbemerkungen}" th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+								<td colspan="2" class="freitext ta-lt" th:text="${leistung.textFachbezogeneLernentwicklung()}">Bemerkung</td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:unless="${!lernabschnitt.leistungsdatenWeitererUnterricht().isEmpty()}" class="f-ital">- entfällt -</div>
+
+					<!-- Arbeitsgemeinschaften: Der Abstand zum folgenden Schlussblock steht hier unten, damit er bei einem Seitenumbruch
+					     auf der vorigen Seite bleibt und das Engagement oben auf der Seite denselben Abstand zur Kopfzeile hat wie ein Fach. -->
+					<div class="abschnitt-vor-schlussblock">
+						<div class="abschnitt abschnitt-folge f-bold zeugnis-abschnittstitel-container">Teilnahme an Arbeitsgemeinschaften</div>
+						<!-- Aufbau wie bei den Fächern: je Arbeitsgemeinschaft eine eigene Tabelle, Bezeichnung links, Note rechts, darunter der Text -->
+						<table class="mp-0 fixed-100 fach" th:each="leistung : ${lernabschnitt.leistungsdatenArbeitsgemeinschaften()}"
+							   th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+							<colgroup>
+								<col class="spalte-halb" />
+								<col class="spalte-halb" />
+							</colgroup>
+							<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+							<tbody>
+								<tr class="fach-kopf">
+									<td class="f-bold" th:with="fach = ${leistung.fach()}"
+													   th:text="${fach == null ? '' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Fach</td>
+									<td class="ta-r">
+										<span class="formularfeld ta-c f-ital" th:if="${mitNoten}" th:with="note=${#strings.isEmpty(leistung.noteKuerzel()) ? '' : leistung.noteTextZeugnis()}">
+											<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+											<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+										</span>
+									</td>
+								</tr>
+								<tr th:classappend="${fbOhneUmbruch ? 'fach-als-block' : 'fach-umbrechbar'}">
+									<td colspan="2" class="freitext ta-lt" th:text="${leistung.textFachbezogeneLernentwicklung()}">Bemerkung</td>
+								</tr>
+							</tbody>
+						</table>
+						<div th:unless="${!lernabschnitt.leistungsdatenArbeitsgemeinschaften().isEmpty()}" class="f-ital">- keine -</div>
+					</div>
+
+					<!-- Engagement und Bemerkungen bleiben zusammen und stehen immer mit dem Unterschriftenblock auf der letzten Seite.
+					     Dadurch gehört die Fußnote zum Engagement (3), ohne gedruckte Ankreuzkompetenzen 2)) immer in den Fußnotenblock der letzten Seite. -->
+					<div class="schlussblock">
+
+						<!-- Bottom Box: Der Block ist als Fußnote am Anfang dieses Abschnitts verankert und steht am unteren Rand der Seite,
+						     auf der Engagement und Bemerkungen stehen. Passt beides nicht mehr auf die Seite, wandert alles auf die nächste Seite. -->
+						<div class="fussbereich-letzte-seite">
+
+							<!-- Unterschriftenblock -->
+							<div class="einzug"
+								 th:with="ort = ${(Schule != null) ? Schule.ort() : ''},
+										  datum = ${#convert.toDateDELong(lernabschnitt.datumZeugnis())}"
+								 th:text="${#strings.isEmpty(datum) ? ort : (#strings.isEmpty(ort) ? datum : ort + ', den ' + datum)}">Soest, den 17. Juli 2026</div>
+
+							<div class="unterschriften">
+								<table class="fixed-100 mp-0">
+									<colgroup>
+										<col class="spalte-unterschrift" />
+										<col class="spalte-siegel" />
+										<col class="spalte-unterschrift" />
+									</colgroup>
+									<tr class="zeile-unterschrift">
+										<th class="ta-cb f-very-tiny"></th>
+										<th class="ta-cb f-very-tiny">(Siegel)</th>
+										<th class="ta-cb f-very-tiny"></th>
+									</tr>
+									<tr>
+										<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${finalSchulleitungUnterschrift}">Schulleiter/in</td>
+										<td class="ta-ct f-very-tiny"></td>
+										<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${finalKlassenlehrerUnterschrift}">Klassenlehrer/in</td>
+									</tr>
+									<tr>
+										<td class="ta-ct f-very-tiny" th:text="${finalSchulleitungBezeichnung}">(Schulleiter/in)</td>
+										<td class="ta-ct f-very-tiny"></td>
+										<td class="ta-ct f-very-tiny" th:text="${finalKlassenlehrerBezeichnung}">(Klassenlehrer/in)</td>
+									</tr>
+								</table>
+							</div>
+
+							<div class="einzug">
+								Kenntnis genommen
+							</div>
+
+							<div class="unterschriften">
+								<table class="fixed-100 mp-0">
+									<colgroup>
+										<col class="spalte-unterschrift" />
+										<col class="spalte-siegel" />
+										<col class="spalte-unterschrift" />
+									</colgroup>
+									<tr class="zeile-unterschrift">
+										<th class="ta-cb f-very-tiny"></th>
+										<th></th>
+										<th></th>
+									</tr>
+									<tr>
+										<td class="bo-t-black-strong ta-ct f-very-tiny">Unterschrift der Sorgeberechtigten<sup class="fussnote-verweis">*)</sup></td>
+										<td></td>
+										<td></td>
+									</tr>
+								</table>
+							</div>
+
+							<div class="einzug m-t-2">
+								<div class="m-b-2 f-9" th:if="${mitTerminElternsprechtag && terminElternsprechtag != null && !terminElternsprechtag.datum().isEmpty()}"
+									 th:text="${'Elternsprechtag am ' + #convert.toDateDELong(terminElternsprechtag.datum())
+											   + (terminElternsprechtag.uhrzeit().isEmpty() ? '' : ' um ' + terminElternsprechtag.uhrzeit() + ' Uhr')}">Elternsprechtag am 15. Juni 2026 um 18:00 Uhr</div>
+								<div class="m-b-2 f-9" th:if="${mitTerminWiederbeginnUnterricht && terminWiederbeginnUnterricht != null && !terminWiederbeginnUnterricht.datum().isEmpty()}"
+									 th:text="${'Wiederbeginn des Unterrichts am ' + #convert.toDateDELong(terminWiederbeginnUnterricht.datum())
+											   + (terminWiederbeginnUnterricht.uhrzeit().isEmpty() ? '' : ' um ' + terminWiederbeginnUnterricht.uhrzeit() + ' Uhr')}">Wiederbeginn des Unterrichts am 1. September 2026 um 08:00 Uhr</div>
+							</div>
+
+							<!-- Fußnoten -->
+							<hr class="fussnoten-linie fussnoten-linie-voll"/>
+							<div class="fussnote f-very-tiny"><span class="fussnote-zeichen" th:text="${akGedruckt ? '3)' : '2)'}">2)</span>Die Angaben beziehen sich auf das außerunterrichtliche Engagement in und außerhalb der Schule.</div>
+							<div class="fussnote f-very-tiny"><span class="fussnote-zeichen">*)</span>Sorgeberechtigte im Sinne des § 123 SchulG.</div>
+
+							<!-- Hinweise zum Zeugnis -->
+							<div class="ta-c f-very-tiny f-bold m-t-2">Hinweise zum Zeugnis</div>
+							<div class="hinweise f-very-tiny">
+								<ol>
+									<li>Zur Spalte "Bemerkungen":<br/>
+										Hier können eingetragen werden: Angaben über die Leistungen im herkunftssprachlichen Unterricht, Angaben über besondere Leistungen,
+										Angaben über besonderen persönlichen Einsatz im außerunterrichtlichen Bereich, Angaben über außerschulische, insbesondere ehrenamtliche Tätigkeiten,
+										Angaben über sonderpädagogische Förderung (sofern zutreffend), Angaben über Wiederholung oder Rücktritt (sofern zutreffend).</li>
+									<li th:if="${mitNoten}">Notenstufen:<br/>
+										Bei der Bewertung einzelner Schülerleistungen sowie in Zeugnissen werden die folgenden Notenstufen gemäß § 48 Absatz 3 SchulG zugrunde gelegt:<br/>
+										1. sehr gut (1), 2. gut (2), 3. befriedigend (3), 4. ausreichend (4), 5. mangelhaft (5), 6. ungenügend (6)</li>
+									<li>Rechtsbehelfsbelehrung:<br/>
+										Gegen die Entscheidung, die Schülerin oder den Schüler nicht zu versetzen oder einen erreichbaren Abschluss oder eine Berechtigung nicht zu vergeben, kann innerhalb eines
+										Monats nach Bekanntgabe des Zeugnisses Widerspruch erhoben werden. Der Widerspruch ist bei der Schule
+										(<span th:text="${(Schule != null ? Schule.bezeichnungSchuleZeileEins() : '') + ','}">Schulname,</span>
+										<span th:text="${(Schule != null ? Schule.strassennameHausnummer() : '') + ','}">Straße 12,</span>
+										<span th:text="${(Schule != null ? Schule.plzOrt() : '') + ')'}">12345 Ort)</span> zu erheben.</li>
+								</ol>
+							</div>
+
+							<div class="m-r-3 m-b-2 f-very-tiny ta-r" th:text="${'SNr.: ' + (Schule != null ? Schule.schulnummer() : '') + ', SForm: ' + ((Schule != null && Schule.schulform() != null) ? Schule.schulform().kuerzel : '')}">SNr.: 123456, SForm: G</div>
+						</div>
+
+						<!-- außerunterrichtliches Engagement -->
+						<div class="abschnitt zeugnis-abschnittstitel-container">
+							<span class="f-bold">Angaben zum außerunterrichtlichen Engagement</span><sup class="fussnote-verweis" th:text="${akGedruckt ? '3)' : '2)'}">2)</sup>
+						</div>
+						<div th:if="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisAUEText())}" class="freitext" th:text="${lernabschnitt.zeugnisAUEText()}"></div>
+						<div th:unless="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisAUEText())}" class="f-ital">- keine -</div>
+
+						<!-- Bemerkungen -->
+						<div class="abschnitt abschnitt-folge f-bold zeugnis-abschnittstitel-container">Bemerkungen</div>
+						<div th:if="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisBemerkungText())}" class="freitext max-zeilen-8" th:text="${lernabschnitt.zeugnisBemerkungText()}"></div>
+						<div th:unless="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisBemerkungText())}" class="f-ital">- keine -</div>
+
+						<!-- Versetzungsvermerk (Anlage zu Nr. 6.1 VVzAO-GS): nur im 2. Halbjahr. Der Freitext der Schule hat Vorrang vor dem Satz aus dem
+						     Versetzungsvermerk. In der Schuleingangsphase (Jahrgang 01/02) gibt es nur Verbleib (BE) oder Versetzung in Klasse 3 (V);
+						     ein in Bereich oder Kürzel nicht vorgesehener Vermerk ergibt "- kein -". -->
+						<th:block th:if="${lernabschnitt.schuljahresabschnitt() != null && lernabschnitt.schuljahresabschnitt().abschnitt() == 2}"
+								  th:with="jg = ${lernabschnitt.jahrgang() != null ? lernabschnitt.jahrgang().jahrgang() : null},
+										   bereich = ${(jg == @de.svws_nrw.asd.types.jahrgang.Jahrgaenge@JAHRGANG_01 || jg == @de.svws_nrw.asd.types.jahrgang.Jahrgaenge@JAHRGANG_02) ? 'EP'
+													 : (jg == @de.svws_nrw.asd.types.jahrgang.Jahrgaenge@JAHRGANG_03 ? 'K3' : 'X')},
+										   vermerkSchluessel = ${bereich + '-' + lernabschnitt.versetzungsvermerkKuerzel()},
+										   vermerkFreitext = ${lernabschnitt.versetzungsentscheidungText()}">
+							<div class="abschnitt abschnitt-folge f-bold zeugnis-abschnittstitel-container">Versetzungsvermerk</div>
+							<div th:if="${!vermerkFreitext.isEmpty()}" class="freitext" th:text="${vermerkFreitext}">Freitext zur Versetzung</div>
+							<th:block th:if="${vermerkFreitext.isEmpty()}" th:switch="${vermerkSchluessel}">
+								<div th:case="'EP-BE'" class="freitext" th:text="${schueler.vorname() + ' verbleibt in der Schuleingangsphase.'}">Mia verbleibt in der Schuleingangsphase.</div>
+								<div th:case="'EP-V'" class="freitext" th:text="${schueler.vorname() + ' wird in die Klasse 3 versetzt.'}">Mia wird in die Klasse 3 versetzt.</div>
+								<div th:case="'K3-V'" class="freitext" th:text="${schueler.vorname() + ' wird in die Klasse 4 versetzt.'}">Mia wird in die Klasse 4 versetzt.</div>
+								<div th:case="'K3-VV'" class="freitext" th:text="${schueler.vorname() + ' wird in die Klasse 5 vorversetzt.'}">Mia wird in die Klasse 5 vorversetzt.</div>
+								<div th:case="'K3-FR'" class="freitext" th:text="${schueler.vorname() + ' tritt freiwillig in die Klasse 2 zurück.'}">Mia tritt freiwillig in die Klasse 2 zurück.</div>
+								<div th:case="'K3-N'" class="freitext" th:text="${schueler.vorname() + ' wird nicht versetzt.'}">Mia wird nicht versetzt.</div>
+								<div th:case="*" class="f-ital">- kein -</div>
+							</th:block>
+						</th:block>
+					</div>
+
+				</th:block>
+				</div>
+
+				<!-- Fußnote 1) ist direkt an ihrer Überschrift verankert und erscheint dadurch unten auf der Seite, auf der die Überschrift nach dem Umbruch landet.
+				     Fußnote 2) zu den Kompetenzstufen ist am ersten Kompetenzblock verankert (Fragment akTabelle).
+				     Die Fußnote zum Engagement (3), ohne gedruckte Ankreuzkompetenzen 2)) steht im Fußnotenblock der letzten Seite. -->
+
+				<!-- Ende der Kopfzeile: Das nächste Zeugnis beginnt ohne Kopfzeile. -->
+				<div class="kopf-gerade"></div>
+				<div class="kopf-ungerade"></div>
+
+			</div>
+
+			</th:block>
+		</th:block>
+	</body>
+</html>

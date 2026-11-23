@@ -514,6 +514,29 @@ public final class ReportingReportvorlageUtils {
 	}
 
 	/**
+	 * Erstellt die Filter-Definition-Gruppe "Ankreuzkompetenzfilter" für Zeugnisvorlagen. Sie lässt nur bewertete Ankreuzkompetenzen zu:
+	 * Mindestens eine der Stufen 1 bis 5 ist angekreuzt, und die Kompetenz hat nach ihrer Unterkategorie einen eigenen Text. Ein Eintrag mit
+	 * Doppelpunkt am Ende wie "-Bemerkungen:" ist eine Unterkategorie ohne Kompetenz und im Katalog nicht zulässig, denn die Unterkategorie
+	 * steht bei jeder ihrer Kompetenzen; die Gruppe filtert solche Einträge aus. Die Gruppe ist unsichtbar und vorausgewählt.
+	 * Die konfigurierte Anzahl der Stufen der Schule wird hier nicht berücksichtigt; ein Kreuz in einer nicht konfigurierten Stufe gilt als Datenfehler.
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung auf bewertete Ankreuzkompetenzen
+	 */
+	public static @NotNull ReportingFilterDefinitionGruppe erzeugeAnkreuzkompetenzZeugnisfilterGruppe() {
+		final ReportingFilterDefinition nurBewertete = ReportingFilterDefinitionFactory.definition("Nur bewertete Ankreuzkompetenzen",
+				"ReportingSchuelerAnkreuzkompetenz",
+				ReportingFilterDefinitionFactory.or(
+						ReportingFilterDefinitionFactory.eq("stufe1", "true"),
+						ReportingFilterDefinitionFactory.eq("stufe2", "true"),
+						ReportingFilterDefinitionFactory.eq("stufe3", "true"),
+						ReportingFilterDefinitionFactory.eq("stufe4", "true"),
+						ReportingFilterDefinitionFactory.eq("stufe5", "true")),
+				ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.notEq("ankreuzkompetenz.kompetenzText", "")));
+		return erzeugeFilterDefinitionGruppe("Ankreuzkompetenzfilter", "ReportingSchuelerAnkreuzkompetenz", false, false, ReportingFilterVerknuepfung.AND,
+				List.of(nurBewertete), List.of(nurBewertete));
+	}
+
+	/**
 	 * Normalisiert den technischen Namen einer Enum-Konstante für die Anzeige, indem der erste Buchstabe groß und die übrigen Buchstaben klein
 	 * geschrieben werden (z. B. "AKTIV" wird zu "Aktiv").
 	 *

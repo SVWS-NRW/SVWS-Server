@@ -308,6 +308,19 @@ public enum ReportingReportvorlage {
 			.setErforderlicherServerMode(ServerMode.ALPHA)
 			.setReportingParameter(ReportingReportvorlageKonfigurationSchueler.getSchuelerVGrundschulzeugnisKlasse4())),
 
+	/** Report-Vorlage: Schüler - Grundschulzeugnis - Klasse 1 bis 3 */
+	SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_1_BIS_3(new ReportingReportvorlageDefinition("Schueler-GrundschulzeugnisKlasse1Bis3")
+			.setUiTitel("Grundschulzeugnis Klasse 1 bis 3")
+			.setUiBeschreibung("Ein Zeugnis der Grundschule für die Klassen 1 bis 3 erstellen.")
+			.setUiNutzungen(List.of(ReportingReportvorlageUiNutzung.SCHUELER, ReportingReportvorlageUiNutzung.KLASSEN))
+			.setDatenContext(ReportingReportvorlageDatenContext.SCHUELER)
+			.setPfadHtmlTemplate("schueler/aogs/SchuelerGrundschulzeugnisKlasse1Bis3.html")
+			.setDateiname("Grundschulzeugnis-Klasse1Bis3")
+			.setBenutzerKompetenzen(List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN))
+			.setSchulformen(ReportingReportvorlageSchulformen.GRUNDSCHULE)
+			.setErforderlicherServerMode(ServerMode.ALPHA)
+			.setReportingParameter(ReportingReportvorlageKonfigurationSchueler.getSchuelerVGrundschulzeugnisKlasse1Bis3())),
+
 	/** Report-Vorlage: Schüler - Schulbescheinigung */
 	SCHUELER_V_SCHULBESCHEINIGUNG(new ReportingReportvorlageDefinition("Schueler-Schulbescheinigung")
 			.setUiTitel("Schulbescheinigung")

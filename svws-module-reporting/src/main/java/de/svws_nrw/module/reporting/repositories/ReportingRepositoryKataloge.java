@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
+import de.svws_nrw.core.data.kataloge.AnkreuzkompetenzKonfiguration;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
@@ -26,6 +27,7 @@ import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationMapper;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieherArt;
@@ -58,6 +60,7 @@ public class ReportingRepositoryKataloge {
 	private Map<Long, JahrgangsDaten> mapJahrgaenge;
 	private Map<Long, ReportingErzieherArt> mapErzieherarten;
 	private Map<Long, Ankreuzkompetenz> mapAnkreuzkompetenzen;
+	private AnkreuzkompetenzKonfiguration ankreuzkompetenzKonfiguration;
 
 	/**
 	 * Erstellt ein neues ReportingKatalogRepository. Die Katalogdaten werden erst beim ersten Zugriff geladen.
@@ -412,6 +415,27 @@ public class ReportingRepositoryKataloge {
 			}
 		}
 		return mapAnkreuzkompetenzen;
+	}
+
+	/**
+	 * Gibt die Konfiguration der Ankreuzkompetenzen (Tabelle K_Ankreuzdaten: Texte der Stufen, Bezeichnung „Sonstiges“) zurück. Sie wird beim
+	 * ersten Zugriff aus der Datenbank geladen, und zwar nur lesend über das Repository: Der Service würde eine fehlende Zeile anlegen, beim
+	 * Erzeugen eines Reports darf aber nichts geschrieben werden. Fehlt die Zeile, wird eine leere Konfiguration geliefert.
+	 *
+	 * @return Die Konfiguration der Ankreuzkompetenzen; nie {@code null}.
+	 */
+	public AnkreuzkompetenzKonfiguration ankreuzkompetenzKonfiguration() {
+		if (ankreuzkompetenzKonfiguration == null) {
+			try {
+				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Konfiguration der Ankreuzkompetenzen.");
+				ankreuzkompetenzKonfiguration = KatalogRepositoryFactory.getNewInstance().getAnkreuzkompetenzKonfigurationRepository().findFirst()
+						.map(AnkreuzkompetenzKonfigurationMapper.INSTANCE::toApi)
+						.orElseGet(AnkreuzkompetenzKonfiguration::new);
+			} catch (final Exception e) {
+				throw fehlerKatalogdatenLaden("Ankreuzkompetenz-Konfiguration", e);
+			}
+		}
+		return ankreuzkompetenzKonfiguration;
 	}
 
 	/**

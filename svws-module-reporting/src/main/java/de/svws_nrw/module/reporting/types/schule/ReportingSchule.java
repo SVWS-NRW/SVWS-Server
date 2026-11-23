@@ -6,12 +6,16 @@ import java.util.Objects;
 
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
+import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ReportingAnkreuzkompetenzKonfiguration;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schule.
  */
 public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
+
+	/** Die Konfiguration der Ankreuzkompetenzen (Stufenzahl und -texte). Nicht Teil des Konstruktors; der Proxy lädt sie beim ersten Zugriff. */
+	protected ReportingAnkreuzkompetenzKonfiguration ankreuzkompetenzKonfiguration;
 
 	/** Der aktuelle Abschnitt des Schuljahres der Schule. */
 	protected ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
@@ -107,6 +111,15 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 
 
 	// ##### Getter #####
+
+	/**
+	 * Die Konfiguration der Ankreuzkompetenzen der Schule: Anzahl und Texte der Stufen.
+	 *
+	 * @return Inhalt des Feldes ankreuzkompetenzKonfiguration; kann {@code null} sein, wenn der Typ ohne Proxy erzeugt wurde.
+	 */
+	public ReportingAnkreuzkompetenzKonfiguration ankreuzkompetenzKonfiguration() {
+		return ankreuzkompetenzKonfiguration;
+	}
 
 	/**
 	 * Der aktuelle Abschnitt des Schuljahres der Schule.

@@ -541,7 +541,9 @@ public class ReportingRepositorySchueler {
 	/**
 	 * Liefert die Belegungen der Ankreuzkompetenzen für den übergebenen Lernabschnitt eines Schülers als Liste von Reporting-Objekten.
 	 * Beim ersten Zugriff auf einen Schuljahresabschnitt werden in einer einzigen Abfrage alle Belegungen für sämtliche
-	 * bereits bekannten Lernabschnitte dieses Schuljahresabschnitts nachgeladen und im Cache abgelegt.
+	 * bereits bekannten Lernabschnitte dieses Schuljahresabschnitts nachgeladen und im Cache abgelegt. Eine Filtergruppe für
+	 * {@link ReportingSchuelerAnkreuzkompetenz} aus den Reporting-Parametern wird angewendet; ohne Filtergruppe bleiben alle Belegungen erhalten.
+	 * Bei gleicher Sortierung entscheidet die ID der Kompetenz, damit die Reihenfolge auch bei einheitlich sortierten Katalogen fest bleibt.
 	 *
 	 * @param lernabschnitt Der Lernabschnitt, dessen Belegungen der Ankreuzkompetenzen geliefert werden sollen.
 	 *
@@ -549,9 +551,13 @@ public class ReportingRepositorySchueler {
 	 */
 	public List<ReportingSchuelerAnkreuzkompetenz> schuelerLernabschnittAnkreuzkompetenzen(final ReportingSchuelerLernabschnitt lernabschnitt) {
 		schuelerAnkreuzkompetenzenZuSchuljahresabschnitt(lernabschnitt.idSchuljahresabschnitt());
+		final Predicate<ReportingSchuelerAnkreuzkompetenz> filter = ReportingSchuelerAnkreuzkompetenz.FILTER.bedingung(
+				this.reportingContext.filterService().getFilter(ReportingSchuelerAnkreuzkompetenz.class.getSimpleName()), null);
 		return mapSchuelerAnkreuzkompetenzen.getOrDefault(lernabschnitt.id(), new ArrayList<>()).stream()
 				.map(dto -> (ReportingSchuelerAnkreuzkompetenz) new ProxyReportingSchuelerAnkreuzkompetenz(dto, lernabschnitt))
-				.sorted(Comparator.comparingInt(sak -> sak.ankreuzkompetenz().sortierung()))
+				.filter(filter)
+				.sorted(Comparator.<ReportingSchuelerAnkreuzkompetenz>comparingInt(sak -> sak.ankreuzkompetenz().sortierung())
+						.thenComparingLong(sak -> sak.ankreuzkompetenz().id()))
 				.toList();
 	}
 

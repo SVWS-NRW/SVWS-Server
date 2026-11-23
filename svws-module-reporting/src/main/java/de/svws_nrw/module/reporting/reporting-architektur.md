@@ -310,7 +310,7 @@ Damit sind die Proxy-Typen reine Adapter zwischen den Reporting-Templates und de
 - `schule/` — `ReportingSchule`, `ReportingSchuljahresabschnitt`, `ReportingBenutzer`, NRW-Schulkatalog, …
 - `fach/` — `ReportingFach`, `ReportingStatistikFach`
 - `jahrgang/` — `ReportingJahrgang`
-- `ankreuzkompetenz/` — `ReportingAnkreuzkompetenz`
+- `ankreuzkompetenz/` — `ReportingAnkreuzkompetenz`, `ReportingAnkreuzkompetenzKonfiguration` (Anzahl und Texte der Stufen aus `K_Ankreuzdaten`; nur lesend geladen über `ReportingRepositoryKataloge.ankreuzkompetenzKonfiguration()`, im Template über `Schule.ankreuzkompetenzKonfiguration()`)
 - `lehrer/` — `ReportingLehrer`, `ReportingLehrerLeitungsfunktion`, Factory-Klassen für Unterrichtsaufstellungen
 - `schueler/` — `ReportingSchueler`, Lernabschnitte (`lernabschnitte/`), Erzieher (`erzieher/`), Sprachen, Telefon, Schulbesuch, GOSt-Daten
 - `lerngruppen/` — `ReportingKlasse`, `ReportingKurs`

@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ReportingAnkreuzkompetenz;
 
@@ -7,6 +8,9 @@ import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ReportingAnkreuzkompe
  * Basis-Klasse im Rahmen des Reportings für eine Schüler-Ankreuzkompetenz (Belegung einer Ankreuzkompetenz für einen Schüler in einem Lernabschnitt).
  */
 public class ReportingSchuelerAnkreuzkompetenz extends ReportingBaseType {
+
+	/** Die Filterkonfiguration für {@link ReportingSchuelerAnkreuzkompetenz}. */
+	public static final ReportingFilterung<ReportingSchuelerAnkreuzkompetenz> FILTER = ReportingSchuelerAnkreuzkompetenzFilter.FILTER;
 
 	/** Die Ankreuzkompetenz (Katalog-Eintrag/Floskel), auf die sich die Belegung bezieht. */
 	protected ReportingAnkreuzkompetenz ankreuzkompetenz;

@@ -72,7 +72,7 @@ describe("ReportCards", () => {
 	test("zeigt die Vorlagen eines Bereichs nach Titel sortiert", () => {
 		const wrapper = erzeuge({ uiNutzung: ReportingReportvorlageUiNutzung.KLASSEN, ids: idsKlassen(), stundenplaene: [stundenplan(7)] });
 		expect(titel(wrapper)).toEqual(titelImBereich(ReportingReportvorlageUiNutzung.KLASSEN));
-		expect(titel(wrapper)).toHaveLength(6);
+		expect(titel(wrapper)).toHaveLength(7);
 		expect(emitted(wrapper, "update:hatVorlagen")).toEqual([true]);
 	});
 
@@ -124,7 +124,7 @@ describe("ReportCards", () => {
 	test("blendet Stundenplan-Vorlagen ohne Stundenplan aus", () => {
 		const wrapper = erzeuge({ uiNutzung: ReportingReportvorlageUiNutzung.KLASSEN, ids: idsKlassen() });
 		expect(titel(wrapper)).not.toContain(ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getUiTitel());
-		expect(titel(wrapper)).toHaveLength(5);
+		expect(titel(wrapper)).toHaveLength(6);
 		expect(emitted(wrapper, "update:hatVorlagen")).toEqual([true]);
 	});
 
@@ -132,7 +132,7 @@ describe("ReportCards", () => {
 		nichtZulaessig.add(ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN);
 		const wrapper = erzeuge({ uiNutzung: ReportingReportvorlageUiNutzung.KLASSEN, ids: idsKlassen(), stundenplaene: [stundenplan(7)] });
 		expect(titel(wrapper)).not.toContain(ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN.getUiTitel());
-		expect(titel(wrapper)).toHaveLength(5);
+		expect(titel(wrapper)).toHaveLength(6);
 	});
 
 	test("meldet keine nutzbaren Vorlagen, wenn keine Vorlage des Bereichs zulässig ist", () => {
