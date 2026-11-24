@@ -43,6 +43,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppeSchueler;
 import de.svws_nrw.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin;
+import de.svws_nrw.db.dto.migration.schild.benutzer.MigrationDTOUserGroups;
 import de.svws_nrw.db.dto.migration.schild.benutzer.MigrationDTOUsers;
 import de.svws_nrw.db.dto.migration.schild.berufskolleg.MigrationDTOFachklassen;
 import de.svws_nrw.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerBKFach;
@@ -1148,6 +1149,41 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOUsers daten = entities.get(i);
 			userIDs.add(daten.ID);
+		}
+		return true;
+	}
+
+	/**
+	 * Prüft die Entitäten der Tabelle "Usergroups".
+	 * Benutzergruppen ohne Bezeichnung (null, leer oder nur Leerzeichen) erhalten die Ersatzbezeichnung
+	 * "Benutzergruppe &lt;ID&gt;", damit sie mit ihren Kompetenzen und Mitgliedern übernommen werden.
+	 * Ist diese Bezeichnung bereits vergeben, so wird eine laufende Nummer angehängt.
+	 *
+	 * @param entities   die Entitäten
+	 *
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkUserGroups(final List<MigrationDTOUserGroups> entities) {
+		final Set<String> bezeichnungen = new HashSet<>();
+		for (final MigrationDTOUserGroups daten : entities) {
+			if ((daten.UG_Bezeichnung != null) && !daten.UG_Bezeichnung.isBlank()) {
+				bezeichnungen.add(daten.UG_Bezeichnung.strip().toLowerCase());
+			}
+		}
+		for (final MigrationDTOUserGroups daten : entities) {
+			if ((daten.UG_Bezeichnung != null) && !daten.UG_Bezeichnung.isBlank()) {
+				continue;
+			}
+			final String basis = "Benutzergruppe " + daten.UG_ID;
+			String bezeichnung = basis;
+			for (int nr = 2; bezeichnungen.contains(bezeichnung.toLowerCase()); nr++) {
+				bezeichnung = basis + " (" + nr + ")";
+			}
+			bezeichnungen.add(bezeichnung.toLowerCase());
+			logger.logLn(LogLevel.ERROR,
+					"Korrigiere Datensatz (ID %d): Die Benutzergruppe hat keine Bezeichnung. Diese wird auf \"%s\" gesetzt. Bitte überprüfen Sie nach der Migration die Bezeichnung und die Kompetenzen dieser Benutzergruppe."
+							.formatted(daten.UG_ID, bezeichnung));
+			daten.UG_Bezeichnung = bezeichnung;
 		}
 		return true;
 	}
@@ -2369,6 +2405,9 @@ public final class DBMigrationManager {
 		}
 		if (firstObject instanceof MigrationDTOUsers) {
 			return checkUsers((List<MigrationDTOUsers>) entities);
+		}
+		if (firstObject instanceof MigrationDTOUserGroups) {
+			return checkUserGroups((List<MigrationDTOUserGroups>) entities);
 		}
 		if (firstObject instanceof MigrationDTOProtokollLogin) {
 			return checkLogins((List<MigrationDTOProtokollLogin>) entities);
