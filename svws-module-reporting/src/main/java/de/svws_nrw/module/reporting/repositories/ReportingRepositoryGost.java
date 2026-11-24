@@ -119,7 +119,8 @@ public class ReportingRepositoryGost {
 
 	/**
 	 * Lädt den GOSt-FächerManager zum übergebenen Abiturjahr aus der Datenbank und ergänzt die Fachkombinationen. Die Daten
-	 * werden bei erstem Zugriff aus der Datenbank geladen und im Cache gehalten.
+	 * werden bei erstem Zugriff aus der Datenbank geladen und im Cache gehalten. Als Schuljahr dient immer das Schuljahr des
+	 * Abiturs, also Abiturjahr - 1. Davon hängt die Prüfungsordnung ab, deshalb zählt der ausgewählte Abschnitt hier nicht.
 	 *
 	 * @param abiturjahr Das Abiturjahr des Jahrgangs.
 	 *
@@ -129,9 +130,7 @@ public class ReportingRepositoryGost {
 	 */
 	public GostFaecherManager faecherManager(final int abiturjahr) throws ApiOperationException {
 		return mapAbiturjahrgangFaecher.computeIfAbsent(abiturjahr, jahr -> {
-			final int auswahlSchuljahr = this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr();
-			final GostFaecherManager manager =
-					DBUtilsFaecherGost.getFaecherManager(auswahlSchuljahr, this.reportingContext.conn(), jahr);
+			final GostFaecherManager manager = DBUtilsFaecherGost.getFaecherManager(jahr - 1, this.reportingContext.conn(), jahr);
 			manager.addFachkombinationenAll(
 					DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingContext.conn(), jahr));
 			return manager;
