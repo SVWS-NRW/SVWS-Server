@@ -19,13 +19,20 @@
 				Drucken
 			</svws-ui-button>
 		</div>
-		<header>
-			<h1 class="text-headline-lg konferenz-titel">
-				<span class="konferenz-titel-bildschirm">Konferenzübersicht</span>
-				<span class="konferenz-titel-druck">Konferenzübersicht {{ klassenLabelDruck }} - {{ druckdatum }}</span>
-			</h1>
-			<p class="text-ui-100">Fächer, Fachnoten und Teilleistungen aller Schüler der ausgewählten Klasse.</p>
-		</header>
+		<div class="flex flex-wrap items-end justify-between gap-4 print:!hidden">
+			<header>
+				<h1 class="text-headline-lg konferenz-titel">
+					<span class="konferenz-titel-bildschirm">Konferenzübersicht</span>
+					<span class="konferenz-titel-druck">Konferenzübersicht {{ klassenLabelDruck }} - {{ druckdatum }}</span>
+				</h1>
+				<p class="text-ui-100">Fächer, Fachnoten und Teilleistungen aller Schüler der ausgewählten Klasse.</p>
+			</header>
+			<div class="w-full max-w-lg">
+				<svws-ui-select title="Nach Vor- oder Nachname suchen" :model-value="auswahlSchueler" :items="schuelerListe"
+					:item-text="schuelerAnzeige" :item-filter="filterSchueler" autocomplete removable
+					@update:model-value="value => auswahlSchueler = value ?? null" />
+			</div>
+		</div>
 		<div v-if="schuelerZeilenAngezeigt.length === 0" class="rounded-lg bg-ui-75 p-4 text-ui-100">
 			{{ mahnungsAnsicht ? 'Keine gefährdeten Schüler in der ausgewählten Klasse.' : 'Keine Schüler in der ausgewählten Klasse.' }}
 		</div>
@@ -143,6 +150,7 @@
 		auswahlMehrfach: () => ENMv2Klasse[];
 	}>();
 	const manager = shallowRef<EnmManager | null>(null);
+	const auswahlSchueler = ref<SchuelerEintrag | null>(null);
 	const ladeFehler = ref(false);
 	const punkteAnsicht = ref(false);
 	const mahnungsAnsicht = ref(false);
@@ -273,10 +281,16 @@
 		});
 	});
 	const schuelerZeilenAngezeigt = computed(() => {
-		if ((mahnungsAnsicht.value === false) || (mahnungsToggleSichtbar.value === false)) {
-			return schuelerZeilen.value;
+		let result = schuelerZeilen.value;
+		if (auswahlSchueler.value !== null) {
+			const { id: idSchueler } = auswahlSchueler.value.schueler;
+			const { id: idKlasse } = auswahlSchueler.value.klasse;
+			result = result.filter(zeile => zeile.schueler.id === idSchueler && zeile.klasse.id === idKlasse);
 		}
-		return schuelerZeilen.value.filter(zeile => istMahnungsJahrgang(zeile.klasse) && hatMahnungsnote(zeile));
+		if (mahnungsAnsicht.value && mahnungsToggleSichtbar.value) {
+			result = result.filter(zeile => istMahnungsJahrgang(zeile.klasse) && hatMahnungsnote(zeile));
+		}
+		return result;
 	});
 
 	const teilleistungsgruppen = ['So', 'Kl'] as const;
@@ -298,6 +312,16 @@
 			return enmManager.klasseIstAbteilungsleitung(klasse.id);
 		}
 		return false;
+	}
+
+	function schuelerAnzeige(eintrag: SchuelerEintrag): string {
+		return `${eintrag.schueler.nachname ?? ''}, ${eintrag.schueler.vorname ?? ''} (${eintrag.klasse.kuerzelAnzeige ?? eintrag.klasse.kuerzel ?? ''})`;
+	}
+
+	function filterSchueler(eintraege: SchuelerEintrag[], suche: string): SchuelerEintrag[] {
+		const begriff = suche.toLocaleLowerCase();
+		return eintraege.filter(eintrag => `${eintrag.schueler.nachname ?? ''} ${eintrag.schueler.vorname ?? ''}`
+			.toLocaleLowerCase().includes(begriff));
 	}
 
 	function badgeStyle(klasse: ENMv2Klasse, wert: string | null): Record<string, string> | undefined {
