@@ -431,7 +431,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		final DTOSchulformen schulgliederung = new DTOSchulformen(1L);
 		final Schulgliederung sgl = switch (schulform) {
 			case BK, SB -> Schulgliederung.A01;
-			case SG, SR, V, PS, S, KS, SK, R, H, GE, G, FW, HI, WF -> Schulgliederung.DEFAULT;
+			case SG, SR, V, PS, S, SK, R, H, GE, G, FW, HI, WF -> Schulgliederung.DEFAULT;
+			case KS -> Schulgliederung.AB;
 			case GM -> Schulgliederung.GRH;
 			case GY -> Schulgliederung.GY9;
 			case WB -> Schulgliederung.G02;
@@ -560,7 +561,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			dto.Sortierung = i + 1;
 			dto.IstChronologisch = true;
 			dto.Kurzbezeichnung = jg.daten(schuljahr).kuerzel;
-			dto.GliederungKuerzel = null;
+			dto.GliederungKuerzel = sgl.daten(schuljahr).kuerzel;
 			dto.Sekundarstufe = null;
 			dto.AnzahlRestabschnitte = null;
 			dto.Folgejahrgang_ID = null;
