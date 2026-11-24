@@ -523,6 +523,10 @@ public class LupoMDB {
 					logger.logLn(0, "FEHLER! Ignoriere das Fach beim Einlesen...");
 					continue;
 				}
+				if (Boolean.FALSE.equals(dtoFach.IstOberstufenFach)) {
+					logger.logLn(0, "FEHLER - Das Fach ist nicht als Fach der Oberstufe gekennzeichnet! Ignoriere das Fach beim Einlesen...");
+					continue;
+				}
 				final Fach fach = Fach.data().getWertBySchluessel(dtoFach.StatistikKuerzel);
 				if (fach == null) {
 					logger.logLn(0, "FEHLER - Das Fach %s ist einem unbekannten Statistik-Kürzel %s zugeordnet."
