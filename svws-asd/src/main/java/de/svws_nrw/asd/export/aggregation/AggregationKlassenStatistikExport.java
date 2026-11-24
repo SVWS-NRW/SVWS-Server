@@ -683,8 +683,10 @@ public class AggregationKlassenStatistikExport {
 							if (istWB_BK_SB) {
 								final String herkunftsart_1_Stelle = schueler.idVorigeAbschlussart == null ? "" : schueler.idVorigeAbschlussart;
 								final String herkunftsart_2_Stelle =
-										schueler.berufsabschlussVorhandenVorherigeSchule || (Hochschulabschluss.OHNE_HOCHSCHULABSCHLUSS != Hochschulabschluss
-												.data().getWertByIDOrNull(schueler.idHochschulabschluss)) ? "Y" : "";
+										schueler.berufsabschlussVorhandenVorherigeSchule || ((Hochschulabschluss
+												.data().getWertByIDOrNull(schueler.idHochschulabschluss) != null)
+												&& (Hochschulabschluss.OHNE_HOCHSCHULABSCHLUSS != Hochschulabschluss
+														.data().getWertByIDOrNull(schueler.idHochschulabschluss))) ? "Y" : "";
 								herkunftsart = herkunftsart_1_Stelle + herkunftsart_2_Stelle;
 							}
 						}
@@ -831,7 +833,7 @@ public class AggregationKlassenStatistikExport {
 											herkunftsschulform = "";
 										}
 									} else {
-										herkunftsschulform = Schulform.data().getSchluesselByIDOrNull(idSchulform);
+										herkunftsschulform = Schulform.data().getEintragByID(idSchulform).kuerzel;
 									}
 								} else {
 									herkunftsschulform = "";
@@ -858,8 +860,10 @@ public class AggregationKlassenStatistikExport {
 						} else {
 							final String herkunftsart_1_Stelle = schueler.idVorigeAbschlussart == null ? "" : schueler.idVorigeAbschlussart;
 							final String herkunftsart_2_Stelle =
-									schueler.berufsabschlussVorhandenVorherigeSchule || (Hochschulabschluss.OHNE_HOCHSCHULABSCHLUSS != Hochschulabschluss
-											.data().getWertByIDOrNull(schueler.idHochschulabschluss)) ? "Y" : "";
+									schueler.berufsabschlussVorhandenVorherigeSchule || ((Hochschulabschluss
+											.data().getWertByIDOrNull(schueler.idHochschulabschluss) != null)
+											&& (Hochschulabschluss.OHNE_HOCHSCHULABSCHLUSS != Hochschulabschluss
+													.data().getWertByIDOrNull(schueler.idHochschulabschluss))) ? "Y" : "";
 							herkunftsart = herkunftsart_1_Stelle + herkunftsart_2_Stelle;
 						}
 

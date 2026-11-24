@@ -266,7 +266,7 @@ public class AggregationReligionStatistikExport {
 	private void erstellenReligionszugehoerigkeitenStatistikExport(final SchuelerStatistikGesamt schueler,
 			final Map<String, ReligionszugehoerigkeitenStatistikExport> religionen) {
 		ReligionszugehoerigkeitenStatistikExport religionExport = new ReligionszugehoerigkeitenStatistikExport();
-		final SchuelerLernabschnittStatistikGesamt lernabschnitt = schueler.lernabschnitte.getFirst();
+		final SchuelerLernabschnittStatistikGesamt lernabschnitt = schueler.lernabschnitte.getLast();
 		// Ermitteln Jahrgang
 		String jahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(lernabschnitt.idJahrgang));
 
@@ -283,7 +283,7 @@ public class AggregationReligionStatistikExport {
 			if (Set.of("01", "02").contains(jahrgang)
 					&& !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
 				jahrgang = PrimarstufeSchuleingangsphaseBesuchsjahre.data()
-						.getSchluesselByIDOrNull(schueler.lernabschnitte.getFirst().idEpJahre);
+						.getSchluesselByIDOrNull(lernabschnitt.idEpJahre);
 			}
 		}
 
@@ -296,20 +296,16 @@ public class AggregationReligionStatistikExport {
 			foerderschwerpunkt = "";
 		}
 
-		final Schulgliederung schulgliederung = Schulgliederung.data().getWertByIDOrNull(lernabschnitt.idSchulgliederung);
-		final String gliederungStr;
+		String schulgliederung = Schulgliederung.data().getSchluesselByIDOrNull(lernabschnitt.idSchulgliederung);
 
-		if (schulgliederung != null) {
-			gliederungStr = schulgliederung.name();
-		} else {
-			gliederungStr = "";
-			fehlermeldungen.add("Beim Schüler mit der ID: " + schueler.id + " ist die Schulgliederung NULL.");
+		if ((schulgliederung == null) || "***".equals(schulgliederung)) {
+			schulgliederung = "";
 		}
 
 		switch (schulform) {
 			case G -> {
 				religionExport.jahrgang = jahrgang;
-				religionExport.schulgliederung = gliederungStr;
+				religionExport.schulgliederung = schulgliederung;
 				religionExport.bildungsbereich = EIN_LEERZEICHEN;
 				religionExport.foerderschwerpunkt = ZWEI_LEERZEICHEN;
 			}
@@ -334,7 +330,7 @@ public class AggregationReligionStatistikExport {
 			}
 			case BK, SB -> {
 				religionExport.jahrgang = ZWEI_LEERZEICHEN;
-				religionExport.schulgliederung = gliederungStr;
+				religionExport.schulgliederung = schulgliederung;
 				religionExport.bildungsbereich = EIN_LEERZEICHEN;
 				religionExport.foerderschwerpunkt = foerderschwerpunkt;
 			}
@@ -351,6 +347,10 @@ public class AggregationReligionStatistikExport {
 		}
 
 		aufsummierenReligionExport(religionExport, schueler);
+
+
+
+
 	}
 
 	private boolean istAbmeldungRelevant(final SchuelerStatistikGesamt s) throws InvalidDateException {
