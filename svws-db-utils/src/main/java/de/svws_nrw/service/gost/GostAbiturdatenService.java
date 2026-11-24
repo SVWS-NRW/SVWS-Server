@@ -389,6 +389,12 @@ public class GostAbiturdatenService {
 						belegungPlanung.Markiert_Q4 = false;
 					}
 
+					// Ignoriere Fachwahlen zu Fächern, die nicht als Fach der gymnasialen Oberstufe vorhanden sind
+					final GostFach gostFach = gostFaecher.get(belegungPlanung.Fach_ID);
+					if (gostFach == null) {
+						continue;
+					}
+
 					// Prüfe, ob die Fachbelegung aufgrund von Leistungsdaten schon vorhanden ist
 					AbiturFachbelegung fach = null;
 					for (final AbiturFachbelegung fb : abidaten.fachbelegungen) {
@@ -404,10 +410,6 @@ public class GostAbiturdatenService {
 						abidaten.fachbelegungen.add(fach);
 					}
 
-					final GostFach gostFach = gostFaecher.get(fach.fachID);
-					if (gostFach == null) {
-						continue;
-					}
 					final Fach zulFach = Fach.getBySchluesselOrDefault(gostFach.kuerzel);
 					fach.istFSNeu = zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache && zulFach.daten(abidaten.schuljahrAbitur).nurSII;
 					final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);

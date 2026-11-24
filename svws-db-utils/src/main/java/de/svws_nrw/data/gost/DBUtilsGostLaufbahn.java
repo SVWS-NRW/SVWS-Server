@@ -84,12 +84,12 @@ public final class DBUtilsGostLaufbahn {
 
 			final AbiturFachbelegung fach = new AbiturFachbelegung();
 			fach.fachID = belegungPlanung.Fach_ID;
-			abidaten.fachbelegungen.add(fach);
 
 			final GostFach gostFach = gostFaecher.get(fach.fachID);
 			if (gostFach == null) {
 				continue;
 			}
+			abidaten.fachbelegungen.add(fach);
 			final Fach zulFach = Fach.getBySchluesselOrDefault(gostFach.kuerzel);
 			fach.istFSNeu = zulFach.daten(schuljahr).istFremdsprache && zulFach.daten(schuljahr).nurSII;
 			final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
