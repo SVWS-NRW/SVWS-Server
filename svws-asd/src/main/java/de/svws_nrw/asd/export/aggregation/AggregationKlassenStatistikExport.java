@@ -51,6 +51,7 @@ import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
+import jakarta.validation.constraints.NotNull;
 
 /*
  * AggregationStatistikExport.java
@@ -179,6 +180,7 @@ public class AggregationKlassenStatistikExport {
 					.thenComparing(e -> e.getKey().fachklasse)
 					.thenComparing(e -> e.getKey().orgForm)
 					.thenComparing(e -> e.getKey().aktJahrgang)
+					.thenComparing(e -> e.getKey().epJahre)
 					.thenComparing(e -> e.getKey().foerderschwerp)
 					.thenComparing(e -> e.getKey().foerderschwerp2)
 					.thenComparing(e -> e.getKey().schwerstbeh)
@@ -187,10 +189,11 @@ public class AggregationKlassenStatistikExport {
 		}
 
 		return Comparator.comparing((final Map.Entry<TeilKlassenKey, List<SchuelerStatistikGesamt>> e) -> e.getKey().klassenKuerzel)
+				.thenComparing(e -> e.getKey().aktJahrgang)
+				.thenComparing(e -> e.getKey().epJahre)
 				.thenComparing(e -> e.getKey().gliederung)
 				.thenComparing(e -> e.getKey().klassenart)
 				.thenComparing(e -> e.getKey().orgForm)
-				.thenComparing(e -> e.getKey().aktJahrgang)
 				.thenComparing(e -> e.getKey().foerderschwerp)
 				.thenComparing(e -> e.getKey().schwerstbeh)
 				.thenComparing(e -> e.getKey().labk)
@@ -266,40 +269,55 @@ public class AggregationKlassenStatistikExport {
 	private void bauenKlakFuerASchulen(final KlassenStatistikExport klassenStatistikExport, final SchuelerLernabschnittStatistikGesamt lernabschnitt) {
 		final KlassenStatistikGesamt klasse = klasseIdMap.get(lernabschnitt.idKlasse);
 
-		if (klasse.idJahrgang == null) {
-			klassenStatistikExport.jahrgang = "";
-			// Jahrgangsübergreifende Klasse
-			if (!(Schulform.WB.equals(schulform))) {
-				klassenStatistikExport.jahrgang = "JU";
-			}
-		} else {
-			klassenStatistikExport.jahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(klasse.idJahrgang));
-		}
-
-		if (klassenStatistikExport.jahrgang == null) {
-			klassenStatistikExport.jahrgang = "";
-			fehlermeldungen
-					.add(this.getClass().getSimpleName() + ": Über die Klasse mit folgender ID konnte kein Jahrgang ermittelt werden: " + klasse.id
-							+ " idJahrgang: " + klasse.idJahrgang);
-		}
-
-		// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
-		if (Set.of("01", "02").contains(klassenStatistikExport.jahrgang)
-				&& !(Schulform.WB.equals(schulform))) {
-
-			if (klassenStatistikExport.jahrgang.equals("01")) {
-				klassenStatistikExport.jahrgang = "1E";
-			} else {
-				klassenStatistikExport.jahrgang = "2E";
-			}
-		}
+		klassenStatistikExport.jahrgang = ermittelnJahrgang(klasse, schulform, jahrgangIdMap, fehlermeldungen);
 
 		if (schulform.istAllgemeinbildend()) {
-			final String parallelitaet = klasseIdMap.get(lernabschnitt.idKlasse).parallelitaet;
+			final String parallelitaet = klasse.parallelitaet;
 			klassenStatistikExport.bildungsgangkennzeichen =
 					parallelitaet == null ? EIN_LEERZEICHEN : parallelitaet.trim();
 			klassenStatistikExport.parallelitaet2 = EIN_LEERZEICHEN;
 		}
+	}
+
+	/**
+	 * @param klasse
+	 * @param schulform
+	 * @param jahrgangIdMap
+	 * @param fehlermeldungen
+	 * @return der Jahrgang
+	 */
+	public static @NotNull String ermittelnJahrgang(final KlassenStatistikGesamt klasse, final Schulform schulform, final Map<Long, Long> jahrgangIdMap,
+			final List<String> fehlermeldungen) {
+		String jahrgang = "";
+
+		if (klasse.idJahrgang == null) {
+			jahrgang = "";
+			// Jahrgangsübergreifende Klasse
+			if (!(Schulform.WB.equals(schulform))) {
+				jahrgang = "JU";
+			}
+		} else {
+			jahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(klasse.idJahrgang));
+		}
+
+		if (jahrgang == null) {
+			jahrgang = "";
+			fehlermeldungen
+					.add("Über die Klasse mit folgender ID konnte kein Jahrgang ermittelt werden: " + klasse.id
+							+ " idJahrgang: " + klasse.idJahrgang);
+		}
+
+		// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
+		if (Set.of("01", "02").contains(jahrgang)
+				&& !(Schulform.WB.equals(schulform))) {
+
+			if (jahrgang.equals("01")) {
+				jahrgang = "1E";
+			} else {
+				jahrgang = "2E";
+			}
+		}
+		return jahrgang;
 	}
 
 	/**

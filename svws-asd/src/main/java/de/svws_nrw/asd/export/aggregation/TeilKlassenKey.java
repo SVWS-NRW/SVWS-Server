@@ -9,6 +9,7 @@ import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerLernabschnittStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerStatistikGesamt;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
@@ -25,27 +26,27 @@ public class TeilKlassenKey {
 	/**
 	 * Bei A-Schulen bestehend aus Jahrgang und Parallelität und bei BK-Schulen das Kürzel.
 	 */
-	String klassenKuerzel;
+	String klassenKuerzel = "";
 	/**
 	 *
 	 */
-	String gliederung;
+	String gliederung = "";
 	/**
 	 *
 	 */
-	String klassenart;
+	String klassenart = "";
 	/**
 	 * Organisationsform
 	 */
-	String orgForm;
+	String orgForm = "";
 	/**
 	 *
 	 */
-	String aktJahrgang;
+	String aktJahrgang = "";
 	/**
 	 *
 	 */
-	String foerderschwerp;
+	String foerderschwerp = "";
 	/**
 	 *
 	 */
@@ -53,19 +54,19 @@ public class TeilKlassenKey {
 	/**
 	 *	Lehrername-Abkürzung
 	 */
-	String labk;
+	String labk = "";
 	/**
 	 * Reformpädagogik
 	 */
-	String reformpdg;
+	String reformpdg = "";
 	/**
 	 *
 	 */
-	String foerderschwerp2;
+	String foerderschwerp2 = "";
 	/**
 	 *
 	 */
-	String adressmerkmal;
+	String adressmerkmal = "";
 
 	/**
 	 *
@@ -74,7 +75,11 @@ public class TeilKlassenKey {
 	/**
 	 *
 	 */
-	String fachklasse;
+	String fachklasse = "";
+	/**
+	 * Die bisherige Anzahl der Jahre in der Schuleingangssphase.
+	 */
+	String epJahre = "";
 
 
 
@@ -92,14 +97,13 @@ public class TeilKlassenKey {
 			final Map<Long, LehrerStatistikGesamt> lehrerStatistikGesamt, final long idSchuljahresabschnitt, final Map<Long, Long> jahrgangIds,
 			final Schulform schulform, final Map<Long, Long> foerderschwerpunktIdMap, final List<String> fehlermeldungen) {
 		final SchuelerLernabschnittStatistikGesamt lernabschnitt = AggregationUtils.ermittelnLernabschnitt(schueler, idSchuljahresabschnitt);
+		final KlassenStatistikGesamt klasse = klassenStatistikGesamt.get(lernabschnitt.idKlasse);
 		aktJahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIds.get(lernabschnitt.idJahrgang));
 
 		if (aktJahrgang == null) {
 			aktJahrgang = "";
 			fehlermeldungen.add("Bei folgendem Schüler konnte kein Jahrgang ermittelt werden: " + schueler.id + " JahrgangsID: " + lernabschnitt.idJahrgang);
 		}
-
-		final KlassenStatistikGesamt klasse = klassenStatistikGesamt.get(lernabschnitt.idKlasse);
 
 		if ((Schulform.BK.equals(schulform)) || (Schulform.SB.equals(schulform))) {
 			if ((klasse != null) && (klasse.kuerzel != null)) {
@@ -110,10 +114,15 @@ public class TeilKlassenKey {
 						.add("Beim Schüler mit der ID: " + schueler.id + " konnte zu folgender Klasse kein Kürzel ermittelt werden: " + lernabschnitt.idKlasse);
 			}
 		} else {
+			epJahre = PrimarstufeSchuleingangsphaseBesuchsjahre.data().getSchluesselByIDOrNull(lernabschnitt.idEpJahre);
+
+			if (epJahre == null) {
+				epJahre = "";
+			}
 			final String parallelitaet = ((klasse != null) && (klasse.parallelitaet != null))
 					? klasse.parallelitaet
 					: "";
-			klassenKuerzel = aktJahrgang.concat(parallelitaet);
+			klassenKuerzel = AggregationKlassenStatistikExport.ermittelnJahrgang(klasse, schulform, jahrgangIds, fehlermeldungen).concat(parallelitaet);
 		}
 
 		final String schulgliederung = Schulgliederung.data().getSchluesselByIDOrNull(lernabschnitt.idSchulgliederung);
@@ -185,9 +194,8 @@ public class TeilKlassenKey {
 
 	@Override
 	public final int hashCode() {
-		return Objects.hash(adressmerkmal, aktJahrgang, fachklasse, foerderschwerp, foerderschwerp2, gliederung, istJva,
-				klassenKuerzel, klassenart, labk,
-				orgForm, reformpdg, schwerstbeh);
+		return Objects.hash(adressmerkmal, aktJahrgang, epJahre, fachklasse, foerderschwerp, foerderschwerp2, gliederung, Boolean.valueOf(istJva),
+				klassenKuerzel, klassenart, labk, orgForm, reformpdg, Boolean.valueOf(schwerstbeh));
 	}
 
 
@@ -204,12 +212,10 @@ public class TeilKlassenKey {
 			return false;
 		}
 		final TeilKlassenKey other = (TeilKlassenKey) obj;
-		return Objects.equals(adressmerkmal, other.adressmerkmal) && Objects.equals(aktJahrgang, other.aktJahrgang)
+		return Objects.equals(adressmerkmal, other.adressmerkmal) && Objects.equals(aktJahrgang, other.aktJahrgang) && Objects.equals(epJahre, other.epJahre)
 				&& Objects.equals(fachklasse, other.fachklasse) && Objects.equals(foerderschwerp, other.foerderschwerp)
-				&& Objects.equals(foerderschwerp2, other.foerderschwerp2) && Objects.equals(gliederung, other.gliederung)
-				&& (istJva == other.istJva)
-				&& Objects.equals(klassenKuerzel, other.klassenKuerzel) && Objects.equals(klassenart, other.klassenart)
-				&& Objects.equals(labk, other.labk)
+				&& Objects.equals(foerderschwerp2, other.foerderschwerp2) && Objects.equals(gliederung, other.gliederung) && (istJva == other.istJva)
+				&& Objects.equals(klassenKuerzel, other.klassenKuerzel) && Objects.equals(klassenart, other.klassenart) && Objects.equals(labk, other.labk)
 				&& Objects.equals(orgForm, other.orgForm) && Objects.equals(reformpdg, other.reformpdg) && (schwerstbeh == other.schwerstbeh);
 	}
 
@@ -217,13 +223,10 @@ public class TeilKlassenKey {
 
 	@Override
 	public final String toString() {
-		return "TeilKlassenKey [klassenKuerzel=" + klassenKuerzel + ", gliederung=" + gliederung + ", klassenart=" + klassenart + ", orgForm="
-				+ orgForm
-				+ ", aktJahrgang=" + aktJahrgang + ", foerderschwerp=" + foerderschwerp + ", schwerstbeh=" + schwerstbeh + ", labk=" + labk
-				+ ", reformpdg="
-				+ reformpdg + ", foerderschwerp2=" + foerderschwerp2 + ", adressmerkmal=" + adressmerkmal + ", istJva=" + istJva
-				+ ", fachklasse=" + fachklasse
-				+ "]";
+		return "TeilKlassenKey [klassenKuerzel=" + klassenKuerzel + ", gliederung=" + gliederung + ", klassenart=" + klassenart + ", orgForm=" + orgForm
+				+ ", aktJahrgang=" + aktJahrgang + ", epJahre=" + epJahre + ", foerderschwerp=" + foerderschwerp + ", schwerstbeh=" + schwerstbeh + ", labk="
+				+ labk + ", reformpdg=" + reformpdg + ", foerderschwerp2=" + foerderschwerp2 + ", adressmerkmal=" + adressmerkmal + ", istJva=" + istJva
+				+ ", fachklasse=" + fachklasse + "]";
 	}
 
 
