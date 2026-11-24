@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIaa02IntKatalogFaecherAsdKatalog",
+    "historie" : [ {
+      "praefix" : "IAA02",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Faecher-AsdKatalog",
+      "dtos" : "FachStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Fach",
+      "anzeigebereich_ui" : "Fach ASD-Kürzel",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["IAA01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Fach: Der eingetragene Wert für das Feld 'Fach ASD-Kürzel' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog.",
+      "bedingung" : "FachStatistikGesamt.kuerzelStatistik ≠ einem zeitlich gültigen Historieneintrag in Fach.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

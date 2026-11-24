@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIaa00IntKatalogFaecherAsdKatalog",
+    "historie" : [ {
+      "praefix" : "IAA00",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Faecher-AsdKatalog",
+      "dtos" : "FachStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Fach",
+      "anzeigebereich_ui" : "Fach ASD-Kürzel",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Fach: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "FachStatistikGesamt.kuerzelStatistik = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}
+

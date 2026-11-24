@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIaa01IntKatalogFaecherAsdKatalog",
+    "historie" : [ {
+      "praefix" : "IAA01",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Faecher-AsdKatalog",
+      "dtos" : "FachStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Fach",
+      "anzeigebereich_ui" : "Fach ASD-Kürzel",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["IAA00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Fach: Das Feld 'Fach ASD-Kürzel' muss zulässig sein.",
+      "erlaeuterung" : "Da das Feld kuerzelStatistik ein String ist, können wir nicht, wie normalerweise mit der id arbeiten. Hier muss deswegen stattdessen gesucht werden, ob irgendwo in Fach.json im Attribut schluessel ein identischer String steht",
+      "bedingung" : "FachStatistikGesamt.kuerzelStatistik ≠ einem String im Attribut schluessel in Fach.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}
+  
