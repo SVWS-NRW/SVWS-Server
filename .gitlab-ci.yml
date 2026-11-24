@@ -219,7 +219,7 @@ analyze:sonarqube:
     allow_failure: true
 
 package:installer:win:snapshot:
-    image: ${REGISTRY_HOST}/svwsnrw/docker-runner-wine:21
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node26-wine
     stage: package
     needs:
         - build
@@ -250,7 +250,7 @@ package:installer:win:snapshot:
     allow_failure: true
 
 package:installer:win:release:
-    image: ${REGISTRY_HOST}/svwsnrw/docker-runner-wine:21
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node26-wine
     stage: package
     needs:
         - build
