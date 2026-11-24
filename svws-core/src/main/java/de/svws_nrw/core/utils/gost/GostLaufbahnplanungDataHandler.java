@@ -993,7 +993,7 @@ public final class GostLaufbahnplanungDataHandler {
 			gkl.id = vorgabe.id;
 			gkl.idFach = vorgabe.idFach;
 			gkl.idHalbjahr = vorgabe.halbjahr;
-			gkl.quartal = vorgabe.halbjahr;
+			gkl.quartal = vorgabe.quartal;
 			daten.gkl.add(gkl);
 		}
 		schueler.gkl[0] = this.gklWahlen.idKlausurvorgabeEF_Sprachen;
