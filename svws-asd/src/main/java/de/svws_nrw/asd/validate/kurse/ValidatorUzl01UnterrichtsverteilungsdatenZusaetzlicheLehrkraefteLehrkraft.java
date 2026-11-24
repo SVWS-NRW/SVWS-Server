@@ -3,10 +3,9 @@ package de.svws_nrw.asd.validate.kurse;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.kurse.KursLehrer;
-import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -14,40 +13,41 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft extends Validator {
 
-	/** Die Liste weiterer Lehrer. */
-	private final @NotNull Supplier<List<KursLehrer>> _listWeitereLehrer;
-	/** Die Liste der Lehrer. */
-	private final @NotNull Supplier<List<LehrerStatistikGesamt>> _listLehrer;
+	/** Die Liste der IDs weiterer Lehrer. */
+	private final @NotNull Supplier<@AllowNull List<Long>> _idsWeitereLehrer;
+	/** Die Liste der IDs aller Lehrer. */
+	private final @NotNull Supplier<@AllowNull List<Long>> _idsAlleLehrer;
 
 	/**
 	 * Erstellt einen neuen Validator für die Prüfung zusätzlicher Lehrkräfte
 	 *
-	 * @param listWeitereLehrer   die Liste der Kurslehrer
-	 * @param listLehrer          die Liste der Lehrer
+	 * @param idsWeitereLehrer    die Liste der IDs der weiteren LehrerKursleherer
+	 * @param idsAlleLehrer       die Liste der IDs aller Lehrer dieser Schule
 	 * @param kontext             der Kontext des Validators
 	 */
 
-	public ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(@NotNull final Supplier<List<KursLehrer>> listWeitereLehrer,
-			@NotNull final Supplier<List<LehrerStatistikGesamt>> listLehrer, @NotNull final ValidatorKontext kontext) {
+	public ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(@NotNull final Supplier<@AllowNull List<Long>> idsWeitereLehrer,
+			@NotNull final Supplier<@AllowNull List<Long>> idsAlleLehrer, @NotNull final ValidatorKontext kontext) {
 		super(kontext);
-		_listWeitereLehrer = listWeitereLehrer;
-		_listLehrer = listLehrer;
+		_idsWeitereLehrer = idsWeitereLehrer;
+		_idsAlleLehrer = idsAlleLehrer;
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final List<KursLehrer> listWeitereLehrer = _listWeitereLehrer.get();
-		final List<LehrerStatistikGesamt> listLehrer = _listLehrer.get();
+		final List<Long> idsWeitereLehrer = _idsWeitereLehrer.get();
+		final List<Long> idsAlleLehrer = _idsAlleLehrer.get();
 
-		if (listWeitereLehrer == null || listLehrer == null) {
+		if (idsWeitereLehrer == null || idsAlleLehrer == null) {
 			return true;
 		}
 
-		for (final KursLehrer idKurslehrer : listWeitereLehrer) {
+		for (final Long idKurslehrer : idsWeitereLehrer) {
 			boolean gefunden = false;
-			for (final LehrerStatistikGesamt idLehrer : listLehrer) {
-				if (idKurslehrer.idLehrer == idLehrer.id) {
+			for (final Long idLehrer : idsAlleLehrer) {
+				if (idKurslehrer == idLehrer) {
 					gefunden = true;
+					break;
 				}
 			}
 			if (!gefunden) {

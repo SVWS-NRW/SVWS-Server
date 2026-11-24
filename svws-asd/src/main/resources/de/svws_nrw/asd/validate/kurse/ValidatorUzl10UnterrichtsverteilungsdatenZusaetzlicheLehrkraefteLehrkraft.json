@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUzl10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft",
+    "historie" : [ {
+      "praefix" : "UZL10",
+      "altes_kuerzel" : "TJ003",
+      "zweig" : "Unterrichtsverteilungsdaten-ZusaetzlicheLehrkraefte-Lehrkraft",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Tabelle 'Zusätzliche Lehrkraft'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Zusätzliche Lehrkraft: Die ausgewählte zusätzliche Lehrkraft ist bereits oben im Feld 'Lehrkraft' angegeben. Bitte prüfen.",
+      "erlaeuterung" : "",
+      "bedingung" : "KursDaten.List<KursLehrer> weitereLehrer.idLehrer ≙ KursDaten.lehrer",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+ }

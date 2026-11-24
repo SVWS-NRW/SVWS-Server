@@ -1,8 +1,7 @@
-import { KursLehrer } from '../../../asd/data/kurse/KursLehrer';
 import { ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft } from '../../../asd/validate/kurse/ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft';
-import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
+import { ValidatorUzl10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft } from '../../../asd/validate/kurse/ValidatorUzl10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -13,13 +12,15 @@ export class ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrk
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param listWeitereLehrer  die Liste der Kursleherer
-	 * @param listLehrer         die Liste aller Lehrer dieser Schule
-	 * @param kontext            der Kontext des Validators
+	 * @param idsWeitereLehrer    die Liste der IDs der weiteren LehrerKursleherer
+	 * @param idsAlleLehrer       die Liste der IDs aller Lehrer dieser Schule
+	 * @param idLehrer            die ID einer ausgewählten, weiteren Lehrkraft
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(listWeitereLehrer: Supplier<List<KursLehrer>>, listLehrer: Supplier<List<LehrerStatistikGesamt>>, kontext: ValidatorKontext) {
+	public constructor(idsWeitereLehrer: Supplier<List<number> | null>, idsAlleLehrer: Supplier<List<number> | null>, idLehrer: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(listWeitereLehrer, listLehrer, kontext));
+		this._validatoren.add(new ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(idsWeitereLehrer, idsAlleLehrer, kontext));
+		this._validatoren.add(new ValidatorUzl10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(idsWeitereLehrer, idLehrer, kontext));
 	}
 
 	protected pruefe(): boolean {

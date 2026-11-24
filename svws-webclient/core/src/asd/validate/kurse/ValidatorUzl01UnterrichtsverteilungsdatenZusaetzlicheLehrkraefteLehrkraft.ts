@@ -1,5 +1,3 @@
-import { KursLehrer } from '../../../asd/data/kurse/KursLehrer';
-import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
@@ -9,40 +7,41 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft extends Validator {
 
 	/**
-	 * Die Liste weiterer Lehrer.
+	 * Die Liste der IDs weiterer Lehrer.
 	 */
-	private readonly _listWeitereLehrer: Supplier<List<KursLehrer>>;
+	private readonly _idsWeitereLehrer: Supplier<List<number> | null>;
 
 	/**
-	 * Die Liste der Lehrer.
+	 * Die Liste der IDs aller Lehrer.
 	 */
-	private readonly _listLehrer: Supplier<List<LehrerStatistikGesamt>>;
+	private readonly _idsAlleLehrer: Supplier<List<number> | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator für die Prüfung zusätzlicher Lehrkräfte
 	 *
-	 * @param listWeitereLehrer   die Liste der Kurslehrer
-	 * @param listLehrer          die Liste der Lehrer
+	 * @param idsWeitereLehrer    die Liste der IDs der weiteren LehrerKursleherer
+	 * @param idsAlleLehrer       die Liste der IDs aller Lehrer dieser Schule
 	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(listWeitereLehrer: Supplier<List<KursLehrer>>, listLehrer: Supplier<List<LehrerStatistikGesamt>>, kontext: ValidatorKontext) {
+	public constructor(idsWeitereLehrer: Supplier<List<number> | null>, idsAlleLehrer: Supplier<List<number> | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._listWeitereLehrer = listWeitereLehrer;
-		this._listLehrer = listLehrer;
+		this._idsWeitereLehrer = idsWeitereLehrer;
+		this._idsAlleLehrer = idsAlleLehrer;
 	}
 
 	protected pruefe(): boolean {
-		const listWeitereLehrer: List<KursLehrer> | null = this._listWeitereLehrer.get();
-		const listLehrer: List<LehrerStatistikGesamt> | null = this._listLehrer.get();
-		if (listWeitereLehrer === null || listLehrer === null) {
+		const idsWeitereLehrer: List<number> | null = this._idsWeitereLehrer.get();
+		const idsAlleLehrer: List<number> | null = this._idsAlleLehrer.get();
+		if (idsWeitereLehrer === null || idsAlleLehrer === null) {
 			return true;
 		}
-		for (const idKurslehrer of listWeitereLehrer) {
+		for (const idKurslehrer of idsWeitereLehrer) {
 			let gefunden: boolean = false;
-			for (const idLehrer of listLehrer) {
-				if (idKurslehrer.idLehrer === idLehrer.id) {
+			for (const idLehrer of idsAlleLehrer) {
+				if (idKurslehrer as unknown === idLehrer as unknown) {
 					gefunden = true;
+					break;
 				}
 			}
 			if (!gefunden) {

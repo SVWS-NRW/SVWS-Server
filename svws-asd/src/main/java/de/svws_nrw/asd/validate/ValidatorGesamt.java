@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.kurse.KursLehrer;
 import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
@@ -292,6 +293,12 @@ public final class ValidatorGesamt extends Validator {
 		_validatoren.addAll(allgemein);
 		mapValidatorenKurse.put(-1L, allgemein);
 
+		// ID-Liste alle Lehrer
+		final @NotNull List<Long> idsAlleLehrer = new ArrayList<>();
+		for (final LehrerStatistikGesamt lehrer : gesamt.lehrer) {
+			idsAlleLehrer.add(lehrer.id);
+		}
+
 		// Durchwandere die Kursdatensätze und ergänze die Subvalidatoren für die Kurse
 		for (final KursStatistikGesamt kurs : gesamt.kurse) {
 			// Erzeuge die Liste der Subvalidatoren für die Kurse
@@ -313,9 +320,16 @@ public final class ValidatorGesamt extends Validator {
 			list.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden(
 					() -> (double) kurs.wochenstunden,
 					this.kontext()));
+			// ID-Liste der weiteren Lehrer
+			final @NotNull List<Long> idsWeitereLehrer  = new ArrayList<>();
+			for (final KursLehrer idWeitererlehrer : kurs.weitereLehrer) {
+				idsWeitereLehrer.add(idWeitererlehrer.idLehrer);
+			}
+
 			list.add(new ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(
-					() -> kurs.weitereLehrer,
-					() -> gesamt.lehrer,
+					() -> idsWeitereLehrer,
+					() -> idsAlleLehrer,
+					() -> kurs.idLehrer,
 					this.kontext()));
 			list.add(new ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden(
 					() -> kurs.wochenstundenLehrer,

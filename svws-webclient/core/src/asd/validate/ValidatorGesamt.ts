@@ -181,6 +181,10 @@ export class ValidatorGesamt extends Validator {
 		const allgemein: List<Validator> = new ArrayList<Validator>();
 		this._validatoren.addAll(allgemein);
 		this.mapValidatorenKurse.put(-1, allgemein);
+		const idsAlleLehrer: List<number> = new ArrayList<number>();
+		for (const lehrer of gesamt.lehrer) {
+			idsAlleLehrer.add(lehrer.id);
+		}
 		for (const kurs of gesamt.kurse) {
 			const list: List<Validator> = new ArrayList<Validator>();
 			list.add(new ValidatorUfUnterrichtsverteilungsdatenFach({ get: () => kurs.idFach }, this.kontext()));
@@ -188,7 +192,11 @@ export class ValidatorGesamt extends Validator {
 			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft({ get: () => kurs.idLehrer }, { get: () => gesamt.lehrer }, this.kontext()));
 			list.add(new ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden({ get: () => kurs.wochenstundenLehrer }, this.kontext()));
 			list.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden({ get: () => kurs.wochenstunden as number }, this.kontext()));
-			list.add(new ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft({ get: () => kurs.weitereLehrer }, { get: () => gesamt.lehrer }, this.kontext()));
+			const idsWeitereLehrer: List<number> = new ArrayList<number>();
+			for (const idWeitererlehrer of kurs.weitereLehrer) {
+				idsWeitereLehrer.add(idWeitererlehrer.idLehrer);
+			}
+			list.add(new ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft({ get: () => idsWeitereLehrer }, { get: () => idsAlleLehrer }, { get: () => kurs.idLehrer }, this.kontext()));
 			list.add(new ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden({ get: () => kurs.wochenstundenLehrer }, this.kontext()));
 			this._validatoren.addAll(list);
 			this.mapValidatorenKurse.put(kurs.id, list);

@@ -10,8 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.kurse.KursLehrer;
-import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -66,41 +64,21 @@ class TestValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkr
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
 	void testValidatorUf01UnterrichtsverteilungsdatenFach(final Integer anzahl, final boolean result) {
 
-		final List<KursLehrer> listWeitereLehrer = new ArrayList<KursLehrer>();
-		final List<LehrerStatistikGesamt> listLehrer = new ArrayList<LehrerStatistikGesamt>();
+		final List<Long> idsWeitereLehrer = new ArrayList<>();
+		final List<Long> idsAlleLehrer = new ArrayList<>();
 
 		if (anzahl > 0) {
-			// Liste KursLehrer erzeugen
-			final KursLehrer kursLehrer1 = new KursLehrer();
-			final KursLehrer kursLehrer2 = new KursLehrer();
-			final KursLehrer kursLehrer3 = new KursLehrer();
 
-			kursLehrer1.idLehrer = 1;
-			kursLehrer2.idLehrer = 2;
-			kursLehrer3.idLehrer = 3;
+			idsWeitereLehrer.add(1L);
+			idsWeitereLehrer.add(2L);
+			idsWeitereLehrer.add(3L);
 
-			listWeitereLehrer.add(kursLehrer1);
-			listWeitereLehrer.add(kursLehrer2);
-			listWeitereLehrer.add(kursLehrer3);
-
-			// Liste Lehrer erzeugen
-			final LehrerStatistikGesamt lehrerStatistikGesamt1 = new LehrerStatistikGesamt();
-			final LehrerStatistikGesamt lehrerStatistikGesamt2 = new LehrerStatistikGesamt();
-			final LehrerStatistikGesamt lehrerStatistikGesamt3 = new LehrerStatistikGesamt();
-
-			lehrerStatistikGesamt1.id = 1;
-			lehrerStatistikGesamt2.id = 2;
-			lehrerStatistikGesamt3.id = 3;
-
-			listLehrer.add(lehrerStatistikGesamt1);
-			listLehrer.add(lehrerStatistikGesamt2);
-			listLehrer.add(lehrerStatistikGesamt3);
+			idsAlleLehrer.add(1L);
+			idsAlleLehrer.add(2L);
+			idsAlleLehrer.add(3L);
 
 			if (anzahl >= 2) {
-				final KursLehrer kursLehrer4 = new KursLehrer();
-
-				kursLehrer4.idLehrer = 4;
-				listWeitereLehrer.add(kursLehrer4);
+				idsWeitereLehrer.add(4L);
 			}
 		}
 
@@ -110,7 +88,7 @@ class TestValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkr
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft validator =
-				new ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(() -> listWeitereLehrer, () -> listLehrer, kontext);
+				new ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(() -> idsWeitereLehrer, () -> idsAlleLehrer, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 
