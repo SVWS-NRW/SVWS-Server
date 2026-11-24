@@ -187,7 +187,7 @@ public class GostLaufbahnplanungExportV1Service {
 			exportFach.istMoeglichQ12 = fach.istMoeglichQ12;
 			exportFach.istMoeglichQ21 = fach.istMoeglichQ21;
 			exportFach.istMoeglichQ22 = fach.istMoeglichQ22;
-			exportFach.wochenstundenQualifikationsphase = 3;
+			exportFach.wochenstundenQualifikationsphase = fach.wochenstundenQualifikationsphase;
 			exportFach.projektKursLeitfach1ID = null;
 			exportFach.projektKursLeitfach1Kuerzel = null;
 			exportFach.projektKursLeitfach2ID = null;
