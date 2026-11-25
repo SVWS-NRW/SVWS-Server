@@ -39,6 +39,10 @@ class SchuelerLernabschnittsdatenMapperTest {
 		return e;
 	}
 
+	private static SchuelerLernabschnittsdatenMappingContext createContextMitKennungFachklasse(final String kennung) {
+		return new SchuelerLernabschnittsdatenMappingContext(new SchuelerLernabschnittBemerkungen(), List.of(), kennung);
+	}
+
 	// -------------------------------------------------------------------------
 	// toApi
 	// -------------------------------------------------------------------------
@@ -84,6 +88,35 @@ class SchuelerLernabschnittsdatenMapperTest {
 		}
 
 		@Test
+		@DisplayName("Ermittelt idFachklasseStatistik aus der Kennung im Kontext und dem Schuljahr, fachklasseID bleibt die Katalog-ID")
+		void toApi_idFachklasseStatistik() {
+			final var entity = createEntity();
+			entity.Fachklasse_ID = 5L;
+
+			final var result = mapper.toApi(entity, 2024, Schulform.BK, createContextMitKennungFachklasse("210-148-18"));
+
+			assertThat(result)
+					.hasFieldOrPropertyWithValue("fachklasseID", 5L)
+					.hasFieldOrPropertyWithValue("idFachklasseStatistik", 1429000L);
+		}
+
+		@Test
+		@DisplayName("idFachklasseStatistik ist null, wenn keine Kennung der Fachklasse im Kontext steht")
+		void toApi_idFachklasseStatistikOhneKennung() {
+			final var result = mapper.toApi(createEntity(), 2024, Schulform.BK, SchuelerLernabschnittsdatenMappingContext.empty());
+
+			assertThat(result.idFachklasseStatistik).isNull();
+		}
+
+		@Test
+		@DisplayName("idFachklasseStatistik ist null, wenn die Kennung im Schuljahr unbekannt ist")
+		void toApi_idFachklasseStatistikUnbekannteKennung() {
+			final var result = mapper.toApi(createEntity(), 2024, Schulform.BK, createContextMitKennungFachklasse("99-999-99"));
+
+			assertThat(result.idFachklasseStatistik).isNull();
+		}
+
+		@Test
 		@DisplayName("Übernimmt Bemerkungen und Leistungsdaten aus dem Kontext, Zeugnisbemerkung aus der Entity")
 		void toApi_setztKontextUndZeugnisBemerkungen() {
 			final var entity = createEntity();
@@ -91,7 +124,7 @@ class SchuelerLernabschnittsdatenMapperTest {
 			bemerkung.zeugnisASV = "ASV-Text";
 			final var leistung = new SchuelerLeistungsdaten();
 			leistung.id = 100L;
-			final var ctx = new SchuelerLernabschnittsdatenMappingContext(bemerkung, List.of(leistung));
+			final var ctx = new SchuelerLernabschnittsdatenMappingContext(bemerkung, List.of(leistung), null);
 
 			final var result = mapper.toApi(entity, 2024, Schulform.GY, ctx);
 

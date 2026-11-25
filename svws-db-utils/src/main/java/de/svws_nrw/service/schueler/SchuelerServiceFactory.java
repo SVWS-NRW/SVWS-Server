@@ -264,6 +264,7 @@ public final class SchuelerServiceFactory {
 	public SchuelerLernabschnittService getSchuelerLernabschnittService() {
 		final var lernabschnittRepository = schuelerRepositoryFactory.getSchuelerLernabschnittRepository();
 		final var bemerkungRepository = schuelerRepositoryFactory.getSchuelerLernabschnittBemerkungenRepository();
+		final var fachklasseRepository = katalogRepositoryFactory.getFachklasseRepository();
 		final var repos = new SchuelerLernabschnittsdatenRepos(
 				lernabschnittRepository,
 				schuelerRepositoryFactory.getSchuelerRepository(),
@@ -272,7 +273,7 @@ public final class SchuelerServiceFactory {
 				LehrerRepositoryFactory.getNewInstance().getLehrerRepository(),
 				KlassenRepositoryFactory.getNewInstance().getKlassenRepository(),
 				katalogRepositoryFactory.getFoerderschwerpunktRepository(),
-				katalogRepositoryFactory.getFachklasseRepository(),
+				fachklasseRepository,
 				katalogRepositoryFactory.getJahrgangRepository(),
 				katalogRepositoryFactory.getSchuelerschwerpunktRepository()
 		);
@@ -280,7 +281,8 @@ public final class SchuelerServiceFactory {
 				bemerkungRepository,
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				SchuelerLeistungsdatenMapper.INSTANCE,
-				SchuelerLernabschnittBemerkungenMapper.INSTANCE);
+				SchuelerLernabschnittBemerkungenMapper.INSTANCE,
+				fachklasseRepository);
 
 		return new SchuelerLernabschnittService(
 				repos,

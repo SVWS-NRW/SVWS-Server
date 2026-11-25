@@ -13,6 +13,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.JsonNullableMapper;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragCreateRequest;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragPatchRequest;
+import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseKennungUtils;
 import jakarta.ws.rs.core.Response;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
@@ -61,15 +62,12 @@ public interface FachklasseMapper {
 	}
 
 	/**
-	 * Rekonstruiert nach dem Basis-Mapping den Fachklassen-Schlüssel aus dem Feld
-	 * {@link DTOFachklassen#Kennung} (z.B. {@code "10-179-02"}) durch Entfernen des letzten
-	 * Bindestrichs (z.B. {@code "10-17902"}) und löst damit den zum Schuljahr passenden
-	 * {@link Fachklasse}-Katalogeintrag auf.
-	 * <p>
-	 * Bei Erfolg wird das Feld {@link FachklasseEintrag#idFachklasse} – die ID des zum Schuljahr gültigen Katalogeintrags - gesetzt.
+	 * Löst nach dem Basis-Mapping die {@link DTOFachklassen#Kennung} (z.B. {@code "10-179-02"}) über
+	 * {@link FachklasseKennungUtils#findIdFachklasseStatistik(String, int)} auf den zum Schuljahr passenden
+	 * {@link Fachklasse}-Katalogeintrag auf und setzt dessen ID in {@link FachklasseEintrag#idFachklasse}.
 	 * <p>
 	 * Ist {@link DTOFachklassen#Kennung} {@code null}, leer oder der rekonstruierte Schlüssel
-	 * im angegebenen Schuljahr unbekannt, werden die Felder nicht gesetzt.
+	 * im angegebenen Schuljahr unbekannt, bleibt das Feld {@code null}.
 	 *
 	 * @param entity    die Quell-Entity mit dem zu rekonstruierenden {@link DTOFachklassen#Kennung}-Feld
 	 * @param schuljahr das aktuelle Schuljahr für den {@link Fachklasse}-Lookup
@@ -80,18 +78,7 @@ public interface FachklasseMapper {
 			final DTOFachklassen entity,
 			@Context final int schuljahr,
 			@MappingTarget final FachklasseEintrag dto) {
-		if ((entity.Kennung == null) || entity.Kennung.isBlank()) {
-			return;
-		}
-		// "10-179-02" -> letzten Bindestrich entfernen -> "10-17902"
-		final int lastDash = entity.Kennung.lastIndexOf("-");
-		final var schluesselFachklasse = entity.Kennung.substring(0, lastDash) + entity.Kennung.substring(lastDash + 1);
-
-		final var fachklasse = Fachklasse.data().getEintragBySchuljahrUndSchluessel(schuljahr, schluesselFachklasse);
-		if (fachklasse == null) {
-			return;
-		}
-		dto.idFachklasse = fachklasse.id;
+		dto.idFachklasse = FachklasseKennungUtils.findIdFachklasseStatistik(entity.Kennung, schuljahr);
 	}
 
 	/**

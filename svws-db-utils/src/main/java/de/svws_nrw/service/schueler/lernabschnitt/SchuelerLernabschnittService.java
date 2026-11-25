@@ -74,7 +74,7 @@ public final class SchuelerLernabschnittService {
 	 * @param repos                      die vom Service benötigten Repositories
 	 * @param mapper                     der Mapper zur Konvertierung zwischen Entity und API-Modell
 	 * @param bemerkungenMapper          der Mapper für den Patch der Bemerkungen
-	 * @param kontextLoader              der Loader für die Zusatzdaten (Bemerkungen, Leistungsdaten) beim Mapping
+	 * @param kontextLoader              der Loader für die Zusatzdaten (Bemerkungen, Fachklassen, Leistungsdaten) beim Mapping
 	 * @param epJahre                    die Regeln zu den EP-Jahren (Prüfung und Fortschreibung)
 	 * @param eigeneSchuleService        der Service für die eigene Schule (liefert die Schulform)
 	 * @param benutzerKompetenzService   der Service für die Benutzerkompetenzen

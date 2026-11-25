@@ -91,6 +91,12 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "die ID der Fachklasse des Schülers an einem Berufskolleg", example = "null")
 	public Long fachklasseID = null;
 
+	/** Die statistikrelevante ID der Fachklasse aus dem Core-Type Fachklasse. Wird aus der Kennung der Fachklasse und dem Schuljahr ermittelt und kann nur gelesen werden. */
+	@Schema(description = "die statistikrelevante ID der Fachklasse aus dem Core-Type Fachklasse. Wird aus der Kennung der Fachklasse und dem Schuljahr "
+			+ "ermittelt, ist nur lesend und null, wenn keine Fachklasse zugeordnet ist oder ihre Kennung im Schuljahr unbekannt ist", example = "1759000",
+			accessMode = Schema.AccessMode.READ_ONLY)
+	public Long idFachklasseStatistik = null;
+
 	/** Der Schwerpunkt eines Schülers laut dem Schwerpunkt-Katalog */
 	@Schema(description = "der Schwerpunkt eines Schülers laut dem Schwerpunkt-Katalog", example = "null")
 	public Long schwerpunktID = null;

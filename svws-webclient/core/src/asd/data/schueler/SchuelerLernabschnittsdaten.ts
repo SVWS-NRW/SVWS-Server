@@ -99,6 +99,11 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public fachklasseID: number | null = null;
 
 	/**
+	 * Die statistikrelevante ID der Fachklasse aus dem Core-Type Fachklasse. Wird aus der Kennung der Fachklasse und dem Schuljahr ermittelt und kann nur gelesen werden.
+	 */
+	public idFachklasseStatistik: number | null = null;
+
+	/**
 	 * Der Schwerpunkt eines Schülers laut dem Schwerpunkt-Katalog
 	 */
 	public schwerpunktID: number | null = null;
@@ -296,6 +301,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.jahrgangID = (obj.jahrgangID === undefined) ? null : obj.jahrgangID === null ? null : obj.jahrgangID;
 		result.idEpJahre = (obj.idEpJahre === undefined) ? null : obj.idEpJahre === null ? null : obj.idEpJahre;
 		result.fachklasseID = (obj.fachklasseID === undefined) ? null : obj.fachklasseID === null ? null : obj.fachklasseID;
+		result.idFachklasseStatistik = (obj.idFachklasseStatistik === undefined) ? null : obj.idFachklasseStatistik === null ? null : obj.idFachklasseStatistik;
 		result.schwerpunktID = (obj.schwerpunktID === undefined) ? null : obj.schwerpunktID === null ? null : obj.schwerpunktID;
 		result.idOrganisationsform = (obj.idOrganisationsform === undefined) ? null : obj.idOrganisationsform === null ? null : obj.idOrganisationsform;
 		result.idKlassenart = (obj.idKlassenart === undefined) ? null : obj.idKlassenart === null ? null : obj.idKlassenart;
@@ -372,6 +378,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
 		result += '"idEpJahre" : ' + ((obj.idEpJahre === null) ? 'null' : obj.idEpJahre.toString()) + ',';
 		result += '"fachklasseID" : ' + ((obj.fachklasseID === null) ? 'null' : obj.fachklasseID.toString()) + ',';
+		result += '"idFachklasseStatistik" : ' + ((obj.idFachklasseStatistik === null) ? 'null' : obj.idFachklasseStatistik.toString()) + ',';
 		result += '"schwerpunktID" : ' + ((obj.schwerpunktID === null) ? 'null' : obj.schwerpunktID.toString()) + ',';
 		result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : obj.idOrganisationsform.toString()) + ',';
 		result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
@@ -468,6 +475,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		}
 		if (obj.fachklasseID !== undefined) {
 			result += '"fachklasseID" : ' + ((obj.fachklasseID === null) ? 'null' : obj.fachklasseID.toString()) + ',';
+		}
+		if (obj.idFachklasseStatistik !== undefined) {
+			result += '"idFachklasseStatistik" : ' + ((obj.idFachklasseStatistik === null) ? 'null' : obj.idFachklasseStatistik.toString()) + ',';
 		}
 		if (obj.schwerpunktID !== undefined) {
 			result += '"schwerpunktID" : ' + ((obj.schwerpunktID === null) ? 'null' : obj.schwerpunktID.toString()) + ',';

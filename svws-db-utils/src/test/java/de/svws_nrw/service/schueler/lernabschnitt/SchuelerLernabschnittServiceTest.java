@@ -12,6 +12,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.data.TransactionSupport;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOFachklassen;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
@@ -141,7 +142,7 @@ class SchuelerLernabschnittServiceTest {
 				jahrgangRepository, schuelerschwerpunktRepository);
 		// Die Hilfsklassen werden echt instanziiert, gemockt sind nur ihre Repositories
 		final var kontextLoader = new SchuelerLernabschnittMappingContextLoader(bemerkungRepository, leistungsdatenRepository,
-				SchuelerLeistungsdatenMapper.INSTANCE, SchuelerLernabschnittBemerkungenMapper.INSTANCE);
+				SchuelerLeistungsdatenMapper.INSTANCE, SchuelerLernabschnittBemerkungenMapper.INSTANCE, fachklasseRepository);
 		service = new SchuelerLernabschnittService(repos, mapper, SchuelerLernabschnittBemerkungenMapper.INSTANCE, kontextLoader,
 				new SchuelerLernabschnittEpJahre(repository), eigeneSchuleService, benutzerKompetenzService);
 
@@ -251,6 +252,21 @@ class SchuelerLernabschnittServiceTest {
 
 			assertThat(result).isSameAs(apiModel);
 
+		}
+
+		@Test
+		@DisplayName("Die Kennung der zugeordneten Fachklasse wird an den Mapper übergeben")
+		void get_uebergibtKennungFachklasse() {
+			entity.Fachklasse_ID = 5L;
+			final var fachklasse = new DTOFachklassen(5L);
+			fachklasse.Kennung = "10-179-02";
+			when(repository.findById(ID_LERNABSCHNITT)).thenReturn(Optional.of(entity));
+			when(fachklasseRepository.findMapByIds(List.of(5L))).thenReturn(Map.of(5L, fachklasse));
+			stubToApi(apiModel);
+
+			service.get(ID_LERNABSCHNITT);
+
+			assertThat(captureContext().kennungFachklasse()).isEqualTo("10-179-02");
 		}
 
 		@Test

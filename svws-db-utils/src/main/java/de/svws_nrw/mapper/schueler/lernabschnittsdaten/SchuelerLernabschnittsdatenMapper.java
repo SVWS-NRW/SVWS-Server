@@ -22,6 +22,7 @@ import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.mapper.JsonNullableMapper;
+import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseKennungUtils;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
 import org.mapstruct.AfterMapping;
@@ -70,6 +71,7 @@ public interface SchuelerLernabschnittsdatenMapper {
 	@Mapping(target = "folgeklassenID", source = "entity.Folgeklasse_ID")
 	@Mapping(target = "jahrgangID", source = "entity.Jahrgang_ID")
 	@Mapping(target = "fachklasseID", source = "entity.Fachklasse_ID")
+	@Mapping(target = "idFachklasseStatistik", ignore = true)
 	@Mapping(target = "schwerpunktID", source = "entity.Schwerpunkt_ID")
 	@Mapping(target = "foerderschwerpunkt1ID", source = "entity.Foerderschwerpunkt_ID")
 	@Mapping(target = "foerderschwerpunkt2ID", source = "entity.Foerderschwerpunkt2_ID")
@@ -294,6 +296,22 @@ public interface SchuelerLernabschnittsdatenMapper {
 		target.bemerkungen = ctx.bemerkung();
 		target.bemerkungen.zeugnisAllgemein = entity.ZeugnisBem;
 		target.leistungsdaten = ctx.leistungsdaten();
+	}
+
+	/**
+	 * Befüllt die statistikrelevante ID der Fachklasse. Sie wird aus der Kennung der Fachklasse im Mapping-Kontext
+	 * und dem Schuljahr des Lernabschnitts über den Core-Type Fachklasse ermittelt.
+	 *
+	 * @param schuljahr   das Schuljahr des zugehörigen Schuljahresabschnitts
+	 * @param ctx         der Mapping-Kontext mit der Kennung der Fachklasse
+	 * @param target      das zu befüllende Core-DTO
+	 */
+	@AfterMapping
+	default void mapIdFachklasseStatistik(
+			@Context final int schuljahr,
+			@Context final SchuelerLernabschnittsdatenMappingContext ctx,
+			@MappingTarget final SchuelerLernabschnittsdaten target) {
+		target.idFachklasseStatistik = FachklasseKennungUtils.findIdFachklasseStatistik(ctx.kennungFachklasse(), schuljahr);
 	}
 
 	/**

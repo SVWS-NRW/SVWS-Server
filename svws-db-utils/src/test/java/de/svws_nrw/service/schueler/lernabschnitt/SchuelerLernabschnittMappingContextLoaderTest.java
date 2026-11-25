@@ -5,13 +5,16 @@ import java.util.Map;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOFachklassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.mapper.schueler.leistungsdaten.SchuelerLeistungsdatenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittBemerkungenMapper;
+import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdatenMappingContext;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
+import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,16 +47,31 @@ class SchuelerLernabschnittMappingContextLoaderTest {
 	@Mock
 	private SchuelerLernabschnittBemerkungenMapper bemerkungenMapper;
 
+	@Mock
+	private FachklasseRepository fachklasseRepository;
+
 	private SchuelerLernabschnittMappingContextLoader loader;
 
 	@BeforeEach
 	void setUp() {
 		loader = new SchuelerLernabschnittMappingContextLoader(bemerkungRepository, leistungsdatenRepository, leistungsdatenMapper,
-				bemerkungenMapper);
+				bemerkungenMapper, fachklasseRepository);
 	}
 
 	private static DTOSchuelerLernabschnittsdaten createLernabschnitt(final long id, final long idSchuljahresabschnitt) {
 		return new DTOSchuelerLernabschnittsdaten(id, ID_SCHUELER, idSchuljahresabschnitt, true, null, 1L);
+	}
+
+	private static DTOSchuelerLernabschnittsdaten createLernabschnittMitFachklasse(final long id, final Long idFachklasse) {
+		final var lernabschnitt = createLernabschnitt(id, ID_ABSCHNITT_2024);
+		lernabschnitt.Fachklasse_ID = idFachklasse;
+		return lernabschnitt;
+	}
+
+	private static DTOFachklassen createFachklasse(final long id, final String kennung) {
+		final var fachklasse = new DTOFachklassen(id);
+		fachklasse.Kennung = kennung;
+		return fachklasse;
 	}
 
 	@Test
@@ -62,7 +80,7 @@ class SchuelerLernabschnittMappingContextLoaderTest {
 		final var result = loader.load(List.of(), SCHULJAHR_BY_ID_ABSCHNITT, true);
 
 		assertThat(result).isEmpty();
-		verifyNoInteractions(bemerkungRepository, leistungsdatenRepository);
+		verifyNoInteractions(bemerkungRepository, leistungsdatenRepository, fachklasseRepository);
 	}
 
 	@Test
@@ -105,6 +123,35 @@ class SchuelerLernabschnittMappingContextLoaderTest {
 			assertThat(kontext.leistungsdaten()).isEmpty();
 		});
 		verifyNoInteractions(leistungsdatenRepository, leistungsdatenMapper, bemerkungenMapper);
+	}
+
+	@Test
+	@DisplayName("Fachklassen werden gebündelt geladen und ihre Kennung je Lernabschnitt in den Kontext übernommen")
+	void load_mitFachklassen() {
+		final var mitFachklasse = createLernabschnittMitFachklasse(1L, 5L);
+		final var mitGleicherFachklasse = createLernabschnittMitFachklasse(2L, 5L);
+		final var ohneFachklasse = createLernabschnittMitFachklasse(3L, null);
+		when(bemerkungRepository.findMapByLernabschnittID(List.of(1L, 2L, 3L))).thenReturn(Map.of());
+		when(fachklasseRepository.findMapByIds(List.of(5L))).thenReturn(Map.of(5L, createFachklasse(5L, "10-179-02")));
+
+		final var result = loader.load(List.of(mitFachklasse, mitGleicherFachklasse, ohneFachklasse), SCHULJAHR_BY_ID_ABSCHNITT, false);
+
+		assertThat(result).hasSize(3)
+				.extractingByKeys(1L, 2L, 3L)
+				.extracting(SchuelerLernabschnittsdatenMappingContext::kennungFachklasse)
+				.containsExactly("10-179-02", "10-179-02", null);
+	}
+
+	@Test
+	@DisplayName("Nicht gefundene Fachklasse - die Kennung im Kontext ist null")
+	void load_fachklasseNichtGefunden() {
+		final var lernabschnitt = createLernabschnittMitFachklasse(1L, 99L);
+		when(bemerkungRepository.findMapByLernabschnittID(List.of(1L))).thenReturn(Map.of());
+		when(fachklasseRepository.findMapByIds(List.of(99L))).thenReturn(Map.of());
+
+		final var result = loader.load(List.of(lernabschnitt), SCHULJAHR_BY_ID_ABSCHNITT, false);
+
+		assertThat(result.get(1L).kennungFachklasse()).isNull();
 	}
 
 }
