@@ -60,7 +60,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		const listOfAutopatchProps: Iterable<keyof SchuelerSchulbesuchsdaten> =
 			["idVorherigeSchule", "entlassdatumVorherigeSchule", "kuerzelEntlassjahrgangVorherigeSchule", "idEntlassgrundVorherigeSchule",
 				"idHerkunftsartVersetzungVorherigeSchule", "entlassdatumDieseSchule", "idEntlassjahrgangDieseSchule",
-				"idEntlassgrundDieseSchule", "idAbschlussartDieseSchule", "idKindergarten", "idDauerKindergartenbesuch", "verpflichtungSprachfoerderkurs",
+				"idEntlassgrundDieseSchule", "idKindergarten", "idDauerKindergartenbesuch", "verpflichtungSprachfoerderkurs",
 				"teilnahmeSprachfoerderkurs", "wechselBestaetigtAufnehmendeSchule", "idAufnehmendeSchule", "wechseldatumAufnehmendeSchule",
 				"idEinschulungsartGrundschule", "idEingangsphaseGrundschule", "idUebergangsempfehlungGrundschule", "kuerzelErsteSchulformSek1",
 				"berufsabschlussVorhandenVorherigeSchule", "schluesselAbschlussartAllgemeinbildendDieseSchule", "schluesselAbschlussartBerufsbildendDieseSchule",

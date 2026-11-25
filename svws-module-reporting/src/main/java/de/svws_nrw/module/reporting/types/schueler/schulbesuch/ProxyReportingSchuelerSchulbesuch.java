@@ -2,7 +2,9 @@ package de.svws_nrw.module.reporting.types.schueler.schulbesuch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
@@ -43,8 +45,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 				ersetzeNullBlankTrim(schulbesuchsdaten.entlassdatumDieseSchule),
 				schulbesuchsdaten.idEntlassjahrgangDieseSchule,
 				createEndlassgrund(reportingContext, schulbesuchsdaten.idEntlassgrundDieseSchule),
-				schulbesuchsdaten.idAbschlussartDieseSchule,
-				schulbesuchsdaten.schluesselAbschlussartBerufsbildendDieseSchule + schulbesuchsdaten.schluesselAbschlussartAllgemeinbildendDieseSchule,
+				createHoechsterSchulabschlussSchluessel(schulbesuchsdaten),
 				createReportingSchulkatalogEintragNRW(reportingContext, schulbesuchsdaten.idAufnehmendeSchule),
 				ersetzeNullBlankTrim(schulbesuchsdaten.wechseldatumAufnehmendeSchule),
 				schulbesuchsdaten.wechselBestaetigtAufnehmendeSchule,
@@ -85,6 +86,21 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 		}
 
 		return reportingContext.repositoryKataloge().entlassgrund(idEntlassgrund);
+	}
+
+	/**
+	 * Setzt den Schlüssel des höchsten Schulabschlusses aus berufsbildendem und allgemeinbildendem Anteil zusammen.
+	 * Fehlende Anteile werden ausgelassen, statt als "null" im Schlüssel zu landen.
+	 *
+	 * @param schulbesuchsdaten Die Schulbesuchsdaten mit den beiden Abschlussschlüsseln.
+	 *
+	 * @return Der zusammengesetzte Schlüssel, z. B. "2D" oder "D"; leer, wenn kein Abschluss gesetzt ist.
+	 */
+	private static String createHoechsterSchulabschlussSchluessel(final SchuelerSchulbesuchsdaten schulbesuchsdaten) {
+		return Stream.of(schulbesuchsdaten.schluesselAbschlussartBerufsbildendDieseSchule,
+				schulbesuchsdaten.schluesselAbschlussartAllgemeinbildendDieseSchule)
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining());
 	}
 
 	private static String uebergangsempfehlungKuerzel(final Long idUebergangsempfehlung) {

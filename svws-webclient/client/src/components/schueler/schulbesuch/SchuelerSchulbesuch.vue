@@ -31,18 +31,15 @@
 					v-model="model.idEntlassgrundDieseSchule.value"
 					:readonly />
 				<div />
-				<ui-select label="Höchster allgemeinbildender Abschluss" v-if="!eigeneSchuleIstGrundschule"
+				<ui-select label="Höchster allgemeinbildender Abschluss" class="col-span-full" v-if="!eigeneSchuleIstGrundschule"
 					:manager="abschlussartAllgemeinbildendDieseSchuleManager"
 					v-model="model.abschlussartAllgemeinbildendDieseSchule.value"
 					:readonly statistics />
-				<ui-select label="Höchster berufsbildender Abschluss" v-if="!eigeneSchuleIstGrundschule"
+				<ui-select label="Höchster berufsbildender Abschluss" class="col-span-full" v-if="schuleHatBerufsbildendenAbschluss"
 					:manager="abschlussartBerufsbildendDieseSchuleManager"
 					v-model="model.abschlussartBerufsbildendDieseSchule.value"
 					:readonly statistics
 					:disabled="noAllgemeinbildenderAbschlussSelected" />
-				<svws-ui-text-input placeholder="Art des Abschlusses" span="full"
-					v-model="model.proxy.idAbschlussartDieseSchule"
-					disabled statistics :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 
@@ -193,6 +190,7 @@
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
 	const eigeneSchuleIstGrundschule = computed(() => schuleState.schulform === Schulform.G);
+	const schuleHatBerufsbildendenAbschluss = computed(() => [Schulform.BK, Schulform.SB, Schulform.HI].includes(schuleState.schulform));
 
 	const wechselBevorstehend = ref<boolean>(false);
 

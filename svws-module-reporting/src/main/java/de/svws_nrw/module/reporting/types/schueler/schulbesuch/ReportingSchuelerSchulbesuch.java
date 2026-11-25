@@ -44,9 +44,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/** Der Grund für die Entlassung von dieser Schule. */
 	protected final KatalogEntlassgrund entlassungGrund;
 
-	/** Die ID des Abschlusses, welcher an dieser Schule erworben wurde. */
-	protected final String entlassungAbschlussartID;
-
 	/** Der Schlüssel für den höchsten Schulabschluss. */
 	protected final String hoechsterSchulabschlussSchluessel;
 
@@ -111,7 +108,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 * @param entlassungDatum Das Entlassdatum von dieser Schule.
 	 * @param idEntlassjahrgang Die ID des Jahrgangs bei der Entlassung von dieser Schule.
 	 * @param entlassungGrund Die ID des Grundes für die Entlassung von dieser Schule.
-	 * @param entlassungAbschlussartID Die ID des Abschlusses, welcher an dieser Schule erworben wurde.
 	 * @param hoechsterSchulabschlussSchluessel Der Schlüssel für den höchsten Schulabschluss.
 	 * @param aufnehmendeSchule Die aufnehmende Schule nach einer Entlassung.
 	 * @param aufnehmendWechseldatum Das Datum beim Wechsel zu einer aufnehmenden Schule.
@@ -142,7 +138,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 			final String entlassungDatum,
 			final Long idEntlassjahrgang,
 			final KatalogEntlassgrund entlassungGrund,
-			final String entlassungAbschlussartID,
 			final String hoechsterSchulabschlussSchluessel,
 			final ReportingSchulkatalogEintragNRW aufnehmendeSchule,
 			final String aufnehmendWechseldatum,
@@ -170,7 +165,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 		this.entlassungDatum = ersetzeNullBlankTrim(entlassungDatum);
 		this.idEntlassjahrgang = idEntlassjahrgang;
 		this.entlassungGrund = entlassungGrund;
-		this.entlassungAbschlussartID = ersetzeNullBlankTrim(entlassungAbschlussartID);
 		this.hoechsterSchulabschlussSchluessel = ersetzeNullBlankTrim(hoechsterSchulabschlussSchluessel);
 		this.aufnehmendeSchule = aufnehmendeSchule;
 		this.aufnehmendWechseldatum = ersetzeNullBlankTrim(aufnehmendWechseldatum);
@@ -280,15 +274,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 */
 	public KatalogEntlassgrund entlassungGrund() {
 		return entlassungGrund;
-	}
-
-	/**
-	 * Gibt die ID des Abschlusses dieser Schule zurück.
-	 *
-	 * @return Die ID des Abschlusses; nie {@code null}, bei fehlendem Wert ein leerer String.
-	 */
-	public String entlassungAbschlussartID() {
-		return entlassungAbschlussartID;
 	}
 
 	/**

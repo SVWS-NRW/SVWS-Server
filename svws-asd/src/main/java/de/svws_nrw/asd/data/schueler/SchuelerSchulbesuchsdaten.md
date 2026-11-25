@@ -14,7 +14,6 @@
 | entlassungDatum                   | String   |       | true     |          | @ASD                        | das Entlassdatum von dieser Schule                                                            |
 | entlassungJahrgang                | String   |       | true     |          | @ASD                        | der Jahrgang bei der Entlassung von dieser Schule                                             |
 | entlassungGrundID                 | Long     |       | true     |          | -                           | die ID des Grundes für die Entlassung von dieser Schule                                       |
-| entlassungAbschlussartID          | String   |       | true     |          | ? Nachfragen                | die ID des Abschlusses, welcher an dieser Schule erworben wurde                               |
 | aufnehmdendSchulnummer            | String   |       | true     |          | in UAG 2 in Klärung         | die Schulnummer der aufnehmenden Schule nach einer Entlassung                                 |
 | aufnehmdendWechseldatum           | String   |       | true     |          | -                           | das Datum beim Wechsel zu einer aufnehmenden Schule                                           |
 | aufnehmdendBestaetigt             | Boolean  |       | true     |          | -                           | gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat                                  |

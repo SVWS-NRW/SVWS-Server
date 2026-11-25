@@ -78,11 +78,6 @@ public class SchuelerSchulbesuchPatchRequest {
 	@Schema(description = "Die ID des Entlassgrundes von dieser Schule.", example = "1")
 	public JsonNullable<Long> idEntlassgrundDieseSchule = JsonNullable.undefined();
 
-	/** Die ID der Abschlussart, welcher an dieser Schule erworben wurde. */
-	@Schema(description = "Die ID der Abschlussart, welcher an dieser Schule erworben wurde.", example = "OA")
-	@Size(max = 2)
-	public JsonNullable<String> idAbschlussartDieseSchule = JsonNullable.undefined();
-
 	/** Der Schlüssel des Schulabschlusses (Allgemeinbildend) der an dieser Schule erworben wurde. */
 	@Schema(description = "Die ID des Schulabschlusses (Allgemeinbildend) der an dieser Schule erworben wurde.", example = "B")
 	@Size(max = 1)
