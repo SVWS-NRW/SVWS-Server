@@ -60,6 +60,35 @@ class TeilleistungsartServiceTest {
 	}
 
 	@Test
+	@DisplayName("getAll | leerer Katalog - leere Liste")
+	void testGetAll_leererKatalog() {
+		when(teilleistungsartRepository.getAll()).thenReturn(List.of());
+		when(teilleistungsartRepository.getReferencedIds(List.of())).thenReturn(Set.of());
+
+		final var result = teilleistungsartService.getAll();
+
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	@DisplayName("getAll | Einträge werden mit Referenz-Kennzeichen geliefert")
+	void testGetAll_mitEintraegen() {
+		final var referenziert = createEntity(1, "leistungsart 1", true, 1);
+		final var nichtReferenziert = createEntity(2, "leistungsart 2", false, 2);
+		when(teilleistungsartRepository.getAll()).thenReturn(List.of(referenziert, nichtReferenziert));
+		when(teilleistungsartRepository.getReferencedIds(List.of(1L, 2L))).thenReturn(Set.of(1L));
+
+		final var result = teilleistungsartService.getAll();
+
+		assertThat(result)
+				.extracting("id", "bezeichnung", "istSichtbar", "sortierung", "referenziertInAnderenTabellen")
+				.containsExactly(
+						tuple(1L, "leistungsart 1", true, 1, true),
+						tuple(2L, "leistungsart 2", false, 2, false)
+				);
+	}
+
+	@Test
 	@DisplayName("create | Erfolg")
 	void testCreateSuccess() {
 		final var restInput = createRestRequest();

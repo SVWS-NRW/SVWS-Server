@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.schule.kataloge.teilleistungsart;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,8 @@ import de.svws_nrw.repo.RepositoryImpl;
  */
 public final class TeilleistungsartRepositoryImpl extends RepositoryImpl<DTOTeilleistungsarten> implements TeilleistungsartRepository {
 
+	private static final String QUERY_REFERENCED_IDS = "SELECT DISTINCT a.Art_ID FROM DTOSchuelerTeilleistung a WHERE a.Art_ID IN :ids";
+
 	/**
 	 * Erstellt ein neues Repository.
 	 *
@@ -24,10 +27,12 @@ public final class TeilleistungsartRepositoryImpl extends RepositoryImpl<DTOTeil
 
 	@Override
 	public Set<Long> getReferencedIds(final List<Long> idsToCheck) {
-		final String referencedQuery = "SELECT DISTINCT a.Art_ID FROM DTOSchuelerTeilleistung a WHERE a.Art_ID IN :referencedIds";
+		if ((idsToCheck == null) || idsToCheck.isEmpty()) {
+			return Collections.emptySet();
+		}
 
-		return new HashSet<>(conn.query(referencedQuery, Long.class)
-				.setParameter("referencedIds", idsToCheck)
+		return new HashSet<>(conn.query(QUERY_REFERENCED_IDS, Long.class)
+				.setParameter("ids", idsToCheck)
 				.getResultList());
 	}
 
