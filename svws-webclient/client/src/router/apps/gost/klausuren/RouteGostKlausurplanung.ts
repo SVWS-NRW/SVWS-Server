@@ -143,7 +143,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 				hj ??= (abiturjahr < abschnittStateImpl.auswahl.schuljahr + abschnittStateImpl.auswahl.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				halbjahr = hj;
 			}
-			const changedHalbjahr: boolean = await gostKlausurplanungStateImpl.setHalbjahr(halbjahr, abiturjahrwechsel);
+			const changedHalbjahr = await gostKlausurplanungStateImpl.setHalbjahr(halbjahr, abiturjahrwechsel);
 			this.updateViewByRoute(to);
 			if (changedHalbjahr || (to.name === this.name)) {
 				return this.getRouteForCurrentView(halbjahr, datum, idtermin);

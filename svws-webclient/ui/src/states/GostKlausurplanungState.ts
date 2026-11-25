@@ -37,6 +37,7 @@ export interface GostKlausurplanungState {
 	get quartal(): 0 | 1 | 2;
 	get kwWarnLimit(): number;
 	get kwErrorLimit(): number;
+	get vorgabenSchreibvorgangLaeuft(): boolean;
 
 	setAbiturjahr(abiturjahr: number | undefined): Promise<boolean>;
 	setHalbjahr(halbjahr: GostHalbjahr, hjChanged: boolean): Promise<boolean>;
