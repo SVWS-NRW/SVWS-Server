@@ -153,7 +153,8 @@ public final class GostKlausurenVorgabeVorlagenService {
 	 */
 	private static void addCopyIfMissing(final List<DTOGostKlausurenVorgaben> vorgabenNeu, final Set<VorgabeKey> existingKeys, final int abiturjahr,
 			final GostHalbjahr halbjahr, final int quartal, final DTOGostKlausurenVorgaben vorgabe) {
-		if (!isMatchingFilter(vorgabe, halbjahr, quartal) || existingKeys.contains(VorgabeKey.of(vorgabe))) {
+		if ((vorgabe.Halbjahr.istEinfuehrungsphase() && (vorgabe.Kursart == GostKursart.LK))
+				|| !isMatchingFilter(vorgabe, halbjahr, quartal) || existingKeys.contains(VorgabeKey.of(vorgabe))) {
 			return;
 		}
 		vorgabenNeu.add(copyVorgabe(abiturjahr, vorgabe));

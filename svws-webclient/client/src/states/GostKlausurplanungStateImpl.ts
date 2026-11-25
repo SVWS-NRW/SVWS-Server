@@ -23,6 +23,7 @@ import type { GostKlausurplanungState } from "@ui/states/GostKlausurplanungState
 import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui/states/GostKlausurplanungState";
 import { StateManager } from "@ui/ui/StateManager";
 
+import { ApiStatus } from "~/components/ApiStatus";
 import { api } from "~/router/Api";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
@@ -51,6 +52,8 @@ const defaultState = <GostKlausurplanungReactiveState> {
 
 
 export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanungReactiveState> implements GostKlausurplanungState {
+
+	private readonly vorgabenSchreibsperre = new ApiStatus();
 
 	public constructor() {
 		super(defaultState);
@@ -114,48 +117,38 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 	}
 
 	public async setHalbjahr(halbjahr: GostHalbjahr, hjChanged: boolean): Promise<boolean> {
-		if (this._state.value.abiturjahr === undefined) {
-			throw new DeveloperNotificationException("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		}
-		if (!hjChanged && (halbjahr === this._state.value.halbjahr)) {
+		const abiturjahr = this.abiturjahr;
+		const manager = this.manager;
+		const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
+		const abschnitt = (abiturjahr === -1) ? undefined : abschnittStateImpl.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr) ?? undefined;
+		const vorlagenGeladen = manager.getFaecherManagerOrNull(-1) !== null;
+		const fehlendeKlausurdaten = (abiturjahr === -1) ? new ArrayList<GostKlausurenHalbjahresdaten>() : manager.getMissingHjKlausurdata(abiturjahr, halbjahr.id);
+		const stundenplaeneFehlen = (abschnitt !== undefined) && !manager.stundenplanManagerGeladenByAbschnitt(abschnitt.id);
+		const fehlendatenFehlen = (abschnitt !== undefined) && !manager.hasFehlenddatenZuAbijahrUndHalbjahr(abiturjahr, halbjahr);
+
+		if (!hjChanged && (halbjahr === this.halbjahr) && (abschnitt?.id === this.abschnitt?.id) && vorlagenGeladen
+			&& fehlendeKlausurdaten.isEmpty() && !stundenplaeneFehlen && !fehlendatenFehlen) {
 			return false;
 		}
-		try {
-			api.status.start();
-			const result: Partial<GostKlausurplanungReactiveState> = {
-				abschnitt: undefined,
-				halbjahr: halbjahr,
-			};
 
-			if (!this.manager.isVorgabenInitialized()) {
-				const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
-				this.manager.vorgabeAddAll(listKlausurvorgaben);
-				const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
-				const faecherManager = new GostFaecherManager(schuleStateImpl.abschnitt.schuljahr, listFaecher);
-				this.manager.setFaecherManager(-1, faecherManager);
+		const apiStatusGestartet = api.status.start();
+		try {
+			if (!vorlagenGeladen) {
+				const vorlagen = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
+				const faecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
+				const faecherManager = new GostFaecherManager(schuleStateImpl.abschnitt.schuljahr, faecher);
+				manager.vorgabeAddAll(vorlagen);
+				manager.setFaecherManager(-1, faecherManager);
 			}
-			if (this._state.value.abiturjahr === -1) {
-				this.setPatchedState(result);
-				return true;
-			}
-			const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
-			const abschnitt = abschnittStateImpl.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
-			if (abschnitt !== null) {
-				Object.assign(result, { abschnitt });
-			}
-			this.setPatchedState(result);
-			const missingKlausurData = this.manager.getMissingHjKlausurdata(this.abiturjahr, halbjahr.id);
-			if (!missingKlausurData.isEmpty()) {
-				const klausurdatenGzip = await api.server.getGostKlausurenAlleKlausurdatenGZip(missingKlausurData, api.schema);
+
+			if (!fehlendeKlausurdaten.isEmpty()) {
+				const klausurdatenGzip = await api.server.getGostKlausurenAlleKlausurdatenGZip(fehlendeKlausurdaten, api.schema);
 				const klausurdatenBlob = await new Response(klausurdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 				const klausurdaten = GostKlausurenAlleKlausurdaten.transpilerFromJSON(await klausurdatenBlob.text());
-				this.manager.addAllData(klausurdaten);
-				this.setPatchedState(result);
+				manager.addAllData(klausurdaten);
 			}
-			if (abschnitt === null) {
-				return true;
-			}
-			if (!this.manager.stundenplanManagerGeladenByAbschnitt(abschnitt.id)) {
+
+			if (stundenplaeneFehlen) {
 				const listStundenplaene = await api.server.getStundenplanlisteAktivFuerAbschnitt(api.schema, abschnitt.id);
 				const listStundenplanManager = new ArrayList<StundenplanManager>();
 				for (const stundenplan of listStundenplaene) {
@@ -166,16 +159,19 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 					const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
 					listStundenplanManager.add(stundenplanmanager);
 				}
-				this.manager.stundenplanManagerAddAllBySchuljahresabschnittsid(abschnitt.id, listStundenplanManager);
+				manager.stundenplanManagerAddAllBySchuljahresabschnittsid(abschnitt.id, listStundenplanManager);
 			}
-			this.setPatchedState(result);
-			if (!this.manager.hasFehlenddatenZuAbijahrUndHalbjahr(this.abiturjahr, this._state.value.halbjahr)) {
-				await this.reloadFehlendData();
-				this.commit();
+
+			if (fehlendatenFehlen) {
+				manager.setKlausurDataFehlend(await this.ladeFehlendData(abiturjahr, halbjahr));
 			}
+
+			this.setPatchedState({ halbjahr, abschnitt });
 			return true;
 		} finally {
-			api.status.stop();
+			if (apiStatusGestartet) {
+				api.status.stop();
+			}
 		}
 	}
 
@@ -240,12 +236,16 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 		void this.setConfigValue("kwErrorLimit", value);
 	};
 
+	private async ladeFehlendData(abiturjahr: number, halbjahr: GostHalbjahr): Promise<GostKlausurenHalbjahresdaten> {
+		const fehlendDataGzip = await api.server.getGostKlausurenKlausurdatenIssuesGZip(api.schema, abiturjahr, halbjahr.id);
+		const fehlendDataBlob = await new Response(fehlendDataGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+		return GostKlausurenHalbjahresdaten.transpilerFromJSON(await fehlendDataBlob.text());
+	}
+
 	reloadFehlendData = async () => {
-		if ((this.abiturjahr !== -1) && (this._state.value.abschnitt !== undefined)) {
-			const fehlendDataGzip = await api.server.getGostKlausurenKlausurdatenIssuesGZip(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
-			const fehlendDataBlob = await new Response(fehlendDataGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-			const fehlendData = GostKlausurenHalbjahresdaten.transpilerFromJSON(await fehlendDataBlob.text());
-			this.manager.setKlausurDataFehlend(fehlendData);
+		if ((this.abiturjahr !== -1) && (this.abschnitt !== undefined)) {
+			const manager = this.manager;
+			manager.setKlausurDataFehlend(await this.ladeFehlendData(this.abiturjahr, this.halbjahr));
 		}
 	};
 
@@ -438,33 +438,49 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 		}
 	};
 
-	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
-		api.status.start();
+	public get vorgabenSchreibvorgangLaeuft(): boolean {
+		return this.vorgabenSchreibsperre.pending;
+	}
+
+	private async schreibeVorgaben(aktion: () => Promise<void>): Promise<void> {
+		if (!this.vorgabenSchreibsperre.start()) {
+			return;
+		}
+		const apiStatusGestartet = api.status.start();
 		try {
+			await aktion();
+		} finally {
+			if (apiStatusGestartet) {
+				api.status.stop();
+			}
+			this.vorgabenSchreibsperre.stop();
+		}
+	}
+
+	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
+		await this.schreibeVorgaben(async () => {
 			const neueVorgaben = await api.server.createMissingGostKlausurenVorgabenVorlagen(api.schema, this.halbjahr.id, quartal);
 			this.manager.vorgabeAddAll(neueVorgaben);
 			this.commit();
-		} finally {
-			api.status.stop();
-		}
+		});
 	};
 
 	erzeugeKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>) => {
-		api.status.start();
-		try {
-			const request: Partial<GostKlausurvorgabe> = {
-				...vorgabe,
-				abiturjahrgang: this.abiturjahr,
-				halbjahr: this.halbjahr.id,
-			};
-			delete request.id;
-			const neueVorgabe = await api.server.createGostKlausurenVorgabe(request, api.schema);
-			this.manager.vorgabeAdd(neueVorgabe);
-			await this.reloadFehlendData();
-		} finally {
-			this.commit();
-			api.status.stop();
-		}
+		await this.schreibeVorgaben(async () => {
+			try {
+				const request: Partial<GostKlausurvorgabe> = {
+					...vorgabe,
+					abiturjahrgang: this.abiturjahr,
+					halbjahr: this.halbjahr.id,
+				};
+				delete request.id;
+				const neueVorgabe = await api.server.createGostKlausurenVorgabe(request, api.schema);
+				this.manager.vorgabeAdd(neueVorgabe);
+				await this.reloadFehlendData();
+			} finally {
+				this.commit();
+			}
+		});
 	};
 
 	patchKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>, id: number) => {
@@ -476,22 +492,18 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 		if (vorgaben.isEmpty()) {
 			return;
 		}
-		api.status.start();
-		try {
+		await this.schreibeVorgaben(async () => {
 			const result = await api.server.patchGostKlausurenVorgabenMultiple(vorgaben, api.schema);
 			for (const vorgabe of result.vorgabenPatched) {
 				this.manager.vorgabePatchAttributes(vorgabe);
 			}
 			this.manager.setzeRaumZuSchuelerklausuren(result);
 			this.commit();
-		} finally {
-			api.status.stop();
-		}
+		});
 	};
 
 	loescheKlausurvorgaben = async (vorgaben: List<GostKlausurvorgabe>) => {
-		api.status.start();
-		try {
+		await this.schreibeVorgaben(async () => {
 			const vorgabeIds = new ArrayList<number>();
 			for (const vorgabe of vorgaben) {
 				vorgabeIds.add(vorgabe.id);
@@ -501,9 +513,7 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 			vorgaben.clear();
 			await this.reloadFehlendData();
 			this.commit();
-		} finally {
-			api.status.stop();
-		}
+		});
 	};
 
 	erzeugeKursklausurenAusVorgaben = async (quartal: number) => {
@@ -532,15 +542,15 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 	};
 
 	erzeugeVorgabenAusVorlage = async (quartal: number) => {
-		api.status.start();
-		try {
-			const listKlausurvorgaben = await api.server.copyGostKlausurenVorgabenVorlagenToJahrgang(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-			this.manager.vorgabeAddAll(listKlausurvorgaben);
-			await this.reloadFehlendData();
-		} finally {
-			this.commit();
-			api.status.stop();
-		}
+		await this.schreibeVorgaben(async () => {
+			try {
+				const listKlausurvorgaben = await api.server.copyGostKlausurenVorgabenVorlagenToJahrgang(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
+				this.manager.vorgabeAddAll(listKlausurvorgaben);
+				await this.reloadFehlendData();
+			} finally {
+				this.commit();
+			}
+		});
 	};
 
 	createKlausurraum = async (raum: Partial<GostKlausurraum>) => {

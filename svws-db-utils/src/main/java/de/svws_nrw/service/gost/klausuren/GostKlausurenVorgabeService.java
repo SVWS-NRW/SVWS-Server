@@ -132,19 +132,25 @@ public final class GostKlausurenVorgabeService {
 	 */
 	public GostKlausurvorgabe create(final GostKlausurenVorgabeCreateRequest createRequest) {
 		return transactional(() -> {
+			final GostHalbjahr halbjahr = GostKlausurenValidationUtils.checkHalbjahr(createRequest.halbjahr);
+			final GostKursart kursart = checkKursart(createRequest.kursart);
+			if (halbjahr.istEinfuehrungsphase() && (kursart == GostKursart.LK)) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "In der Einführungsphase sind keine Klausurvorgaben für Leistungskurse zulässig.");
+			}
+
 			final DTOGostKlausurenVorgaben dto = new DTOGostKlausurenVorgaben(
 					-1L,
 					createRequest.abiturjahrgang,
-					GostKlausurenValidationUtils.checkHalbjahr(createRequest.halbjahr),
+					halbjahr,
 					createRequest.quartal,
 					createRequest.idFach,
-					checkKursart(createRequest.kursart),
+					kursart,
 					(createRequest.dauer == null) ? 0 : createRequest.dauer,
 					(createRequest.auswahlzeit == null) ? 0 : createRequest.auswahlzeit,
-					createRequest.istGklMoeglich,
-					createRequest.istMdlPruefung,
-					createRequest.istAudioNotwendig,
-					createRequest.istVideoNotwendig);
+					Boolean.TRUE.equals(createRequest.istGklMoeglich),
+					Boolean.TRUE.equals(createRequest.istMdlPruefung),
+					Boolean.TRUE.equals(createRequest.istAudioNotwendig),
+					Boolean.TRUE.equals(createRequest.istVideoNotwendig));
 			dto.Bemerkungen = convertBemerkung(createRequest.bemerkungVorgabe);
 			repository.create(dto);
 			repository.flush();
