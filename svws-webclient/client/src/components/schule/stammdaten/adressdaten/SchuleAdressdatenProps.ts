@@ -3,9 +3,9 @@ import type { Teilstandort } from "@core/core/data/schule/Teilstandort";
 import type { List } from "@core/java/util/List";
 
 export interface SchuleAdressdatenProps {
-	patch: (data: Partial<SchuleStammdaten>) => Promise<void>;
+	patch: (data: Partial<SchuleStammdaten>) => Promise<boolean>;
 	getListTeilstandorte: () => List<Teilstandort>;
 	addTeilstandorteintrag: (data: Partial<Teilstandort>) => Promise<void>;
-	patchTeilstandorteintrag: (data: Partial<Teilstandort>, adrMerkmal: string) => Promise<void>;
+	patchTeilstandorteintrag: (data: Partial<Teilstandort>, adrMerkmal: string) => Promise<boolean>;
 	deleteTeilstandorteintraege: (adrMerkmale: List<string>) => Promise<void>;
 }

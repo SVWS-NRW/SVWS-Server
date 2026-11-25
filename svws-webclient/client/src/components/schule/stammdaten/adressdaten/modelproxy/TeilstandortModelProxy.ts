@@ -1,42 +1,59 @@
 import type { Teilstandort } from "@core/core/data/schule/Teilstandort";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-
-import { ValidatorTeilstandortAdrMerkmal } from "~/components/schule/stammdaten/adressdaten/modelproxy/validation/ValidatorTeilstandortAdrMerkmal";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 /**
  * ModelProxy für Teilstandorte
  */
 export class TeilstandortModelProxy extends ModelProxy<Teilstandort> {
 
-	private readonly _liste: () => Iterable<Teilstandort>;
-
 	/**
 	 * ModelProxy für Teilstandorte
 	 *
-	 * @param data 			Lambda für den Zugriff auf die Original-Daten
-	 * @param liste         Lambda für den Zugriff auf die Liste aller Teilstandorte
+	 * @param data    Lambda für den Zugriff auf die Original-Daten
+	 * @param patch   Methode zum Patchen der Daten
 	 */
 	constructor(
 		data: () => Teilstandort,
-		liste: () => Iterable<Teilstandort>
+		patch?: (data: Partial<Teilstandort>) => Promise<boolean>
 	) {
-		super({ data });
-		this._liste = liste;
+		super({ data, patch });
 		this.addValidatoren();
 		this.validate();
 	}
 
 	private addValidatoren() {
-		this.addValidator(new ValidatorTeilstandortAdrMerkmal(() => this.proxy, this._liste), 'adrMerkmal');
+		// Merkmal
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.adrMerkmal), 'adrMerkmal');
 
-		this.addValidator(new ValidatorStringLength(() => this.proxy.kuerzel, null, 30), 'kuerzel');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.strassenname, null, 55), 'strassenname');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.hausNr, null, 10), 'hausNr');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.hausNrZusatz, null, 30), 'hausNrZusatz');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.plz, null, 10), 'plz');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.ort, null, 50), 'ort');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.bemerkung, null, 50), 'bemerkung');
+		// Kürzel
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.kuerzel, null, 30), 'kuerzel');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.kuerzel, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'kuerzel');
 
+		// Straße
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.strassenname, null, 55), 'strassenname');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.strassenname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'strassenname');
+
+		// Hausnummer
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.hausNr, null, 10), 'hausNr');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.hausNr, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'hausNr');
+
+		// Hausnummer-Zusatz
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.hausNrZusatz, null, 30), 'hausNrZusatz');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.hausNrZusatz, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'hausNrZusatz');
+
+		// PLZ
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.plz, null, 10), 'plz');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.plz, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'plz');
+
+		// Ort
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.ort, null, 50), 'ort');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.ort, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'ort');
+
+		// Bemerkung
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bemerkung, null, 50), 'bemerkung');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bemerkung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bemerkung');
 	}
 }

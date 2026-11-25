@@ -28,9 +28,10 @@ export class RouteDataSchuleAdressdaten extends RouteData<RouteStateSchuleAdress
 		this.setPatchedState({ listTeilstandorte });
 	}
 
-	patch = async (data: Partial<SchuleStammdaten>) => {
+	patch = async (data: Partial<SchuleStammdaten>): Promise<boolean> => {
 		await schuleStateImpl.patchStammdaten(data);
 		this.commit();
+		return true;
 	};
 
 	get getListTeilstandorte(): List<Teilstandort> {
@@ -46,7 +47,7 @@ export class RouteDataSchuleAdressdaten extends RouteData<RouteStateSchuleAdress
 		this.setPatchedState({ listTeilstandorte });
 	};
 
-	patchTeilstandorteintrag = async (data: Partial<Teilstandort>, adrMerkmal: string): Promise<void> => {
+	patchTeilstandorteintrag = async (data: Partial<Teilstandort>, adrMerkmal: string): Promise<boolean> => {
 		await api.server.patchTeilstandort(data, api.schema, adrMerkmal);
 		const listTeilstandorte = this.getListTeilstandorte;
 		for (const teilstandort of listTeilstandorte) {
@@ -56,6 +57,7 @@ export class RouteDataSchuleAdressdaten extends RouteData<RouteStateSchuleAdress
 			}
 		}
 		this.setPatchedState({ listTeilstandorte });
+		return true;
 	};
 
 	deleteTeilstandorteintraege = async (adrMermale: List<string>): Promise<void> => {
