@@ -1,12 +1,7 @@
 package de.svws_nrw.api.external;
 
+import de.svws_nrw.controller.schule.schuljahresabschnitt.SchuljahresabschnittV1ControllerFactory;
 import de.svws_nrw.core.data.schuljahresabschnitt.v1.SchuljahresabschnittV1;
-import de.svws_nrw.core.types.ServerMode;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.schule.DataSchuljahresabschnitteV1;
-import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
-import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,14 +28,6 @@ import jakarta.ws.rs.core.Response;
 public class APISchuljahresabschnitteV1 {
 
 	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public APISchuljahresabschnitteV1() {
-		// leer
-	}
-
-
-	/**
 	 * Die OpenAPI-Methode für die Abfrage der verfügbaren Schuljahresabschnitte.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -57,9 +44,9 @@ public class APISchuljahresabschnitteV1 {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuljahresabschnitte anzusehen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response getSchuljahresabschnitte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuljahresabschnitteV1(EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance()).getSchuljahresabschnittService())
-				.getAllAsResponse(),
-				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM, BenutzerKompetenz.EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN);
+		return SchuljahresabschnittV1ControllerFactory.withReadAccess(request)
+				.getController()
+				.getList();
 	}
 
 }
