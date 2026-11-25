@@ -61,11 +61,12 @@ export class Projektkurse extends GostBelegpruefung {
 
 	protected pruefeEF1(): void {
 		this.pruefeBelegungEF();
+		this.pruefeAufAnrechenbarenProjektkurs(false);
 	}
 
 	protected pruefeGesamt(): void {
 		this.pruefeBelegungEF();
-		this.pruefeAufAnrechenbarenProjektkurs();
+		this.pruefeAufAnrechenbarenProjektkurs(true);
 		this.pruefeBelegungHalbjahre();
 		this.pruefeBelegungLeitfaecher();
 		if (this.manager.istProjektKursBesondereLernleistung()) {
@@ -93,8 +94,10 @@ export class Projektkurse extends GostBelegpruefung {
 	/**
 	 * Prüft, ob ein anrechenbarer Projektkurs unter den belegten Projektfächern existiert. Es darf aber
 	 * auch nur genau ein anrechenbarer Projektkurs existieren!
+	 *
+	 * @param mitFehlern   gibt an, ob dabei Belegungsfehler gemeldet werden
 	 */
-	private pruefeAufAnrechenbarenProjektkurs(): void {
+	private pruefeAufAnrechenbarenProjektkurs(mitFehlern: boolean): void {
 		for (const fachbelegung of this.projektkursBelegung) {
 			for (const belegungHalbjahr of fachbelegung.belegungen) {
 				if (belegungHalbjahr === null) {
@@ -109,15 +112,21 @@ export class Projektkurse extends GostBelegpruefung {
 				}
 				const nextHalbjahr: GostHalbjahr | null = halbjahr.next();
 				if (nextHalbjahr === null) {
-					this.addFehler(GostBelegungsfehler.PF_18);
+					if (mitFehlern) {
+						this.addFehler(GostBelegungsfehler.PF_18);
+					}
 					continue;
 				} else
 					if (!this.manager.pruefeBelegung(fachbelegung, nextHalbjahr)) {
-						this.addFehler(GostBelegungsfehler.PF_17_INFO);
+						if (mitFehlern) {
+							this.addFehler(GostBelegungsfehler.PF_17_INFO);
+						}
 						continue;
 					}
 				if (this.projektkurs !== null) {
-					this.addFehler(GostBelegungsfehler.PF_14);
+					if (mitFehlern) {
+						this.addFehler(GostBelegungsfehler.PF_14);
+					}
 					break;
 				}
 				this.projektkurs = fachbelegung;

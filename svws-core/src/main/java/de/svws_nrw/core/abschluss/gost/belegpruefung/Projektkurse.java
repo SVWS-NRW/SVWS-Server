@@ -70,6 +70,8 @@ public final class Projektkurse extends GostBelegpruefung {
 	protected void pruefeEF1() {
 		// Prüfe auf Projektkurse - diese sind nicht in der EF erlaubt
 		pruefeBelegungEF();
+		// Bestimme den anrechenbaren Projektkurs für die Kurszahlen, ohne Fehler zu melden
+		pruefeAufAnrechenbarenProjektkurs(false);
 	}
 
 
@@ -77,7 +79,7 @@ public final class Projektkurse extends GostBelegpruefung {
 	protected void pruefeGesamt() {
 		// Prüfe die Belegung des Projektkurses und der Leitfächer
 		pruefeBelegungEF();
-		pruefeAufAnrechenbarenProjektkurs();
+		pruefeAufAnrechenbarenProjektkurs(true);
 		pruefeBelegungHalbjahre();
 		pruefeBelegungLeitfaecher();
 
@@ -111,8 +113,10 @@ public final class Projektkurse extends GostBelegpruefung {
 	/**
 	 * Prüft, ob ein anrechenbarer Projektkurs unter den belegten Projektfächern existiert. Es darf aber
 	 * auch nur genau ein anrechenbarer Projektkurs existieren!
+	 *
+	 * @param mitFehlern   gibt an, ob dabei Belegungsfehler gemeldet werden
 	 */
-	private void pruefeAufAnrechenbarenProjektkurs() {
+	private void pruefeAufAnrechenbarenProjektkurs(final boolean mitFehlern) {
 		// Prüfe ggf. auch mehrere Projektfächer, da abgebrochene Einzelbelegungen vorliegen können
 		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
 			// Prüfe die einzelnen Halbjahresbelegungen der Projektfächer
@@ -134,16 +138,22 @@ public final class Projektkurse extends GostBelegpruefung {
 				// Der Projektkurs ist nur anrechenbar, sofern das Fach im nachfolgenden Halbjahr belegt wurde.
 				final GostHalbjahr nextHalbjahr = halbjahr.next();
 				if (nextHalbjahr == null) {
-					addFehler(GostBelegungsfehler.PF_18);
+					if (mitFehlern) {
+						addFehler(GostBelegungsfehler.PF_18);
+					}
 					continue;
 				} else if (!manager.pruefeBelegung(fachbelegung, nextHalbjahr)) {
-					addFehler(GostBelegungsfehler.PF_17_INFO);
+					if (mitFehlern) {
+						addFehler(GostBelegungsfehler.PF_17_INFO);
+					}
 					continue;
 				}
 
 				// Wurde bereits ein anderer Projektkurs in zwei aufeinanderfolgenden Jahren belegt?
 				if (projektkurs != null) {
-					addFehler(GostBelegungsfehler.PF_14);
+					if (mitFehlern) {
+						addFehler(GostBelegungsfehler.PF_14);
+					}
 					break;
 				}
 

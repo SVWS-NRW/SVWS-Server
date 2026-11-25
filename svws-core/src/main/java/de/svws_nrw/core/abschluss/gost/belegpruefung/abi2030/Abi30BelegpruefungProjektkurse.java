@@ -82,6 +82,8 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	protected void pruefeEF1() {
 		// Prüfe auf Projektkurse - diese sind nicht in der EF erlaubt
 		pruefeBelegungEF();
+		// Bestimme den anrechenbaren Projektkurs für die Kurszahlen, ohne Fehler zu melden
+		pruefeBelegung(false);
 	}
 
 
@@ -89,7 +91,7 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	protected void pruefeGesamt() {
 		// Prüfe die Belegung des Projektkurses und der Leitfächer
 		pruefeBelegungEF();
-		pruefeBelegung();
+		pruefeBelegung(true);
 		if (projektkurs != null) {
 			pruefeBelegungReferenzfaecher();
 		}
@@ -117,15 +119,21 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 	/**
 	 * Prüft, ob genau ein Projektkurs belegt wurde.
+	 *
+	 * @param mitFehlern   gibt an, ob dabei Belegungsfehler gemeldet werden
 	 */
-	private void pruefeBelegung() {
+	private void pruefeBelegung(final boolean mitFehlern) {
 		if (projektkursBelegung.isEmpty()) {
-			addFehler(GostBelegungsfehler.GOST30_PF_21);
+			if (mitFehlern) {
+				addFehler(GostBelegungsfehler.GOST30_PF_21);
+			}
 			return;
 		}
 
 		if (projektkursBelegung.size() > 1) {
-			addFehler(GostBelegungsfehler.GOST30_PF_14);
+			if (mitFehlern) {
+				addFehler(GostBelegungsfehler.GOST30_PF_14);
+			}
 			return;
 		}
 
@@ -136,13 +144,17 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 		// Prüfe auf fehlerhafte Belegungen in den Halbjahren der Q1
 		if (manager.pruefeBelegungHatMindestensEinmalKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-			addFehler(GostBelegungsfehler.GOST30_PF_20);
+			if (mitFehlern) {
+				addFehler(GostBelegungsfehler.GOST30_PF_20);
+			}
 			return;
 		}
 
 		// Prüfe auf Belegungen in beiden Halbjahren der Q2
 		if (!manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			addFehler(GostBelegungsfehler.GOST30_PF_20);
+			if (mitFehlern) {
+				addFehler(GostBelegungsfehler.GOST30_PF_20);
+			}
 			return;
 		}
 
