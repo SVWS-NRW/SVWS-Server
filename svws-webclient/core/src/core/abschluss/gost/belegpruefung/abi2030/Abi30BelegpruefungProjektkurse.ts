@@ -62,11 +62,12 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 	protected pruefeEF1(): void {
 		this.pruefeBelegungEF();
+		this.pruefeBelegung(false);
 	}
 
 	protected pruefeGesamt(): void {
 		this.pruefeBelegungEF();
-		this.pruefeBelegung();
+		this.pruefeBelegung(true);
 		if (this.projektkurs !== null) {
 			this.pruefeBelegungReferenzfaecher();
 		}
@@ -88,14 +89,20 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 	/**
 	 * Prüft, ob genau ein Projektkurs belegt wurde.
+	 *
+	 * @param mitFehlern   gibt an, ob dabei Belegungsfehler gemeldet werden
 	 */
-	private pruefeBelegung(): void {
+	private pruefeBelegung(mitFehlern: boolean): void {
 		if (this.projektkursBelegung.isEmpty()) {
-			this.addFehler(GostBelegungsfehler.GOST30_PF_21);
+			if (mitFehlern) {
+				this.addFehler(GostBelegungsfehler.GOST30_PF_21);
+			}
 			return;
 		}
 		if (this.projektkursBelegung.size() > 1) {
-			this.addFehler(GostBelegungsfehler.GOST30_PF_14);
+			if (mitFehlern) {
+				this.addFehler(GostBelegungsfehler.GOST30_PF_14);
+			}
 			return;
 		}
 		const fachbelegung: AbiturFachbelegung | null = this.projektkursBelegung.get(0);
@@ -103,11 +110,15 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			return;
 		}
 		if (this.manager.pruefeBelegungHatMindestensEinmalKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-			this.addFehler(GostBelegungsfehler.GOST30_PF_20);
+			if (mitFehlern) {
+				this.addFehler(GostBelegungsfehler.GOST30_PF_20);
+			}
 			return;
 		}
 		if (!this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			this.addFehler(GostBelegungsfehler.GOST30_PF_20);
+			if (mitFehlern) {
+				this.addFehler(GostBelegungsfehler.GOST30_PF_20);
+			}
 			return;
 		}
 		this.projektkurs = fachbelegung;
