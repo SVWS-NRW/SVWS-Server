@@ -9854,7 +9854,6 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<KursLehrer>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursdaten anzusehen.
-	 *   Code 404: Keine Kurslehrer für den Kurs mit der angegebenen ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} idKurs - der Pfad-Parameter idKurs
@@ -9882,25 +9881,30 @@ export class ApiServer extends BaseApi {
 	 * Patched den Kurslehrer mit der angegeben ID, insofern die notwendigen Berechtigungen vorliegen.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 200: Der Patch wurde erfolgreich integriert. Der geänderte KursLehrer wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KursLehrer
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<KursLehrer>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} idKurs - der Pfad-Parameter idKurs
 	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert. Der geänderte KursLehrer wird zurückgegeben.
 	 */
-	public async patchKursLehrer(data: Partial<KursLehrer>, schema: string, idKurs: number, idLehrer: number): Promise<void> {
+	public async patchKursLehrer(data: Partial<KursLehrer>, schema: string, idKurs: number, idLehrer: number): Promise<KursLehrer> {
 		const path = "/db/{schema}/kurse/{idKurs: \\d+}/kursLehrer/{idLehrer: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString())
 			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString());
 		const body: string = KursLehrer.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return KursLehrer.transpilerFromJSON(text);
 	}
 
 
@@ -9913,7 +9917,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 201: Der KursLehrer wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: KursLehrer
+	 *   Code 400: Der KursLehrer existiert bereits oder die Daten sind fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um KursLehrer anzulegen.
+	 *   Code 404: Der Kurs oder der Lehrer wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<KursLehrer>} data - der Request-Body für die HTTP-Methode
@@ -9939,18 +9945,18 @@ export class ApiServer extends BaseApi {
 	 * Entfernt mehrere KursLehrer, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt. Nicht vorhandene KursLehrer werden je ID in der Antwort als Fehler gemeldet.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 400: Die Liste der IDs ist null oder enthält null-Werte.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um KursLehrer zu entfernen.
-	 *   Code 404: KursLehrer nicht vorhanden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} idKurs - der Pfad-Parameter idKurs
 	 *
-	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 * @returns Die Lösch-Operationen wurden ausgeführt. Nicht vorhandene KursLehrer werden je ID in der Antwort als Fehler gemeldet.
 	 */
 	public async deleteKursLehrer(data: List<number>, schema: string, idKurs: number): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/kurse/{idKurs: \\d+}/kursLehrer/delete/multiple"

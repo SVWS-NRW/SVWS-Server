@@ -16,7 +16,6 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.asd.data.kurse.KursLehrer;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
@@ -25,14 +24,14 @@ import de.svws_nrw.service.kurse.KursCreateRequest;
 import de.svws_nrw.service.kurse.KursPatchRequest;
 
 /**
- * MapStruct-Mapper für die Konvertierung eines {@link DTOKurs} in das Core-DTO {@link KursDaten} und eines
- * {@link DTOKursLehrer} in das Core-DTO {@link KursLehrer} (Lesen). Außerdem überträgt er die Daten eines
- * {@link KursCreateRequest} bzw. {@link KursPatchRequest} auf ein {@link DTOKurs}, ohne selbst auf die Datenbank zuzugreifen.
+ * MapStruct-Mapper für die Konvertierung eines {@link DTOKurs} in das Core-DTO {@link KursDaten} (Lesen). Außerdem
+ * überträgt er die Daten eines {@link KursCreateRequest} bzw. {@link KursPatchRequest} auf ein {@link DTOKurs},
+ * ohne selbst auf die Datenbank zuzugreifen.
  * <p>
- * Die Schüler und die weiteren Lehrer eines Kurses werden nicht von diesem Mapper bestimmt. Der aufrufende
- * Service lädt diese Daten gebündelt und ergänzt sie im {@link KursDaten}.
+ * Die Schüler eines Kurses werden nicht von diesem Mapper bestimmt. Der aufrufende Service lädt diese Daten
+ * gebündelt und ergänzt sie im {@link KursDaten}. Die Zusatzkräfte werden mit dem {@link KurslehrerMapper} gemappt.
  */
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = KurslehrerMapper.class)
 public interface KursMapper {
 
 	/** Der Wert für die Sortierung, wenn beim Kurs keine Sortierung gesetzt ist. */
@@ -50,9 +49,6 @@ public interface KursMapper {
 	/** Die Wochenstunden des Lehrers, wenn sie im Patch auf null gesetzt werden. */
 	double WOCHENSTUNDEN_LEHRER_DEFAULT = 0.0;
 
-	/** Die Wochenstunden einer Zusatzkraft, wenn kein Anteil gesetzt ist. */
-	double ANTEIL_DEFAULT = 0.0;
-
 	/** Das Trennzeichen der kommagetrennten Listen für Jahrgänge und Schienen. */
 	String TRENNZEICHEN = ",";
 
@@ -60,44 +56,33 @@ public interface KursMapper {
 	KursMapper INSTANCE = Mappers.getMapper(KursMapper.class);
 
 	/**
-	 * Konvertiert ein {@link DTOKurs} in ein {@link KursDaten} ohne Schüler und ohne weitere Lehrer.
+	 * Konvertiert ein {@link DTOKurs} in ein {@link KursDaten} einschließlich der weiteren Lehrer (Zusatzkräfte),
+	 * jedoch ohne Schüler.
 	 *
-	 * @param dto   der Kurs, welcher gemappt werden soll
+	 * @param dto             der Kurs, welcher gemappt werden soll
+	 * @param zusatzkraefte   die Zusatzkräfte des Kurses
 	 *
 	 * @return die Kursdaten
 	 */
-	@Mapping(source = "ID", target = "id")
-	@Mapping(source = "Schuljahresabschnitts_ID", target = "idSchuljahresabschnitt")
-	@Mapping(source = "KurzBez", target = "kuerzel")
+	@Mapping(source = "dto.ID", target = "id")
+	@Mapping(source = "dto.Schuljahresabschnitts_ID", target = "idSchuljahresabschnitt")
+	@Mapping(source = "dto.KurzBez", target = "kuerzel")
 	@Mapping(source = "dto", target = "idJahrgaenge", qualifiedByName = "mapIdJahrgaenge")
-	@Mapping(source = "Fach_ID", target = "idFach")
-	@Mapping(source = "Lehrer_ID", target = "idLehrer")
-	@Mapping(source = "KursartAllg", target = "kursartAllg", defaultValue = "")
-	@Mapping(source = "Sortierung", target = "sortierung", qualifiedByName = "mapSortierung")
-	@Mapping(source = "Sichtbar", target = "istSichtbar", qualifiedByName = "mapIstSichtbar")
-	@Mapping(source = "Schienen", target = "schienen", qualifiedByName = "mapSchienen")
-	@Mapping(source = "WochenStd", target = "wochenstunden", qualifiedByName = "mapWochenstunden")
+	@Mapping(source = "dto.Fach_ID", target = "idFach")
+	@Mapping(source = "dto.Lehrer_ID", target = "idLehrer")
+	@Mapping(source = "dto.KursartAllg", target = "kursartAllg", defaultValue = "")
+	@Mapping(source = "dto.Sortierung", target = "sortierung", qualifiedByName = "mapSortierung")
+	@Mapping(source = "dto.Sichtbar", target = "istSichtbar", qualifiedByName = "mapIstSichtbar")
+	@Mapping(source = "dto.Schienen", target = "schienen", qualifiedByName = "mapSchienen")
+	@Mapping(source = "dto.WochenStd", target = "wochenstunden", qualifiedByName = "mapWochenstunden")
 	@Mapping(source = "dto", target = "wochenstundenLehrer", qualifiedByName = "mapWochenstundenLehrer")
-	@Mapping(source = "Fortschreibungsart", target = "idKursFortschreibungsart", qualifiedByName = "mapIdKursFortschreibungsart")
-	@Mapping(source = "SchulNr", target = "schulnummer")
-	@Mapping(source = "EpochU", target = "istEpochalunterricht")
-	@Mapping(source = "ZeugnisBez", target = "bezeichnungZeugnis", qualifiedByName = "mapBezeichnungZeugnis")
+	@Mapping(source = "dto.Fortschreibungsart", target = "idKursFortschreibungsart", qualifiedByName = "mapIdKursFortschreibungsart")
+	@Mapping(source = "dto.SchulNr", target = "schulnummer")
+	@Mapping(source = "dto.EpochU", target = "istEpochalunterricht")
+	@Mapping(source = "dto.ZeugnisBez", target = "bezeichnungZeugnis", qualifiedByName = "mapBezeichnungZeugnis")
 	@Mapping(target = "schueler", ignore = true)
-	@Mapping(target = "weitereLehrer", ignore = true)
-	KursDaten toApi(DTOKurs dto);
-
-	/**
-	 * Konvertiert ein {@link DTOKursLehrer} in ein {@link KursLehrer}. Ist kein Anteil gesetzt,
-	 * so werden 0 Wochenstunden verwendet.
-	 *
-	 * @param dto   die Zuordnung der Zusatzkraft zum Kurs, welche gemappt werden soll
-	 *
-	 * @return die Zusatzkraft des Kurses
-	 */
-	@Mapping(source = "Kurs_ID", target = "idKurs")
-	@Mapping(source = "Lehrer_ID", target = "idLehrer")
-	@Mapping(source = "Anteil", target = "wochenstundenLehrer", qualifiedByName = "mapAnteil")
-	KursLehrer toApi(DTOKursLehrer dto);
+	@Mapping(source = "zusatzkraefte", target = "weitereLehrer")
+	KursDaten toApi(DTOKurs dto, List<DTOKursLehrer> zusatzkraefte);
 
 	/**
 	 * Bestimmt die IDs der Jahrgänge eines Kurses aus der ID des Jahrgangs und der kommagetrennten Liste
@@ -338,18 +323,6 @@ public interface KursMapper {
 	@Named("mapBezeichnungZeugnis")
 	default String mapBezeichnungZeugnis(final String bezeichnung) {
 		return ((bezeichnung == null) || bezeichnung.isBlank()) ? null : bezeichnung;
-	}
-
-	/**
-	 * Bildet einen nicht gesetzten Anteil einer Zusatzkraft auf 0 Wochenstunden ab.
-	 *
-	 * @param anteil   der Anteil, kann null sein
-	 *
-	 * @return die Wochenstunden der Zusatzkraft
-	 */
-	@Named("mapAnteil")
-	default double mapAnteil(final Double anteil) {
-		return (anteil == null) ? ANTEIL_DEFAULT : anteil;
 	}
 
 }

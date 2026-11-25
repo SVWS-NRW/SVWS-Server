@@ -44,7 +44,7 @@ class KursMapperTest {
 	@Test
 	@DisplayName("toApi (KursDaten): Alle Felder werden gemappt")
 	void toKursDaten_mapptAlleFelder() {
-		final var result = mapper.toApi(createKurs());
+		final var result = mapper.toApi(createKurs(), List.of());
 
 		assertThat(result).hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("idSchuljahresabschnitt", 2L)
@@ -67,9 +67,30 @@ class KursMapperTest {
 	}
 
 	@Test
+	@DisplayName("toApi (mit Zusatzkräften): Die Zusatzkräfte werden als weitere Lehrer übernommen")
+	void toKursDaten_mitZusatzkraeften() {
+		final var zusatzkraft = new DTOKursLehrer(1L, 20L);
+		zusatzkraft.Anteil = 1.5;
+
+		final var result = mapper.toApi(createKurs(), List.of(zusatzkraft));
+
+		assertThat(result.id).isEqualTo(1L);
+		assertThat(result.weitereLehrer).singleElement()
+				.hasFieldOrPropertyWithValue("idKurs", 1L)
+				.hasFieldOrPropertyWithValue("idLehrer", 20L)
+				.hasFieldOrPropertyWithValue("wochenstundenLehrer", 1.5);
+	}
+
+	@Test
+	@DisplayName("toApi (mit Zusatzkräften): Ohne Zusatzkräfte sind die weiteren Lehrer leer")
+	void toKursDaten_ohneZusatzkraefte() {
+		assertThat(mapper.toApi(createKurs(), List.of()).weitereLehrer).isEmpty();
+	}
+
+	@Test
 	@DisplayName("toApi: Nicht gesetzte Werte erhalten die Defaults")
 	void toKursDaten_setztDefaults() {
-		final var result = mapper.toApi(new DTOKurs(1L, 2L, "D-GK1", 3L));
+		final var result = mapper.toApi(new DTOKurs(1L, 2L, "D-GK1", 3L), List.of());
 
 		assertThat(result).hasFieldOrPropertyWithValue("kursartAllg", "")
 				.hasFieldOrPropertyWithValue("sortierung", 32000)
@@ -90,7 +111,7 @@ class KursMapperTest {
 		final var dto = new DTOKurs(1L, 2L, "D-GK1", 3L);
 		dto.WochenStd = 4;
 
-		assertThat(mapper.toApi(dto)).hasFieldOrPropertyWithValue("wochenstunden", 4)
+		assertThat(mapper.toApi(dto, List.of())).hasFieldOrPropertyWithValue("wochenstunden", 4)
 				.hasFieldOrPropertyWithValue("wochenstundenLehrer", 4.0);
 	}
 
@@ -100,7 +121,7 @@ class KursMapperTest {
 		final var dto = createKurs();
 		dto.ZeugnisBez = "  ";
 
-		assertThat(mapper.toApi(dto).bezeichnungZeugnis).isNull();
+		assertThat(mapper.toApi(dto, List.of()).bezeichnungZeugnis).isNull();
 	}
 
 	@Test
@@ -395,23 +416,6 @@ class KursMapperTest {
 
 		assertThat(dto).hasFieldOrPropertyWithValue("Jahrgaenge", "5,6")
 				.hasFieldOrPropertyWithValue("Schienen", "1,2");
-	}
-
-	@Test
-	@DisplayName("toApi (KursLehrer): Alle Felder werden gemappt")
-	void toKursLehrer_mapptAlleFelder() {
-		final var dto = new DTOKursLehrer(1L, 2L);
-		dto.Anteil = 1.5;
-
-		assertThat(mapper.toApi(dto)).hasFieldOrPropertyWithValue("idKurs", 1L)
-				.hasFieldOrPropertyWithValue("idLehrer", 2L)
-				.hasFieldOrPropertyWithValue("wochenstundenLehrer", 1.5);
-	}
-
-	@Test
-	@DisplayName("toApi (KursLehrer): Ohne Anteil sind es 0 Wochenstunden")
-	void toKursLehrer_ohneAnteil() {
-		assertThat(mapper.toApi(new DTOKursLehrer(1L, 2L))).hasFieldOrPropertyWithValue("wochenstundenLehrer", 0.0);
 	}
 
 }

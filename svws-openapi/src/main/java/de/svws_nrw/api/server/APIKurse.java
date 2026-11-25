@@ -1,21 +1,21 @@
 package de.svws_nrw.api.server;
 
-import java.io.InputStream;
 import java.util.List;
 
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.kurse.KursLehrer;
 import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
 import de.svws_nrw.controller.kurse.KursControllerFactory;
+import de.svws_nrw.controller.kurse.KurslehrerControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.kurse.DataKatalogKursarten;
-import de.svws_nrw.data.kurse.DataKursLehrer;
 import de.svws_nrw.service.kurse.KursCreateRequest;
 import de.svws_nrw.service.kurse.KursPatchRequest;
+import de.svws_nrw.service.kurse.KurslehrerCreateRequest;
+import de.svws_nrw.service.kurse.KurslehrerPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -264,11 +264,11 @@ public class APIKurse {
 	@ApiResponse(responseCode = "200", description = "Die Kurslehrer des Kurses",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursLehrer.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Kurslehrer für den Kurs mit der angegebenen ID gefunden")
 	public Response getKursLehrer(@PathParam("schema") final String schema, @PathParam("idKurs") final long idKurs, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataKursLehrer(conn, idKurs).getListAsResponse(), request, ServerMode.STABLE, BenutzerKompetenz.KEINE
-		);
+		return KurslehrerControllerFactory
+				.withNoAccess(request)
+				.getKurslehrerController()
+				.getListByIdKurs(idKurs);
 	}
 
 	/**
@@ -277,39 +277,39 @@ public class APIKurse {
 	 * @param schema        das Datenbankschema, auf welchem der Patch ausgeführt werden soll
 	 * @param idKurs        Kurs ID
 	 * @param idLehrer        Lehrer ID
-	 * @param is            der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch         die zu ändernden Attribute des Kurslehrers
 	 * @param request        die Informationen zur HTTP-Anfrage
 	 *
-	 * @return                das Ergebnis der Patch-Operation
+	 * @return                die HTTP-Antwort mit dem geänderten KursLehrer
 	 */
 	@PATCH
 	@Path("/{idKurs: \\d+}/kursLehrer/{idLehrer: \\d+}")
 	@Operation(summary = "Patched den Kurslehrer mit der angegebenen ID.",
 			description = "Patched den Kurslehrer mit der angegeben ID, insofern die notwendigen Berechtigungen vorliegen.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert. Der geänderte KursLehrer wird zurückgegeben.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursLehrer.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchKursLehrer(@PathParam("schema") final String schema, @PathParam("idKurs") final long idKurs,
 			@PathParam("idLehrer") final long idLehrer,
 			@RequestBody(description = "Der Patch des KursLehrers", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = KursLehrer.class))) final InputStream is,
+							schema = @Schema(implementation = KursLehrer.class))) final KurslehrerPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursLehrer(conn, idKurs).patchAsResponse(new Long[] { idKurs, idLehrer }, is),
-				request, ServerMode.DEV, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
-
+		return KurslehrerControllerFactory
+				.withWriteAccessDev(request)
+				.getKurslehrerController()
+				.patch(idKurs, idLehrer, patch);
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen mehrerer KursLehrer.
+	 * Die OpenAPI-Methode für das Erstellen eines KursLehrers.
 	 *
 	 * @param schema        das Datenbankschema
 	 * @param idKurs        Kurs ID
-	 * @param is            der Input-Stream mit den Daten des KursLehrers
+	 * @param input         die Daten des zu erstellenden KursLehrers
 	 * @param request        die Informationen zur HTTP-Anfrage
 	 * @return                die HTTP-Antwort mit dem erstellten KursLehrer
 	 */
@@ -319,15 +319,19 @@ public class APIKurse {
 			description = "Erstellt einen neuen Kurslehrer, insofern die notwendigen Berechtigungen vorliegen.")
 	@ApiResponse(responseCode = "201", description = "Der KursLehrer wurde erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursLehrer.class)))
+	@ApiResponse(responseCode = "400", description = "Der KursLehrer existiert bereits oder die Daten sind fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um KursLehrer anzulegen.")
+	@ApiResponse(responseCode = "404", description = "Der Kurs oder der Lehrer wurde nicht gefunden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addKursLehrer(@PathParam("schema") final String schema, @PathParam("idKurs") final long idKurs,
 			@RequestBody(description = "Die Daten des zu erstellenden KursLehrers.", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = KursLehrer.class))) final InputStream is,
+							schema = @Schema(implementation = KursLehrer.class))) final KurslehrerCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursLehrer(conn, idKurs).addAsResponse(is),
-				request, ServerMode.DEV, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
+		return KurslehrerControllerFactory
+				.withWriteAccessDev(request)
+				.getKurslehrerController()
+				.create(idKurs, input);
 	}
 
 	/**
@@ -335,31 +339,27 @@ public class APIKurse {
 	 *
 	 * @param schema        das Datenbankschema
 	 * @param idKurs        Kurs ID
-	 * @param is            der InputStream, mit der Liste der zu löschenden IDs
+	 * @param idsLehrer     die IDs der Lehrer, deren Kurslehrer-Eintrag gelöscht werden soll
 	 * @param request        die Informationen zur HTTP-Anfrage
 	 * @return                die HTTP-Antwort mit dem Status der Lösch-Operationen
 	 */
 	@DELETE
 	@Path("/{idKurs: \\d+}/kursLehrer/delete/multiple")
 	@Operation(summary = "Entfernt mehrere KursLehrer.", description = "Entfernt mehrere KursLehrer, insofern die notwendigen Berechtigungen vorhanden sind.")
-	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt. Nicht vorhandene KursLehrer werden je ID in der Antwort als Fehler gemeldet.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "400", description = "Die Liste der IDs ist null oder enthält null-Werte.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um KursLehrer zu entfernen.")
-	@ApiResponse(responseCode = "404", description = "KursLehrer nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKursLehrer(@PathParam("schema") final String schema, @PathParam("idKurs") final long idKurs,
 			@RequestBody(description = "Die IDs der zu löschenden Kurslehrer",
 					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataKursLehrer(conn, idKurs).deleteMultipleAsSimpleResponseList(
-						JSONMapper
-								.toListOfLong(is)
-								.stream()
-								.map(v -> new Long[] { idKurs, v })
-								.toList()),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> idsLehrer,
+			@Context final HttpServletRequest request) {
+		return KurslehrerControllerFactory
+				.withDeleteAccessStable(request)
+				.getKurslehrerController()
+				.delete(idKurs, idsLehrer);
 	}
 
 }

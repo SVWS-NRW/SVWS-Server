@@ -64,7 +64,7 @@ public final class KursService {
 	 * Erstellt einen neuen Service.
 	 *
 	 * @param repositories   die Repositories, die der Service benötigt
-	 * @param kursMapper     der Mapper für die Konvertierung der Kurse
+	 * @param kursMapper     der Mapper für die Konvertierung der Kurse einschließlich ihrer Zusatzkräfte
 	 */
 	public KursService(final KursRepositories repositories, final KursMapper kursMapper) {
 		this.kurseRepository = repositories.kurseRepository();
@@ -287,11 +287,7 @@ public final class KursService {
 	}
 
 	private KursDaten mapKurs(final DTOKurs dtoKurs, final List<DTOKursLehrer> zusatzkraefte, final List<Schueler> schueler) {
-		final var kurs = kursMapper.toApi(dtoKurs);
-
-		zusatzkraefte.stream()
-				.map(kursMapper::toApi)
-				.forEach(kurs.weitereLehrer::add);
+		final var kurs = kursMapper.toApi(dtoKurs, zusatzkraefte);
 		kurs.schueler.addAll(schueler);
 
 		return kurs;

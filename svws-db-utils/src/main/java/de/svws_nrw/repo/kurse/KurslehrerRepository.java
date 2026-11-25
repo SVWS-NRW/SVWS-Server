@@ -14,6 +14,15 @@ import de.svws_nrw.repo.RepositoryBase;
 public interface KurslehrerRepository extends RepositoryBase<DTOKursLehrer, DTOKursLehrerPK> {
 
 	/**
+	 * Bestimmt alle Zusatzkräfte eines Kurses.
+	 *
+	 * @param idKurs   die ID des Kurses
+	 *
+	 * @return die Zusatzkräfte des Kurses, leer wenn keine vorhanden sind
+	 */
+	List<DTOKursLehrer> getListByIdKurs(long idKurs);
+
+	/**
 	 * Bestimmt die Zuordnung der Kurslehrer-DTOs der Zusatzkräfte zu den Kursen mit den übergebenen IDs.
 	 *
 	 * @param idsKurse   die IDs der Kurse

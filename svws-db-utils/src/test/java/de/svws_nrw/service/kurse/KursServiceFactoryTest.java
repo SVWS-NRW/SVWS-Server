@@ -57,4 +57,17 @@ class KursServiceFactoryTest {
 		verify(schuelerRepositoryFactory).getSchuelerLeistungsdatenRepository();
 	}
 
+	@Test
+	@DisplayName("getKurslehrerService: Der Service wird mit den Repositories der übergebenen Factories erstellt")
+	void getKurslehrerService_nutztRepositoriesDerFactories() {
+		final var factory = KursServiceFactory.getNewInstance(kurseRepositoryFactory, schuelerRepositoryFactory, lehrerRepositoryFactory,
+				eigeneSchuleRepositoryFactory, katalogRepositoryFactory);
+
+		assertThat(factory.getKurslehrerService()).isNotNull();
+
+		verify(kurseRepositoryFactory).getKurslehrerRepository();
+		verify(kurseRepositoryFactory).getKurseRepository();
+		verify(lehrerRepositoryFactory).getLehrerRepository();
+	}
+
 }

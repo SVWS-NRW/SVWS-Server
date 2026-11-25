@@ -1,6 +1,7 @@
 package de.svws_nrw.service.kurse;
 
 import de.svws_nrw.mapper.kurse.KursMapper;
+import de.svws_nrw.mapper.kurse.KurslehrerMapper;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
@@ -8,7 +9,7 @@ import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 
 /**
- * Eine Factory zum Erstellen der Services für Kurse.
+ * Eine Factory zum Erstellen der Services für Kurse und deren Zusatzkräfte (Kurslehrer).
  */
 public final class KursServiceFactory {
 
@@ -68,6 +69,19 @@ public final class KursServiceFactory {
 				LehrerRepositoryFactory.getNewInstance(),
 				EigeneSchuleRepositoryFactory.getNewInstance(),
 				KatalogRepositoryFactory.getNewInstance());
+	}
+
+	/**
+	 * Erstellt einen neuen Service für den Zugriff auf die Zusatzkräfte (Kurslehrer) von Kursen.
+	 *
+	 * @return der Service
+	 */
+	public KurslehrerService getKurslehrerService() {
+		return new KurslehrerService(
+				kurseRepositoryFactory.getKurslehrerRepository(),
+				kurseRepositoryFactory.getKurseRepository(),
+				lehrerRepositoryFactory.getLehrerRepository(),
+				KurslehrerMapper.INSTANCE);
 	}
 
 	/**

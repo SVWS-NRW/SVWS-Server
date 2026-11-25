@@ -32,6 +32,11 @@ public final class KurslehrerRepositoryImpl extends RepositoryBaseImpl<DTOKursLe
 	}
 
 	@Override
+	public List<DTOKursLehrer> getListByIdKurs(final long idKurs) {
+		return conn.queryList(DTOKursLehrer.QUERY_BY_KURS_ID, DTOKursLehrer.class, idKurs);
+	}
+
+	@Override
 	public Map<Long, List<DTOKursLehrer>> getMapZusatzkraefte(final Collection<Long> idsKurse) {
 		if ((idsKurse == null) || (idsKurse.isEmpty())) {
 			return Collections.emptyMap();
