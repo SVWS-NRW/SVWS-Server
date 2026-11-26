@@ -39,6 +39,9 @@ export class RouteSchuleAdressdaten extends RouteNode<any, RouteSchuleStammdaten
 			addTeilstandorteintrag: routeSchuleAdressdaten.data.addTeilstandorteintrag,
 			patchTeilstandorteintrag: routeSchuleAdressdaten.data.patchTeilstandorteintrag,
 			deleteTeilstandorteintraege: routeSchuleAdressdaten.data.deleteTeilstandorteintraege,
+			getListLeitungsfunktionen: () => routeSchuleAdressdaten.data.listLeitungsfunktionen,
+			getListLehrer: () => routeSchuleAdressdaten.data.listLehrer,
+			gotoLehrer: routeSchuleAdressdaten.data.gotoLehrer,
 		};
 	}
 

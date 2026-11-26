@@ -69,6 +69,18 @@
 					</svws-ui-input-wrapper>
 				</svws-ui-content-card>
 				<svws-ui-spacing :size="2" />
+				<template v-if="hatKompetenzLehrerdaten">
+					<svws-ui-content-card title="Schulleitungsfunktionen">
+						<template #actions>
+							<svws-ui-checkbox type="toggle" v-model="nurAktive">Nur aktive</svws-ui-checkbox>
+						</template>
+						<schule-leitungsfunktionen-table :get-list-leitungsfunktionen
+							:get-list-lehrer
+							:goto-lehrer
+							:nur-aktive />
+					</svws-ui-content-card>
+					<svws-ui-spacing :size="2" />
+				</template>
 				<svws-ui-content-card title="Teilstandorte">
 					<schule-teilstandorte-table :readonly="!hatKompetenzUpdate"
 						:get-list-teilstandorte
@@ -115,6 +127,8 @@
 	const schuleModel = new SchuleStammdatenModelProxy(() => schuleState.stammdaten, props.patch);
 	const teilstandortModel = shallowRef<TeilstandortModelProxy | null>(null);
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzLehrerdaten = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN));
+	const nurAktive = ref<boolean>(true);
 
 	function enterDefaultMode() {
 		setTeilstandortMode(Mode.DEFAULT);

@@ -15,7 +15,7 @@
 				</tr>
 			</template>
 		</tbody>
-		<tfoot v-if="$slots.header">
+		<tfoot v-if="$slots.footer && (footerCount > 0)">
 			<template v-for="i in footerCount" :key="i">
 				<tr>
 					<slot :i name="footer" />
