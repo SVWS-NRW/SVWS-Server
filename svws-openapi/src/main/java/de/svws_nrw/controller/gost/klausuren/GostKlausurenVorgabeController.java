@@ -1,6 +1,7 @@
 package de.svws_nrw.controller.gost.klausuren;
 
 import java.util.Collection;
+import java.util.List;
 
 import de.svws_nrw.service.gost.klausuren.GostKlausurenVorgabeCreateRequest;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenVorgabePatchRequest;
@@ -28,6 +29,15 @@ public interface GostKlausurenVorgabeController {
 	 * @return die Response
 	 */
 	Response create(GostKlausurenVorgabeCreateRequest createRequest);
+
+	/**
+	 * Erstellt mehrere Klausurvorgaben gemeinsam.
+	 *
+	 * @param createRequests die Daten der anzulegenden Klausurvorgaben
+	 *
+	 * @return die Response mit den angelegten Klausurvorgaben
+	 */
+	Response createMultiple(List<GostKlausurenVorgabeCreateRequest> createRequests);
 
 	/**
 	 * Patcht eine Klausurvorgabe.

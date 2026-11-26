@@ -75,14 +75,18 @@
 				<template #actions>
 					<div class="flex w-full items-center gap-1">
 						<div class="ml-auto flex items-center gap-1">
+							<svws-ui-checkbox v-if="state.jahrgangsdaten?.abiturjahr === -1" type="toggle" v-model="apoGostNeu">
+								<span class="sr-only">Neue APO-GOSt</span>
+								<span class="text-button font-normal" aria-hidden="true">APO-GOSt <span class="inline-block w-7 text-left">{{ apoGostNeu ? 'neu' : 'alt' }}</span></span>
+							</svws-ui-checkbox>
 							<svws-ui-tooltip v-if="selectedHatDauerWarnung" position="top" :indicator="false">
 								<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate || vorgabenSchreibvorgangLaeuft" @click="setAusgewaehlteDauerAufApoVorgabe">
-									<span class="icon i-ri-restart-line" />Dauer zurücksetzen
+									<span class="icon i-ri-restart-line" />Klausurdauer zurücksetzen
 								</svws-ui-button>
 								<template #content>Klausurdauer auf APO-GOSt-Vorgaben setzen</template>
 							</svws-ui-tooltip>
 							<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate || vorgabenSchreibvorgangLaeuft" @click="state.erzeugeVorgabenAusVorlage(state.quartal)" v-if="state.jahrgangsdaten?.abiturjahr !== -1"><span class="icon i-ri-upload-2-line" />Aus Vorlage importieren</svws-ui-button>
-							<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate || vorgabenSchreibvorgangLaeuft" @click="state.erzeugeDefaultKlausurvorgaben(state.quartal)" v-else><span class="icon i-ri-upload-2-line" />Standard-Vorlagen anlegen</svws-ui-button>
+							<svws-ui-button v-else type="transparent" :disabled="!hatKompetenzUpdate || vorgabenSchreibvorgangLaeuft" @click="state.erzeugeDefaultKlausurvorgaben(state.quartal, abiturjahr)"><span class="icon i-ri-upload-2-line" />Standard-Vorgaben anlegen</svws-ui-button>
 							<svws-ui-tooltip v-if="selectedHatVerwendeteVorgaben" position="top" :indicator="false">
 								<svws-ui-button type="trash" disabled />
 								<template #content>Es sind Vorgaben selektiert, die Grundlage für geplante Klausuren sind.</template>
@@ -188,6 +192,7 @@
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
 	import { GostKursart } from '@core/core/types/gost/GostKursart';
+	import { GostKlausurplanManager } from '@core/core/utils/gost/klausuren/GostKlausurplanManager';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { Comparator } from '@core/java/util/Comparator';
 	import type { List } from '@core/java/util/List';
@@ -204,6 +209,8 @@
 	const state = useGostKlausurplanungState();
 	const benutzerState = useBenutzerState();
 	const vorgabenSchreibvorgangLaeuft = computed(() => state.vorgabenSchreibvorgangLaeuft);
+	const apoGostNeu = ref(false);
+	const abiturjahr = computed(() => apoGostNeu.value ? 2030 : -1);
 	const presenter = useKlausurplanungPresenter(state);
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
@@ -301,7 +308,14 @@
 	}
 
 	function berechneGostKlausurdauerByVorgabeOrNull(vorgabe: GostKlausurvorgabe): number | null {
-		return state.manager.fachOrNullByVorgabe(vorgabe) === null ? null : state.manager.berechneGostKlausurdauerByVorgabe(vorgabe);
+		const fach = state.manager.fachOrNullByVorgabe(vorgabe);
+		if (fach === null) {
+			return null;
+		}
+		const halbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
+		const kursart = GostKursart.fromKuerzelOrException(vorgabe.kursart);
+		const jahr = (vorgabe.abiturjahrgang === -1) ? abiturjahr.value : vorgabe.abiturjahrgang;
+		return GostKlausurplanManager.berechneGostKlausurdauerByHalbjahrAndKursartAndFach(halbjahr, kursart, fach, jahr);
 	}
 
 	async function patchEditorFeld(patch: Partial<GostKlausurvorgabe>, id: number, reset: () => void) {
@@ -366,6 +380,7 @@
 
 	async function setAusgewaehlteDauerAufApoVorgabe() {
 		await setDauerAufGostVorgabe(selected.value.filter(vorgabe => dauerWarnung(vorgabe) !== null));
+		ausgewaehlteVorgabeIds.value = new Set();
 	}
 
 	async function setDauerAufGostVorgabe(vorgaben: GostKlausurvorgabe[]) {
@@ -388,8 +403,8 @@
 
 	function validiereDauer(vorgabe: GostKlausurvorgabe = activeVorgabe.value): List<ValidatorFehler> {
 		const validator = new ValidatorGostKlausurdauer(
-			() => (vorgabe.id > 0) && (state.manager.fachOrNullByVorgabe(vorgabe) !== null) ? vorgabe : null,
-			vorgabe => state.manager.berechneGostKlausurdauerByVorgabe(vorgabe),
+			() => (vorgabe.id > 0) ? vorgabe : null,
+			berechneGostKlausurdauerByVorgabeOrNull,
 			vorgabe => vorgabeIstNeuEinsetzendeFremdsprache(vorgabe)
 		);
 		validator.run();

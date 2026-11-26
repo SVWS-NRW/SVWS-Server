@@ -7,7 +7,7 @@ export class ValidatorGostKlausurdauer extends BasicValidator {
 
 	public constructor(
 		private readonly data: () => GostKlausurvorgabe | null,
-		private readonly berechneApoDauer: (vorgabe: GostKlausurvorgabe) => number,
+		private readonly berechneApoDauer: (vorgabe: GostKlausurvorgabe) => number | null,
 		private readonly istNeuEinsetzendeFremdsprache: (vorgabe: GostKlausurvorgabe) => boolean
 	) {
 		super(ValidatorFehlerart.HINWEIS);
@@ -19,7 +19,7 @@ export class ValidatorGostKlausurdauer extends BasicValidator {
 			return true;
 		}
 		const apoDauer = this.berechneApoDauer(vorgabe);
-		if (vorgabe.dauer === apoDauer) {
+		if ((apoDauer === null) || (vorgabe.dauer === apoDauer)) {
 			return true;
 		}
 		const halbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);

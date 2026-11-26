@@ -131,30 +131,45 @@ public final class GostKlausurenVorgabeService {
 	 * @return die neue Klausurvorgabe
 	 */
 	public GostKlausurvorgabe create(final GostKlausurenVorgabeCreateRequest createRequest) {
-		return transactional(() -> {
-			final GostHalbjahr halbjahr = GostKlausurenValidationUtils.checkHalbjahr(createRequest.halbjahr);
-			final GostKursart kursart = checkKursart(createRequest.kursart);
-			if (halbjahr.istEinfuehrungsphase() && (kursart == GostKursart.LK)) {
-				throw new ApiOperationException(Status.BAD_REQUEST, "In der Einführungsphase sind keine Klausurvorgaben für Leistungskurse zulässig.");
-			}
+		return createMultiple(List.of(createRequest)).getFirst();
+	}
 
-			final DTOGostKlausurenVorgaben dto = new DTOGostKlausurenVorgaben(
-					-1L,
-					createRequest.abiturjahrgang,
-					halbjahr,
-					createRequest.quartal,
-					createRequest.idFach,
-					kursart,
-					(createRequest.dauer == null) ? 0 : createRequest.dauer,
-					(createRequest.auswahlzeit == null) ? 0 : createRequest.auswahlzeit,
-					Boolean.TRUE.equals(createRequest.istGklMoeglich),
-					Boolean.TRUE.equals(createRequest.istMdlPruefung),
-					Boolean.TRUE.equals(createRequest.istAudioNotwendig),
-					Boolean.TRUE.equals(createRequest.istVideoNotwendig));
-			dto.Bemerkungen = convertBemerkung(createRequest.bemerkungVorgabe);
-			repository.create(dto);
+	/**
+	 * Erstellt mehrere Klausurvorgaben in einer Transaktion.
+	 *
+	 * @param createRequests die Daten der anzulegenden Klausurvorgaben
+	 *
+	 * @return die angelegten Klausurvorgaben
+	 */
+	public List<GostKlausurvorgabe> createMultiple(final List<GostKlausurenVorgabeCreateRequest> createRequests) {
+		return transactional(() -> {
+			final List<DTOGostKlausurenVorgaben> dtos = new ArrayList<>();
+			for (final GostKlausurenVorgabeCreateRequest createRequest : createRequests) {
+				final GostHalbjahr halbjahr = GostKlausurenValidationUtils.checkHalbjahr(createRequest.halbjahr);
+				final GostKursart kursart = checkKursart(createRequest.kursart);
+				if (halbjahr.istEinfuehrungsphase() && (kursart == GostKursart.LK)) {
+					throw new ApiOperationException(Status.BAD_REQUEST, "In der Einführungsphase sind keine Klausurvorgaben für Leistungskurse zulässig.");
+				}
+
+				final DTOGostKlausurenVorgaben dto = new DTOGostKlausurenVorgaben(
+						-1L,
+						createRequest.abiturjahrgang,
+						halbjahr,
+						createRequest.quartal,
+						createRequest.idFach,
+						kursart,
+						(createRequest.dauer == null) ? 0 : createRequest.dauer,
+						(createRequest.auswahlzeit == null) ? 0 : createRequest.auswahlzeit,
+						Boolean.TRUE.equals(createRequest.istGklMoeglich),
+						Boolean.TRUE.equals(createRequest.istMdlPruefung),
+						Boolean.TRUE.equals(createRequest.istAudioNotwendig),
+						Boolean.TRUE.equals(createRequest.istVideoNotwendig));
+				dto.Bemerkungen = convertBemerkung(createRequest.bemerkungVorgabe);
+				dtos.add(dto);
+			}
+			repository.create(dtos);
 			repository.flush();
-			return get(dto.ID);
+			return toApiList(dtos);
 		});
 	}
 

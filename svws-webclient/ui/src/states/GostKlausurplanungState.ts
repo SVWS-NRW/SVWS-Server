@@ -63,7 +63,7 @@ export interface GostKlausurplanungState {
 	loescheSchuelerklausuren(klausuren: List<GostSchuelerklausur>): Promise<void>;
 	patchKlausur(klausur: GostKursklausur | GostSchuelerklausur | GostSchuelerklausurtermin, patch: Partial<GostKursklausur | GostSchuelerklausur | GostSchuelerklausurtermin>): Promise<void>;
 	patchSchuelerklausurtermine(klausuren: List<GostSchuelerklausurtermin>, patch: Partial<GostSchuelerklausurtermin>): Promise<void>;
-	erzeugeDefaultKlausurvorgaben(quartal: number): Promise<void>;
+	erzeugeDefaultKlausurvorgaben(quartal: number, abiturjahr: number): Promise<void>;
 	erzeugeKlausurvorgabe(vorgabe: Partial<GostKlausurvorgabe>): Promise<void>;
 	patchKlausurvorgabe(vorgabe: Partial<GostKlausurvorgabe>, id: number): Promise<void>;
 	patchKlausurvorgaben(vorgaben: List<Partial<GostKlausurvorgabe>>): Promise<void>;

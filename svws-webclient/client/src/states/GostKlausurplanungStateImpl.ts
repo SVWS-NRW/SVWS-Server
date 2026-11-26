@@ -457,10 +457,24 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 		}
 	}
 
-	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
+	private async vorgabenCreateMultiple(vorgaben: List<GostKlausurvorgabe>) {
+		const requests = new ArrayList<Partial<GostKlausurvorgabe>>();
+		for (const vorgabe of vorgaben) {
+			const { id, ...request } = vorgabe;
+			requests.add(request);
+		}
+		const manager = this.manager;
+		const neueVorgaben = await api.server.createGostKlausurenVorgabenMultiple(requests, api.schema);
+		manager.vorgabeAddAll(neueVorgaben);
+	}
+
+	erzeugeDefaultKlausurvorgaben = async (quartal: number, abiturjahr: number) => {
 		await this.schreibeVorgaben(async () => {
-			const neueVorgaben = await api.server.createMissingGostKlausurenVorgabenVorlagen(api.schema, this.halbjahr.id, quartal);
-			this.manager.vorgabeAddAll(neueVorgaben);
+			const vorgaben = this.manager.vorgabeErzeugeFehlendeStandardVorlagen(this.halbjahr, quartal, abiturjahr);
+			if (vorgaben.isEmpty()) {
+				return;
+			}
+			await this.vorgabenCreateMultiple(vorgaben);
 			this.commit();
 		});
 	};
@@ -543,9 +557,15 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 
 	erzeugeVorgabenAusVorlage = async (quartal: number) => {
 		await this.schreibeVorgaben(async () => {
+			const { manager, abiturjahr, halbjahr } = this;
+			const vorlagen = manager.vorgabeGetMengeByHalbjahrAndQuartal(-1, halbjahr, quartal);
+			const zielvorgaben = manager.vorgabeGetMengeByHalbjahrAndQuartal(abiturjahr, halbjahr, quartal);
+			const kopien = GostKlausurplanManager.vorgabeKopiereFehlendeVorlagen(abiturjahr, halbjahr, quartal, vorlagen, zielvorgaben);
+			if (kopien.isEmpty()) {
+				return;
+			}
 			try {
-				const listKlausurvorgaben = await api.server.copyGostKlausurenVorgabenVorlagenToJahrgang(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-				this.manager.vorgabeAddAll(listKlausurvorgaben);
+				await this.vorgabenCreateMultiple(kopien);
 				await this.reloadFehlendData();
 			} finally {
 				this.commit();
