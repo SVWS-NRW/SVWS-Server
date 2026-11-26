@@ -5,18 +5,18 @@ import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
-import type { KurseGruppenprozesseProps } from "~/components/kurse/gruppenprozesse/SKurseGruppenprozesseProps";
+import type { KurseGruppenprozesseProps } from "~/components/kurse/gruppenprozesse/KurseGruppenprozesseProps";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 
 import { type RouteKurse, routeKurse } from "./RouteKurse";
 
-const SKurseGruppenprozesse = () => import("~/components/kurse/gruppenprozesse/SKurseGruppenprozesse.vue");
+const KurseGruppenprozesse = () => import("~/components/kurse/gruppenprozesse/KurseGruppenprozesse.vue");
 
 export class RouteKurseGruppenprozesse extends RouteNode<any, RouteKurse> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "kurse.gruppenprozesse", "gruppenprozesse", SKurseGruppenprozesse);
+		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "kurse.gruppenprozesse", "gruppenprozesse", KurseGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

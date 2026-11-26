@@ -4,16 +4,16 @@ import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 
-import type { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
+import type { KursDatenProps } from "~/components/kurse/daten/KursDatenProps";
 import { type RouteKurse } from "~/router/apps/kurse/RouteKurse";
 import { RouteNode } from "~/router/RouteNode";
 
-const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
+const KursDaten = () => import("~/components/kurse/daten/KursDaten.vue");
 
 export class RouteKursDaten extends RouteNode<any, RouteKurse> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "kurse.daten", "daten", SKursDaten);
+		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "kurse.daten", "daten", KursDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs";

@@ -46,7 +46,7 @@
 
 	import { useKurseAuswahlState } from "~/states/kurse/KurseAuswahlState";
 
-	import type { KurseGruppenprozesseProps } from "./SKurseGruppenprozesseProps";
+	import type { KurseGruppenprozesseProps } from "./KurseGruppenprozesseProps";
 
 	const props = defineProps<KurseGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

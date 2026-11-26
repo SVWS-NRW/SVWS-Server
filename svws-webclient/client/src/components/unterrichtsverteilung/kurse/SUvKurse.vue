@@ -46,7 +46,6 @@
 	import { computed, ref, watch } from "vue";
 
 	import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
-	import { ZulaessigeKursart } from "@core/asd/types/kurse/ZulaessigeKursart";
 	import { UvKurs } from "@core/core/data/uv/UvKurs";
 	import type { UvSchuelergruppe } from "@core/core/data/uv/UvSchuelergruppe";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
@@ -54,6 +53,7 @@
 
 	import { useUvPresenter } from "../UvPresenter";
 	import SUvSchuelergruppenSchuelerliste from "~/components/unterrichtsverteilung/schuelergruppen/SUvSchuelergruppenSchuelerliste.vue";
+	import { getKursarten } from "~/utils/helfer";
 
 	const props = defineProps<{
 		kurs: UvKurs | undefined;
@@ -95,21 +95,6 @@
 			return;
 		}
 		await props.gotoSchuelergruppe(idSchuelergruppe);
-	}
-
-	function getKursarten(schuljahr: number): Map<string, string> {
-		const result = new Map<string, string>();
-		for (const art of ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr)) {
-			const daten = art.daten(schuljahr);
-			if ((daten === null) || (daten.kuerzel === 'PUK')) {
-				continue;
-			}
-			result.set(daten.kuerzelAllg ?? daten.kuerzel, daten.bezeichnungAllg ?? daten.text);
-			if (daten.kuerzelAllg === 'DK') {
-				result.set(daten.kuerzel, daten.text);
-			}
-		}
-		return new Map([...result.entries()].sort());
 	}
 
 	watch(() => props.kurs?.id, () => {

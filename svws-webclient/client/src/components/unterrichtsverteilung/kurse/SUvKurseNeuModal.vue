@@ -33,7 +33,6 @@
 	import { computed, ref, watch } from "vue";
 
 	import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
-	import { ZulaessigeKursart } from "@core/asd/types/kurse/ZulaessigeKursart";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 	import { UvKurs } from "@core/core/data/uv/UvKurs";
 	import type { UvSchuelergruppe } from "@core/core/data/uv/UvSchuelergruppe";
@@ -42,6 +41,7 @@
 	import { useUvState } from "@ui/states/UvState";
 
 	import { useUvPresenter } from "../UvPresenter";
+	import { getKursarten } from "~/utils/helfer";
 
 	const emit = defineEmits<{ created: [kurs: UvKurs] }>();
 	const state = useUvState();
@@ -89,21 +89,6 @@
 		return errors;
 	});
 	const isValid = computed(() => hatKompetenzAendern.value && validationErrors.value.length === 0);
-
-	function getKursarten(schuljahr: number): Map<string, string> {
-		const result = new Map<string, string>();
-		for (const art of ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr)) {
-			const daten = art.daten(schuljahr);
-			if ((daten === null) || (daten.kuerzel === 'PUK')) {
-				continue;
-			}
-			result.set(daten.kuerzelAllg ?? daten.kuerzel, daten.bezeichnungAllg ?? daten.text);
-			if (daten.kuerzelAllg === 'DK') {
-				result.set(daten.kuerzel, daten.text);
-			}
-		}
-		return new Map([...result.entries()].sort());
-	}
 
 	watch(() => state.planungsabschnitt?.id, () => {
 		show.value = false;

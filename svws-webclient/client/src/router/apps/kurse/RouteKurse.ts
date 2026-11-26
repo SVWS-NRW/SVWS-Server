@@ -22,14 +22,14 @@ import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
 import { routeKurseNeu } from "./RouteKurseNeu";
 
 
-const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue");
-const SKurseApp = () => import("~/components/kurse/SKurseApp.vue");
+const KurseAuswahl = () => import("~/components/kurse/KurseAuswahl.vue");
+const KurseApp = () => import("~/components/kurse/KurseApp.vue");
 
 export class RouteKurse extends RouteTabNode<RouteDataKurse, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "kurse", String.raw`kurse/:id(\d+)?`, SKurseApp, new RouteDataKurse());
-		super.setView("liste", SKurseAuswahl, (_route) => <RouteLocationNormalizedGeneric>{});
+		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "kurse", String.raw`kurse/:id(\d+)?`, KurseApp, new RouteDataKurse());
+		super.setView("liste", KurseAuswahl, (_route) => <RouteLocationNormalizedGeneric>{});
 		super.mode = ServerMode.STABLE;
 		super.text = "Kurse";
 		super.children = [

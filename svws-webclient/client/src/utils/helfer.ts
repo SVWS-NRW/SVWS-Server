@@ -1,4 +1,5 @@
 import type { CoreTypeData } from "@core/asd/data/CoreTypeData";
+import { ZulaessigeKursart } from "@core/asd/types/kurse/ZulaessigeKursart";
 import type { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 import type { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
 import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
@@ -6,7 +7,6 @@ import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintr
 import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
-
 
 
 /** Die Sortierfunktion für den Ortskatalog */
@@ -59,7 +59,7 @@ export function staatsangehoerigkeitKatalogEintragFilter(items: Iterable<Nationa
 	const list = [];
 	for (const i of items) {
 		if (i.historie().getLast().staatsangehoerigkeit.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+				|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 			list.push(i);
 		}
 	}
@@ -85,7 +85,7 @@ export function verkehrsspracheKatalogEintragFilter(items: Iterable<Verkehrsspra
 	const list = [];
 	for (const i of items) {
 		if (i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.historie().getLast().text.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+				|| i.historie().getLast().text.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 			list.push(i);
 		}
 	}
@@ -102,7 +102,7 @@ export function nationalitaetenKatalogEintragFilter(items: Iterable<Nationalitae
 	const list = [];
 	for (const i of items) {
 		if (i.historie().getLast().bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+				|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 			list.push(i);
 		}
 	}
@@ -148,8 +148,8 @@ export function lehrer_filter(items: Iterable<LehrerListeEintrag>, search: strin
 	const list = [];
 	for (const i of items) {
 		if (i.kuerzel.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))
-			|| i.nachname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))
-			|| i.vorname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))) {
+				|| i.nachname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))
+				|| i.vorname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))) {
 			list.push(i);
 		}
 	}
@@ -177,4 +177,34 @@ export function coreTypeDataFilter(items: CoreTypeData[], search: string): CoreT
 	const searchLower = search.trim().toLowerCase();
 	return items.filter(item => item.schluessel.toLowerCase().includes(searchLower) || item.text.toLowerCase().includes(searchLower)
 			|| item.kuerzel.toLowerCase().includes(searchLower));
+}
+
+/**
+ * Liefert die zulässigen Kursarten (Kürzel -> Bezeichnung) für ein Schuljahr.
+ * Allgemeine Kursarten (z. B. GK) erscheinen einmal, konkrete nur, wenn es keine allgemeine gibt oder bei DK.
+ *
+ * @param schuljahr das Schuljahr
+ *
+ * @returns die nach Kürzel sortierte Map der Kursarten
+ */
+export function getKursarten(schuljahr: number): Map<string, string> {
+	const arten = new Map<string, string>();
+	for (const art of ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr)) {
+		const daten = art.daten(schuljahr);
+		if (daten === null) {
+			continue;
+		}
+		if (daten.kuerzel === "PUK") {
+			continue;
+		}
+		// allgemeine Kursart (z. B. "GK") mit allgemeiner Bezeichnung
+		if ((daten.kuerzelAllg !== null) && (daten.bezeichnungAllg !== null)) {
+			arten.set(daten.kuerzelAllg, daten.bezeichnungAllg);
+		}
+		// konkrete Kursart: ohne allgemeine Bezeichnung oder bei DK zusätzlich
+		if ((daten.kuerzelAllg === null) || (daten.bezeichnungAllg === null) || (daten.kuerzelAllg === "DK")) {
+			arten.set(daten.kuerzel, daten.text);
+		}
+	}
+	return new Map([...arten.entries()].sort());
 }

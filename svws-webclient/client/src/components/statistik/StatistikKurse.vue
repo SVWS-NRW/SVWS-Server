@@ -39,7 +39,7 @@
 		<div v-if="kurseAuswahlState.idSelected !== null" class="flex min-w-0 flex-1 flex-col">
 			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoKurs(kurseAuswahlState.selected)"><span class="icon cursor-pointer i-ri-link" /> {{ kurseAuswahlState.selected.kuerzel }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
-				<s-kurs-daten v-bind="$props" v-if="tabManager.tab.name === 'UF'" />
+				<kurs-daten v-bind="$props" v-if="tabManager.tab.name === 'UF'" />
 			</svws-ui-tab-bar>
 		</div>
 	</div>
