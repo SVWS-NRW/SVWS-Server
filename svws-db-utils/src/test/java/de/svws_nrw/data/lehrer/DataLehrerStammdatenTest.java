@@ -31,10 +31,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
@@ -43,10 +45,12 @@ import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.util.TestUtils;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -91,7 +95,7 @@ class DataLehrerStammdatenTest {
 	}
 
 	@Test
-	@DisplayName("add | erfolgreiches Anlegen eines Lehrerstammdatensatzes")
+	@DisplayName("add | erfolgreiches Anlegen eines Lehrerstammdatensatzes mit leeren Personalabschnittsdaten im aktuellen Schuljahresabschnitt")
 	void addLehrerTest() throws ApiOperationException {
 		final HashMap<String, Object> coreDtoLehrer = getCoreDtoLehrerMap();
 		final DTOLehrer mockedLehrer = getDtoLehrer();
@@ -99,13 +103,48 @@ class DataLehrerStammdatenTest {
 		when(this.conn.queryByKey(eq(DTOLehrer.class), any())).thenReturn(mockedLehrer);
 		when(this.conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
 		when(this.conn.transactionPersistAll(anyList())).thenReturn(true);
+		mockAktuellerSchuljahresabschnitt(42L);
+		when(this.conn.transactionGetNextID(DTOLehrer.class)).thenReturn(1L);
+		when(this.conn.transactionGetNextID(DTOLehrerAbschnittsdaten.class)).thenReturn(7L);
+		when(this.conn.transactionPersist(any(DTOLehrerAbschnittsdaten.class))).thenReturn(true);
 
-		this.dataLehrerStammdaten.addAsResponse(is);
+		final Response response = this.dataLehrerStammdaten.addAsResponse(is);
 
+		assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 		verify(this.dataLernplattformen).getAll();
 		verify(this.dataEinwilligungsarten).getAll();
-
 		verify(this.conn, times(2)).transactionPersistAll(any(Collection.class));
+
+		final ArgumentCaptor<DTOLehrerAbschnittsdaten> captor = ArgumentCaptor.forClass(DTOLehrerAbschnittsdaten.class);
+		verify(this.conn).transactionPersist(captor.capture());
+		final DTOLehrerAbschnittsdaten abschnitt = captor.getValue();
+		assertThat(abschnitt.ID).isEqualTo(7L);
+		assertThat(abschnitt.Lehrer_ID).isEqualTo(mockedLehrer.ID);
+		assertThat(abschnitt.Schuljahresabschnitts_ID).isEqualTo(42L);
+		assertThat(abschnitt.PflichtstdSoll).isNull();
+		assertThat(abschnitt.Rechtsverhaeltnis).isNull();
+		assertThat(abschnitt.Beschaeftigungsart).isNull();
+		assertThat(abschnitt.Einsatzstatus).isNull();
+		assertThat(abschnitt.StammschulNr).isNull();
+	}
+
+	@Test
+	@DisplayName("add | Fehler beim Anlegen der Personalabschnittsdaten bricht die Neuanlage ab")
+	void addLehrerTest_personalabschnittsdatenFehler() {
+		final InputStream is = TestUtils.fromObject(getCoreDtoLehrerMap());
+		when(this.conn.queryByKey(eq(DTOLehrer.class), any())).thenReturn(getDtoLehrer());
+		when(this.conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
+		when(this.conn.transactionPersistAll(anyList())).thenReturn(true);
+		mockAktuellerSchuljahresabschnitt(42L);
+		when(this.conn.transactionGetNextID(DTOLehrer.class)).thenReturn(1L);
+		when(this.conn.transactionGetNextID(DTOLehrerAbschnittsdaten.class)).thenReturn(7L);
+		when(this.conn.transactionPersist(any(DTOLehrerAbschnittsdaten.class))).thenReturn(false);
+
+		final Throwable throwable = catchThrowable(() -> this.dataLehrerStammdaten.addAsResponse(is));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.INTERNAL_SERVER_ERROR);
 	}
 
 	@Test
@@ -808,6 +847,14 @@ class DataLehrerStammdatenTest {
 				arguments("geschlecht", null),
 				arguments("personalTyp", null)
 		);
+	}
+
+	private void mockAktuellerSchuljahresabschnitt(final long idSchuljahresabschnitt) {
+		final Schuljahresabschnitt abschnitt = new Schuljahresabschnitt();
+		abschnitt.id = idSchuljahresabschnitt;
+		final Benutzer benutzer = mock(Benutzer.class);
+		when(benutzer.schuleGetSchuljahresabschnitt()).thenReturn(abschnitt);
+		when(this.conn.getUser()).thenReturn(benutzer);
 	}
 
 	private DTOLehrer getDtoLehrer() {

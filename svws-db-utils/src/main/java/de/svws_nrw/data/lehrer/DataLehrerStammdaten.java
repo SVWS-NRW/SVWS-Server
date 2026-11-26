@@ -23,6 +23,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
 import de.svws_nrw.db.schema.Schema;
@@ -82,7 +83,9 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	}
 
 	/**
-	 * Legt einen Lehrer an und initialisiert die nötigen Lernplattformen.
+	 * Legt einen Lehrer an und initialisiert die nötigen Lernplattformen, Einwilligungen sowie leere
+	 * Personalabschnittsdaten im aktuellen Schuljahresabschnitt der Schule. Alle Schritte laufen in einer
+	 * Transaktion, sodass keine unvollständig angelegte Lehrkraft entsteht.
 	 * @param initAttributes initialer Payload as Map
 	 * @return {@link LehrerStammdaten}
 	 * @throws ApiOperationException - im Fehlerfall
@@ -92,6 +95,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		final LehrerStammdaten newLehrer = addBasic(getNextID(null, initAttributes), initAttributes);
 		createLehrerLernPlattformen(newLehrer);
 		createLehrerDatenschutz(newLehrer);
+		createLehrerPersonalabschnittsdaten(newLehrer);
 		conn.transactionFlush();
 
 		return newLehrer;
@@ -115,6 +119,14 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 				.toList();
 
 		conn.transactionPersistAll(initialLehrerDatenschutzSaetze);
+	}
+
+	private void createLehrerPersonalabschnittsdaten(final LehrerStammdaten newLehrer) throws ApiOperationException {
+		final long idSchuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnitt().id;
+		final long id = conn.transactionGetNextID(DTOLehrerAbschnittsdaten.class);
+		if (!conn.transactionPersist(new DTOLehrerAbschnittsdaten(id, newLehrer.id, idSchuljahresabschnitt))) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Anlegen der Personalabschnittsdaten der Lehrkraft.");
+		}
 	}
 
 

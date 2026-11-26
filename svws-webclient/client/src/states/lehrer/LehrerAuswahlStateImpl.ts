@@ -288,7 +288,6 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 
 	public async add(data: Partial<LehrerStammdaten>): Promise<LehrerStammdaten> {
 		const result = await api.server.addLehrerStammdaten(data, api.schema);
-		await this.createPersonalabschnittsdaten(result.id);
 		await this.setSchuljahresabschnitt(this.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(result.id);
 		return result;
