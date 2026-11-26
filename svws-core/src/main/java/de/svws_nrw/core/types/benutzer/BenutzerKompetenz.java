@@ -592,6 +592,12 @@ public enum BenutzerKompetenz {
 			"Ermöglicht Lernplattformen den lesenden Abruf von Stammdaten über die External API."
 	)),
 
+	/** Es werden Rechte zum Exportieren von Schulträger-Daten über die External API benötigt. */
+	EXTERNAL_API_SCHULTRAEGER_EXPORTIEREN(new BenutzerKompetenzKatalogEintrag(
+			511, BenutzerKompetenzGruppe.EXTERNAL_API, "Schulträger-Daten exportieren", null,
+			"Ermöglicht Schulträgern den lesenden Abruf von Daten über die External API."
+	)),
+
 	/** Es werden Rechte zum Administrieren der IT.NRW Schnittstellen benötigt. */
 	IT_NRW_ADMINISTRIEREN(new BenutzerKompetenzKatalogEintrag(
 			510, BenutzerKompetenzGruppe.IT_NRW, "Administration", null,
@@ -605,7 +611,7 @@ public enum BenutzerKompetenz {
 	));
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 5;
+	public static final long VERSION = 6;
 
 	/** Die Daten der Benutzerkompetenz */
 	public final @NotNull BenutzerKompetenzKatalogEintrag daten;

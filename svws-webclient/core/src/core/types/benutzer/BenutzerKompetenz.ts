@@ -499,19 +499,24 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	public static readonly EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN: BenutzerKompetenz = new BenutzerKompetenz("EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN", 95, new BenutzerKompetenzKatalogEintrag(509, BenutzerKompetenzGruppe.EXTERNAL_API, "Lernplattform-Daten exportieren", null, "Ermöglicht Lernplattformen den lesenden Abruf von Stammdaten über die External API."));
 
 	/**
+	 * Es werden Rechte zum Exportieren von Schulträger-Daten über die External API benötigt.
+	 */
+	public static readonly EXTERNAL_API_SCHULTRAEGER_EXPORTIEREN: BenutzerKompetenz = new BenutzerKompetenz("EXTERNAL_API_SCHULTRAEGER_EXPORTIEREN", 96, new BenutzerKompetenzKatalogEintrag(511, BenutzerKompetenzGruppe.EXTERNAL_API, "Schulträger-Daten exportieren", null, "Ermöglicht Schulträgern den lesenden Abruf von Daten über die External API."));
+
+	/**
 	 * Es werden Rechte zum Administrieren der IT.NRW Schnittstellen benötigt.
 	 */
-	public static readonly IT_NRW_ADMINISTRIEREN: BenutzerKompetenz = new BenutzerKompetenz("IT_NRW_ADMINISTRIEREN", 96, new BenutzerKompetenzKatalogEintrag(510, BenutzerKompetenzGruppe.IT_NRW, "Administration", null, "Ermöglicht die Administration von Zugangsdaten für IT.NRW."));
+	public static readonly IT_NRW_ADMINISTRIEREN: BenutzerKompetenz = new BenutzerKompetenz("IT_NRW_ADMINISTRIEREN", 97, new BenutzerKompetenzKatalogEintrag(510, BenutzerKompetenzGruppe.IT_NRW, "Administration", null, "Ermöglicht die Administration von Zugangsdaten für IT.NRW."));
 
 	/**
 	 * Es werden Rechte zum Signieren von Dokumenten über die IT.NRW Schnittstellen benötigt.
 	 */
-	public static readonly IT_NRW_DIGITALER_SCHULSTEMPEL: BenutzerKompetenz = new BenutzerKompetenz("IT_NRW_DIGITALER_SCHULSTEMPEL", 97, new BenutzerKompetenzKatalogEintrag(76, BenutzerKompetenzGruppe.IT_NRW, "Digitale Schulstempel nutzen", null, "Ermöglicht das Signieren von Dokumenten über IT.NRW."));
+	public static readonly IT_NRW_DIGITALER_SCHULSTEMPEL: BenutzerKompetenz = new BenutzerKompetenz("IT_NRW_DIGITALER_SCHULSTEMPEL", 98, new BenutzerKompetenzKatalogEintrag(76, BenutzerKompetenzGruppe.IT_NRW, "Digitale Schulstempel nutzen", null, "Ermöglicht das Signieren von Dokumenten über IT.NRW."));
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION: number = 5;
+	public static readonly VERSION: number = 6;
 
 	/**
 	 * Die Daten der Benutzerkompetenz
