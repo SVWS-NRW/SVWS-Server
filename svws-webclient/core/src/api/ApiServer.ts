@@ -18418,7 +18418,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Alle verfügbaren Logos als ZIP-Archiv konnten erfolgreich abgerufen werden
 	 *     - Mime-Type: application/zip
 	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Logo-Einträge anzusehen.
+	 *   Code 403: Der SVWS-Benutzer ist nicht angemeldet oder hat keinen Zugriff auf das Schema.
 	 *   Code 404: Keine Logo-Einträge gefunden
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
