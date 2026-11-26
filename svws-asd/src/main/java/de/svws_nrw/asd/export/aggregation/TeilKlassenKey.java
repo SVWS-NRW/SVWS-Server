@@ -15,7 +15,6 @@ import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 
 
@@ -125,14 +124,8 @@ public class TeilKlassenKey {
 			klassenKuerzel = AggregationKlassenStatistikExport.ermittelnJahrgang(klasse, schulform, jahrgangIds, fehlermeldungen).concat(parallelitaet);
 		}
 
-		final String schulgliederung = Schulgliederung.data().getSchluesselByIDOrNull(lernabschnitt.idSchulgliederung);
+		gliederung = AggregationUtils.getSchulgliederungById(lernabschnitt.idSchulgliederung, schulform);
 
-		if (schulgliederung != null) {
-			gliederung = "***".equals(schulgliederung) ? "" : schulgliederung;
-		} else {
-			gliederung = "";
-			fehlermeldungen.add("Beim Schüler mit der ID: " + schueler.id + " ist die Schulgliederung NULL.");
-		}
 		klassenart = Klassenart.data().getSchluesselByIDOrNull(lernabschnitt.idKlassenart) == null ? ""
 				: Klassenart.data().getSchluesselByIDOrNull(lernabschnitt.idKlassenart);
 		if (Schulform.WB == schulform) {

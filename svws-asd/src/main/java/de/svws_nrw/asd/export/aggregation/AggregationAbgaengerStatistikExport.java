@@ -330,8 +330,7 @@ public class AggregationAbgaengerStatistikExport {
 			}
 		}
 
-		abgaengerExport.schulgliederung = AggregationUtils.getSchulgliederungById(vorjahresLernabschnitt.idSchulgliederung).equals("***") ? ""
-				: AggregationUtils.getSchulgliederungById(vorjahresLernabschnitt.idSchulgliederung);
+		abgaengerExport.schulgliederung = AggregationUtils.getSchulgliederungById(vorjahresLernabschnitt.idSchulgliederung, schulform);
 		abgaengerExport.fachklasse = AggregationUtils.getFachklasseById(vorjahresLernabschnitt.idFachklasse);
 		abgaengerExport.klassenart = AggregationUtils.getKlassenartById(vorjahresLernabschnitt.idKlassenart);
 		abgaengerExport.foerderschwerpunkt1 =

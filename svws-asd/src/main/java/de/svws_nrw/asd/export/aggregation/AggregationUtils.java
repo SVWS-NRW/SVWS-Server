@@ -248,10 +248,19 @@ public final class AggregationUtils {
 	 * Holt den Schlüsselwert aus dem zugehörigen Katalog oder gibt einen Leerstring zurück, falls zu der ID kein Eintrag gefunden wird.
 	 *
 	 * @param idSchulgliederung - ID der Schulgliederung
+	 * @param schulform			- Schulform
 	 * @return Schlüsselwert
 	 */
-	public static String getSchulgliederungById(final Long idSchulgliederung) {
-		return ersetzeNullDurchLeer(Schulgliederung.data().getSchluesselByIDOrNull(idSchulgliederung));
+	public static String getSchulgliederungById(final Long idSchulgliederung, final Schulform schulform) {
+		String schulgliederung = ersetzeNullDurchLeer(Schulgliederung.data().getSchluesselByIDOrNull(idSchulgliederung));
+		if (schulgliederung.equals("***")) {
+			if ("GY".equals(schulform.name())) {
+				schulgliederung = "GY";
+			} else {
+				schulgliederung = "";
+			}
+		}
+		return schulgliederung;
 	}
 
 	/**

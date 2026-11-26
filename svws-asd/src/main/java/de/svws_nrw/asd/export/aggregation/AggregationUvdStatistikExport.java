@@ -244,8 +244,7 @@ public class AggregationUvdStatistikExport {
 	private static void fuellenSchluesselFelderSchulformA(final Entry<String, List<SchuelerLeistungsdatenStatistikGesamt>> stammEntry,
 			final UnterrichtsverteilungStatistikExport uvdExportStammsatz) {
 		uvdExportStammsatz.jahrgang = stammEntry.getKey().substring(0, LAENGE_JAHRGANG);
-		uvdExportStammsatz.schulgliederung = stammEntry.getKey().substring(LAENGE_JAHRGANG, LAENGE_JAHRGANG + LAENGE_SGL).equals("***") ? ""
-				: stammEntry.getKey().substring(LAENGE_JAHRGANG, LAENGE_JAHRGANG + LAENGE_SGL);
+		uvdExportStammsatz.schulgliederung = stammEntry.getKey().substring(LAENGE_JAHRGANG, LAENGE_JAHRGANG + LAENGE_SGL);
 		uvdExportStammsatz.artDerGruppe = stammEntry.getKey().substring(LAENGE_JAHRGANG + LAENGE_SGL);
 	}
 
@@ -558,7 +557,8 @@ public class AggregationUvdStatistikExport {
 			final String jahrgangKurseImKlassenverband = ermittelnJahrgangKurseImKlassenverband(klasse);
 			final String jahrgangKurseOhneKlassenverband = ermittelnJahrgangKurseOhneKlassenverband(schueler, lernabschnitt);
 
-			final String sgl = AggregationUtils.auffuellenStellengerecht(AggregationUtils.getSchulgliederungById(lernabschnitt.idSchulgliederung), 3);
+			final String sgl =
+					AggregationUtils.auffuellenStellengerecht(AggregationUtils.getSchulgliederungById(lernabschnitt.idSchulgliederung, schulform), 3);
 			final String jahrgangSgl = jahrgangKurseOhneKlassenverband.concat(sgl);
 
 			for (final SchuelerLeistungsdatenStatistikGesamt leistungsdaten : lernabschnitt.leistungsdaten) {
