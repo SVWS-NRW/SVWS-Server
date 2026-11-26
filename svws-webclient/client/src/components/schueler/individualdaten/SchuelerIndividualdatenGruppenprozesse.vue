@@ -3,97 +3,78 @@
 		Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 	</div>
 	<template v-else>
-		<div class="flex gap-4 pt-8 px-6 lg:px-9 3xl:px-12 4xl:px-20">
-			<SvwsUiTooltip color="light" :show-arrow="false">
-				<template #content>
-					Änderungen übernehmen
-				</template>
-				<svws-ui-button :disabled="!props.pendingStateManager().pendingStateExists() || disableSave" @click="patchPendingStates" type="primary" size="big">
-					Speichern
-					<svws-ui-spinner :spinning="loading" />
-				</svws-ui-button>
-			</SvwsUiTooltip>
-			<SvwsUiTooltip color="light" :show-arrow="false">
-				<template #content>
-					Änderungen zurücksetzen
-				</template>
-				<svws-ui-button :disabled="!props.pendingStateManager().pendingStateExists()" @click="pendingStateManager().resetPendingState()" type="danger"
-					size="big">
-					Zurücksetzen
-				</svws-ui-button>
-			</SvwsUiTooltip>
-		</div>
+		<gruppenprozesse-aktionen :gruppenprozesse="schuelerAuswahlState.gruppenprozesse" />
 		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Statusdaten" v-if="hatKompetenzAnsehen">
 				<template #actions v-if="schulform === Schulform.BK || schulform === Schulform.SB">
-					<ui-gruppenprozesse-wrapper :pending-state-manager
+					<ui-gruppenprozesse-wrapper :model
 						attribute-name="istDuplikat" :nullable="false" class="self-center">
 						<svws-ui-checkbox v-model="istDuplikat" :disabled="!hatKompetenzUpdate"
-							:indeterminate="!pendingStateManager().isAttributePending('istDuplikat')">
+							:indeterminate="!model.isPending('istDuplikat')">
 							Ist Duplikat
 						</svws-ui-checkbox>
 					</ui-gruppenprozesse-wrapper>
 				</template>
 				<svws-ui-input-wrapper :grid="2">
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="status" :nullable="false">
+					<ui-gruppenprozesse-wrapper :model attribute-name="status" :nullable="false">
 						<ui-select v-model="status" label="Status" :manager="statusSelectManager" statistics :removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper v-if="alleExtern" :pending-state-manager attribute-name="externeSchulNr">
+					<ui-gruppenprozesse-wrapper v-if="alleExtern" :model attribute-name="externeSchulNr">
 						<ui-select v-model="stammschuleExtern" label="Stammschule" :manager="stammschuleSelectManager" :readonly="!hatKompetenzUpdate" />
 					</ui-gruppenprozesse-wrapper>
 					<div v-else />
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="fahrschuelerArtID">
+					<ui-gruppenprozesse-wrapper :model attribute-name="fahrschuelerArtID">
 						<ui-select v-model="fahrschuelerArtID" label="Fahrschüler" :manager="fahrschuelerSelectManager" :readonly="!hatKompetenzUpdate" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="haltestelleID">
+					<ui-gruppenprozesse-wrapper :model attribute-name="haltestelleID">
 						<ui-select v-model="haltestelleID" label="Haltestelle" :manager="haltestelleSelectManager" :readonly="!hatKompetenzUpdate"
 							:removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="aufnahmedatum">
+					<ui-gruppenprozesse-wrapper :model attribute-name="aufnahmedatum">
 						<svws-ui-text-input placeholder="Aufnahmedatum" :readonly="!hatKompetenzUpdate" :model-value="aufnahmedatum"
 							@update:model-value="setAufnahmedatum" type="date" statistics />
 					</ui-gruppenprozesse-wrapper>
 					<svws-ui-spacing />
 					<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes gap-y-2!">
-						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="istVolljaehrig"
+						<ui-gruppenprozesse-wrapper :model attribute-name="istVolljaehrig"
 							:nullable="false">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="istVolljaehrig"
-								:indeterminate="!pendingStateManager().isAttributePending('istVolljaehrig')">
+								:indeterminate="!model.isPending('istVolljaehrig')">
 								Volljährig
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="keineAuskunftAnDritte"
+						<ui-gruppenprozesse-wrapper :model attribute-name="keineAuskunftAnDritte"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="keineAuskunftAnDritte"
-								:indeterminate="!pendingStateManager().isAttributePending('keineAuskunftAnDritte')">
+								:indeterminate="!model.isPending('keineAuskunftAnDritte')">
 								Keine Auskunft an Dritte
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="istSchulpflichtErfuellt"
+						<ui-gruppenprozesse-wrapper :model attribute-name="istSchulpflichtErfuellt"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="istSchulpflichtErfuellt"
-								:indeterminate="!pendingStateManager().isAttributePending('istSchulpflichtErfuellt')">
+								:indeterminate="!model.isPending('istSchulpflichtErfuellt')">
 								Schulpflicht erfüllt
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="istBerufsschulpflichtErfuellt"
+						<ui-gruppenprozesse-wrapper :model attribute-name="istBerufsschulpflichtErfuellt"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="istBerufsschulpflichtErfuellt"
-								:indeterminate="!pendingStateManager().isAttributePending('istBerufsschulpflichtErfuellt')">
+								:indeterminate="!model.isPending('istBerufsschulpflichtErfuellt')">
 								Schulpflicht SII erfüllt
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="hatMasernimpfnachweis"
+						<ui-gruppenprozesse-wrapper :model attribute-name="hatMasernimpfnachweis"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="hatMasernimpfnachweis"
-								:indeterminate="!pendingStateManager().isAttributePending('hatMasernimpfnachweis')">
+								:indeterminate="!model.isPending('hatMasernimpfnachweis')">
 								Masern-Schutznachweis
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="erhaeltSchuelerBAFOEG"
+						<ui-gruppenprozesse-wrapper :model attribute-name="erhaeltSchuelerBAFOEG"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="erhaeltSchuelerBAFOEG"
-								:indeterminate="!pendingStateManager().isAttributePending('erhaeltSchuelerBAFOEG')">
+								:indeterminate="!model.isPending('erhaeltSchuelerBAFOEG')">
 								BAFöG
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
@@ -102,30 +83,30 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 				<svws-ui-input-wrapper :grid="2">
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idStaatsangehoerigkeit">
+					<ui-gruppenprozesse-wrapper :model attribute-name="idStaatsangehoerigkeit">
 						<ui-select v-model="staatsangehoerigkeitID" label="1. Staatsangehörigkeit" :manager="ersteStaatsAngehoerigkeitSelectManager" statistics
 							:removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idStaatsangehoerigkeit2">
+					<ui-gruppenprozesse-wrapper :model attribute-name="idStaatsangehoerigkeit2">
 						<ui-select v-model="staatsangehoerigkeit2ID" label="2. Staatsangehörigkeit"	:manager="zweiteStaatsAngehoerigkeitSelectManager" statistics
 							:removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="religionID">
+					<ui-gruppenprozesse-wrapper :model attribute-name="religionID">
 						<ui-select v-model="konfession" label="Konfession" :manager="konfessionSelectManager" :readonly="!hatKompetenzUpdate"
 							statistics :removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="druckeKonfessionAufZeugnisse"
+					<ui-gruppenprozesse-wrapper :model attribute-name="druckeKonfessionAufZeugnisse"
 						:nullable="false" class="self-center">
 						<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate"
-							:indeterminate="!pendingStateManager().isAttributePending('druckeKonfessionAufZeugnisse')">
+							:indeterminate="!model.isPending('druckeKonfessionAufZeugnisse')">
 							Konfession aufs Zeugnis
 						</svws-ui-checkbox>
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="religionabmeldung">
+					<ui-gruppenprozesse-wrapper :model attribute-name="religionabmeldung">
 						<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly="!hatKompetenzUpdate" :model-value="religionabmeldung"
 							@update:model-value="setReligionabmeldung" type="date" statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="religionanmeldung">
+					<ui-gruppenprozesse-wrapper :model attribute-name="religionanmeldung">
 						<svws-ui-text-input placeholder="Wiederanmeldung" :readonly="!hatKompetenzUpdate" :model-value="religionanmeldung"
 							@update:model-value="setReligionanmeldung" type="date" statistics />
 					</ui-gruppenprozesse-wrapper>
@@ -133,38 +114,38 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen" id="Card-Migrationshintergrund">
 				<template #actions>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="hatMigrationshintergrund"
+					<ui-gruppenprozesse-wrapper :model attribute-name="hatMigrationshintergrund"
 						:nullable="false" class="self-center">
-						<svws-ui-checkbox @update:model-value="(hatMigrationsHintergrund) => {!hatMigrationsHintergrund && resetMigrationsHintergrundInputs()}"
+						<svws-ui-checkbox @update:model-value="(hatMigrationsHintergrund) => {!hatMigrationsHintergrund && bereich.resetMigrationshintergrund()}"
 							:disabled="!hatKompetenzUpdate" v-model="hatMigrationshintergrund" statistics focus-class-content
-							:indeterminate="!pendingStateManager().isAttributePending('hatMigrationshintergrund')">
+							:indeterminate="!model.isPending('hatMigrationshintergrund')">
 							Migrationshintergrund vorhanden
 						</svws-ui-checkbox>
 					</ui-gruppenprozesse-wrapper>
 				</template>
 				<svws-ui-input-wrapper :grid="2">
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="zuzugsjahr" :nullable="hatMigrationshintergrund">
-						<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="zuzugsjahr" @update:model-value="setZuzugsjahr"
+					<ui-gruppenprozesse-wrapper :model attribute-name="zuzugsjahr" :nullable="hatMigrationshintergrund">
+						<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="zuzugsjahr" @update:model-value="(value: number | null) => bereich.setZuzugsjahr(value)"
 							:disabled="!hatMigrationshintergrund" statistics :steps="false" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate"
-							:min="minZuzugsjahr" :max="maxZuzugsjahr" />
+							:min="bereich.minZuzugsjahr" :max="bereich.maxZuzugsjahr" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idGeburtsland" :nullable="hatMigrationshintergrund">
+					<ui-gruppenprozesse-wrapper :model attribute-name="idGeburtsland" :nullable="hatMigrationshintergrund">
 						<ui-select v-model="idGeburtsland" label="Geburtsland" :manager="geburtslandSelectManager" :disabled="!hatMigrationshintergrund"
 							:readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idVerkehrspracheFamilie"
+					<ui-gruppenprozesse-wrapper :model attribute-name="idVerkehrspracheFamilie"
 						:nullable="hatMigrationshintergrund">
 						<ui-select v-model="verkehrssprache" label="Verkehrssprache" :manager="verkehrsspracheSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false"
 							searchable statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idGeburtslandMutter"
+					<ui-gruppenprozesse-wrapper :model attribute-name="idGeburtslandMutter"
 						:nullable="hatMigrationshintergrund">
 						<ui-select v-model="geburtslandMutter" label="Geburtsland Mutter" :manager="geburtslandMutterSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" searchable
 							statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idGeburtslandVater" :nullable="hatMigrationshintergrund">
+					<ui-gruppenprozesse-wrapper :model attribute-name="idGeburtslandVater" :nullable="hatMigrationshintergrund">
 						<ui-select v-model="geburtslandVater" label="Geburtsland Vater" :manager="geburtslandVaterSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false"
 							searchable statistics />
@@ -173,12 +154,12 @@
 			</svws-ui-content-card>
 		</div>
 	</template>
-	<svws-ui-checkpoint-modal :checkpoint :continue-routing="continueRoutingAfterCheckpointCustom" />
 </template>
 
 <script setup lang="ts">
 
-	import { computed, ref, toRefs, watch } from "vue";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
@@ -195,10 +176,10 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
-	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
+	import GruppenprozesseAktionen from "~/components/gruppenprozesse/GruppenprozesseAktionen.vue";
 	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
+	import { SchuelerStammdatenBereich } from "~/states/schueler/SchuelerStammdatenBereich";
 
-	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 	const schuleState = useSchuleState();
 	const fahrschuelerartenState = useFahrschuelerartenState();
 	const benutzerState = useBenutzerState();
@@ -207,35 +188,15 @@
 	const haltestellenState = useHaltestellenState();
 	const herkunftschulenState = useHerkunftschulenState();
 
-	const { pendingStateManager } = toRefs(props);
+	/** Der Bereich der Stammdaten wird von der Route beim Betreten des Tabs angemeldet, bevor die Komponente aufgebaut wird */
+	const bereich = schuelerAuswahlState.gruppenprozesse.bereichOrException(SchuelerStammdatenBereich.SCHLUESSEL);
+	const model = bereich.model;
 
-	const status = pendingStateManager.value().status;
-	const staatsangehoerigkeitID = pendingStateManager.value().staatsangehoerigkeitID;
-	const staatsangehoerigkeit2ID = pendingStateManager.value().staatsangehoerigkeit2ID;
-	const konfession = pendingStateManager.value().konfession;
-	const druckeKonfessionAufZeugnisse = pendingStateManager.value().druckeKonfessionAufZeugnisse;
-	const istDuplikat = pendingStateManager.value().istDuplikat;
-	const alleExtern = pendingStateManager.value().alleExtern;
-	const stammschuleExtern = pendingStateManager.value().stammschuleExtern;
-	const aufnahmedatum = pendingStateManager.value().aufnahmedatum;
-	const religionanmeldung = pendingStateManager.value().religionanmeldung;
-	const religionabmeldung = pendingStateManager.value().religionabmeldung;
-	const fahrschuelerArtID = pendingStateManager.value().fahrschuelerArtID;
-	const haltestelleID = pendingStateManager.value().haltestelleID;
-	const hatMigrationshintergrund = pendingStateManager.value().hatMigrationshintergrund;
-	const idGeburtsland = pendingStateManager.value().idGeburtsland;
-	const geburtslandMutter = pendingStateManager.value().geburtslandMutter;
-	const geburtslandVater = pendingStateManager.value().geburtslandVater;
-	const verkehrssprache = pendingStateManager.value().verkehrssprache;
-	const zuzugsjahr = pendingStateManager.value().zuzugsjahr;
-	const erhaeltSchuelerBAFOEG = pendingStateManager.value().erhaeltSchuelerBAFOEG;
-	const hatMasernimpfnachweis = pendingStateManager.value().hatMasernimpfnachweis;
-	const istBerufsschulpflichtErfuellt = pendingStateManager.value().istBerufsschulpflichtErfuellt;
-	const istSchulpflichtErfuellt = pendingStateManager.value().istSchulpflichtErfuellt;
-	const istVolljaehrig = pendingStateManager.value().istVolljaehrig;
-	const keineAuskunftAnDritte = pendingStateManager.value().keineAuskunftAnDritte;
-
-	const loading = ref<boolean>(false);
+	// Die Bindungen werden auf oberster Ebene benötigt, damit sie im Template automatisch entpackt werden
+	const { status, staatsangehoerigkeitID, staatsangehoerigkeit2ID, konfession, druckeKonfessionAufZeugnisse, istDuplikat, alleExtern, stammschuleExtern,
+		aufnahmedatum, religionanmeldung, religionabmeldung, fahrschuelerArtID, haltestelleID, hatMigrationshintergrund, idGeburtsland, geburtslandMutter,
+		geburtslandVater, verkehrssprache, zuzugsjahr, erhaeltSchuelerBAFOEG, hatMasernimpfnachweis, istBerufsschulpflichtErfuellt, istSchulpflichtErfuellt,
+		istVolljaehrig, keineAuskunftAnDritte } = model;
 
 	const hatKompetenzAnsehen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
@@ -244,17 +205,15 @@
 	const schulform = computed(() => schuleState.schulform);
 	const schulen = computed(() => herkunftschulenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.values());
 
-	watch(() => props.pendingStateManager().pendingStateExists(), (somethingPending: boolean) => {
-		props.checkpoint.active = somethingPending;
-	}, { immediate: false, deep: true });
 
-	const ersteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
+	/** Erzeugt einen Select-Manager für die Nationalitäten, jedes Feld benötigt einen eigenen Manager */
+	const createNationalitaetenSelectManager = () => new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
 
-	const zweiteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
-	});
+	const ersteStaatsAngehoerigkeitSelectManager = createNationalitaetenSelectManager();
+
+	const zweiteStaatsAngehoerigkeitSelectManager = createNationalitaetenSelectManager();
 
 	const statusSelectManager = new CoreTypeSelectManager({
 		clazz: SchuelerStatus.class, schuljahr: schuljahr, schulformen: schulform,
@@ -289,77 +248,25 @@
 		return text.length > 0 ? text : 'Fehlende Angaben';
 	}
 
-	const geburtslandSelectManager = new CoreTypeSelectManager({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
-	});
+	const geburtslandSelectManager = createNationalitaetenSelectManager();
 
-	const geburtslandMutterSelectManager = new CoreTypeSelectManager({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
-	});
+	const geburtslandMutterSelectManager = createNationalitaetenSelectManager();
 
-	const geburtslandVaterSelectManager = new CoreTypeSelectManager({
-		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
-	});
+	const geburtslandVaterSelectManager = createNationalitaetenSelectManager();
 
 	const verkehrsspracheSelectManager = new CoreTypeSelectManager({
 		clazz: Verkehrssprache.class, schuljahr: schuljahr, schulformen: schulform,
 	});
 
-	function setReligionabmeldung(value: string | null) {
+	/** Erzeugt die Behandlung der Eingabe eines Datumsfeldes, bei der das Löschen des Datums ignoriert wird */
+	const ignoriereNull = (attribut: WritableComputedRef<string | null>) => (value: string | null) => {
 		if (value !== null) {
-			religionabmeldung.value = value;
-		}
-	}
-
-	function setReligionanmeldung(value: string | null) {
-		if (value !== null) {
-			religionanmeldung.value = value;
-		}
-	}
-
-	function setAufnahmedatum(value: string | null) {
-		if (value !== null) {
-			aufnahmedatum.value = value;
-		}
-	}
-
-	const minZuzugsjahr = new Date().getFullYear() + 1 - 100;
-	const maxZuzugsjahr = new Date().getFullYear() + 1;
-
-	const disableSave = ref<boolean>(!hatKompetenzUpdate.value);
-
-	const setZuzugsjahr = (value: number | null) => {
-		disableSave.value = ((value !== null) && ((value < minZuzugsjahr) || (value > maxZuzugsjahr)));
-
-		if ((value !== null) && !disableSave.value) {
-			zuzugsjahr.value = value;
-		} else {
-			props.pendingStateManager().removePendingState("zuzugsjahr");
+			attribut.value = value;
 		}
 	};
 
-	async function continueRoutingAfterCheckpointCustom() {
-		props.pendingStateManager().resetPendingState();
-		await props.continueRoutingAfterCheckpoint();
-	}
-
-	async function patchPendingStates() {
-		loading.value = true;
-		await schuelerAuswahlState.gruppenprozesse.patchMultiple(props.pendingStateManager());
-		loading.value = false;
-	}
-
-	function resetMigrationsHintergrundInputs() {
-		zuzugsjahr.value = null;
-		props.pendingStateManager().removePendingState('zuzugsjahr');
-		idGeburtsland.value = null;
-		props.pendingStateManager().removePendingState('idGeburtsland');
-		verkehrssprache.value = null;
-		props.pendingStateManager().removePendingState('idVerkehrspracheFamilie');
-		geburtslandMutter.value = null;
-		props.pendingStateManager().removePendingState('idGeburtslandMutter');
-		geburtslandVater.value = null;
-		props.pendingStateManager().removePendingState('idGeburtslandVater');
-	}
+	const setAufnahmedatum = ignoriereNull(aufnahmedatum);
+	const setReligionanmeldung = ignoriereNull(religionanmeldung);
+	const setReligionabmeldung = ignoriereNull(religionabmeldung);
 
 </script>

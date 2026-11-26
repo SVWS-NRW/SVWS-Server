@@ -13,6 +13,15 @@ test.use({
 	ignoreHTTPSErrors: true,
 });
 
+/** Das Modal, das beim Verlassen der Gruppenprozesse mit ausstehenden Änderungen (hier im Bereich Individualdaten) erscheint */
+const modalUngespeicherteAenderungen = `
+    - heading "Ungespeicherte Änderungen" [level=2]
+    - paragraph: "Es gibt Änderungen, die noch nicht gespeichert wurden. Wie möchten Sie fortfahren? Änderungen in: Individualdaten"
+    - button "Abbrechen"
+    - button "Verwerfen und fortfahren"
+    - button "Speichern und fortfahren"
+    `;
+
 test('Weitere Felder zu Migrationshintergrund nur aktiv, wenn Migrationshintergrund vorhanden', async ({ page }) => {
 	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
@@ -75,13 +84,8 @@ test('Modal bei Routenwechsel wird aktiv, bei Fortsetzen werden Änderungen zur�
 	await page.getByRole('option', { name: 'Rheingold' }).click();
 
 	await page.getByRole('link', { name: 'Schule' }).click();
-	await expect(page.getByLabel('Daten gehen verloren')).toMatchAriaSnapshot(`
-    - heading "Daten gehen verloren" [level=2]
-    - paragraph: Beim Verlassen dieser Seite gehen alle eingetragenen Informationen verloren. Wollen Sie die Seite wirklich verlassen?
-    - button "Abbrechen"
-    - button "Ja"
-    `);
-	await page.getByRole('button', { name: 'Ja' }).click();
+	await expect(page.getByLabel('Ungespeicherte Änderungen')).toMatchAriaSnapshot(modalUngespeicherteAenderungen);
+	await page.getByRole('button', { name: 'Verwerfen und fortfahren' }).click();
 
 	await page.getByRole('link', { name: 'Schüler', exact: true }).click();
 
@@ -99,12 +103,7 @@ test('Modal bei Routenwechsel wird aktiv, bei Abbrechen werden Pending States be
 	await page.getByRole('option', { name: 'Rheingold' }).click();
 
 	await page.getByRole('link', { name: 'Schule' }).click();
-	await expect(page.getByLabel('Daten gehen verloren')).toMatchAriaSnapshot(`
-    - heading "Daten gehen verloren" [level=2]
-    - paragraph: Beim Verlassen dieser Seite gehen alle eingetragenen Informationen verloren. Wollen Sie die Seite wirklich verlassen?
-    - button "Abbrechen"
-    - button "Ja"
-    `);
+	await expect(page.getByLabel('Ungespeicherte Änderungen')).toMatchAriaSnapshot(modalUngespeicherteAenderungen);
 	await page.getByRole('button', { name: 'Abbrechen' }).click();
 	await expect(page.locator(tooltipFahrschuelerId)).toHaveCount(1);
 });
@@ -175,14 +174,9 @@ test('Auswahl aufheben (Ja), schließt Gruppenprozess und reaktiviert Schülerau
 
 	await page.getByRole('button', { name: 'Auswahl aufheben' }).click();
 
-	await expect(page.getByLabel('Daten gehen verloren')).toMatchAriaSnapshot(`
-    - heading "Daten gehen verloren" [level=2]
-    - paragraph: Beim Verlassen dieser Seite gehen alle eingetragenen Informationen verloren. Wollen Sie die Seite wirklich verlassen?
-    - button "Abbrechen"
-    - button "Ja"
-    `);
+	await expect(page.getByLabel('Ungespeicherte Änderungen')).toMatchAriaSnapshot(modalUngespeicherteAenderungen);
 
-	await page.getByRole('button', { name: 'Ja' }).click();
+	await page.getByRole('button', { name: 'Verwerfen und fortfahren' }).click();
 
 	expect(await page.getByRole('row', { name: '09a Arens Matthias' }).getByRole('cell').first().ariaSnapshot()).not.toContain(`disabled`);
 
@@ -205,12 +199,7 @@ test('Auswahl aufheben (Nein), bleibt in Gruppenprozess und aktuelle Änderungen
 
 	await page.getByRole('button', { name: 'Auswahl aufheben' }).click();
 
-	await expect(page.getByLabel('Daten gehen verloren')).toMatchAriaSnapshot(`
-    - heading "Daten gehen verloren" [level=2]
-    - paragraph: Beim Verlassen dieser Seite gehen alle eingetragenen Informationen verloren. Wollen Sie die Seite wirklich verlassen?
-    - button "Abbrechen"
-    - button "Ja"
-    `);
+	await expect(page.getByLabel('Ungespeicherte Änderungen')).toMatchAriaSnapshot(modalUngespeicherteAenderungen);
 
 	await page.getByRole('button', { name: 'Abbrechen' }).click();
 

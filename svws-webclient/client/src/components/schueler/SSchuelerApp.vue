@@ -64,6 +64,8 @@
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-group-line" />
 	</div>
+	<!-- Fragt beim Verlassen nach, wenn in den Gruppenprozessen ausstehende Änderungen vorliegen (siehe GruppenprozessNavigationGuard) -->
+	<svws-ui-navigation-guard-modal :query="schuelerAuswahlState.gruppenprozesse.query" />
 </template>
 
 <script setup lang="ts">

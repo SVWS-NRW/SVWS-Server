@@ -35,7 +35,6 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { KurseAuswahlFilter } from "./KurseAuswahlFilter";
 import type { KurseAuswahlState } from "./KurseAuswahlState";
 import { kurseAuswahlStateRoutingAdapter } from "./KurseAuswahlStateRoutingAdapter";
-import { KurseGruppenprozessState } from "./KurseGruppenprozessState";
 import { KurseStammdatenState } from "./KurseStammdatenState";
 
 /** Der Comparator für den Vergleich von Fächern in Fächerlisten */
@@ -74,8 +73,6 @@ export class KurseAuswahlStateImpl extends GenericAuswahlStateImpl<KursDaten, Ku
 	/** Der State für die Stammdaten */
 	private readonly _stammdaten = new KurseStammdatenState(this);
 
-	/** Der State für die Stammdaten der Mehrfachauswahl */
-	private readonly _gruppenprozesse = new KurseGruppenprozessState(this);
 
 	/** Der Filter der Auswahlliste */
 	private readonly _filter = new KurseAuswahlFilter(
@@ -132,9 +129,6 @@ export class KurseAuswahlStateImpl extends GenericAuswahlStateImpl<KursDaten, Ku
 		return this._stammdaten;
 	}
 
-	public get gruppenprozesse(): KurseGruppenprozessState {
-		return this._gruppenprozesse;
-	}
 
 	public commit(): void {
 		super.commit();
@@ -151,7 +145,6 @@ export class KurseAuswahlStateImpl extends GenericAuswahlStateImpl<KursDaten, Ku
 	public reset(): void {
 		super.reset();
 		this._stammdaten.reset();
-		this._gruppenprozesse.reset();
 		this._lehrer.reset();
 		this._jahrgaenge.reset();
 		this._faecher.reset();

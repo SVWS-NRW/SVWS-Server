@@ -1,15 +1,14 @@
-import type { RouteLocationNormalized, RouteParams } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
-import { type LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesseProps";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
+import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
+import { LehrerStammdatenBereich } from "~/states/lehrer/LehrerStammdatenBereich";
 
 const LehrerIndividualdatenGruppenprozesse = () => import("~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesse.vue");
 
@@ -18,23 +17,13 @@ export class RouteLehrerIndividualdatenGruppenprozesse extends RouteNode<any, Ro
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KEINE], "lehrer.gruppenprozesse.daten", "gruppenprozesse/daten", LehrerIndividualdatenGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
-		super.propHandler = (props) => this.getProps(props);
 		super.mode = ServerMode.DEV;
 		super.text = "Individualdaten";
-		super.setCheckpoint = true;
 	}
 
-	protected async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams): Promise<any> {
-		routeLehrer.data.pendingStateManager.resetPendingState();
-		routeLehrer.data.pendingStateManagerRegistry.removeAllPendingStateManager();
-	}
-
-	public getProps(_: RouteLocationNormalized): LehrerIndividualdatenGruppenprozesseProps {
-		return {
-			pendingStateManager: () => routeLehrer.data.pendingStateManager,
-			checkpoint: this.checkpoint,
-			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
-		};
+	protected async update(): Promise<void | Error | RouteLocationRaw> {
+		// Der Bereich der Stammdaten wird beim Betreten des Tabs bei den Gruppenprozessen angemeldet
+		await useLehrerAuswahlState().gruppenprozesse.register(LehrerStammdatenBereich.SCHLUESSEL, () => new LehrerStammdatenBereich());
 	}
 
 }

@@ -7,7 +7,6 @@ import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import { ConfigElement } from "@ui/utils/Config";
 
-import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 
 import { routeError } from "./error/RouteError";
@@ -28,7 +27,6 @@ export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<an
 	gotoHinzufuegenView: (navigate: boolean) => Promise<void>;
 	gotoSchnelleingabeView: (navigate: boolean, id?: number | null) => Promise<void>;
 	gotoGruppenprozessView: (navigate: boolean) => Promise<void>;
-	pendingStateManagerRegistry: () => PendingStateManagerRegistry;
 }
 
 
@@ -39,7 +37,6 @@ export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<an
 export interface RouteAuswahlProps<TAuswahlManager extends AuswahlManager<number, TAuswahl, TDaten>, TAuswahl = any, TDaten = any> extends RouteTabProps {
 	manager: () => TAuswahlManager;
 	patch: (data: Partial<TDaten>) => Promise<boolean>;
-	pendingStateManagerRegistry: () => PendingStateManagerRegistry;
 }
 
 /**
@@ -108,7 +105,6 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 			gotoHinzufuegenView: this.data.gotoHinzufuegenView,
 			gotoSchnelleingabeView: this.data.gotoSchnelleingabeView,
 			gotoGruppenprozessView: this.data.gotoGruppenprozessView,
-			pendingStateManagerRegistry: () => this.data.pendingStateManagerRegistry,
 		}));
 		configStateImpl.nonPersistentConfig.addElements([
 			new ConfigElement(`${this.name}.auswahl.id`, "user", ""),
@@ -241,7 +237,6 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 			...props,
 			manager: () => this.data.manager,
 			patch: this.data.patch,
-			pendingStateManagerRegistry: () => this.data.pendingStateManagerRegistry,
 		});
 	}
 

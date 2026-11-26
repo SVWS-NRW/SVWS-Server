@@ -36,7 +36,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { comparatorKlassenListeEintrag, KlassenAuswahlFilter } from "./KlassenAuswahlFilter";
 import type { KlassenAuswahlState } from "./KlassenAuswahlState";
 import { klassenAuswahlStateRoutingAdapter } from "./KlassenAuswahlStateRoutingAdapter";
-import { KlassenGruppenprozessState } from "./KlassenGruppenprozessState";
 import { KlassenStammdatenState } from "./KlassenStammdatenState";
 
 type KlassenAuswahlReactiveState = GenericAuswahlReactiveState<KlassenListeEintrag>;
@@ -70,8 +69,6 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 	/** Der State für die Stammdaten */
 	private readonly _stammdaten = new KlassenStammdatenState(this);
 
-	/** Der State für die Stammdaten der Mehrfachauswahl */
-	private readonly _gruppenprozesse = new KlassenGruppenprozessState(this);
 
 	/** Der Filter der Auswahlliste */
 	private readonly _filter = new KlassenAuswahlFilter(
@@ -138,9 +135,6 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 		return this._stammdaten;
 	}
 
-	public get gruppenprozesse(): KlassenGruppenprozessState {
-		return this._gruppenprozesse;
-	}
 
 	public get schuelerstatus(): SchuelerStatusFilter {
 		return this._schuelerstatus;
@@ -166,7 +160,6 @@ export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenList
 		super.reset();
 		this._stundenplaene.reset();
 		this._stammdaten.reset();
-		this._gruppenprozesse.reset();
 		this._lehrer.reset();
 		this._jahrgaenge.reset();
 		this._schueler.reset();

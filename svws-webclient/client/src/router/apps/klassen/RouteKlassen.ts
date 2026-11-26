@@ -13,6 +13,7 @@ import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeError } from "~/router/error/RouteError";
+import { GruppenprozessRouting } from "~/router/GruppenprozessRouting";
 import { updateAuswahlRoute } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
@@ -27,6 +28,9 @@ const KlassenAuswahl = () => import("~/components/klassen/KlassenAuswahl.vue");
 const KlassenApp = () => import("~/components/klassen/KlassenApp.vue");
 
 export class RouteKlassen extends RouteTabNode<RouteDataKlassen, RouteApp> {
+
+	/** Das Routing der Gruppenprozesse: Guard bei ungespeicherten Änderungen und Aufräumen beim Verlassen */
+	private readonly _gruppenprozessRouting = new GruppenprozessRouting(this, () => useKlassenAuswahlState().gruppenprozesse);
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "klassen", String.raw`klassen/:id(-?\d+)?`, KlassenApp, new RouteDataKlassen());
@@ -49,6 +53,8 @@ export class RouteKlassen extends RouteTabNode<RouteDataKlassen, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
 		isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
+		this._gruppenprozessRouting.update(to, from);
+
 		try {
 			const redirect = await updateAuswahlRoute({
 				route: this,
@@ -77,6 +83,7 @@ export class RouteKlassen extends RouteTabNode<RouteDataKlassen, RouteApp> {
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
+		this._gruppenprozessRouting.leave();
 		const klassenState = useKlassenAuswahlState();
 		if (klassenState.navigator.activeViewType !== ViewType.DEFAULT) {
 			this._selectedChild.value = undefined;

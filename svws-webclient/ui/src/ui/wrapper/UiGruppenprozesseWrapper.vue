@@ -38,13 +38,10 @@
 
 	import { computed, ref } from 'vue';
 
-	import { HashMap } from '@core/java/util/HashMap';
-	import type { JavaMap } from '@core/java/util/JavaMap';
-
-	import type { PendingStateManager } from './PendingStateManager';
+	import type { MultiModelProxy } from '../../model/MultiModelProxy';
 
 	const props = withDefaults(defineProps<{
-		pendingStateManager: () => PendingStateManager<any>,
+		model: MultiModelProxy<any>,
 		attributeName: keyof T,
 		nullable?: boolean,
 	}>(), {
@@ -54,37 +51,19 @@
 	const container = ref<HTMLElement | null>(null);
 	const pendingIndicatorHovered = ref<boolean>(false);
 
-	// Erzeugt ein Record mit den Werten und der Anzahl wie häufig dieser Wert gesetzt wurde
-	const actualValuesWithAmount = computed(() => {
-		const keyAmounts: JavaMap<any, number> = new HashMap();
-		for (const obj of props.pendingStateManager().listeDaten.values()) {
-			const key = ((obj[props.attributeName] === null) || (obj[props.attributeName] === undefined)) ? 'Keine Daten' : obj[props.attributeName];
-			const keyAmount = keyAmounts.get(key);
-			keyAmounts.put(key, (keyAmount === null) ? 1 : keyAmount + 1);
-		}
-		return keyAmounts;
-	});
+	// Die aktuellen Werte mit der Anzahl, wie häufig dieser Wert gesetzt ist (null für fehlende Werte)
+	const actualValuesWithAmount = computed(() => props.model.valueCounts(props.attributeName));
 
 	const attributeValue = computed(() => {
-		// Prüfe, ob Attribut in Generic <T> vorhanden sein kann
-		let value = undefined;
-		if (props.attributeName in props.pendingStateManager().pendingValues) {
-			value = props.pendingStateManager().pendingValues[props.attributeName];
-		}
-		return value;
+		// Prüfe, ob für das Attribut ein Pending vorliegt
+		return props.model.isPending(props.attributeName) ? props.model.pending[props.attributeName] : undefined;
 	});
 
-	const pendingAmountOverall = computed<number>(() => {
-		let amount = 0;
-		for (const keyAmount of actualValuesWithAmount.value.values()) {
-			amount += keyAmount;
-		}
-		return amount;
-	});
+	const pendingAmountOverall = computed<number>(() => props.model.count);
 
 	const showClearButton = computed<boolean>(() => {
-		for (const key of actualValuesWithAmount.value.keySet()) {
-			if ((key !== 'Keine Daten') && (attributeValue.value !== null)) {
+		for (const key of actualValuesWithAmount.value.keys()) {
+			if ((key !== null) && (attributeValue.value !== null)) {
 				return true;
 			}
 		}
@@ -93,10 +72,9 @@
 
 	const tooltipTextActual = computed<string>(() => {
 		let tooltipActual = 'Aktuell: ';
-		for (const entry of actualValuesWithAmount.value.entrySet()) {
-			const mapper = props.pendingStateManager().attributeDisplayMappers.get(props.attributeName);
-			tooltipActual += ((mapper === undefined) || (entry.getKey() === 'Keine Daten')) ? entry.getKey() : mapper(entry.getKey());
-			tooltipActual += ` (${entry.getValue()}), `;
+		for (const [key, amount] of actualValuesWithAmount.value) {
+			tooltipActual += (key === null) ? 'Keine Daten' : props.model.displayText(props.attributeName, key);
+			tooltipActual += ` (${amount}), `;
 		}
 		const tailCut = tooltipActual.slice(0, -2);
 		return tailCut.length > 200 ? `${tailCut.slice(0, 200)} ...` : tailCut;
@@ -105,8 +83,7 @@
 	const tooltipTextAfter = computed(() => {
 		let tooltipAfter = 'Nachher: ';
 		if ((attributeValue.value !== undefined) && (attributeValue.value !== null)) {
-			const mapper = props.pendingStateManager().attributeDisplayMappers.get(props.attributeName);
-			tooltipAfter += (mapper !== undefined) ? mapper(attributeValue.value) : attributeValue.value;
+			tooltipAfter += props.model.displayText(props.attributeName, attributeValue.value);
 		} else {
 			tooltipAfter += 'Keine Daten';
 		}
@@ -117,7 +94,7 @@
 
 	// Entfernt den aktuellen pendingState für das Attribut
 	function revert() {
-		props.pendingStateManager().removePendingState(props.attributeName);
+		props.model.removePending(props.attributeName);
 	}
 
 	// Setzt den pendingState für das Attribut auf <code>null</code>
@@ -125,7 +102,7 @@
 		if (!props.nullable || !showClearButton.value) {
 			return;
 		}
-		props.pendingStateManager().setPendingState(props.attributeName, null, props.pendingStateManager().liste.auswahlKeyList());
+		props.model.setPending(props.attributeName, null);
 	}
 
 </script>

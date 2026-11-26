@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParamsRawGeneric } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -10,6 +10,7 @@ import { api } from "~/router/Api";
 import type { RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { RouteNode } from "~/router/RouteNode";
 import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
+import { KlassenDatenBereich } from "~/states/klassen/KlassenDatenBereich";
 
 const KlassenGruppenprozesse = () => import("~/components/klassen/gruppenprozesse/KlassenGruppenprozesse.vue");
 
@@ -27,6 +28,7 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 	protected async update(): Promise<void | Error | RouteLocationRaw> {
 		const klassenState = useKlassenAuswahlState();
 		await klassenState.updateMapStundenplaene();
+		await klassenState.gruppenprozesse.register(KlassenDatenBereich.SCHLUESSEL, () => new KlassenDatenBereich());
 	}
 
 	public addRouteParamsFromState(): RouteParamsRawGeneric {

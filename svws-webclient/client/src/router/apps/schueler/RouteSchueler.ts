@@ -23,6 +23,7 @@ import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 import { routeError } from "~/router/error/RouteError";
+import { GruppenprozessRouting } from "~/router/GruppenprozessRouting";
 import { updateAuswahlRoute } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
@@ -58,11 +59,12 @@ const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue");
 
 export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 
+	/** Das Routing der Gruppenprozesse: Guard bei ungespeicherten Änderungen und Aufräumen beim Verlassen */
+	private readonly _gruppenprozessRouting = new GruppenprozessRouting(this, () => useSchuelerAuswahlState().gruppenprozesse);
+
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schueler", String.raw`schueler/:id(\d+)?`, SSchuelerApp, new RouteDataSchueler());
-		super.setView("liste", SSchuelerAuswahl, (_route) => <any>{
-			pendingStateManagerRegistry: () => this.data.pendingStateManagerRegistry,
-		});
+		super.setView("liste", SSchuelerAuswahl, (_route) => <any>{});
 		super.mode = ServerMode.STABLE;
 		super.text = "Schüler";
 		super.children = [
@@ -94,6 +96,8 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 		if (isEntering) {
 			await this.initiateKataloge();
 		}
+
+		this._gruppenprozessRouting.update(to, from);
 
 		try {
 			const redirect = await updateAuswahlRoute({
@@ -151,6 +155,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 		if (schuelerAuswahlState.navigator.activeViewType !== ViewType.DEFAULT) {
 			this._selectedChild.value = undefined;
 		}
+		this._gruppenprozessRouting.leave();
 		this.data.reset();
 		const { id } = RouteNode.getStringParams(from_params, ['id']);
 		await configStateImpl.nonPersistentConfig.setValue(`${this.name}.auswahl.id`, id ?? "");

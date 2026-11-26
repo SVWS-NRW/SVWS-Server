@@ -19,6 +19,7 @@ import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPerson
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeError } from "~/router/error/RouteError";
+import { GruppenprozessRouting } from "~/router/GruppenprozessRouting";
 import { updateAuswahlRoute } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
@@ -36,11 +37,12 @@ const LehrerApp = () => import("~/components/lehrer/LehrerApp.vue");
 
 export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 
+	/** Das Routing der Gruppenprozesse: Guard bei ungespeicherten Änderungen und Aufräumen beim Verlassen */
+	private readonly _gruppenprozessRouting = new GruppenprozessRouting(this, () => useLehrerAuswahlState().gruppenprozesse);
+
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_ANSEHEN], "lehrer", String.raw`lehrkraefte/:id(\d+)?`, LehrerApp, new RouteDataLehrer());
-		super.setView("liste", LehrerAuswahl, (_route) => <any>{
-			pendingStateManagerRegistry: () => this.data.pendingStateManagerRegistry,
-		});
+		super.setView("liste", LehrerAuswahl, (_route) => <any>{});
 		super.mode = ServerMode.STABLE;
 		super.text = "Lehrkräfte";
 		super.children = [
@@ -70,6 +72,8 @@ export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 		if (isEntering) {
 			await this.initiateKataloge();
 		}
+		this._gruppenprozessRouting.update(to, from);
+
 		try {
 			const redirect = await updateAuswahlRoute({
 				route: this,
@@ -111,6 +115,7 @@ export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 		if (lehrerAuswahlState.navigator.activeViewType !== ViewType.DEFAULT) {
 			this._selectedChild.value = undefined;
 		}
+		this._gruppenprozessRouting.leave();
 		this.data.reset();
 		const { id } = RouteNode.getStringParams(from_params, ['id']);
 		await configStateImpl.nonPersistentConfig.setValue(`${this.name}.auswahl.id`, id ?? "");

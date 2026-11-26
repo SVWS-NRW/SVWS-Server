@@ -9,6 +9,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeError } from "~/router/error/RouteError";
 import { routeInit } from "~/router/init/RouteInit";
 import { routeLogin } from "~/router/login/RouteLogin";
+import type { NavigationGuard } from "~/router/NavigationGuard";
 import { RouteNode } from "~/router/RouteNode";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
@@ -57,6 +58,9 @@ export class RouteManager {
 
 	/** Die Route-Location, welche zuletzt erfolgreich ausgewählt wurde (siehe auch Methode afterEach) */
 	protected _routeLocation: RouteLocationNormalized | undefined = undefined;
+
+	/** Die registrierten Guards, die eine Navigation unterbrechen können (z.B. bei ungespeicherten Änderungen) */
+	private readonly _guards = new Set<NavigationGuard>();
 
 	/** Der aktuelle Fehlerstatus der Route */
 	private _errorstate = reactive<RouteStateError>({
@@ -159,6 +163,19 @@ export class RouteManager {
 		return RouteManager.doRoute(destinationRoute);
 	}
 
+	/**
+	 * Registriert einen Guard, der vor jeder Navigation gefragt wird, ob diese bestätigt werden muss.
+	 *
+	 * @param guard   der Guard
+	 *
+	 * @returns eine Funktion, die den Guard wieder abmeldet
+	 */
+	public static registerGuard(guard: NavigationGuard): () => void {
+		const guards = this.getInstanceOrException()._guards;
+		guards.add(guard);
+		return () => guards.delete(guard);
+	}
+
 	public static getInstanceOrException(): RouteManager {
 		const manager = RouteManager._instance;
 		if (manager === undefined) {
@@ -248,6 +265,14 @@ export class RouteManager {
 		}
 		if ((from_node === undefined) && (from.fullPath !== "/")) {
 			return false;
+		}
+		// Prüfe, ob ein Guard die Navigation unterbricht, z.B. bei ungespeicherten Änderungen. Bei einem Redirect wurde bereits bestätigt.
+		if ((from_node !== undefined) && (nodeRedirected === undefined)) {
+			for (const guard of this._guards) {
+				if (guard.isBlocked(to_node, from_node) && !(await guard.queryConfirmation(to_node))) {
+					return false;
+				}
+			}
 		}
 		if (benutzerStateImpl.authenticated && benutzerStateImpl.istAdmin && (to.name?.toString().startsWith("init") ?? false)) {
 			return await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);

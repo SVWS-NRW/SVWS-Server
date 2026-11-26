@@ -8,7 +8,7 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :lock-selectable="pendingStateManagerRegistry().pendingStateExists()" :clickable="!lehrerAuswahlState.liste.auswahlExists()"
+			<svws-ui-table :lock-selectable="lehrerAuswahlState.gruppenprozesse.hasPending" :clickable="!lehrerAuswahlState.liste.auswahlExists()"
 				:clicked="clickedEintrag" @update:clicked="lehrerDaten => lehrerAuswahlState.navigator.select(lehrerDaten.id)" :items="lehrerAuswahlState.filter.visible"
 				:model-value="[...lehrerAuswahlState.liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns selectable count
 				:filter-open="true" :filtered="lehrerAuswahlState.filter.isActive" :filterReset="lehrerAuswahlState.filter.setDefault" scroll-into-view scroll v-model:sort-by-and-order="sortByAndOrder"
@@ -55,9 +55,7 @@
 
 	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
-	import type { LehrerAuswahlProps } from "./LehrerAuswahlProps";
 
-	const props = defineProps<LehrerAuswahlProps>();
 	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const lehrerAuswahlState = useLehrerAuswahlState();

@@ -12,6 +12,7 @@ import { RouteDataKurse } from "~/router/apps/kurse/RouteDataKurse";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { type RouteApp } from "~/router/apps/RouteApp";
 import { routeError } from "~/router/error/RouteError";
+import { GruppenprozessRouting } from "~/router/GruppenprozessRouting";
 import { updateAuswahlRoute } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
@@ -26,6 +27,9 @@ const KurseAuswahl = () => import("~/components/kurse/KurseAuswahl.vue");
 const KurseApp = () => import("~/components/kurse/KurseApp.vue");
 
 export class RouteKurse extends RouteTabNode<RouteDataKurse, RouteApp> {
+
+	/** Das Routing der Gruppenprozesse: Guard bei ungespeicherten Änderungen und Aufräumen beim Verlassen */
+	private readonly _gruppenprozessRouting = new GruppenprozessRouting(this, () => useKurseAuswahlState().gruppenprozesse);
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "kurse", String.raw`kurse/:id(\d+)?`, KurseApp, new RouteDataKurse());
@@ -50,6 +54,8 @@ export class RouteKurse extends RouteTabNode<RouteDataKurse, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
 		isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
+		this._gruppenprozessRouting.update(to, from);
+
 		try {
 			const redirect = await updateAuswahlRoute({
 				route: this,
@@ -78,6 +84,7 @@ export class RouteKurse extends RouteTabNode<RouteDataKurse, RouteApp> {
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
+		this._gruppenprozessRouting.leave();
 		const kurseAuswahlState = useKurseAuswahlState();
 		if (kurseAuswahlState.navigator.activeViewType !== ViewType.DEFAULT) {
 			this._selectedChild.value = undefined;

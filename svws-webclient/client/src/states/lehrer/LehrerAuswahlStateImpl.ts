@@ -22,7 +22,6 @@ import { api } from "~/router/Api";
 import { LehrerAuswahlFilter } from "./LehrerAuswahlFilter";
 import type { LehrerAuswahlState } from "./LehrerAuswahlState";
 import { lehrerAuswahlStateRoutingAdapter } from "./LehrerAuswahlStateRoutingAdapter";
-import { LehrerGruppenprozessState } from "./LehrerGruppenprozessState";
 import { LehrerPersonaldatenState } from "./LehrerPersonaldatenState";
 import { LehrerStammdatenState } from "./LehrerStammdatenState";
 
@@ -40,8 +39,6 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeE
 	/** Der State für die Stammdaten */
 	private readonly _stammdaten = new LehrerStammdatenState(this);
 
-	/** Der State für die Stammdaten der Mehrfachauswahl */
-	private readonly _gruppenprozesse = new LehrerGruppenprozessState(this);
 
 	/** Der State für die Personaldaten */
 	private readonly _personaldaten = new LehrerPersonaldatenState(this, () => this.idSchuljahresabschnitt);
@@ -83,9 +80,6 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeE
 		return this._stammdaten;
 	}
 
-	public get gruppenprozesse(): LehrerGruppenprozessState {
-		return this._gruppenprozesse;
-	}
 
 	public get personaldaten(): LehrerPersonaldatenState {
 		return this._personaldaten;
@@ -107,7 +101,6 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeE
 		super.reset();
 		this._stundenplaene.reset();
 		this._stammdaten.reset();
-		this._gruppenprozesse.reset();
 		this._personaldaten.reset();
 		this._filter.reset();
 	}

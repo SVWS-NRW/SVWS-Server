@@ -18,22 +18,14 @@ import type { GenericGruppenprozessState } from "./GenericGruppenprozessState";
 export type GenericAuswahlSelectCallback = (idAuswahl: number | null) => Promise<() => void>;
 
 /**
- * Ein Callback, der bei einer Änderung der Mehrfachauswahl aufgerufen wird, damit ein State seine Daten zu der
- * Mehrfachauswahl laden kann. Der Callback arbeitet wie {@link GenericAuswahlSelectCallback} in zwei Phasen.
- *
- * @param idsAuswahl   die IDs der Einträge der Mehrfachauswahl, die Liste ist leer, wenn keine Mehrfachauswahl besteht
- *
- * @returns eine Promise mit der Funktion, welche die geladenen Daten übernimmt
- */
-export type GenericAuswahlMultiSelectCallback = (idsAuswahl: List<number>) => Promise<() => void>;
-
-/**
  * Die Schnittstelle von generischen States für Auswahllisten.
  *
  * @typeParam TAuswahl   der Typ der Einträge der Auswahlliste
  * @typeParam TDaten     der Typ der Stammdaten zu einem Eintrag der Auswahlliste
+ * @typeParam TGruppenprozesseState   der Typ des Orchestrators der Gruppenprozesse (Default: der Standard-Orchestrator)
  */
-export interface GenericAuswahlState<TAuswahl extends { id: number }, TDaten> {
+export interface GenericAuswahlState<TAuswahl extends { id: number }, TDaten,
+	TGruppenprozesseState extends GenericGruppenprozessState<TAuswahl> = GenericGruppenprozessState<TAuswahl>> {
 
 	/**
 	 * Gibt zurück, ob der State aktuell mit einer gültigen initialisiert und verfügbar ist.
@@ -46,12 +38,20 @@ export interface GenericAuswahlState<TAuswahl extends { id: number }, TDaten> {
 	get stammdaten(): GenericDatenState<TDaten>;
 
 	/**
-	 * Gibt den State für die Stammdaten der Mehrfachauswahl (Gruppenprozesse) zurück. Die Mehrfachauswahl selbst
-	 * liegt in diesem Auswahl-State, der State hält nur die dazu geladenen Stammdaten.
+	 * Gibt den Orchestrator der Gruppenprozesse zurück. Die Mehrfachauswahl selbst liegt in diesem Auswahl-State. Der
+	 * Orchestrator hält die dynamisch angemeldeten Bereiche (z.B. Stammdaten) mit den dazu geladenen Daten und den
+	 * ausstehenden Änderungen.
 	 *
-	 * @returns der State für die Stammdaten der Mehrfachauswahl
+	 * @returns der Orchestrator der Gruppenprozesse
 	 */
-	get gruppenprozesse(): GenericGruppenprozessState<TDaten>;
+	get gruppenprozesse(): TGruppenprozesseState;
+
+	/**
+	 * Gibt die IDs der aktuellen Mehrfachauswahl zurück.
+	 *
+	 * @returns die IDs, ohne initialisierte Auswahlliste eine leere Liste
+	 */
+	getMultiSelection(): List<number>;
 
 	/**
 	 * Gibt den Navigator zurück, der die aktive Ansicht hält und die Ansicht und die Auswahl wechselt.
@@ -114,24 +114,7 @@ export interface GenericAuswahlState<TAuswahl extends { id: number }, TDaten> {
 	removeOnSelect(callback: GenericAuswahlSelectCallback): void;
 
 	/**
-	 * Hinterlegt einen Callback, der bei einer Änderung der Mehrfachauswahl aufgerufen wird (auch beim Wechsel in die
-	 * Ansicht der Gruppenprozesse und beim Wechsel des Schuljahresabschnittes, bei dem die Mehrfachauswahl verworfen wird).
-	 *
-	 * @param callback   der Callback
-	 *
-	 * @returns eine Funktion, welche den Callback wieder entfernt
-	 */
-	onMultiSelect(callback: GenericAuswahlMultiSelectCallback): () => void;
-
-	/**
-	 * Entfernt einen mit {@link onMultiSelect} hinterlegten Callback. Ist der Callback nicht hinterlegt, so geschieht nichts.
-	 *
-	 * @param callback   der Callback
-	 */
-	removeOnMultiSelect(callback: GenericAuswahlMultiSelectCallback): void;
-
-	/**
-	 * Setzt die Mehrfachauswahl und ruft danach die mit {@link onMultiSelect} hinterlegten Callbacks auf. Einträge, die
+	 * Setzt die Mehrfachauswahl und lädt danach die Daten der Bereiche der Gruppenprozesse zu der Mehrfachauswahl. Einträge, die
 	 * nicht in der Auswahlliste enthalten sind, werden ignoriert.
 	 *
 	 * @param items   die Einträge der Mehrfachauswahl
@@ -190,10 +173,9 @@ export interface GenericAuswahlState<TAuswahl extends { id: number }, TDaten> {
 export type GenericAuswahlHost<TAuswahl extends { id: number }> = Pick<GenericAuswahlState<TAuswahl, unknown>, "onSelect" | "getEntry" | "updateEntry">;
 
 /**
- * Die schmale Schnittstelle eines Auswahl-States, die States zu der Mehrfachauswahl (z.B. die Stammdaten der
- * Gruppenprozesse) benötigen, um sich an die Mehrfachauswahl anzuhängen.
+ * Die schmale Schnittstelle eines Auswahl-States, die der Orchestrator der Gruppenprozesse und deren Bereiche
+ * benötigen, um Einträge der Auswahlliste und die aktuellen IDs der Mehrfachauswahl zu erfragen.
  *
  * @typeParam TAuswahl   der Typ der Einträge der Auswahlliste
  */
-export type GenericAuswahlMultiHost<TAuswahl extends { id: number }> = Pick<GenericAuswahlState<TAuswahl, unknown>, "onMultiSelect" | "getEntry">;
-
+export type GenericAuswahlGruppenprozessHost<TAuswahl extends { id: number }> = Pick<GenericAuswahlState<TAuswahl, unknown>, "getEntry" | "getMultiSelection">;

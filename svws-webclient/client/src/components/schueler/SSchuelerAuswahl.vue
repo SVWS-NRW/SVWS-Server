@@ -8,7 +8,7 @@
 			<slot name="header" />
 		</div>
 		<div class="secondary-menu--content">
-			<svws-ui-table :lock-selectable="pendingStateManagerRegistry().pendingStateExists()" :clickable="!schuelerAuswahlState.liste.auswahlExists()"
+			<svws-ui-table :lock-selectable="schuelerAuswahlState.gruppenprozesse.hasPending" :clickable="!schuelerAuswahlState.liste.auswahlExists()"
 				:clicked="clickedEintrag" @update:clicked="schueler => schuelerAuswahlState.navigator.select(schueler.id)"
 				:items="schuelerAuswahlState.filter.visible" :model-value="[...schuelerAuswahlState.liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="schuelerAuswahlState.filter.isActive" :filterReset="schuelerAuswahlState.filter.setDefault" scroll-into-view scroll
@@ -107,9 +107,7 @@
 
 	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
-	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
-	const props = defineProps<SchuelerAuswahlProps>();
 	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();

@@ -9,8 +9,6 @@ import type { List } from "@core/java/util/List";
 import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
-import { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
-
 import { RouteData, type RouteStateInterface } from "./RouteData";
 import { RouteManager } from "./RouteManager";
 import type { RouteNode } from "./RouteNode";
@@ -49,7 +47,6 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	/** Die Route für die Schnelleingabe */
 	private readonly _routeSchnelleingabe: RouteNode<any, any> | undefined;
 
-	private readonly _pendingStateManagerRegistry: PendingStateManagerRegistry;
 
 	/**
 	 * Erzeugt ein neues Route-Daten-Objekt mit dem übergebenen Default-State.
@@ -64,18 +61,6 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		this._routeGruppenprozesse = routes.gruppenprozesse;
 		this._routeHinzufuegen = routes.hinzufuegen;
 		this._routeSchnelleingabe = routes.schnelleingabe;
-		this._pendingStateManagerRegistry = new PendingStateManagerRegistry();
-	}
-
-	/**
-	 * Gibt den Pending State Manager Registry zurück.
-	 * Falls dieser noch nicht initialisiert wurde, wird eine DeveloperNotificationException geworfen.
-	 *
-	 * @throws DeveloperNotificationException falls der Zugriff vor der Initialisierung erfolgt.
-	 * @returns der Pending State Manager Registry
-	 */
-	get pendingStateManagerRegistry(): PendingStateManagerRegistry {
-		return this._pendingStateManagerRegistry;
 	}
 
 	/**

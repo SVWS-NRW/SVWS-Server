@@ -35,7 +35,6 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { SchuelerAuswahlFilter } from "./SchuelerAuswahlFilter";
 import type { SchuelerAuswahlState } from "./SchuelerAuswahlState";
 import { schuelerAuswahlStateRoutingAdapter } from "./SchuelerAuswahlStateRoutingAdapter";
-import { SchuelerGruppenprozessState } from "./SchuelerGruppenprozessState";
 import { SchuelerStammdatenState } from "./SchuelerStammdatenState";
 
 type SchuelerAuswahlReactiveState = GenericAuswahlReactiveState<SchuelerListeEintrag>;
@@ -69,8 +68,6 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 	/** Der State für die Stammdaten */
 	private readonly _stammdaten = new SchuelerStammdatenState(this);
 
-	/** Der State für die Stammdaten der Mehrfachauswahl */
-	private readonly _gruppenprozesse = new SchuelerGruppenprozessState(this);
 
 	/** Der Filter der Auswahlliste */
 	private readonly _filter = new SchuelerAuswahlFilter(
@@ -109,9 +106,6 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 		return this._stammdaten;
 	}
 
-	public get gruppenprozesse(): SchuelerGruppenprozessState {
-		return this._gruppenprozesse;
-	}
 
 	public schuelerIstImSchuljahresabschnitt(idSchueler: number): boolean {
 		const schueler = this.liste.get(idSchueler);
@@ -160,7 +154,6 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 		super.reset();
 		this._stundenplaene.reset();
 		this._stammdaten.reset();
-		this._gruppenprozesse.reset();
 		this._lehrer.reset();
 		this._jahrgaenge.reset();
 		this._klassen.reset();

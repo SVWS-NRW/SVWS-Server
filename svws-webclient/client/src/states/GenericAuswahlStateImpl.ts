@@ -7,10 +7,10 @@ import { ViewType } from "@ui/ui/nav/ViewType";
 import { StateManager } from "@ui/ui/StateManager";
 
 import { GenericAuswahlNavigator } from "./GenericAuswahlNavigator";
-import type { GenericAuswahlMultiSelectCallback, GenericAuswahlSelectCallback, GenericAuswahlState } from "./GenericAuswahlState";
+import type { GenericAuswahlGruppenprozessHost, GenericAuswahlSelectCallback, GenericAuswahlState } from "./GenericAuswahlState";
 import type { GenericAuswahlStateRoutingAdapter } from "./GenericAuswahlStateRoutingAdapter";
 import type { GenericDatenState } from "./GenericDatenState";
-import type { GenericGruppenprozessState } from "./GenericGruppenprozessState";
+import { GenericGruppenprozessState } from "./GenericGruppenprozessState";
 
 export interface GenericAuswahlReactiveState<TAuswahl> {
 	idSchuljahresabschnitt: number;
@@ -21,19 +21,31 @@ export interface GenericAuswahlReactiveState<TAuswahl> {
 
 
 /**
- * Die abstrakte Basisklasse für generische States für Auswahllisten
+ * Erzeugt den Orchestrator der Gruppenprozesse zu dem Auswahl-State, der ihn hält.
+ *
+ * @typeParam TAuswahl                der Typ der Einträge der Auswahlliste
+ * @typeParam TGruppenprozesseState   der Typ des erzeugten Orchestrators
  */
-export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, TDaten, R extends GenericAuswahlReactiveState<TAuswahl>>
-	extends StateManager<R> implements GenericAuswahlState<TAuswahl, TDaten> {
+export type GenericGruppenprozessStateFactory<TAuswahl extends { id: number }, TGruppenprozesseState extends GenericGruppenprozessState<TAuswahl>>
+	= (host: GenericAuswahlGruppenprozessHost<TAuswahl>) => TGruppenprozesseState;
+
+/**
+ * Die abstrakte Basisklasse für generische States für Auswahllisten
+ *
+ * @typeParam TAuswahl                der Typ der Einträge der Auswahlliste
+ * @typeParam TDaten                  der Typ der Stammdaten zu einem Eintrag der Auswahlliste
+ * @typeParam R                       der Typ des reaktiven States
+ * @typeParam TGruppenprozesseState   der Typ des Orchestrators der Gruppenprozesse (Default: der Standard-Orchestrator)
+ */
+export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, TDaten, R extends GenericAuswahlReactiveState<TAuswahl>,
+	TGruppenprozesseState extends GenericGruppenprozessState<TAuswahl> = GenericGruppenprozessState<TAuswahl>>
+	extends StateManager<R> implements GenericAuswahlState<TAuswahl, TDaten, TGruppenprozesseState> {
 
 	/** Der Navigator mit der aktiven Ansicht und dem Routing zu den Ansichten */
 	private readonly _navigator: GenericAuswahlNavigator;
 
 	/** Die Callbacks, die bei einer neuen Auswahl aufgerufen werden */
 	private readonly _selectCallbacks = new Set<GenericAuswahlSelectCallback>();
-
-	/** Die Callbacks, die bei einer Änderung der Mehrfachauswahl aufgerufen werden */
-	private readonly _multiSelectCallbacks = new Set<GenericAuswahlMultiSelectCallback>();
 
 
 	/**
@@ -44,24 +56,34 @@ export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, T
 	 */
 	public abstract get stammdaten(): GenericDatenState<TDaten>;
 
-	/**
-	 * Gibt den State für die Stammdaten der Mehrfachauswahl zurück. Dieser hält die Stammdaten der Einträge der
-	 * Mehrfachauswahl, die selbst in diesem Auswahl-State liegt.
-	 *
-	 * @returns der State für die Stammdaten der Mehrfachauswahl
-	 */
-	public abstract get gruppenprozesse(): GenericGruppenprozessState<TDaten>;
+	/** Der Orchestrator der Gruppenprozesse, der die dynamisch angemeldeten Bereiche mit den Daten der Mehrfachauswahl hält */
+	private readonly _gruppenprozesse: TGruppenprozesseState;
+
+	public get gruppenprozesse(): TGruppenprozesseState {
+		return this._gruppenprozesse;
+	}
+
+	public getMultiSelection(): List<number> {
+		return this.isAvailable ? this.liste.auswahlKeyList() : new ArrayList<number>();
+	}
 
 	/**
 	 * Erzeugt einen neuen Auswahl-State mit dem übergebenen reaktiven State.
 	 * Für das Routing zu Ansichten wie Gruppenprozesse, Hinzufügen und Schnelleingabe wird
 	 * ein Routing-Adapter übergeben, um ein automatischen Umschalten zu den jeweiligen Ansichten zu ermöglichen.
 	 *
-	 * @param reactiveState    der reaktive State
-	 * @param routingAdapter   der Adapter für das Routing zu den unterstützten Ansichten (Default, Gruppenprozesse, Neu, ...)
+	 * @param reactiveState            der reaktive State
+	 * @param routingAdapter           der Adapter für das Routing zu den unterstützten Ansichten (Default, Gruppenprozesse, Neu, ...)
+	 * @param createGruppenprozesse    erzeugt den Orchestrator der Gruppenprozesse; optional, solange der Standard-Orchestrator genügt,
+	 *                                 für einen spezialisierten (von GenericGruppenprozessState abgeleiteten) Orchestrator Pflicht
 	 */
-	public constructor(reactiveState: R, routingAdapter: GenericAuswahlStateRoutingAdapter) {
+	public constructor(reactiveState: R, routingAdapter: GenericAuswahlStateRoutingAdapter,
+		...createGruppenprozesse: GenericGruppenprozessState<TAuswahl> extends TGruppenprozesseState
+			? [create?: GenericGruppenprozessStateFactory<TAuswahl, TGruppenprozesseState>]
+			: [create: GenericGruppenprozessStateFactory<TAuswahl, TGruppenprozesseState>]) {
 		super(reactiveState);
+		const [create] = createGruppenprozesse as [GenericGruppenprozessStateFactory<TAuswahl, TGruppenprozesseState>?];
+		this._gruppenprozesse = (create ?? (host => new GenericGruppenprozessState<TAuswahl>(host) as unknown as TGruppenprozesseState))(this);
 		this._navigator = new GenericAuswahlNavigator(routingAdapter, {
 			hasEntry: id => this.liste.has(id),
 			getFirstFilteredId: () => {
@@ -105,15 +127,6 @@ export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, T
 		return () => applies.forEach(apply => apply());
 	}
 
-	public onMultiSelect(callback: GenericAuswahlMultiSelectCallback): () => void {
-		this._multiSelectCallbacks.add(callback);
-		return () => this.removeOnMultiSelect(callback);
-	}
-
-	public removeOnMultiSelect(callback: GenericAuswahlMultiSelectCallback): void {
-		this._multiSelectCallbacks.delete(callback);
-	}
-
 	public async setMultiSelection(items: Iterable<TAuswahl>): Promise<void> {
 		this.liste.auswahlClear();
 		for (const item of items) {
@@ -126,27 +139,14 @@ export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, T
 	}
 
 	/**
-	 * Ruft die hinterlegten Callbacks für die Mehrfachauswahl parallel auf und liefert eine Funktion, welche die
-	 * geladenen Daten übernimmt.
-	 *
-	 * @param idsAuswahl   die IDs der Einträge der Mehrfachauswahl
-	 *
-	 * @returns eine Promise mit der Funktion, welche die geladenen Daten aller Callbacks übernimmt
-	 */
-	private async ladeMultiCallbacks(idsAuswahl: List<number>): Promise<() => void> {
-		const applies = await Promise.all(this._multiSelectCallbacks.values().map(callback => callback(idsAuswahl)));
-		return () => applies.forEach(apply => apply());
-	}
-
-	/**
-	 * Lädt die Daten zu der aktuellen Mehrfachauswahl über die hinterlegten Callbacks und übernimmt sie.
+	 * Lädt die Daten der Bereiche der Gruppenprozesse zu der aktuellen Mehrfachauswahl und übernimmt sie.
 	 */
 	private async ladeMultiAuswahl(): Promise<void> {
 		const ids = new ArrayList<number>();
 		for (const eintrag of this.liste.auswahl()) {
 			ids.add(eintrag.id);
 		}
-		(await this.ladeMultiCallbacks(ids))();
+		(await this._gruppenprozesse.loadForMultiSelection(ids))();
 	}
 
 	public getEntry(id: number): TAuswahl | null {
@@ -163,6 +163,7 @@ export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, T
 	 */
 	public reset(): void {
 		super.reset();
+		this._gruppenprozesse.reset();
 		this._navigator.reset();
 	}
 
@@ -277,7 +278,7 @@ export abstract class GenericAuswahlStateImpl<TAuswahl extends { id: number }, T
 		const applyDaten = await this.ladeCallbacks(idNeu);
 
 		// Die Mehrfachauswahl wird mit der neuen Auswahlliste verworfen
-		const applyMulti = await this.ladeMultiCallbacks(new ArrayList<number>());
+		const applyMulti = await this._gruppenprozesse.loadForMultiSelection(new ArrayList<number>());
 
 		// Ohne vorherige Auswahl wird die Default-Ansicht angezeigt
 		if (idNeu === null) {
