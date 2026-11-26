@@ -7,7 +7,7 @@ import { RouteNode } from "@admin/router/RouteNode";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import { ServerMode } from "@core/core/types/ServerMode";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 import { TabManager } from "@ui/ui/nav/TabManager";
 
 import type { RouteApp } from "../RouteApp";

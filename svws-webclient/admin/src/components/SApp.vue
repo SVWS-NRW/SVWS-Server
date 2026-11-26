@@ -74,7 +74,7 @@
 
 	import { ref } from "vue";
 
-	import type { TabData } from '@ui/ui/nav/TabData';
+	import type { TabData } from "@ui/ui/nav/TabManager";
 	import { version } from "@version";
 
 	import type { AppProps } from './SAppProps';

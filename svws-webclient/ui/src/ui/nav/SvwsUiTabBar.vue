@@ -40,7 +40,7 @@
 
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
 
-	import type { TabManager } from './TabManager';
+	import type { TabData, TabManager } from './TabManager';
 
 	const props = withDefaults(defineProps<{
 		tabManager: () => TabManager;
@@ -53,7 +53,11 @@
 		focusHelpVisible: false,
 	});
 
-	defineSlots();
+	defineSlots<{
+		default(): any,
+		badge(props: { tab: TabData }): any
+	}>();
+
 	type ComponentData = {
 		scrolled: boolean;
 		scrolledMax: boolean;

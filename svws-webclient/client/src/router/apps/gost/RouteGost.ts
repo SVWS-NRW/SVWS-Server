@@ -4,7 +4,7 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import { ConfigElement } from "@ui/utils/Config";
 

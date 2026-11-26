@@ -1,6 +1,14 @@
 import { type ShallowRef, shallowRef, triggerRef } from "vue";
 
-import type { TabData } from "./TabData";
+export interface TabData {
+	name: string;
+	text: string;
+	tabgroup?: string;
+	image?: string;
+	hide?: boolean;
+	tabContentHatAuswahl?: boolean;
+	count?: number;
+};
 
 /**
  * Diese Klasse dient der Verwaltung der Tabs. Sie wird von Applikationsseite initialisiert
@@ -40,18 +48,19 @@ export class TabManager {
 		this._tab = shallowRef(tab);
 		this._setTab = setTab;
 		for (let i = 0; (i < this._tabs.length); i++) {
+			const tab = this._tabs[i];
 			if ((hidden !== undefined) && (i < hidden.length)) {
-				this._tabs[i].hide = hidden[i];
+				tab.hide = hidden[i];
 			}
-			this._mapName.set(this._tabs[i].name, this._tabs[i]);
-			this._mapNameToIndex.set(this._tabs[i].name, i);
-			const groupname = this.tabs[i].tabgroup ?? "";
+			this._mapName.set(tab.name, tab);
+			this._mapNameToIndex.set(tab.name, i);
+			const groupname = tab.tabgroup ?? "";
 			let group = this._tabgroups.get(groupname);
 			if (group === undefined) {
 				group = new Array<TabData>();
 				this._tabgroups.set(groupname, group);
 			}
-			group.push(this._tabs[i]);
+			group.push(tab);
 		}
 	}
 

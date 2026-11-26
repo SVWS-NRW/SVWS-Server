@@ -8,7 +8,7 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { GostAbiturjahrUtils } from "@core/core/utils/gost/GostAbiturjahrUtils";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "@core/java/util/ArrayList";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 
 import { api } from "~/router/Api";
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";

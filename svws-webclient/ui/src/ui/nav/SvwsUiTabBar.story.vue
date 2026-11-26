@@ -20,7 +20,7 @@
 
 	import { ref } from "vue";
 
-	import type { TabData } from "./TabData";
+	import type { TabData } from "./TabManager";
 	import { TabManager } from "./TabManager";
 
 	const tabs = [

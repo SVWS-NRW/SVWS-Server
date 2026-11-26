@@ -35,8 +35,7 @@
 
 	import { onMounted, ref } from 'vue';
 
-	import type { TabData } from './TabData';
-	import type { TabManager } from './TabManager';
+	import type { TabData, TabManager } from './TabManager';
 
 	const props = defineProps<{
 		tabManager: () => TabManager;

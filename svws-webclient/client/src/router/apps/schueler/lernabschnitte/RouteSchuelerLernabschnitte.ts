@@ -4,7 +4,7 @@ import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 
 import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SchuelerLernabschnitteProps";
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";

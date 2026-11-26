@@ -1,12 +1,12 @@
 import type { InjectionKey } from "vue";
 
+import type { SchuelerStatistikGesamt } from "@core/asd/data/statistik/SchuelerStatistikGesamt";
 import type { StatistikGesamt } from "@core/asd/data/statistik/StatistikGesamt";
 import type { ZusatzerhebungenStatistikGesamt } from "@core/asd/data/statistik/ZusatzerhebungenStatistikGesamt";
 import type { ValidatorGesamt } from "@core/asd/validate/ValidatorGesamt";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { AppContext } from "@ui/AppContext";
-
 
 /**
  * Die Schnittstelle für den Zustand der Statistikprüfung
@@ -71,6 +71,9 @@ export interface StatistikState {
 	reload: () => Promise<void>;
 
 	get mapSchueler(): Map<number, SchuelerListeEintrag>;
+	get mapSchuelerStatistik(): Map<number, SchuelerStatistikGesamt>;
+
+	gotoTab: (name: string) => Promise<void>;
 
 	/**
 	 * Patcht die Daten der Zusatzerhebungen für den Schuljahresabschnitt der Statistik und übernimmt

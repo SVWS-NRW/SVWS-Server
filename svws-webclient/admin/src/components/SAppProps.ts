@@ -1,4 +1,4 @@
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 
 import type { ApiStatus } from "./ApiStatus";
 

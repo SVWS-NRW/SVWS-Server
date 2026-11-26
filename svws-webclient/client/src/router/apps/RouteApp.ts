@@ -5,7 +5,7 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { AppMenuManager } from "@ui/ui/nav/AppMenuManager";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 import type { TabManager } from "@ui/ui/nav/TabManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
 

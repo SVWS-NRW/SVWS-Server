@@ -7,7 +7,7 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { Checkpoint } from "@ui/ui/modal/Checkpoint";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 import { TabManager } from "@ui/ui/nav/TabManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
 

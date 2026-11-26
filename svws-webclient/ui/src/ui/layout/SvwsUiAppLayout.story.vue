@@ -95,7 +95,7 @@
 
 	import { ref } from "vue";
 
-	import type { TabData } from "../nav/TabData";
+	import type { TabData } from "../nav/TabManager";
 	import { TabManager } from "../nav/TabManager";
 
 	async function setTab(tab: TabData) {

@@ -144,8 +144,7 @@
 	import { useWiedervorlageState } from "@ui/states/WiedervorlageState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import type { TabData } from "@ui/ui/nav/TabData";
-	import type { TabManager } from "@ui/ui/nav/TabManager";
+	import type { TabData, TabManager } from "@ui/ui/nav/TabManager";
 	import { version } from "@version";
 
 	import type { AppProps } from './SAppProps';

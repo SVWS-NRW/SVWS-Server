@@ -6,7 +6,7 @@ import { RouteManager } from "@lupo/router/RouteManager";
 import { RouteNode } from "@lupo/router/RouteNode";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 
 import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
 

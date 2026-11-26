@@ -68,7 +68,7 @@
 	import { LaufbahnplanungUiManager } from "@ui/components/gost/laufbahnplanung/LaufbahnplanungUiManager";
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import { useServerState } from "@ui/states/ServerState";
-	import type { TabData } from "@ui/ui/nav/TabData";
+	import type { TabData } from "@ui/ui/nav/TabManager";
 	import { TabManager } from "@ui/ui/nav/TabManager";
 	import { version } from "@version";
 

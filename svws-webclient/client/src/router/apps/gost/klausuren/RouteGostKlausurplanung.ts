@@ -5,7 +5,7 @@ import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui/states/GostKlausurplanungState";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 import { ConfigElement } from "@ui/utils/Config";
 
 import type { GostKlausurplanungProps } from "~/components/gost/klausuren/SGostKlausurplanungProps";

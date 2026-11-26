@@ -5,10 +5,11 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 
 import type { RouteApp } from "../RouteApp";
 import type { StatistikAppProps } from "~/components/statistik/StatistikAppProps";
+import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { beschaeftigungsartenStateImpl } from "~/states/kataloge/BeschaeftigungsartenStateImpl";

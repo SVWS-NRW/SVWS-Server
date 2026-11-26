@@ -1,6 +1,7 @@
 
 import { computed } from "vue";
 
+import type { SchuelerStatistikGesamt } from "@core/asd/data/statistik/SchuelerStatistikGesamt";
 import { StatistikGesamt } from "@core/asd/data/statistik/StatistikGesamt";
 import type { ZusatzerhebungenStatistikGesamt } from "@core/asd/data/statistik/ZusatzerhebungenStatistikGesamt";
 import { ValidatorGesamt } from "@core/asd/validate/ValidatorGesamt";
@@ -15,12 +16,14 @@ import { lehrerAuswahlStateImpl } from "../lehrer/LehrerAuswahlStateImpl";
 import { schuelerAuswahlStateImpl } from "../schueler/SchuelerAuswahlStateImpl";
 import { schuleStateImpl } from "../SchuleStateImpl";
 import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
 
 
 interface StatistikReactiveState {
 	statistikGesamt: StatistikGesamt;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
+	mapStatistikSchueler: Map<number, SchuelerStatistikGesamt>
 }
 
 /**
@@ -33,6 +36,7 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 			statistikGesamt: new StatistikGesamt(),
 			mapLehrer: new Map<number, LehrerListeEintrag>(),
 			mapSchueler: new Map<number, SchuelerListeEintrag>(),
+			mapStatistikSchueler: new Map<number, SchuelerStatistikGesamt>(),
 		});
 	}
 
@@ -55,14 +59,18 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
+		const mapStatistikSchueler = new Map<number, SchuelerStatistikGesamt>();
 		for (const s of listeSchueler.schueler) {
 			mapSchueler.set(s.id, s);
 		}
 		for (const l of listeLehrer) {
 			mapLehrer.set(l.id, l);
 		}
+		for (const s of statistikGesamt.schueler) {
+			mapStatistikSchueler.set(s.id, s);
+		}
 
-		this.setPatchedState({ mapLehrer, mapSchueler, statistikGesamt });
+		this.setPatchedState({ mapLehrer, mapSchueler, statistikGesamt, mapStatistikSchueler });
 	}
 
 	public reload = () => this.init();
@@ -77,6 +85,10 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 
 	public get mapSchueler(): Map<number, SchuelerListeEintrag> {
 		return this.state.mapSchueler;
+	}
+
+	public get mapSchuelerStatistik(): Map<number, SchuelerStatistikGesamt> {
+		return this.state.mapStatistikSchueler;
 	}
 
 	private readonly _validatorGesamt = computed<ValidatorGesamt>(() => {
@@ -122,6 +134,10 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		this.statistikGesamt.zusatzerhebungen = await api.server.patchStatistikZusatzerhebungen(data, api.schema, idSchuljahresabschnitt);
 		this.commit();
 		return true;
+	};
+
+	public gotoTab = async (name: string) => {
+		await RouteManager.doRoute({ name });
 	};
 }
 

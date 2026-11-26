@@ -1,6 +1,6 @@
 import type { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import type { EnmManager } from "@ui/components/enm/EnmManager";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 
 export interface AppProps {
 	enmManager: () => EnmManager;

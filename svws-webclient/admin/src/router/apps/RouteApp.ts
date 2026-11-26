@@ -2,7 +2,7 @@ import type { AppProps } from "@admin/components/SAppProps";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 import { ServerMode } from "@core/core/types/ServerMode";
-import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabData } from "@ui/ui/nav/TabManager";
 
 import { api } from "../Api";
 import { routeLogin } from "../login/RouteLogin";
@@ -81,7 +81,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 
-	private setApp = async (value: TabData) => {
+	private readonly setApp = async (value: TabData) => {
 		if (value.name === this.data.view.name) {
 			return;
 		}

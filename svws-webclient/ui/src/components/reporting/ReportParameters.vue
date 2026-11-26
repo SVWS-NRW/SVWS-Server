@@ -208,7 +208,7 @@
 	import InputNumber from "@ui/ui/controls/SvwsUiInputNumber.vue";
 	import TextArea from "@ui/ui/controls/SvwsUiTextareaInput.vue";
 	import Input from "@ui/ui/controls/SvwsUiTextInput.vue";
-	import type { TabData } from "@ui/ui/nav/TabData";
+	import type { TabData } from "@ui/ui/nav/TabManager";
 	import { TabManager } from "@ui/ui/nav/TabManager";
 
 	const props = defineProps<{

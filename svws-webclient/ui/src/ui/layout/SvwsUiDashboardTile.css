@@ -58,13 +58,12 @@
 
 .svws-ui-dashboard-tile--dark {
 	@apply bg-ui-brand text-ui-onbrand;
-	@apply font-medium;
 
 	.dashboard-tile--title {
 		@apply text-ui-onbrand-secondary;
 
 		.page--statistik & {
-			@apply text-ui-onstatistic-secondary;
+			@apply text-ui-onstatistic;
 		}
 	}
 

@@ -1,8 +1,7 @@
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 
 import { AppMenuGroup } from "./AppMenuGroup";
-import type { TabData } from "./TabData";
-import type { TabManager } from "./TabManager";
+import type { TabData, TabManager } from "./TabManager";
 
 /**
  * Diese Klasse dient der Verwaltung der Menu-Struktur einer Client-Applikation.
