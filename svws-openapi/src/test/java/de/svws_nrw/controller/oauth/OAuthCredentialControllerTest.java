@@ -3,15 +3,19 @@ package de.svws_nrw.controller.oauth;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.oauth2.OAuthCredentials;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.oauth.OAuthCredentialsInternalMapper;
 import de.svws_nrw.oauth.internal.Credentials;
 import de.svws_nrw.oauth.internal.OAuthDomain;
 import de.svws_nrw.service.oauth.credential.OAuthCreateCredential;
 import de.svws_nrw.service.oauth.credential.OAuthCredentialService;
+import de.svws_nrw.service.oauth.credential.OAuthDomainBerechtigung;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,10 +29,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static jakarta.ws.rs.core.Response.Status.BAD_REQUEST;
 import static jakarta.ws.rs.core.Response.Status.CREATED;
+import static jakarta.ws.rs.core.Response.Status.FORBIDDEN;
 import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 import static jakarta.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -47,7 +55,10 @@ class OAuthCredentialControllerTest {
 
 	@BeforeEach
 	void setUp() {
-		cut = new OAuthCredentialController(service, mapper);
+		final var benutzer = mock(Benutzer.class);
+		lenient().when(benutzer.istAdmin()).thenReturn(false);
+		lenient().when(benutzer.pruefeKompetenz(Set.of(BenutzerKompetenz.IT_NRW_ADMINISTRIEREN))).thenReturn(true);
+		cut = new OAuthCredentialController(service, mapper, new OAuthDomainBerechtigung(benutzer));
 	}
 
 
@@ -71,6 +82,34 @@ class OAuthCredentialControllerTest {
 			assertThat(response.getEntity()).isEqualTo(external);
 			verify(service).create(credentials);
 			verify(mapper).fromInternal(credentials);
+		}
+
+		@Test
+		@DisplayName("FORBIDDEN wenn keine Berechtigung fuer die Domaene besteht")
+		void createForbidden() {
+			final var input = createCredentialFor("WENOM");
+			when(mapper.toInternal(input)).thenReturn(buildCredentials(OAuthDomain.WENOM));
+
+			assertThatThrownBy(() -> cut.create(input))
+					.isInstanceOf(ApiOperationException.class)
+					.extracting("status")
+					.isEqualTo(FORBIDDEN);
+
+			verifyNoInteractions(service);
+		}
+
+		@ParameterizedTest(name = "domain = ''{0}''")
+		@ValueSource(strings = {"UNBEKANNT", "it_nrw", ""})
+		@DisplayName("BeanValidation | BAD_REQUEST wenn die Domaene nicht existiert")
+		void createValidationDomainUnbekannt(final String domain) {
+			final var input = createCredentialFor(domain);
+
+			assertThatThrownBy(() -> cut.create(input))
+					.isInstanceOf(ApiOperationException.class)
+					.extracting("status")
+					.isEqualTo(BAD_REQUEST);
+
+			verifyNoInteractions(service, mapper);
 		}
 
 		@Test
@@ -147,40 +186,6 @@ class OAuthCredentialControllerTest {
 
 
 	@Nested
-	@DisplayName("get")
-	class Get {
-
-		@Test
-		@DisplayName("gibt 200 mit Credentials zurueck wenn vorhanden")
-		void getSuccess() {
-			final var internal = buildCredentials(OAuthDomain.IT_NRW);
-			final var external = buildApiCredentials();
-			when(service.get(1L)).thenReturn(Optional.of(internal));
-			when(mapper.fromInternal(internal)).thenReturn(external);
-
-			final Response response = cut.get(1L);
-
-			assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
-			assertThat(response.getEntity()).isEqualTo(external);
-			verify(service).get(1L);
-		}
-
-		@Test
-		@DisplayName("NOT_FOUND wenn keine Credentials zur ID existieren")
-		void getNotFound() {
-			when(service.get(99L)).thenReturn(Optional.empty());
-
-			assertThatThrownBy(() -> cut.get(99L))
-					.isInstanceOf(ApiOperationException.class)
-					.extracting("status")
-					.isEqualTo(NOT_FOUND);
-
-			verifyNoInteractions(mapper);
-		}
-	}
-
-
-	@Nested
 	@DisplayName("delete")
 	class Delete {
 
@@ -188,6 +193,7 @@ class OAuthCredentialControllerTest {
 		@DisplayName("gibt 204 zurueck und delegiert an den Service")
 		void deleteSuccess() {
 			SimpleOperationResponse log = SimpleOperationResponse.ofSuccess(1L);
+			when(service.get(1L)).thenReturn(Optional.of(buildCredentials(OAuthDomain.IT_NRW)));
 			when(service.delete(1L)).thenReturn(log);
 
 			final Response response = cut.delete(1L);
@@ -195,6 +201,32 @@ class OAuthCredentialControllerTest {
 			assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
 			assertThat(response.getEntity()).isEqualTo(log);
 			verify(service).delete(1L);
+		}
+
+		@Test
+		@DisplayName("FORBIDDEN und kein Loeschen wenn keine Berechtigung fuer die Domaene besteht")
+		void deleteForbidden() {
+			when(service.get(2L)).thenReturn(Optional.of(buildCredentials(OAuthDomain.WENOM)));
+
+			assertThatThrownBy(() -> cut.delete(2L))
+					.isInstanceOf(ApiOperationException.class)
+					.extracting("status")
+					.isEqualTo(FORBIDDEN);
+
+			verify(service, never()).delete(2L);
+		}
+
+		@Test
+		@DisplayName("NOT_FOUND wenn keine Credentials zur ID existieren")
+		void deleteNotFound() {
+			when(service.get(99L)).thenReturn(Optional.empty());
+
+			assertThatThrownBy(() -> cut.delete(99L))
+					.isInstanceOf(ApiOperationException.class)
+					.extracting("status")
+					.isEqualTo(NOT_FOUND);
+
+			verify(service, never()).delete(99L);
 		}
 	}
 
@@ -219,6 +251,21 @@ class OAuthCredentialControllerTest {
 		}
 
 		@Test
+		@DisplayName("liefert nur Credentials von Domaenen, auf die der Benutzer zugreifen darf")
+		void getAllFiltersByBerechtigung() {
+			final var erlaubt = buildCredentials(OAuthDomain.IT_NRW);
+			final var verboten = buildCredentials(OAuthDomain.WENOM);
+			final var external = buildApiCredentials();
+			when(service.getAll()).thenReturn(List.of(erlaubt, verboten));
+			when(mapper.fromInternal(erlaubt)).thenReturn(external);
+
+			final Response response = cut.getAll();
+
+			assertThat(response.getEntity()).isEqualTo(List.of(external));
+			verify(mapper, never()).fromInternal(verboten);
+		}
+
+		@Test
 		@DisplayName("gibt 200 mit leerer Liste zurueck wenn keine Credentials vorhanden sind")
 		void getAllEmpty() {
 			when(service.getAll()).thenReturn(List.of());
@@ -232,36 +279,6 @@ class OAuthCredentialControllerTest {
 	}
 
 
-	@Nested
-	@DisplayName("getAll (serviceDomain)")
-	class GetAllByDomain {
-
-		@Test
-		@DisplayName("gibt 200 mit Credentials der Domaene zurueck")
-		void getAllByDomainSuccess() {
-			final var internal = buildCredentials(OAuthDomain.IT_NRW);
-			final var external = buildApiCredentials();
-			when(service.getAll(OAuthDomain.IT_NRW)).thenReturn(List.of(internal));
-			when(mapper.fromInternal(internal)).thenReturn(external);
-
-			final Response response = cut.getAll("IT_NRW");
-
-			assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
-			assertThat(response.getEntity()).isEqualTo(List.of(external));
-			verify(service).getAll(OAuthDomain.IT_NRW);
-		}
-
-		@Test
-		@DisplayName("wirft IllegalArgumentException bei unbekannter Domaene")
-		void getAllByDomainUnbekannteDomain() {
-			assertThatThrownBy(() -> cut.getAll("UNBEKANNT"))
-					.isInstanceOf(IllegalArgumentException.class);
-
-			verifyNoInteractions(service, mapper);
-		}
-	}
-
-
 	private static OAuthCreateCredential validCreateCredential() {
 		final var input = new OAuthCreateCredential();
 		input.clientId = "client-id";
@@ -269,6 +286,13 @@ class OAuthCredentialControllerTest {
 		input.tokenUrl = "https://auth.example.com/token";
 		input.requestedScope = "scope";
 		input.domain = "IT_NRW";
+		return input;
+	}
+
+	private static OAuthCreateCredential createCredentialFor(final String domain) {
+		final var input = validCreateCredential();
+		input.domain = domain;
+
 		return input;
 	}
 

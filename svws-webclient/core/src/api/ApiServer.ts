@@ -12886,33 +12886,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getOAuthCredential für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/credentials/{id : \d+}
-	 *
-	 * Gibt das OAuth2-Credentials der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von OAuth2-Credentials besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das OAuth2-Credentials der Schule
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: OAuthCredentials
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Credentials anzusehen.
-	 *   Code 404: Keine OAuth2-Credentials mit der ID bei der Schule gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Das OAuth2-Credentials der Schule
-	 */
-	public async getOAuthCredential(schema: string, id: number): Promise<OAuthCredentials> {
-		const path = "/db/{schema}/oauth/credentials/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result: string = await super.getJSON(path);
-		const text = result;
-		return OAuthCredentials.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getOAuthCredentialsForDomain für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/domain/{domain}/credentials
 	 *
 	 * Gibt die OAuth2-Credentials der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der OAuth2-Credentials besitzt.

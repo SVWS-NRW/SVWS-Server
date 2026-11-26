@@ -1,5 +1,6 @@
 package de.svws_nrw.service.oauth.credential;
 
+import de.svws_nrw.validation.constraints.ValidOAuthDomain;
 import de.svws_nrw.validation.constraints.ValidUrl;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,8 @@ public final class OAuthCreateCredential {
 	/**
 	 * Die Domäne der Credentials
 	 */
-	public @NotNull String domain;
+	@NotNull
+	@ValidOAuthDomain
+	public String domain;
 
 }

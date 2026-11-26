@@ -1,6 +1,5 @@
 package de.svws_nrw.repo.oauth.credential;
 
-import java.util.List;
 import java.util.Optional;
 
 import de.svws_nrw.core.types.oauth2.OAuthServiceDomain;
@@ -17,13 +16,4 @@ public interface OAuthCredentialRepository extends Repository<DTOSchuleOAuthSecr
 	 * @return Optional of DTOSchuleOAuthSecrets
 	 */
 	Optional<DTOSchuleOAuthSecrets> findByServiceDomain(OAuthServiceDomain domain);
-
-	/**
-	 * Gibt die Liste von DTOSchuleOAuthSecrets basierend auf der übergebenen {@link OAuthServiceDomain} zurück
-	 *
-	 * @param domain {@link OAuthServiceDomain}
-	 *
-	 * @return Liste von DTOSchuleOAuthSecrets
-	 */
-	List<DTOSchuleOAuthSecrets> findAllByServiceDomain(OAuthServiceDomain domain);
 }

@@ -54,7 +54,7 @@ public interface OAuthCredentialsInternalMapper {
 	 */
 	@Named("mapToDomain")
 	default OAuthDomain mapToDomain(final String name) {
-		return OAuthDomain.valueOf(name);
+		return OAuthDomain.fromName(name).orElseThrow();
 	}
 
 	/**

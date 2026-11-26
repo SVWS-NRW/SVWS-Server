@@ -1,6 +1,5 @@
 package de.svws_nrw.repo.oauth.credential;
 
-import java.util.List;
 import java.util.Optional;
 
 import de.svws_nrw.core.types.oauth2.OAuthServiceDomain;
@@ -26,10 +25,5 @@ public final class OAuthOAuthCredentialRepositoryImpl extends RepositoryImpl<DTO
 		return conn.queryList(QUERY_BY_SERVICEDOMAIN, DTOSchuleOAuthSecrets.class, domain)
 				.stream()
 				.findFirst();
-	}
-
-	@Override
-	public List<DTOSchuleOAuthSecrets> findAllByServiceDomain(final OAuthServiceDomain domain) {
-		return conn.queryList(QUERY_BY_SERVICEDOMAIN, DTOSchuleOAuthSecrets.class, domain);
 	}
 }

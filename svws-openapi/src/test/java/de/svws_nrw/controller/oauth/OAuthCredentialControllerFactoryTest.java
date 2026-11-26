@@ -3,6 +3,7 @@ package de.svws_nrw.controller.oauth;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.repo.DbConnectionProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -27,12 +29,14 @@ class OAuthCredentialControllerFactoryTest {
 		final HttpServletRequest request = mock(HttpServletRequest.class);
 		try (MockedStatic<DBBenutzerUtils> dbUtilsMock = mockStatic(DBBenutzerUtils.class);
 				MockedStatic<DbConnectionProvider> connectionProviderMock = mockStatic(DbConnectionProvider.class)) {
-			connectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(mock(DBEntityManager.class));
+			final DBEntityManager conn = mock(DBEntityManager.class);
+			connectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(conn);
+			final Benutzer benutzer = mock(Benutzer.class);
+			dbUtilsMock.when(() -> DBBenutzerUtils.getSVWSUser(eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.KEINE))).thenReturn(benutzer);
 
 			final var factory = OAuthCredentialControllerFactory.getNewInstance(request);
 
-			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.IT_NRW_ADMINISTRIEREN)),
-					times(1));
+			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), eq(ServerMode.DEV), any(BenutzerKompetenz[].class)), times(1));
 			assertNotNull(factory);
 
 			final var controller = factory.getCredentialController();

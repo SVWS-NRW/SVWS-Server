@@ -89,18 +89,6 @@ class OAuthCredentialServiceTest {
 	}
 
 	@Test
-	@DisplayName("getAll(serviceDomain) | gibt Credentials der Domaene mit maskiertem Secret zurueck, ohne zu entschluesseln")
-	void getAllByDomainSuccess() {
-		final var dto = buildEntity(3L, OAuthServiceDomain.IT_NRW);
-		when(repository.findAllByServiceDomain(OAuthServiceDomain.IT_NRW)).thenReturn(List.of(dto));
-
-		final var result = cut.getAll(OAuthDomain.IT_NRW);
-
-		assertThat(result).containsExactly(withSecret(mapper.fromDomain(dto), MASKED_SECRET));
-		verifyNoInteractions(secretCipher);
-	}
-
-	@Test
 	@DisplayName("get(domain) | gibt Credentials mit entschluesseltem Secret zurueck wenn vorhanden")
 	void getByDomainSuccess() {
 		final var dto = buildEntity(3L, OAuthServiceDomain.IT_NRW);

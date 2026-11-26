@@ -49,18 +49,6 @@ class OAuthOAuthCredentialRepositoryImplTest {
 		assertThat(result).isEmpty();
 	}
 
-	@Test
-	@DisplayName("findAllByServiceDomain | Delegiert Query an DBEntityManager und gibt alle Ergebnisse zurueck")
-	void findAllByServiceDomainSuccess() {
-		final var dto = buildEntity();
-		when(conn.queryList(QUERY_BY_SERVICEDOMAIN, DTOSchuleOAuthSecrets.class, OAuthServiceDomain.IT_NRW))
-				.thenReturn(List.of(dto));
-
-		final var result = cut.findAllByServiceDomain(OAuthServiceDomain.IT_NRW);
-
-		assertThat(result).containsExactly(dto);
-	}
-
 	private static DTOSchuleOAuthSecrets buildEntity() {
 		final var dto = new DTOSchuleOAuthSecrets(3L, "https://auth.example.com/token", "client-id", "client-secret");
 		dto.serviceDomain = OAuthServiceDomain.IT_NRW;

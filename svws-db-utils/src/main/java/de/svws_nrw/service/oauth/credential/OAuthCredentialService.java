@@ -66,20 +66,6 @@ public class OAuthCredentialService implements CredentialStore {
 	}
 
 	/**
-	 * Gibt alle OAuth-Zugangsdaten der übergebenen Domäne mit maskiertem Client-Secret zurück.
-	 *
-	 * @param domain die Domäne
-	 * @return Liste der Zugangsdaten der Domäne
-	 */
-	public List<Credentials> getAll(final OAuthDomain domain) {
-		return repository.findAllByServiceDomain(oAuthDomainMapper.toDomain(domain))
-				.stream()
-				.map(mapper::fromDomain)
-				.map(OAuthCredentialService::masked)
-				.toList();
-	}
-
-	/**
 	 * Gibt die Zugangsdaten zur übergebenen ID mit maskiertem Client-Secret zurück, falls vorhanden.
 	 *
 	 * @param id die ID der Zugangsdaten
