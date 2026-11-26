@@ -7691,6 +7691,40 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createGostKlausurenVorgabenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/multiple
+	 *
+	 * Validiert die übergebenen Klausurvorgaben und speichert sie gemeinsam in einer Transaktion. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Klausurvorgaben besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die angelegten Klausurvorgaben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
+	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben anzulegen.
+	 *   Code 409: Eine Klausurvorgabe ist schon in der Datenbank enthalten.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<GostKlausurvorgabe>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die angelegten Klausurvorgaben.
+	 */
+	public async createGostKlausurenVorgabenMultiple(data: List<Partial<GostKlausurvorgabe>>, schema: string): Promise<List<GostKlausurvorgabe>> {
+		const path = "/db/{schema}/gost/klausuren/vorgaben/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<GostKlausurvorgabe>).map(d => GostKlausurvorgabe.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostKlausurvorgabe>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostKlausurvorgabe.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostKlausurenVorgabenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/multiple
 	 *
 	 * Patcht mehrere Gost-Klausurvorgaben. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen von Gost-Klausurvorgaben besitzt.
@@ -7743,78 +7777,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result: string = await super.deleteJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(GostKlausurvorgabe.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode createMissingGostKlausurenVorgabenVorlagen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/vorlagen/fehlende-erstellen/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
-	 *
-	 * Legt fehlende Klausurvorgabe-Vorlagen an und gibt sie zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Gost-Klausurvorgabe-Vorlagen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der neuen Klausurvorgabe-Vorlagen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
-	 *   Code 400: Falsche Parameter
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Gost-Klausurvorgabe-Vorlagen anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 * @param {number} quartal - der Pfad-Parameter quartal
-	 *
-	 * @returns Die Liste der neuen Klausurvorgabe-Vorlagen.
-	 */
-	public async createMissingGostKlausurenVorgabenVorlagen(schema: string, halbjahr: number, quartal: number): Promise<List<GostKlausurvorgabe>> {
-		const path = "/db/{schema}/gost/klausuren/vorgaben/vorlagen/fehlende-erstellen/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
-			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
-		const result: string = await super.postJSON(path, null);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(GostKlausurvorgabe.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode copyGostKlausurenVorgabenVorlagenToJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/vorlagen/kopieren/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
-	 *
-	 * Kopiert die Klausurvorgabe-Vorlagen in einen konkreten Abiturjahrgang und gibt sie zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anlegen der Gost-Klausurvorgaben besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der kopierten Klausurvorgaben.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
-	 *   Code 400: Falsche Parameter
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Gost-Klausurvorgaben anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 * @param {number} quartal - der Pfad-Parameter quartal
-	 *
-	 * @returns Die Liste der kopierten Klausurvorgaben.
-	 */
-	public async copyGostKlausurenVorgabenVorlagenToJahrgang(schema: string, abiturjahr: number, halbjahr: number, quartal: number): Promise<List<GostKlausurvorgabe>> {
-		const path = "/db/{schema}/gost/klausuren/vorgaben/vorlagen/kopieren/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
-			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
-		const result: string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
 		obj.forEach((elem: any) => {

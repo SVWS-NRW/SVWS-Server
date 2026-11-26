@@ -57,15 +57,6 @@ public final class GostKlausurenControllerFactory {
 	}
 
 	/**
-	 * Erstellt einen Controller für Vorlagenoperationen auf GOSt-Klausurvorgaben.
-	 *
-	 * @return der Controller
-	 */
-	public GostKlausurenVorgabeVorlagenController getGostKlausurenVorgabeVorlagenController() {
-		return new GostKlausurenVorgabeVorlagenControllerImpl(gostKlausurenServiceFactory.getGostKlausurenVorgabeVorlagenService());
-	}
-
-	/**
 	 * Erstellt einen Controller für die GOSt-Klausurtermine.
 	 *
 	 * @return der Controller

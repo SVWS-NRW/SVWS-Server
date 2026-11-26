@@ -60,8 +60,7 @@ public final class GostKlausurenServiceFactory {
 	 * @return eine Instanz des {@link GostKlausurenVorgabeVorlagenService}
 	 */
 	public GostKlausurenVorgabeVorlagenService getGostKlausurenVorgabeVorlagenService() {
-		return new GostKlausurenVorgabeVorlagenService(klausurenRepositoryFactory.getGostKlausurenVorgabeRepository(),
-				gostServiceFactory.getGostFaecherService());
+		return new GostKlausurenVorgabeVorlagenService(klausurenRepositoryFactory.getGostKlausurenVorgabeRepository());
 	}
 
 	/**

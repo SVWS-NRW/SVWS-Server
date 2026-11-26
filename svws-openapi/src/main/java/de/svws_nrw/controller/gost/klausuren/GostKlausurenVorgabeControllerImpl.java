@@ -41,6 +41,11 @@ public final class GostKlausurenVorgabeControllerImpl implements GostKlausurenVo
 	}
 
 	@Override
+	public Response createMultiple(final List<GostKlausurenVorgabeCreateRequest> createRequests) {
+		return Responses.created(gostKlausurenVorgabeService.createMultiple(createRequests));
+	}
+
+	@Override
 	public Response patch(final GostKlausurenVorgabePatchRequest patch) {
 		return Responses.ok(gostKlausurenVorgabePatchService.patchMultiple(List.of(patch)));
 	}

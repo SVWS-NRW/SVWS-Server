@@ -6766,6 +6766,94 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Erstellt Kopien der Vorlagen, die im Zieljahrgang noch fehlen.
+	 *
+	 * @param abiturjahr das Ziel-Abiturjahr
+	 * @param halbjahr das Halbjahr oder null für alle Halbjahre
+	 * @param quartal das Quartal oder 0 für alle Quartale
+	 * @param vorlagen die Vorgaben des Vorlagenjahrgangs
+	 * @param zielvorgaben die vorhandenen Vorgaben des Zieljahrgangs
+	 *
+	 * @return die Kopien ohne vergebene IDs
+	 */
+	public static @NotNull List<GostKlausurvorgabe> vorgabeKopiereFehlendeVorlagen(final int abiturjahr, final GostHalbjahr halbjahr,
+			final int quartal, final @NotNull List<GostKlausurvorgabe> vorlagen, final @NotNull List<GostKlausurvorgabe> zielvorgaben) {
+		final @NotNull HashMap4D<Integer, Integer, String, Long, Boolean> vorhanden = new HashMap4D<>();
+		for (final @NotNull GostKlausurvorgabe vorgabe : zielvorgaben) {
+			vorhanden.put(vorgabe.halbjahr, vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, true);
+		}
+
+		final @NotNull List<GostKlausurvorgabe> kopien = new ArrayList<>();
+		for (final @NotNull GostKlausurvorgabe vorlage : vorlagen) {
+			if (((halbjahr != null) && (vorlage.halbjahr != halbjahr.id)) || ((quartal > 0) && (vorlage.quartal != quartal))) {
+				continue;
+			}
+			final @NotNull GostHalbjahr vorlagenHalbjahr = GostHalbjahr.fromIDorException(vorlage.halbjahr);
+			if ((vorlagenHalbjahr.istEinfuehrungsphase() && GostKursart.LK.kuerzel.equals(vorlage.kursart))
+					|| vorhanden.contains(vorlage.halbjahr, vorlage.quartal, vorlage.kursart, vorlage.idFach)) {
+				continue;
+			}
+
+			final @NotNull GostKlausurvorgabe kopie = new GostKlausurvorgabe();
+			kopie.abiturjahrgang = abiturjahr;
+			kopie.halbjahr = vorlage.halbjahr;
+			kopie.quartal = vorlage.quartal;
+			kopie.idFach = vorlage.idFach;
+			kopie.kursart = vorlage.kursart;
+			kopie.dauer = vorlage.dauer;
+			kopie.auswahlzeit = vorlage.auswahlzeit;
+			kopie.istGklMoeglich = vorlage.istGklMoeglich;
+			kopie.istMdlPruefung = vorlage.istMdlPruefung;
+			kopie.istAudioNotwendig = vorlage.istAudioNotwendig;
+			kopie.istVideoNotwendig = vorlage.istVideoNotwendig;
+			kopie.bemerkungVorgabe = vorlage.bemerkungVorgabe;
+			kopien.add(kopie);
+			vorhanden.put(vorlage.halbjahr, vorlage.quartal, vorlage.kursart, vorlage.idFach, true);
+		}
+		return kopien;
+	}
+
+	/**
+	 * Ermittelt die fehlenden Standard-Klausurvorgaben für den Vorlagenjahrgang.
+	 *
+	 * @param halbjahr das Halbjahr
+	 * @param quartal das Quartal oder 0 für beide Quartale
+	 * @param abiturjahr das Referenzjahr für die Berechnung der Klausurdauer
+	 *
+	 * @return die fehlenden Vorgaben ohne vergebene IDs
+	 */
+	public @NotNull List<GostKlausurvorgabe> vorgabeErzeugeFehlendeStandardVorlagen(final @NotNull GostHalbjahr halbjahr,
+			final int quartal, final int abiturjahr) {
+		final @NotNull List<GostKlausurvorgabe> result = new ArrayList<>();
+		final @NotNull List<GostKursart> kursarten = (halbjahr.istEinfuehrungsphase()) ? List.of(GostKursart.GK) : List.of(GostKursart.GK, GostKursart.LK);
+		final int erstesQuartal = (quartal == 0) ? 1 : quartal;
+		final int letztesQuartal = (quartal == 0) ? 2 : quartal;
+		for (final @NotNull GostFach fach : getFaecherManager(-1).getFaecherSchriftlichMoeglich()) {
+			if ((halbjahr == GostHalbjahr.Q22) && !(fach.istMoeglichAbiGK || fach.istMoeglichAbiLK)) {
+				continue;
+			}
+			for (final @NotNull GostKursart kursart : kursarten) {
+				if ((kursart == GostKursart.LK) && !fach.istMoeglichAbiLK) {
+					continue;
+				}
+				for (int q = erstesQuartal; q <= letztesQuartal; q++) {
+					if (vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(-1, halbjahr, q, kursart, fach.id) != null) {
+						continue;
+					}
+					final @NotNull GostKlausurvorgabe vorgabe = new GostKlausurvorgabe();
+					vorgabe.halbjahr = halbjahr.id;
+					vorgabe.quartal = q;
+					vorgabe.idFach = fach.id;
+					vorgabe.kursart = kursart.kuerzel;
+					vorgabe.dauer = berechneGostKlausurdauerByHalbjahrAndKursartAndFach(halbjahr, kursart, fach, abiturjahr);
+					result.add(vorgabe);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Berechnet die Klausurdauer laut APO-GOSt basierend auf der übergebenen Vorgabe.
 	 *
 	 * @param vorgabe  die {@link GostKlausurvorgabe}, die die notwendigen Informationen wie

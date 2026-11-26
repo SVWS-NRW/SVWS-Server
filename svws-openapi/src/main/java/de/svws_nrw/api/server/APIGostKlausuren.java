@@ -124,6 +124,35 @@ public class APIGostKlausuren {
 	}
 
 	/**
+	 * Erstellt mehrere Klausurvorgaben gemeinsam.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param createRequests die Daten der anzulegenden Klausurvorgaben
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die angelegten Klausurvorgaben
+	 */
+	@POST
+	@Path("/vorgaben/multiple")
+	@Operation(summary = "Erstellt mehrere Klausurvorgaben gemeinsam.",
+			description = "Validiert die übergebenen Klausurvorgaben und speichert sie gemeinsam in einer Transaktion."
+					+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Klausurvorgaben besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die angelegten Klausurvorgaben.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
+	@ApiResponse(responseCode = "400", description = "Die Daten sind fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben anzulegen.")
+	@ApiResponse(responseCode = "409", description = "Eine Klausurvorgabe ist schon in der Datenbank enthalten.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createGostKlausurenVorgabenMultiple(@PathParam("schema") final String schema, @RequestBody(
+			description = "Die Create-Daten für die Klausurvorgaben", required = true,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(
+					schema = @Schema(implementation = GostKlausurvorgabe.class)))) final List<@Valid GostKlausurenVorgabeCreateRequest> createRequests,
+			@Context final HttpServletRequest request) {
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenVorgabeController().createMultiple(createRequests);
+	}
+
+	/**
 	 * Patcht die Daten einer {@link GostKlausurvorgabe}.
 	 *
 	 * @param schema     das Datenbankschema, auf welchem der Patch ausgeführt werden soll
@@ -233,59 +262,6 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
 		return GostKlausurenControllerFactory.withWriteAccess(request)
 				.getGostKlausurenVorgabeController().deleteMultiple(ids);
-	}
-
-	/**
-	 * Kopiert die {@link GostKlausurvorgabe}-Vorlagen in einen konkreten Abiturjahrgang und gibt sie zurück.
-	 *
-	 * @param schema       das Datenbankschema, in welchem die {@link GostKlausurvorgabe}n erstellt werden
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 * @param abiturjahr   das Abiturjahr, für das die {@link GostKlausurvorgabe}n kopiert werden sollen
-	 * @param halbjahr     das GostHalbjahr, für das die {@link GostKlausurvorgabe}n kopiert werden sollen
-	 * @param quartal      das Quartal, 0 für das gesamte GostHalbjahr
-	 *
-	 * @return die Liste der neuen {@link GostKlausurvorgabe}n im angegebenen Abiturjahrgang, GostHalbjahr und Quartal
-	 */
-	@POST
-	@Path("/vorgaben/vorlagen/kopieren/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}")
-	@Operation(summary = "Kopiert die Klausurvorgabe-Vorlagen in einen konkreten Abiturjahrgang und gibt sie zurück.",
-			description = "Kopiert die Klausurvorgabe-Vorlagen in einen konkreten Abiturjahrgang und gibt sie zurück."
-					+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anlegen der Gost-Klausurvorgaben besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der kopierten Klausurvorgaben.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Gost-Klausurvorgaben anzulegen.")
-	@ApiResponse(responseCode = "400", description = "Falsche Parameter")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response copyGostKlausurenVorgabenVorlagenToJahrgang(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
-			@PathParam("halbjahr") final int halbjahr, @PathParam("quartal") final int quartal, @Context final HttpServletRequest request) {
-		return GostKlausurenControllerFactory.withWriteAccess(request).getGostKlausurenVorgabeVorlagenController()
-				.copyVorlagenToJahrgang(abiturjahr, halbjahr, quartal);
-	}
-
-	/**
-	 * Legt fehlende {@link GostKlausurvorgabe}-Vorlagen an und gibt sie zurück.
-	 *
-	 * @param schema     das Datenbankschema, in welchem die {@link GostKlausurvorgabe}n erstellt werden
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 * @param halbjahr     das GostHalbjahr, für das die {@link GostKlausurvorgabe}n erstellt werden sollen
-	 * @param quartal      das Quartal, 0 für das gesamte GostHalbjahr
-	 *
-	 * @return die Liste der neuen {@link GostKlausurvorgabe}-Vorlagen im angegebenen GostHalbjahr und Quartal
-	 */
-	@POST
-	@Path("/vorgaben/vorlagen/fehlende-erstellen/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}")
-	@Operation(summary = "Legt fehlende Klausurvorgabe-Vorlagen an und gibt sie zurück.",
-			description = "Legt fehlende Klausurvorgabe-Vorlagen an und gibt sie zurück."
-					+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Gost-Klausurvorgabe-Vorlagen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der neuen Klausurvorgabe-Vorlagen.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Gost-Klausurvorgabe-Vorlagen anzulegen.")
-	@ApiResponse(responseCode = "400", description = "Falsche Parameter")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response createMissingGostKlausurenVorgabenVorlagen(@PathParam("schema") final String schema, @PathParam("halbjahr") final int halbjahr,
-			@PathParam("quartal") final int quartal, @Context final HttpServletRequest request) {
-		return GostKlausurenControllerFactory.withWriteAccess(request).getGostKlausurenVorgabeVorlagenController()
-				.createMissingVorlagen(halbjahr, quartal);
 	}
 
 	/**
