@@ -1,4 +1,3 @@
-import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
 import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
@@ -235,14 +234,8 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeE
 		await this._stundenplaene.update(this.idSchuljahresabschnitt);
 	}
 
-	private async createPersonalabschnittsdaten(idLehrer: number): Promise<LehrerPersonalabschnittsdaten> {
-		const idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		return await api.server.createLehrerPersonalabschnittsdaten({ idLehrer, idSchuljahresabschnitt }, api.schema);
-	}
-
 	public async add(data: Partial<LehrerStammdaten>): Promise<LehrerStammdaten> {
 		const result = await api.server.addLehrerStammdaten(data, api.schema);
-		await this.createPersonalabschnittsdaten(result.id);
 		await this.setSchuljahresabschnitt(this.idSchuljahresabschnitt, true);
 		await this.navigator.select(result.id);
 		return result;

@@ -143,6 +143,19 @@ public final class LehrerPersonalabschnittsdatenService {
 	}
 
 	/**
+	 * Legt für einen Lehrer leere Personalabschnittsdaten im übergebenen Schuljahresabschnitt an. Die Operation läuft
+	 * in einer Transaktion. Lehrer und Schuljahresabschnitt werden nicht geprüft, das gewährleistet der Aufrufer.
+	 *
+	 * @param idLehrer                 die ID des Lehrers
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 */
+	public void addForLehrer(final long idLehrer, final long idSchuljahresabschnitt) {
+		TransactionSupport.transactional(() -> {
+			repo.create(new DTOLehrerAbschnittsdaten(repo.getNextID(), idLehrer, idSchuljahresabschnitt));
+		});
+	}
+
+	/**
 	 * Erstellt mehrere neue {@link LehrerPersonalabschnittsdaten}.
 	 *
 	 * @param dtos die Daten für die neuen Einträge

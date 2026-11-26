@@ -178,8 +178,8 @@ class LehrerServiceFactoryTest {
 		final var service = serviceFactory.getLehrerStammdatenService();
 		assertNotNull(service);
 
-		// Das Lehrer-Repository nutzen der Stammdaten-, der Lernplattform- und der Einwilligungs-Service
-		verify(repoLehrerFactory, times(3)).getLehrerRepository();
+		// Das Lehrer-Repository nutzen der Stammdaten-, der Lernplattform-, der Einwilligungs- und der Personalabschnittsdaten-Service
+		verify(repoLehrerFactory, times(4)).getLehrerRepository();
 		verify(repoLehrerFactory).getLehrerLernplattformRepository();
 		verify(repoLehrerFactory).getLehrerEinwilligungRepository();
 		verify(repoLehrerFactory).getLehrerFotoRepository();
@@ -189,6 +189,7 @@ class LehrerServiceFactoryTest {
 		verify(katalogRepositoryFactory).getOrtRepository();
 		verify(katalogRepositoryFactory).getOrtsteilRepository();
 		verify(repoSchuleFactory).getSchulleitungRepository();
+		verify(repoSchuleFactory).getSchuleRepository();
 	}
 
 	@Test

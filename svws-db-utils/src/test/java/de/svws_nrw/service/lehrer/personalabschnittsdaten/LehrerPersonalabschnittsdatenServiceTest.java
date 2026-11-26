@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -300,6 +301,29 @@ class LehrerPersonalabschnittsdatenServiceTest {
 		final var result = service.create(dto);
 
 		assertThat(result).isEqualTo(apiModel);
+	}
+
+	// -------------------------------------------------------------------------
+	// addForLehrer
+	// -------------------------------------------------------------------------
+
+	@Test
+	@DisplayName("addForLehrer - legt leere Personalabschnittsdaten für Lehrer und Schuljahresabschnitt an")
+	void addForLehrer() {
+		transactionSupport.when(() -> TransactionSupport.transactional(any(Runnable.class)))
+				.thenAnswer(invocation -> {
+					invocation.getArgument(0, Runnable.class).run();
+					return null;
+				});
+		when(repo.getNextID()).thenReturn(7L);
+		final var captor = ArgumentCaptor.forClass(DTOLehrerAbschnittsdaten.class);
+
+		service.addForLehrer(10L, 20L);
+
+		verify(repo).create(captor.capture());
+		assertThat(captor.getValue())
+				.extracting(e -> e.ID, e -> e.Lehrer_ID, e -> e.Schuljahresabschnitts_ID, e -> e.PflichtstdSoll, e -> e.Rechtsverhaeltnis)
+				.containsExactly(7L, 10L, 20L, null, null);
 	}
 
 	// -------------------------------------------------------------------------

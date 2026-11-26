@@ -303,7 +303,8 @@ public final class LehrerServiceFactory {
 				lehrerRepositoryFactory.getLehrerRepository(),
 				eigeneSchuleRepositoryFactory.getSchulleitungRepository(),
 				katalogRepositoryFactory.getOrtRepository(),
-				katalogRepositoryFactory.getOrtsteilRepository()
+				katalogRepositoryFactory.getOrtsteilRepository(),
+				eigeneSchuleRepositoryFactory.getSchuleRepository()
 		);
 
 		return new LehrerStammdatenService(
@@ -311,6 +312,7 @@ public final class LehrerServiceFactory {
 				this.getLehrerFotoService(),
 				this.getLehrerLernplattformService(),
 				this.getLehrerEinwilligungService(),
+				this.getLehrerPersonalabschnittsdatenService(),
 				LehrerStammdatenMapper.INSTANCE,
 				SchulleitungMapper.INSTANCE
 		);

@@ -19,6 +19,7 @@ import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungService;
 import de.svws_nrw.service.lehrer.foto.LehrerFoto;
 import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import de.svws_nrw.service.lehrer.lernplattform.LehrerLernplattformService;
+import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
 import jakarta.ws.rs.core.Response;
 import org.openapitools.jackson.nullable.JsonNullable;
 
@@ -28,7 +29,8 @@ import org.openapitools.jackson.nullable.JsonNullable;
  * <p>Der Service übernimmt insbesondere:</p>
  * <ul>
  *     <li>das Laden der Stammdaten einzelner, mehrerer oder aller Lehrkräfte (jeweils mit oder ohne Foto),</li>
- *     <li>das Anlegen einer Lehrkraft inklusive der Initialisierung der Lernplattformen und Einwilligungen,</li>
+ *     <li>das Anlegen einer Lehrkraft inklusive der Initialisierung der Lernplattformen, Einwilligungen und der
+ *         Personalabschnittsdaten im aktuellen Schuljahresabschnitt der Schule,</li>
  *     <li>das partielle Aktualisieren der Stammdaten einer Lehrkraft,</li>
  *     <li>die Validierung von Kürzel, Personal-Typ, Geschlecht, Staatsangehörigkeit sowie Wohnort und Ortsteil.</li>
  * </ul>
@@ -47,24 +49,27 @@ public class LehrerStammdatenService {
 	private final LehrerFotoService fotoService;
 	private final LehrerLernplattformService lernplattformService;
 	private final LehrerEinwilligungService einwilligungService;
+	private final LehrerPersonalabschnittsdatenService personalabschnittsdatenService;
 	private final LehrerStammdatenMapper mapper;
 	private final SchulleitungMapper schulleitungMapper;
 
 	/**
 	 * Erstellt einen neuen Service für Lehrer-Stammdaten.
 	 *
-	 * @param repositories           die benötigten Repositories
-	 * @param fotoService            der Service für die Lehrer-Fotos
-	 * @param lernplattformService   der Service für die Lernplattform-Zuordnungen der Lehrer
-	 * @param einwilligungService    der Service für die Einwilligungen der Lehrer
-	 * @param mapper                 der Mapper für die Abbildung der Stammdaten
-	 * @param schulleitungMapper     der Mapper für die Abbildung der Leitungsfunktionen
+	 * @param repositories                     die benötigten Repositories
+	 * @param fotoService                      der Service für die Lehrer-Fotos
+	 * @param lernplattformService             der Service für die Lernplattform-Zuordnungen der Lehrer
+	 * @param einwilligungService              der Service für die Einwilligungen der Lehrer
+	 * @param personalabschnittsdatenService   der Service für die Personalabschnittsdaten der Lehrer
+	 * @param mapper                           der Mapper für die Abbildung der Stammdaten
+	 * @param schulleitungMapper               der Mapper für die Abbildung der Leitungsfunktionen
 	 */
 	public LehrerStammdatenService(
 			final LehrerStammdatenRepositories repositories,
 			final LehrerFotoService fotoService,
 			final LehrerLernplattformService lernplattformService,
 			final LehrerEinwilligungService einwilligungService,
+			final LehrerPersonalabschnittsdatenService personalabschnittsdatenService,
 			final LehrerStammdatenMapper mapper,
 			final SchulleitungMapper schulleitungMapper
 	) {
@@ -72,6 +77,7 @@ public class LehrerStammdatenService {
 		this.fotoService = fotoService;
 		this.lernplattformService = lernplattformService;
 		this.einwilligungService = einwilligungService;
+		this.personalabschnittsdatenService = personalabschnittsdatenService;
 		this.mapper = mapper;
 		this.schulleitungMapper = schulleitungMapper;
 	}
@@ -136,8 +142,9 @@ public class LehrerStammdatenService {
 	}
 
 	/**
-	 * Legt eine neue Lehrkraft an und initialisiert die Lernplattformen sowie die Einwilligungen für die
-	 * Einwilligungsarten der Personenart Lehrer.
+	 * Legt eine neue Lehrkraft an und initialisiert die Lernplattformen, die Einwilligungen für die
+	 * Einwilligungsarten der Personenart Lehrer sowie leere Personalabschnittsdaten im aktuellen Schuljahresabschnitt
+	 * der Schule. Alle Schritte laufen in einer Transaktion, sodass keine unvollständig angelegte Lehrkraft entsteht.
 	 *
 	 * @param request   der Request mit den Daten der neuen Lehrkraft
 	 *
@@ -151,6 +158,7 @@ public class LehrerStammdatenService {
 			final var created = repositories.lehrerRepository().create(lehrer);
 			lernplattformService.addForLehrer(created.ID);
 			einwilligungService.addForLehrer(created.ID);
+			personalabschnittsdatenService.addForLehrer(created.ID, getIdAktuellerSchuljahresabschnitt());
 
 			return toApiMitFotos(List.of(created)).getFirst();
 		});
@@ -174,6 +182,10 @@ public class LehrerStammdatenService {
 
 			return toApiMitFotos(List.of(lehrer)).getFirst();
 		});
+	}
+
+	private long getIdAktuellerSchuljahresabschnitt() {
+		return repositories.eigeneSchuleRepository().getIdSchuljahresabschnitt();
 	}
 
 	private DTOLehrer loadLehrer(final long id) {

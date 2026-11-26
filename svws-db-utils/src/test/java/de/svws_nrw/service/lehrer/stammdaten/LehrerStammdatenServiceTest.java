@@ -14,7 +14,9 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.stammdaten.LehrerStammdatenMapper;
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
+import de.svws_nrw.repo.RepositoryException;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
@@ -22,6 +24,7 @@ import de.svws_nrw.service.lehrer.einwilligung.LehrerEinwilligungService;
 import de.svws_nrw.service.lehrer.foto.LehrerFoto;
 import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import de.svws_nrw.service.lehrer.lernplattform.LehrerLernplattformService;
+import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,6 +43,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -57,6 +61,7 @@ class LehrerStammdatenServiceTest {
 	private static final long ID_ORT = 100L;
 	private static final long ID_ORTSTEIL = 200L;
 	private static final long ID_ANDERER_ORT = 999L;
+	private static final long ID_AKTUELLER_ABSCHNITT = 42L;
 	private static final int GESCHLECHT_M = 3;
 	private static final int GESCHLECHT_UNGUELTIG = 999;
 	private static final long NATIONALITAET_DZA = 68090065L;
@@ -75,6 +80,9 @@ class LehrerStammdatenServiceTest {
 	private OrtsteilRepository ortsteilRepository;
 
 	@Mock
+	private EigeneSchuleRepository eigeneSchuleRepository;
+
+	@Mock
 	private LehrerFotoService fotoService;
 
 	@Mock
@@ -82,6 +90,9 @@ class LehrerStammdatenServiceTest {
 
 	@Mock
 	private LehrerEinwilligungService einwilligungService;
+
+	@Mock
+	private LehrerPersonalabschnittsdatenService personalabschnittsdatenService;
 
 	private LehrerStammdatenService service;
 
@@ -109,13 +120,15 @@ class LehrerStammdatenServiceTest {
 				lehrerRepository,
 				schulleitungRepository,
 				ortRepository,
-				ortsteilRepository
+				ortsteilRepository,
+				eigeneSchuleRepository
 		);
 		service = new LehrerStammdatenService(
 				repositories,
 				fotoService,
 				lernplattformService,
 				einwilligungService,
+				personalabschnittsdatenService,
 				LehrerStammdatenMapper.INSTANCE,
 				SchulleitungMapper.INSTANCE
 		);
@@ -151,6 +164,7 @@ class LehrerStammdatenServiceTest {
 
 			return lehrer;
 		});
+		lenient().when(eigeneSchuleRepository.getIdSchuljahresabschnitt()).thenReturn(ID_AKTUELLER_ABSCHNITT);
 	}
 
 	// -------------------------------------------------------------------------
@@ -258,7 +272,7 @@ class LehrerStammdatenServiceTest {
 	// -------------------------------------------------------------------------
 
 	@Test
-	@DisplayName("create | legt die Lehrkraft an und initialisiert Lernplattformen und Einwilligungen über die Services")
+	@DisplayName("create | legt die Lehrkraft an und initialisiert Lernplattformen, Einwilligungen und Personalabschnittsdaten über die Services")
 	void create() {
 		stubCreate();
 		final var request = createRequest();
@@ -273,6 +287,19 @@ class LehrerStammdatenServiceTest {
 				.containsExactly(ID_NEU, "NEU", "Neumann", "Nora", "LEHRKRAFT", GESCHLECHT_M, "Frau", false, NATIONALITAET_DZA);
 		verify(lernplattformService).addForLehrer(ID_NEU);
 		verify(einwilligungService).addForLehrer(ID_NEU);
+		verify(personalabschnittsdatenService).addForLehrer(ID_NEU, ID_AKTUELLER_ABSCHNITT);
+	}
+
+	@Test
+	@DisplayName("create | Fehler beim Anlegen der Personalabschnittsdaten bricht die Neuanlage ab")
+	void create_personalabschnittsdatenFehler() {
+		stubCreate();
+		doThrow(new RepositoryException("Fehler")).when(personalabschnittsdatenService).addForLehrer(ID_NEU, ID_AKTUELLER_ABSCHNITT);
+		final var request = createRequest();
+
+		assertThatThrownBy(() -> service.create(request))
+				.isInstanceOf(RepositoryException.class)
+				.hasMessage("Fehler");
 	}
 
 	@Test
@@ -312,7 +339,7 @@ class LehrerStammdatenServiceTest {
 				.hasMessage("Das Kuerzel NEU ist bereits vorhanden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		verify(lehrerRepository, never()).create(any(DTOLehrer.class));
-		verifyNoInteractions(lernplattformService, einwilligungService);
+		verifyNoInteractions(lernplattformService, einwilligungService, personalabschnittsdatenService);
 	}
 
 	@Test
