@@ -484,7 +484,6 @@
 
 	function startEdit(vorgabe: GostKlausurvorgabe) {
 		if (aktiveVorgabeId.value === vorgabe.id) {
-			cancelEdit();
 			return;
 		}
 		cancelEdit();
@@ -492,12 +491,16 @@
 	}
 
 	const isMounted = ref(false);
+	let mausgesteBegannImEditor = false;
+
 	onMounted(() => {
 		isMounted.value = true;
+		globalThis.addEventListener('pointerdown', merkeBeginnDerMausgeste, true);
 		globalThis.addEventListener('click', handleClick);
 	});
 
 	onUnmounted(() => {
+		globalThis.removeEventListener('pointerdown', merkeBeginnDerMausgeste, true);
 		globalThis.removeEventListener('click', handleClick);
 	});
 
@@ -519,8 +522,13 @@
 		return presenter.fachFarbeByKuerzel(kuerzel);
 	}
 
+	function merkeBeginnDerMausgeste(e: PointerEvent) {
+		const editor = document.getElementById('vorgabenEdit');
+		mausgesteBegannImEditor = (editor !== null) && e.composedPath().includes(editor);
+	}
+
 	function handleClick(e: MouseEvent) {
-		if (activeVorgabe.value.id <= 0) {
+		if ((activeVorgabe.value.id <= 0) || ((e.detail > 0) && mausgesteBegannImEditor)) {
 			return;
 		}
 		const tabelle = document.getElementById('vorgabenTable');
