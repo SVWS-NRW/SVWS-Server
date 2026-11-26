@@ -69,7 +69,7 @@ class LogoverwaltungControllerImplFactoryTest {
 		final var schuleRepositoryFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(EigeneSchuleServiceFactory.class);
 
-		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN))
+		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE))
 				.thenReturn(dbConnection);
 		repositoryFactoryMock.when(LogoverwaltungRepositoryFactory::getNewInstance)
 				.thenReturn(repositoryFactory);
@@ -86,7 +86,7 @@ class LogoverwaltungControllerImplFactoryTest {
 				.isNotNull()
 				.isInstanceOf(LogoverwaltungControllerFactory.class);
 
-		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN), times(1));
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE), times(1));
 		repositoryFactoryMock.verify(LogoverwaltungRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryMock.verify(() -> LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, LogoverwaltungMapper.INSTANCE, schuleServiceFactory),
 				times(1));
@@ -101,7 +101,7 @@ class LogoverwaltungControllerImplFactoryTest {
 		final var schuleRepositoryFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(EigeneSchuleServiceFactory.class);
 
-		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN))
+		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN))
 				.thenReturn(dbConnection);
 		repositoryFactoryMock.when(LogoverwaltungRepositoryFactory::getNewInstance)
 				.thenReturn(repositoryFactory);
@@ -118,7 +118,7 @@ class LogoverwaltungControllerImplFactoryTest {
 				.isNotNull()
 				.isInstanceOf(LogoverwaltungControllerFactory.class);
 
-		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN), times(1));
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN), times(1));
 		repositoryFactoryMock.verify(LogoverwaltungRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryMock.verify(() -> LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, LogoverwaltungMapper.INSTANCE, schuleServiceFactory),
 				times(1));
@@ -133,7 +133,7 @@ class LogoverwaltungControllerImplFactoryTest {
 		final var schuleRepositoryFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(EigeneSchuleServiceFactory.class);
 
-		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN))
+		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN))
 				.thenReturn(dbConnection);
 		repositoryFactoryMock.when(LogoverwaltungRepositoryFactory::getNewInstance)
 				.thenReturn(repositoryFactory);
@@ -150,7 +150,7 @@ class LogoverwaltungControllerImplFactoryTest {
 				.isNotNull()
 				.isInstanceOf(LogoverwaltungControllerFactory.class);
 
-		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN), times(1));
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN), times(1));
 		repositoryFactoryMock.verify(LogoverwaltungRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryMock.verify(() -> LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, LogoverwaltungMapper.INSTANCE, schuleServiceFactory),
 				times(1));

@@ -21,7 +21,7 @@ export class RouteSchuleLogoverwaltung extends RouteNode<RouteDataSchuleLogoverw
 			SchuleLogoverwaltung,
 			new RouteDataSchuleLogoverwaltung()
 		);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Logoverwaltung";
 		super.propHandler = (route) => this.getProps(route);
 	}

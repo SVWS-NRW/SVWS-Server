@@ -3483,11 +3483,10 @@ public class APISchule {
 	@GET
 	@Path("/logoverwaltung/logos")
 	@Operation(summary = "Gibt eine Übersicht aller Logos für die Logoverwaltung zurück.",
-			description = "Erstellt eine Liste aller vorhanden Logos. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von den Logos besitzt.")
+			description = "Erstellt eine Liste aller vorhandenen Logos. Es wird keine besondere Berechtigung benötigt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Logo.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Logo-Einträge anzusehen.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer ist nicht angemeldet oder hat keinen Zugriff auf das Schema.")
 	@ApiResponse(responseCode = "404", description = "Keine Logo-Einträge gefunden")
 	public Response getLogos(
 			@PathParam("schema") final String schema,
@@ -3511,10 +3510,10 @@ public class APISchule {
 	@Path("/logoverwaltung/logos")
 	@Produces("application/zip")
 	@Operation(summary = "Liefert ein ZIP-Archiv mit Logos.",
-			description = "Liefert ein ZIP-Archiv mit Logos. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+			description = "Liefert ein ZIP-Archiv mit Logos. Es wird keine besondere Berechtigung benötigt.")
 	@ApiResponse(responseCode = "200", description = "Alle verfügbaren Logos als ZIP-Archiv konnten erfolgreich abgerufen werden",
 			content = @Content(mediaType = "application/zip", schema = @Schema(type = "string", format = "binary")))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Logo-Einträge anzusehen.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer ist nicht angemeldet oder hat keinen Zugriff auf das Schema.")
 	@ApiResponse(responseCode = "404", description = "Keine Logo-Einträge gefunden")
 	public Response getLogosAsZip(
 			@PathParam("schema") final String schema,

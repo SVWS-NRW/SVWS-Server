@@ -18382,13 +18382,13 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getLogos für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logoverwaltung/logos
 	 *
-	 * Erstellt eine Liste aller vorhanden Logos. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von den Logos besitzt.
+	 * Erstellt eine Liste aller vorhandenen Logos. Es wird keine besondere Berechtigung benötigt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<Logo>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Logo-Einträge anzusehen.
+	 *   Code 403: Der SVWS-Benutzer ist nicht angemeldet oder hat keinen Zugriff auf das Schema.
 	 *   Code 404: Keine Logo-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
@@ -18412,7 +18412,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode getLogosAsZip für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logoverwaltung/logos
 	 *
-	 * Liefert ein ZIP-Archiv mit Logos. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * Liefert ein ZIP-Archiv mit Logos. Es wird keine besondere Berechtigung benötigt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Alle verfügbaren Logos als ZIP-Archiv konnten erfolgreich abgerufen werden

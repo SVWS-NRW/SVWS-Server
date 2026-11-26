@@ -20,7 +20,7 @@ public final class LogoverwaltungControllerFactory {
 	}
 
 	private static LogoverwaltungControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
-		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, benutzerKompetenz);
+		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, benutzerKompetenz);
 		final var serviceFactory = LogoverwaltungServiceFactory.getNewInstance(
 				LogoverwaltungRepositoryFactory.getNewInstance(),
 				LogoverwaltungMapper.INSTANCE,
@@ -39,7 +39,7 @@ public final class LogoverwaltungControllerFactory {
 	 * @return eine {@link LogoverwaltungControllerFactory}-Instanz mit Leseberechtigung
 	 */
 	public static LogoverwaltungControllerFactory withReadAccess(final HttpServletRequest request) {
-		return getNewInstance(request, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+		return getNewInstance(request, BenutzerKompetenz.KEINE);
 	}
 
 	/**

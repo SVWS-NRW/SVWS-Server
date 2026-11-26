@@ -74,9 +74,11 @@
 
 	import type { ApiFile } from "@core/api/BaseApi";
 	import type { Logo } from "@core/core/data/schule/Logo";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { ReportingBildDefinition } from "@core/core/types/reporting/ReportingBildDefinition";
 	import { Arrays } from "@core/java/util/Arrays";
 	import { useModelProxyList } from "@ui/model/useModelProxyList";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import type { TableAction } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
@@ -91,6 +93,9 @@
 
 	const props = defineProps<SchuleLogoverwaltungProps>();
 	const schuleState = useSchuleState();
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 
 	/**
 	 * Tabellendaten
@@ -165,14 +170,20 @@
 
 	function rowActions(logoModel: LogoModelProxy): TableAction[] {
 		const hasImage = logoModel.proxy.base64 !== "";
-		return [
+		const editActions: TableAction[] = [
 			{
 				label: hasImage ? "Bild aktualisieren" : "Bild hochladen",
 				action: () => openUploadModal(logoModel),
 				iconClasses: hasImage ? "i-ri-edit-2-line" : "i-ri-add-line",
 			},
-			{ label: "Bild exportieren", action: () => exportImage(logoModel), iconClasses: "i-ri-download-2-line", disabled: !hasImage },
+		];
+		const deleteActions: TableAction[] = [
 			{ label: "Bild löschen", action: () => openDeleteModal([logoModel]), iconClasses: "i-ri-close-line icon-ui-danger", disabled: !hasImage },
+		];
+		return [
+			...(hatKompetenzUpdate.value ? editActions : []),
+			{ label: "Bild exportieren", action: () => exportImage(logoModel), iconClasses: "i-ri-download-2-line", disabled: !hasImage },
+			...(hatKompetenzUpdate.value ? deleteActions : []),
 		];
 	}
 
@@ -199,9 +210,12 @@
 	const bulkAllChecked = computed(() => (bulkSelectedLogoModels.value.length === bulkSelectable.value.length) && (bulkSelectedLogoModels.value.length > 0));
 	const bulkIntermediate = computed(() => (bulkSelectedLogoModels.value.length < bulkSelectable.value.length) && (bulkSelectedLogoModels.value.length > 0));
 	const bulkActions = computed(() => {
+		const deleteActions: TableAction[] = [
+			{ label: "Bilder entfernen", action: () => openDeleteModal(bulkSelectedLogoModels.value), iconClasses: "i-ri-close-line icon-ui-danger", disabled: bulkSelectedLogoModels.value.length === 0 },
+		];
 		return [
 			{ label: "Bilder exportieren", action: () => void exportImagesAsZip(), iconClasses: "i-ri-download-2-line", disabled: bulkSelectedLogoModels.value.length === 0 },
-			{ label: "Bilder entfernen", action: () => openDeleteModal(bulkSelectedLogoModels.value), iconClasses: "i-ri-close-line icon-ui-danger", disabled: bulkSelectedLogoModels.value.length === 0 },
+			...(hatKompetenzUpdate.value ? deleteActions : []),
 		];
 	});
 
