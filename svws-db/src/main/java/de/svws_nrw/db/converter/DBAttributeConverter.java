@@ -19,8 +19,6 @@ import de.svws_nrw.db.converter.current.NationalitaetenConverter;
 import de.svws_nrw.db.converter.current.PersonTypNullableConverter;
 import de.svws_nrw.db.converter.current.PersonalTypConverter;
 import de.svws_nrw.db.converter.current.ReportingBildDefinitionConverter;
-import de.svws_nrw.db.converter.current.OAuthResourceTypeConverter;
-import de.svws_nrw.db.converter.current.OAuthServerModeConverter;
 import de.svws_nrw.db.converter.current.OAuthServiceDomainConverter;
 import de.svws_nrw.db.converter.current.SprachpruefungniveauConverter;
 import de.svws_nrw.db.converter.current.StatusSchulwechselAbgangConverter;
@@ -132,8 +130,6 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 		add(new VerkehrssprachenConverter());
 		add(new ReportingBildDefinitionConverter());
 		add(new OAuthServiceDomainConverter());
-		add(new OAuthServerModeConverter());
-		add(new OAuthResourceTypeConverter());
 		add(new StatusSchulwechselAbgangConverter());
 		add(new StatusSchulwechselErfolgreicheBewerbungConverter());
 

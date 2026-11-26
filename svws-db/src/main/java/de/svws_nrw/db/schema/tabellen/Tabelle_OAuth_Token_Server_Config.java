@@ -1,6 +1,5 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.db.converter.current.OAuthServerModeConverter;
 import de.svws_nrw.db.converter.current.OAuthServiceDomainConverter;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
@@ -36,8 +35,6 @@ public class Tabelle_OAuth_Token_Server_Config extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte server_mode */
 	public final SchemaTabelleSpalte col_server_mode = add("server_mode", SchemaDatentypen.VARCHAR, false).setDatenlaenge(16)
 			.setNotNull()
-			.setConverter(OAuthServerModeConverter.class)
-			.setConverterRevision(SchemaRevisionen.REV_84)
 			.setJavaName("serverMode")
 			.setJavaComment("Der Modus der externen Systeme (DEVELOPMENT oder PRODUCTION)");
 
@@ -57,6 +54,7 @@ public class Tabelle_OAuth_Token_Server_Config extends SchemaTabelle {
 		setJavaSubPackage("svws.auth");
 		setJavaClassName("DTOOAuthTokenServerConfig");
 		setJavaComment("Konfiguration der Token Server, über die OAuth-Tokens bezogen werden (Token-URL je Domäne und Modus)");
+		setVeraltet(SchemaRevisionen.REV_89);
 	}
 
 }

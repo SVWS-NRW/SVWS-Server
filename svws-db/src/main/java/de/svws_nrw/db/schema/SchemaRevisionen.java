@@ -415,21 +415,27 @@ public enum SchemaRevisionen {
 	 * und aus der Hilfsspalte StatusTmp befüllt. Anschließend werden Fremdschlüssel, Index und DAV-Trigger neu angelegt und die
 	 * Hilfsspalte entfernt.
 	 */
-	REV_88(88, "2026-11-23");
+	REV_88(88, "2026-11-23"),
+
+	/**
+	 * Tabellen OAuth_Resource_Server_Config und OAuth_Token_Server_Config entfernt. Die Konfiguration der externen OAuth-Systeme
+	 * erfolgt nun über eine Java-basierte Konfiguration.
+	 */
+	REV_89(89, "2026-11-25");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_88;
+	public static final SchemaRevisionen maxRevision = REV_89;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_88;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_89;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */

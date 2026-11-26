@@ -1,7 +1,5 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.db.converter.current.OAuthResourceTypeConverter;
-import de.svws_nrw.db.converter.current.OAuthServerModeConverter;
 import de.svws_nrw.db.converter.current.OAuthServiceDomainConverter;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
@@ -37,16 +35,12 @@ public class Tabelle_OAuth_Resource_Server_Config extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte server_mode */
 	public final SchemaTabelleSpalte col_server_mode = add("server_mode", SchemaDatentypen.VARCHAR, false).setDatenlaenge(16)
 			.setNotNull()
-			.setConverter(OAuthServerModeConverter.class)
-			.setConverterRevision(SchemaRevisionen.REV_84)
 			.setJavaName("serverMode")
 			.setJavaComment("Der Modus der externen Systeme (DEVELOPMENT oder PRODUCTION)");
 
 	/** Die Definition der Tabellenspalte resource_type */
 	public final SchemaTabelleSpalte col_resource_type = add("resource_type", SchemaDatentypen.VARCHAR, false).setDatenlaenge(32)
 			.setNotNull()
-			.setConverter(OAuthResourceTypeConverter.class)
-			.setConverterRevision(SchemaRevisionen.REV_84)
 			.setJavaName("resourceType")
 			.setJavaComment("Die Art des Resource Servers, z.B. SIGNIERDIENST");
 
@@ -72,6 +66,7 @@ public class Tabelle_OAuth_Resource_Server_Config extends SchemaTabelle {
 		setJavaSubPackage("svws.auth");
 		setJavaClassName("DTOOAuthResourceServerConfig");
 		setJavaComment("Konfiguration der Resource Server, die über OAuth angebunden werden (URL und Scope je Domäne, Modus und Ressourcentyp)");
+		setVeraltet(SchemaRevisionen.REV_89);
 	}
 
 }
