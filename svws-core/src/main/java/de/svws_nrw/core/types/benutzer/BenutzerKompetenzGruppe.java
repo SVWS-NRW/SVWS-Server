@@ -78,12 +78,15 @@ public enum BenutzerKompetenzGruppe {
 	EXTERNAL_API(new BenutzerKompetenzGruppenKatalogEintrag(6000, "External API", 4, 4)),
 
 	/** Gruppe für Rechte bezüglich der IT.NRW OAuth Domäne. */
-	IT_NRW(new BenutzerKompetenzGruppenKatalogEintrag(7000, "IT.NRW", 5, 4));
+	IT_NRW(new BenutzerKompetenzGruppenKatalogEintrag(7000, "IT.NRW", 5, 4)),
+
+	/** Gruppe für Rechte bezüglich des E-Mail-Versands. */
+	EMAIL_VERSAND(new BenutzerKompetenzGruppenKatalogEintrag(8000, "E-Mail-Versand", 5, 2));
 
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 4;
+	public static final long VERSION = 5;
 
 	/** Die Daten der Benutzerkompetenz-Gruppe */
 	public final @NotNull BenutzerKompetenzGruppenKatalogEintrag daten;

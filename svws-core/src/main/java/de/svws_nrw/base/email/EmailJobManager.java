@@ -8,12 +8,18 @@ import java.util.OptionalInt;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import jakarta.mail.MessagingException;
+import jakarta.mail.SendFailedException;
+import jakarta.mail.internet.AddressException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -29,8 +35,8 @@ public final class EmailJobManager {
 	/** Die ID des Benutzers aus dem Datenbank-Schema, dem dieser Manager zugeordnet ist. */
 	private final long idUser;
 
-	/** Eine Hilfsklasse, welche die Verwaltung der abgeschlossenen Jobs übernimmt */
-	private final @NotNull EmailJobManagerCompletedJobs completedJobs;
+	/** Wie oft der Worker abgelaufene Jobs aufräumt, solange keine neuen Jobs kommen. */
+	private static final long CLEANUP_INTERVAL_MS = 1000;
 
 	/** Eine Queue zur Verwaltung der Jobs, welche den Status QUEUED haben. */
 	private final BlockingQueue<EmailJob> jobs = new LinkedBlockingQueue<>();
@@ -40,6 +46,12 @@ public final class EmailJobManager {
 
 	/** Eine Deque, um die Sendezeitpunkte für die letzten 60 Sekunden zu speichern, um damit die Senderate von E-Mails pro Minute zu begrenzen. */
 	private final ArrayDeque<Long> sendTimestamps = new ArrayDeque<>();
+
+	/** Schützt {@link #sendTimestamps}. Ein ReentrantLock, weil wait() in einem synchronized-Block unter Java 21 den Trägerthread blockiert. */
+	private final ReentrantLock rateLimitLock = new ReentrantLock();
+
+	/** Weckt wartende Threads, wenn sich die Zeitstempel ändern. */
+	private final Condition rateLimitChanged = rateLimitLock.newCondition();
 
 	/**
 	 * Dieses Lock-Objekt stellt sicher, dass die Statusübergänge eines Jobs atomar ablaufen.
@@ -85,7 +97,6 @@ public final class EmailJobManager {
 	EmailJobManager(final @NotNull String schema, final long idUser) {
 		this.schema = schema;
 		this.idUser = idUser;
-		this.completedJobs = new EmailJobManagerCompletedJobs(this);
 		final @NotNull String threadName = "EmailJobManager_" + schema + "_" + idUser;
 		this.thread = Thread.ofVirtual().name(threadName).start(this::run);
 	}
@@ -99,6 +110,7 @@ public final class EmailJobManager {
 	 * @return die ID des neuen Jobs oder -1, wenn der Job bereits eine ID hatte und erneut versucht wurde diesen Job hinzuzufügen
 	 */
 	public long enqueue(final @NotNull EmailJob job) {
+		removeExpiredJobs();
 		// Setzt die Job-ID und fügt den Job hinzu.
 		final boolean isNewJob = job.setId(nextJobId.getAndIncrement());
 		if (!isNewJob) {
@@ -114,16 +126,48 @@ public final class EmailJobManager {
 
 
 	/**
+	 * Fügt einen neuen Job nur hinzu, solange weniger als die angegebene Zahl an Jobs wartet oder versendet wird. Zählen und Hinzufügen laufen
+	 * unter derselben Sperre, damit parallele Aufträge die Grenze nicht gemeinsam überschreiten.
+	 *
+	 * @param job             der E-Mail-Job
+	 * @param maxActiveJobs   die höchste Zahl an Jobs, die gleichzeitig warten oder versendet werden
+	 *
+	 * @return die ID des neuen Jobs oder -1, wenn die Grenze erreicht ist oder der Job bereits eine ID hatte
+	 */
+	public long enqueue(final @NotNull EmailJob job, final int maxActiveJobs) {
+		synchronized (queueTransitionLock) {
+			if (countActiveJobs() >= maxActiveJobs) {
+				return -1;
+			}
+			return enqueue(job);
+		}
+	}
+
+
+	/**
+	 * Zählt die Jobs, die warten oder versendet werden. Wer einen Auftrag aufwendig vorbereitet, prüft damit vorher, ob er noch Platz hat. Die
+	 * verbindliche Prüfung macht {@link #enqueue(EmailJob, int)}.
+	 *
+	 * @return die Zahl der wartenden und laufenden Jobs
+	 */
+	public long countActiveJobs() {
+		return mapJobs.values().stream()
+				.filter(j -> (j.getStatus() == EmailJobStatus.QUEUED) || (j.getStatus() == EmailJobStatus.SENDING))
+				.count();
+	}
+
+
+	/**
 	 * Stoppt den Thread zum Versenden von E-Mails.
 	 * Hierzu wird das interne Flag running auf false gesetzt und der Worker-Thread des Managers wird unterbrochen.
-	 * Außerdem wird die Liste der abgeschlossenen Jobs sofort geleert.
+	 * Außerdem werden die beendeten Jobs sofort entfernt.
 	 * Diese Methode sollte aufgerufen werden, bevor die Anwendung heruntergefahren wird, um die verbleibenden
 	 * Manager-Aktivitäten abzuschließen.
 	 */
 	public void shutdown() {
 		running = false;
 		thread.interrupt();
-		completedJobs.removeAll();
+		mapJobs.values().removeIf(job -> isFinished(job.getStatus()));
 	}
 
 
@@ -156,6 +200,7 @@ public final class EmailJobManager {
 	 * @return Status oder null, wenn nicht gefunden
 	 */
 	public EmailJob getJob(final long idJob) {
+		removeExpiredJobs();
 		return mapJobs.get(idJob);
 	}
 
@@ -169,12 +214,12 @@ public final class EmailJobManager {
 	 * @return true, wenn der Job gefunden wurde (unabhängig davon, ob er sofort gestoppt werden konnte), und ansonsten false
 	 */
 	public boolean cancelJob(final long idJob) {
+		removeExpiredJobs();
 		final EmailJob job = mapJobs.get(idJob);
 		if (job == null) {
 			return false;
 		}
 
-		EmailJobStatus finalStatus = null;
 		synchronized (queueTransitionLock) {
 			job.requestCancellation();
 			if (job.getStatus() != EmailJobStatus.QUEUED) {
@@ -185,41 +230,50 @@ public final class EmailJobManager {
 				job.addLogError("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
 				// Status noch unter dem Lock setzen.
 				job.setStatus(EmailJobStatus.CANCELED);
-				finalStatus = EmailJobStatus.CANCELED;
+				// Der Worker sieht diesen Job nicht mehr und kann die Anhänge daher nicht freigeben.
+				job.releaseAttachments();
 			}
 			// Wenn remove() false liefert, hat der Worker den Job bereits entnommen,
 			// aber den Status noch nicht auf SENDING gesetzt. cancellationRequested ist
 			// jedoch bereits true, sodass processJob() den Job als CANCELED behandelt.
-		}
-		// completedJobs.add() wird bewusst außerhalb des queueTransitionLock aufgerufen,
-		// um die Lock-Haltezeit zu minimieren und eine verschachtelte Synchronisation zu vermeiden.
-		if (finalStatus != null) {
-			completedJobs.add(job);
 		}
 		return true;
 	}
 
 
 	/**
-	 * Entfernt den Job mit der angegebenen ID aus dem Job-Manager. Diese Methode dient dem
-	 * endgültigen Entfernen eines Jobs durch den {@link EmailJobManagerCompletedJobs}
+	 * Prüft, ob ein Job mit diesem Status beendet ist und nicht mehr verändert wird.
 	 *
-	 * @param idJob   die ID des zu entfernenden Jobs
+	 * @param status   der Status des Jobs
+	 *
+	 * @return true, wenn der Job beendet ist, und ansonsten false
 	 */
-	void removeCompletedJob(final long idJob) {
-		mapJobs.remove(idJob);
+	private static boolean isFinished(final @NotNull EmailJobStatus status) {
+		return (status != EmailJobStatus.QUEUED) && (status != EmailJobStatus.SENDING);
+	}
+
+
+	/**
+	 * Entfernt beendete Jobs, deren Haltezeit abgelaufen ist. Bis dahin kann der Benutzer noch Status und Log abfragen.
+	 */
+	private void removeExpiredJobs() {
+		final long now = System.currentTimeMillis();
+		mapJobs.values().removeIf(job -> isFinished(job.getStatus())
+				&& ((now - job.getTimeLastChanged()) >= job.getContext().getTimeToKeepCompletedJobs()));
 	}
 
 
 	/**
 	 * Die Methode des Worker-Threads des Job-Managers.
+	 * Der Worker wartet immer nur begrenzt auf neue Jobs und räumt zwischendurch auf. Ein Job kann auch ohne den Worker enden, etwa durch einen
+	 * Abbruch in der Warteschlange.
 	 * Die Schleife endet, wenn {@link #shutdown()} aufgerufen wird: Entweder durch
-	 * das Interrupt-Signal (beim Warten auf einen neuen Job in {@code jobs.take()})
+	 * das Interrupt-Signal (beim Warten auf einen neuen Job)
 	 * oder nach Abschluss des aktuell laufenden Jobs, da dieser über
 	 * {@link EmailJob#hasCancellationRequest()} das Abbruch-Flag auswertet.
 	 * {@link #processJob} fängt reguläre Fehler beim Versand bereits selbst ab und markiert den
 	 * Job entsprechend als fehlgeschlagen. Sollte dennoch eine unerwartete Exception bis hierher durchschlagen,
-	 * wurde der Job durch {@code jobs.take()} bereits aus der Warteschlange entnommen und kann nicht mehr regulär
+	 * wurde der Job bereits aus der Warteschlange entnommen und kann nicht mehr regulär
 	 * abgeschlossen werden. Die zugehörigen E-Mails gehen damit unwiederbringlich verloren.
 	 * Damit die Ursache im Fehlerfall nachvollzogen werden kann, wird ein solcher Fehler geloggt,
 	 * bevor der Worker mit dem nächsten Job fortfährt.
@@ -228,8 +282,11 @@ public final class EmailJobManager {
 		while (running) {
 			EmailJob job = null;
 			try {
-				job = jobs.take();
-				processJob(job);
+				removeExpiredJobs();
+				job = jobs.poll(CLEANUP_INTERVAL_MS, TimeUnit.MILLISECONDS);
+				if (job != null) {
+					processJob(job);
+				}
 			} catch (@SuppressWarnings("unused") final InterruptedException e) {
 				Thread.currentThread().interrupt();
 				return;
@@ -281,16 +338,13 @@ public final class EmailJobManager {
 					job.addLogError("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
 				}
 				job.setStatus(EmailJobStatus.CANCELED);
+				job.releaseAttachments();
 			} else {
 				// Status-Wechsel unter dem Lock, damit cancelJob() ihn korrekt sieht.
 				job.setStatus(EmailJobStatus.SENDING);
 			}
 		}
-		// completedJobs.add() wird bewusst außerhalb des queueTransitionLock aufgerufen,
-		// um die Lock-Haltezeit zu minimieren und eine verschachtelte Synchronisation zu vermeiden.
-		// Der canceledBeforeStart-Flag wurde noch unter dem Lock ermittelt und ist daher zuverlässig.
 		if (canceledBeforeStart) {
-			completedJobs.add(job);
 			return;
 		}
 
@@ -335,9 +389,7 @@ public final class EmailJobManager {
 			// Status wird noch unter dem Lock gesetzt, damit kein anderer Thread einen Zwischenstatus sieht.
 			job.setStatus(finalStatus);
 		}
-		// completedJobs.add() wird bewusst außerhalb des queueTransitionLock aufgerufen,
-		// um die Lock-Haltezeit zu minimieren und eine verschachtelte Synchronisation zu vermeiden.
-		completedJobs.add(job);
+		job.releaseAttachments();
 	}
 
 
@@ -355,8 +407,8 @@ public final class EmailJobManager {
 		// Die Größe des Zeitfensters für den Versand: Anzahl an Millisekunden für eine Minute
 		final long zeitfenster = job.getContext().getRateLimitTimeframeMs();
 
-		// Synchronisiert den Zugriff auf der Deque bei dem Zugriff durch mehrere Threads. wait und notifyAll benötigen dieselbe Monitor-Instanz.
-		synchronized (sendTimestamps) {
+		rateLimitLock.lock();
+		try {
 
 			// Eine Endlosschleife, welche entweder das Senden durch "return" erlaubt oder blockierend auf ein freies Zeitfenster wartet.
 			while (true) {
@@ -372,15 +424,15 @@ public final class EmailJobManager {
 				if ((oldest == null) || (sendTimestamps.size() < job.getContext().getMaxEmailsPerMinute())) {
 					// Füge den Zeitstempel in die Queue ein, wecken dann ggf. noch wartende andere Threads und verlasse die Methode zum Senden ...
 					sendTimestamps.addLast(now);
-					sendTimestamps.notifyAll();
+					rateLimitChanged.signalAll();
 					return;
 				}
 
 				// Kein Versenden erlaubt. Bestimme daher die Wartezeit anhand des ältesten Eintrags, warte aber mindestens 50ms, um ein Busy-Wait zu vermeiden.
 				final long wartezeit = Math.max(50, zeitfenster - (now - oldest));
 				try {
-					// Warte so lange, bis die Wartezeit abgelaufen ist oder ein notifyAll durch einen anderen Thread diesen Thread wieder aufweckt ...
-					sendTimestamps.wait(wartezeit);
+					// Warte so lange, bis die Wartezeit abgelaufen ist oder ein anderer Thread diesen Thread wieder aufweckt ...
+					rateLimitChanged.await(wartezeit, TimeUnit.MILLISECONDS);
 					// ... und dann der nächste Schleifendurchlauf zum Prüfen, ob eine Berechtigung zum Senden besteht
 				} catch (@SuppressWarnings("unused") final InterruptedException ie) {
 					// Reagiere auf den Abbruch des Jobs von der shutdown-Methode und signalisiere dies an die Threads mithilfe einer Exception.
@@ -388,6 +440,8 @@ public final class EmailJobManager {
 					throw new EmailJobCanceledException();
 				}
 			}
+		} finally {
+			rateLimitLock.unlock();
 		}
 	}
 
@@ -395,6 +449,8 @@ public final class EmailJobManager {
 	/**
 	 * Sendet die E-Mails des übergebenen Jobs. Der Versand findet an alle Empfänger des Jobs statt.
 	 * Vor jeder einzelnen E-Mail wird geprüft, ob das Versandlimit für E-Mails erreicht wurde, und der Versand wird ggf. für einen Zeitraum ausgesetzt.
+	 * Nach einem Fehler, der alle Empfänger betrifft, endet der Versand. Sonst wartete der Job bei jedem Empfänger erneut auf einen hängenden
+	 * Mailserver oder versuchte eine abgelehnte Anmeldung so oft, bis der Mailserver das Konto sperrt.
 	 *
 	 * @param job   der E-Mail-Job
 	 *
@@ -402,12 +458,32 @@ public final class EmailJobManager {
 	 */
 	private boolean sendAll(final EmailJob job) {
 		boolean allSuccessful = true;
-		for (final EmailJobRecipient recipient : job.getRecipients()) {
-			if (!sendToRecipient(job, recipient)) {
-				allSuccessful = false;
+		final List<EmailJobRecipient> recipients = job.getRecipients();
+		for (int i = 0; i < recipients.size(); i++) {
+			try {
+				if (!sendToRecipient(job, recipients.get(i))) {
+					allSuccessful = false;
+				}
+			} catch (@SuppressWarnings("unused") final FehlerFuerAlleEmpfaenger e) {
+				job.addLogError("- ABBRUCH: Der Versand endet nach diesem Fehler. %d weitere Empfänger erhalten keine E-Mail."
+						.formatted(recipients.size() - i - 1));
+				return false;
 			}
 		}
 		return allSuccessful;
+	}
+
+
+	/**
+	 * Prüft, ob ein Fehler beim Versand alle Empfänger betrifft. Lehnt der Mailserver einen Empfänger oder die Nachricht ab, betrifft das
+	 * nur diese E-Mail. Scheitern dagegen Verbindung, Verschlüsselung oder Anmeldung, scheitert auch jede weitere E-Mail.
+	 *
+	 * @param e   der Fehler beim Versand
+	 *
+	 * @return true, wenn der Fehler alle Empfänger betrifft, und ansonsten false
+	 */
+	private static boolean betrifftAlleEmpfaenger(final @NotNull Exception e) {
+		return (e instanceof MessagingException) && !(e instanceof SendFailedException) && !(e instanceof AddressException);
 	}
 
 
@@ -490,10 +566,23 @@ public final class EmailJobManager {
 			throw e;
 		} catch (final Exception e) {
 			job.addLogError("- Fehler beim Versand an Empfänger " + recipient.email + ": " + e.getMessage());
+			if (betrifftAlleEmpfaenger(e)) {
+				throw new FehlerFuerAlleEmpfaenger();
+			}
 			return false;
 		}
 		job.notifyEmailSent();
 		return true;
+	}
+
+
+	/**
+	 * Beendet den Versand eines Jobs nach einem Fehler, der alle Empfänger betrifft. Den Fehler selbst hat bereits das Log des Jobs.
+	 */
+	private static final class FehlerFuerAlleEmpfaenger extends RuntimeException {
+
+		private static final long serialVersionUID = 1L;
+
 	}
 
 

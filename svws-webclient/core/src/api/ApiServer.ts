@@ -35,6 +35,7 @@ import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindu
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../asd/data/schueler/EinschulungsartKatalogEintrag';
 import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
+import { EmailSendRequest } from '../core/data/email/EmailSendRequest';
 import { ENMConfigResponse } from '../core/data/enm/ENMConfigResponse';
 import { ENMLehrerInitialKennwort } from '../core/data/enm/ENMLehrerInitialKennwort';
 import { ENMServerConfig } from '../core/data/enm/ENMServerConfig';
@@ -2090,6 +2091,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode cancelEmailJob für den Zugriff auf die URL https://{hostname}/db/{schema}/email/email-jobs/{jobId}/cancel
+	 *
+	 * Bricht den angegebenen E-Mail-Job ab. Ein wartender Job endet sofort, ein laufender nach der aktuell versendeten E-Mail. War der Job bereits beendet, wird dies im Log gemeldet.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Abbruch wurde veranlasst oder der Job war bereits beendet.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 404: Job nicht gefunden.
+	 *   Code 409: Der Abbruch ist fehlgeschlagen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} jobId - der Pfad-Parameter jobId
+	 *
+	 * @returns Der Abbruch wurde veranlasst oder der Job war bereits beendet.
+	 */
+	public async cancelEmailJob(schema: string, jobId: number): Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/email/email-jobs/{jobId}/cancel"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{jobId\s*(:[^{}]+({[^{}]+})*)?}/g, jobId.toString());
+		const result: string = await super.postJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getEmailJobLog für den Zugriff auf die URL https://{hostname}/db/{schema}/email/email-jobs/{jobId}/log
 	 *
 	 * Liefert die gesammelten Logeinträge (Hinweise, Fehler) des angegebenen E-Mail-Jobs.
@@ -2136,6 +2164,35 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{jobId\s*(:[^{}]+({[^{}]+})*)?}/g, jobId.toString());
 		const result: string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode sendEmail für den Zugriff auf die URL https://{hostname}/db/{schema}/email/send
+	 *
+	 * Startet den Versand einer E-Mail an eine Liste von Empfängern als Job im Hintergrund. Jede Adresse erhält eine eigene E-Mail mit demselben Betreff, Text und denselben Anhängen. Absender ist der angemeldete Benutzer mit seinen SMTP-Zugangsdaten. Ungültige Adressen werden übersprungen und im Log des Jobs vermerkt. Ein Auftrag hat höchstens 500 Empfänger. Erlaubt sind höchstens 20 Anhänge vom Typ PDF, PNG und JPEG mit zusammen höchstens 8 MB. Nach einem Fehler, der nicht nur einen Empfänger betrifft, etwa bei Verbindung oder Anmeldung, endet der Job, und die übrigen Empfänger erhalten keine E-Mail. Status und Log des Jobs sind bis eine Minute nach seinem Ende abrufbar.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 202: Der Job wurde gestartet. Die Antwort enthält die Job-ID.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Der Auftrag ist fehlerhaft, enthält keine gültige Adresse oder dem Benutzer fehlt eine Absenderadresse.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um E-Mails zu versenden.
+	 *   Code 429: Es warten oder laufen bereits drei E-Mail-Versand-Jobs des Benutzers.
+	 *   Code 500: Unspezifizierter Fehler (z.B. fehlende SMTP-Konfiguration)
+	 *
+	 * @param {EmailSendRequest} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Job wurde gestartet. Die Antwort enthält die Job-ID.
+	 */
+	public async sendEmail(data: EmailSendRequest, schema: string): Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/email/send"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = EmailSendRequest.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}

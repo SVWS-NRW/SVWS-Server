@@ -32,8 +32,13 @@ final class SmtpTestServer implements AutoCloseable {
 		/** Der Server nimmt die Verbindung an, sendet aber nichts. */
 		STUMM,
 		/** Der Server bestätigt den DATA-Befehl und liest danach nichts mehr. */
-		LIEST_NACH_DATA_NICHT
+		LIEST_NACH_DATA_NICHT,
+		/** Der Server lehnt jede Anmeldung ab. */
+		ANMELDUNG_ABGELEHNT
 	}
+
+	/** Empfänger mit diesem lokalen Teil lehnt der Server ab, alle anderen nimmt er an. */
+	static final String ABGELEHNTER_EMPFAENGER = "abgelehnt";
 
 	private final ServerSocket serverSocket;
 	private final Verhalten verhalten;
@@ -206,9 +211,11 @@ final class SmtpTestServer implements AutoCloseable {
 			} else if ("AUTH PLAIN".equals(befehl)) {
 				antworte(out, "334 ");
 				befehle.add(in.readLine());
-				antworte(out, "235 2.7.0 Authentication successful");
+				antworteAufAnmeldung(out);
 			} else if (befehl.startsWith("AUTH PLAIN ")) {
-				antworte(out, "235 2.7.0 Authentication successful");
+				antworteAufAnmeldung(out);
+			} else if (befehl.startsWith("RCPT TO:<" + ABGELEHNTER_EMPFAENGER.toUpperCase(Locale.ROOT) + "@")) {
+				antworte(out, "550 5.1.1 User unknown");
 			} else if ("DATA".equals(befehl)) {
 				antworte(out, "354 End data with <CR><LF>.<CR><LF>");
 				if (verhalten == Verhalten.LIEST_NACH_DATA_NICHT) {
@@ -224,6 +231,10 @@ final class SmtpTestServer implements AutoCloseable {
 				antworte(out, "250 2.0.0 OK");
 			}
 		}
+	}
+
+	private void antworteAufAnmeldung(final Writer out) throws IOException {
+		antworte(out, (verhalten == Verhalten.ANMELDUNG_ABGELEHNT) ? "535 5.7.8 Authentication credentials invalid" : "235 2.7.0 Authentication successful");
 	}
 
 	private static BufferedReader oeffneEingabe(final Socket socket) throws IOException {

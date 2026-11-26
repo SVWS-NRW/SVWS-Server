@@ -147,6 +147,40 @@ public class DataEmailJobs {
 
 
 	/**
+	 * Bricht den Email-Job mit der übergebenen Job-ID ab und erzeugt die zugehörige HTTP-Response. Ein wartender Job endet sofort, ein laufender
+	 * nach der aktuell versendeten E-Mail.
+	 *
+	 * @param id   die Job-ID
+	 *
+	 * @return die HTTP-Response
+	 */
+	public @NotNull Response cancelEmailJob(final long id) {
+		final SimpleOperationResponse resp = new SimpleOperationResponse();
+		try {
+			final EmailJob job = getJobByID(conn, id);
+			// Der Status vor dem Abbruch zählt, denn ein wartender Job ist danach bereits als CANCELED beendet.
+			final EmailJobStatus statusBefore = job.getStatus();
+			if (!getJobManager(conn).cancelJob(id)) {
+				resp.success = false;
+				resp.log.add("Abbruch fehlgeschlagen für Job-ID " + id);
+				return Response.status(Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(resp).build();
+			}
+			resp.success = true;
+			if ((statusBefore == EmailJobStatus.QUEUED) || (statusBefore == EmailJobStatus.SENDING)) {
+				resp.log.add("Abbruch wurde veranlasst.");
+			} else {
+				resp.log.add("Job war bereits beendet (Status = %s).".formatted(statusBefore));
+			}
+			return Response.ok(resp).type(MediaType.APPLICATION_JSON).build();
+		} catch (final ApiOperationException e) {
+			resp.success = false;
+			resp.log.add(e.getBody().toString());
+			return Response.status(e.getStatus()).type(MediaType.APPLICATION_JSON).entity(resp).build();
+		}
+	}
+
+
+	/**
 	 * Ermittelt die EMail-Konfiguration des aktuellen Benutzer anhand der Datenbank
 	 * und entschlüsselt mit dessen Anmeldedaten die SMTP-Server-Konfiguration
 	 *

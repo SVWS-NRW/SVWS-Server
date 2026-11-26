@@ -1,7 +1,6 @@
 package de.svws_nrw.base.email;
 
 import java.io.UnsupportedEncodingException;
-import java.net.IDN;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -304,8 +303,8 @@ public class MailSmtpSession {
 				final String addr = arrayAddresses[i];
 				final Matcher m = p.matcher(addr);
 				result[i] = m.hasMatch()
-						? new InternetAddress(IDN.toASCII(m.group(2)), m.group(1), StandardCharsets.UTF_8.name())
-						: new InternetAddress(IDN.toASCII(addr));
+						? new InternetAddress(EmailUtils.toAsciiDomain(m.group(2)), m.group(1), StandardCharsets.UTF_8.name())
+						: new InternetAddress(EmailUtils.toAsciiDomain(addr));
 			}
 			return result;
 		} catch (final UnsupportedEncodingException e) {

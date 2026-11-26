@@ -127,9 +127,14 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	public static readonly IT_NRW: BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("IT_NRW", 22, new BenutzerKompetenzGruppenKatalogEintrag(7000, "IT.NRW", 5, 4));
 
 	/**
+	 * Gruppe für Rechte bezüglich des E-Mail-Versands.
+	 */
+	public static readonly EMAIL_VERSAND: BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("EMAIL_VERSAND", 23, new BenutzerKompetenzGruppenKatalogEintrag(8000, "E-Mail-Versand", 5, 2));
+
+	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION: number = 4;
+	public static readonly VERSION: number = 5;
 
 	/**
 	 * Die Daten der Benutzerkompetenz-Gruppe

@@ -122,7 +122,8 @@ class MailSmtpSessionMockHelper {
 
 	private void addMail(final String from, final String to, final String subject, final String text, final List<EmailJobAttachment> attachments) {
 		synchronized (sent) {
-			sent.add(new SentMail(from, to, subject, text, attachments));
+			// Eine Kopie, weil der Manager die Anhänge nach dem Ende des Jobs leert.
+			sent.add(new SentMail(from, to, subject, text, new ArrayList<>(attachments)));
 		}
 	}
 

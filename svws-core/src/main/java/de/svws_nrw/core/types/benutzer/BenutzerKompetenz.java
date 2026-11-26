@@ -608,6 +608,18 @@ public enum BenutzerKompetenz {
 	IT_NRW_DIGITALER_SCHULSTEMPEL(new BenutzerKompetenzKatalogEintrag(
 			76, BenutzerKompetenzGruppe.IT_NRW, "Digitale Schulstempel nutzen", null,
 			"Ermöglicht das Signieren von Dokumenten über IT.NRW."
+	)),
+
+	/** Es werden Rechte zum Versenden von E-Mails beim Drucken von Berichten benötigt. */
+	EMAIL_VERSAND_REPORTING(new BenutzerKompetenzKatalogEintrag(
+			801, BenutzerKompetenzGruppe.EMAIL_VERSAND, "Versand im Rahmen des Druckens (Reporting)", null,
+			"Ermöglicht das Versenden von Berichten per E-Mail. Zusätzlich ist ein Recht zum Drucken der Berichte nötig."
+	)),
+
+	/** Es werden Rechte zum Versenden von E-Mails über die API benötigt. */
+	EMAIL_VERSAND_API(new BenutzerKompetenzKatalogEintrag(
+			802, BenutzerKompetenzGruppe.EMAIL_VERSAND, "Versand über API", null,
+			"Ermöglicht das Versenden von E-Mails an übergebene Adressen über die API des SVWS-Servers."
 	));
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */

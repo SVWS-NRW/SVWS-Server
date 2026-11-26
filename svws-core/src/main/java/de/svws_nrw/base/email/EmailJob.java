@@ -221,6 +221,17 @@ public final class EmailJob {
 
 
 	/**
+	 * Gibt die Anhänge aller Empfänger frei. Ein beendeter Job bleibt für die Statusabfrage noch eine Weile im Manager, braucht die Anhänge
+	 * aber nicht mehr. Paketprivat, da nur der Manager das Ende eines Jobs kennt.
+	 */
+	void releaseAttachments() {
+		for (final EmailJobRecipient recipient : recipients) {
+			recipient.attachments.clear();
+		}
+	}
+
+
+	/**
 	 * Fügt mehrere Einträge zum Übersprungen-Log hinzu.
 	 *
 	 * @param messages   die Log-Nachrichten
