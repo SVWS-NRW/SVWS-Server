@@ -79,7 +79,7 @@
 		if (selectedAbschnitt.value === undefined) {
 			return;
 		}
-		await state.importSchueler({
+		await state.planung.importSchueler({
 			idSchuljahresabschnitt: selectedAbschnitt.value.id,
 			folgejahrgang: selectedJahrgangszuweisung.value.value === "folgejahrgang",
 			klassenzuweisungenUebernehmen: selectedKlassenzuweisung.value.value === "beibehalten",

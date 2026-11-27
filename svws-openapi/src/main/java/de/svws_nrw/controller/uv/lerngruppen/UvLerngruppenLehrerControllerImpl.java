@@ -55,4 +55,16 @@ public final class UvLerngruppenLehrerControllerImpl implements UvLerngruppenLeh
 		return Responses.ok(service.deleteMultiple(ids));
 	}
 
+	/**
+	 * Speichert die zusammengehörigen Änderungen atomar.
+	 *
+	 * @param idPlanungsabschnitt die zugehörigen Daten
+	 * @param requests die zugehörigen Daten
+	 * @return die HTTP-Antwort
+	 */
+	@Override
+	public Response replaceByPlanungsabschnitt(final long idPlanungsabschnitt, final Collection<UvLerngruppenLehrerCreateRequest> requests) {
+		return Responses.ok(service.replaceByPlanungsabschnitt(idPlanungsabschnitt, requests));
+	}
+
 }

@@ -3,8 +3,22 @@
 		<template #title>
 			<h1 class="select-none">Zeitraster</h1>
 		</template>
-		<svws-ui-table :items="filteredItems" :columns clickable :clicked="auswahl" @update:clicked="gotoZeitraster" :selectable="hatKompetenzAendern" v-model="selectedZeitraster" count
-			scroll scroll-into-view allow-arrow-key-selection :focus-switching-enabled :focus-help-visible :filter-open="true" :filtered="hasActiveFilter" :filter-reset="resetFilter">
+		<svws-ui-table :items="filteredItems"
+			:columns
+			clickable
+			:clicked="auswahl"
+			@update:clicked="gotoZeitraster"
+			:selectable="hatKompetenzAendern"
+			v-model="selectedZeitraster"
+			count
+			scroll
+			scroll-into-view
+			allow-arrow-key-selection
+			:focus-switching-enabled
+			:focus-help-visible
+			:filter-open="true"
+			:filtered="hasActiveFilter"
+			:filter-reset="resetFilter">
 			<template #search><svws-ui-text-input v-model="search" type="search" placeholder="Zeitraster suchen" removable /></template>
 			<template #cell(bezeichnung)="{ value }">
 				{{ value }}
@@ -20,9 +34,11 @@
 				<svws-ui-button type="icon" @click="openAddModal" title="Neues Zeitraster hinzufügen">
 					<span class="icon i-ri-add-line" />
 				</svws-ui-button>
-				<svws-ui-button type="trash" @click="deleteSelected" :disabled="selectedZeitraster.length === 0" title="Ausgewählte Zeitraster löschen">
-					<span class="icon i-ri-delete-bin-line" />
-				</svws-ui-button>
+				<s-uv-auswahl-loeschen :items="selectedZeitraster"
+					art="Zeitraster"
+					:bezeichnung="item => item.bezeichnung ?? `Zeitraster ${item.id}`"
+					:loeschen="deleteSelected"
+					@deleted="onDeleted" />
 			</template>
 		</svws-ui-table>
 
@@ -39,7 +55,11 @@
 			</template>
 			<template #modalActions>
 				<svws-ui-button type="secondary" @click="showAddModal = false">Abbrechen</svws-ui-button>
-				<svws-ui-button type="primary" @click="addNewZeitraster" :disabled="!newZeitraster.bezeichnung || !newZeitraster.gueltigVon">Hinzufügen</svws-ui-button>
+				<svws-ui-button type="primary"
+					@click="addNewZeitraster"
+					:disabled="!newZeitraster.bezeichnung || !newZeitraster.gueltigVon">
+					Hinzufügen
+				</svws-ui-button>
 			</template>
 		</svws-ui-modal>
 	</s-uv-auswahl>
@@ -54,6 +74,7 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	import SUvAuswahl from "../../SUvAuswahl.vue";
+	import SUvAuswahlLoeschen from "../../SUvAuswahlLoeschen.vue";
 
 	const props = defineProps<{
 		auswahl: UvZeitraster | undefined;
@@ -102,18 +123,20 @@
 		if ((newZeitraster.value.bezeichnung === null)) {
 			return;
 		}
-		const neu = await state.addZeitraster(newZeitraster.value);
+		const neu = await state.grunddaten.addZeitraster(newZeitraster.value);
 		showAddModal.value = false;
 		selectedZeitraster.value = [neu];
 	}
 
-	async function deleteSelected() {
-		if (selectedZeitraster.value.length === 0) {
-			return;
-		}
-		const ids = selectedZeitraster.value.map(z => z.id);
-		await state.deleteZeitraster(ids);
+	async function deleteSelected(items: UvZeitraster[]): Promise<void> {
+		await state.grunddaten.deleteZeitraster(items.map(item => item.id));
+	}
+
+	async function onDeleted(items: UvZeitraster[]): Promise<void> {
 		selectedZeitraster.value = [];
+		if (items.some(item => item.id === props.auswahl?.id)) {
+			await props.gotoZeitraster(undefined);
+		}
 	}
 
 </script>

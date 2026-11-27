@@ -1,6 +1,9 @@
 package de.svws_nrw.core.utils.uvblockung;
 
+import de.svws_nrw.core.data.uv.regel.UvBlockungRegelPrioritaet;
 import de.svws_nrw.core.data.uv.regel.UvBlockungRegelTyp;
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -10,7 +13,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class UvAlgorithmusDynDatenRegel21 implements UvAlgorithmusDynDatenRegel {
 
-	private final @NotNull int @NotNull [] malus;
+	private final @NotNull Logger log;
+	private final int @NotNull [] malus;
 	private final @NotNull UvAlgorithmusDynDatenFach fach;
 	private final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft;
 	private final int maximum;
@@ -20,23 +24,26 @@ public final class UvAlgorithmusDynDatenRegel21 implements UvAlgorithmusDynDaten
 	/**
 	 * Erzeugt eine neue Instanz der Regel und passt den Anfangs-Malus an.
 	 *
+	 * @param log          Der Logger für Debug-Zwecke.
 	 * @param malus        Das globale Malus-Array.
 	 * @param fach         Das {@link UvAlgorithmusDynDatenFach}.
 	 * @param lehrkraft    Die {@link UvAlgorithmusDynDatenLehrkraft}.
-	 * @param minimum      Die maximale Anzahl an Lerngruppen mit dem Fach, das die Lehrkraft unterrichten soll.
+	 * @param maximum      Die maximale Anzahl an Lerngruppen mit dem Fach, die die Lehrkraft unterrichten soll.
 	 * @param prioritaet   Die Priorität der Regel.
 	 */
 	public UvAlgorithmusDynDatenRegel21(
-			final @NotNull int @NotNull [] malus,
+			final @NotNull Logger log,
+			final int @NotNull [] malus,
 			final @NotNull UvAlgorithmusDynDatenFach fach,
 			final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft,
-			final int minimum,
+			final int maximum,
 			final int prioritaet) {
 
+		this.log = log;
 		this.malus = malus;
 		this.fach = fach;
 		this.lehrkraft = lehrkraft;
-		this.maximum = minimum;
+		this.maximum = maximum;
 		this.prioritaet = prioritaet;
 
 		this.changeMalus(1);
@@ -45,9 +52,14 @@ public final class UvAlgorithmusDynDatenRegel21 implements UvAlgorithmusDynDaten
 
 	@Override
 	public void changeMalus(final int faktor) {
+		if ((prioritaet < 0) || (prioritaet >= UvBlockungRegelPrioritaet.DEAKTIVIERT.nr)) {
+			log.logLn(LogLevel.ERROR,
+					"UvAlgorithmusDynDatenRegel21: Ungültige oder deaktivierte Priorität %d - Malus-Änderung wird ignoriert.".formatted(prioritaet));
+			return;
+		}
 		final int ueberschreitung = lehrkraft.istFachZuLerngruppenAnzahl[fach.interneID] - maximum;
 
-		if ((prioritaet >= 0) && (ueberschreitung > 0)) {
+		if (ueberschreitung > 0) {
 			malus[prioritaet] += faktor * ueberschreitung;
 		}
 	}

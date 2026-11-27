@@ -3,7 +3,6 @@ package de.svws_nrw.core.utils.uvblockung;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import de.svws_nrw.core.data.uv.UvPlanungsabschnitt;
 import de.svws_nrw.core.data.uv.regel.UvBlockungRegel;
 import de.svws_nrw.core.data.uv.regel.UvBlockungRegelPrioritaet;
 import de.svws_nrw.core.data.uv.regel.UvBlockungRegelTyp;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.uv.UvManager;
 import de.svws_nrw.core.utils.uv.UvRegelManager;
@@ -38,7 +36,7 @@ import jakarta.validation.constraints.NotNull;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class TestUvDynDaten {
 
-	/** Durch einen eigenen Logger, werden die absichtlichen ERROR-Meldungen konsumiert. */
+	/** Durch einen eigenen Logger werden die absichtlichen ERROR-Meldungen konsumiert. */
 	private static final Logger LOG = new Logger();
 
 	private static final Random RND = new Random(1L);
@@ -55,7 +53,7 @@ class TestUvDynDaten {
 
 	/**
 	 * Erzeugt einen {@link UvAlgorithmusDynDaten}-Zustand mit vollständig leerer Datenmenge.
-	 * Weder Lehrer, noch Lerngruppen, noch Fächer oder Klassen sind vorhanden.
+	 * Weder Lehrer, noch Lerngruppen, noch Fächer, noch Klassen sind vorhanden.
 	 *
 	 * @return ein {@link UvAlgorithmusDynDaten}-Objekt ohne jegliche Daten.
 	 */
@@ -73,7 +71,7 @@ class TestUvDynDaten {
 	 * <p>
 	 * Genau eine Lerngruppe.
 	 * Genau ein Lehrer im Planungsabschnitt.
-	 * Der Lehrer hat die Lehrbefähigung für das Fach, d.h. er kann zugeordnet werden.
+	 * Der Lehrer hat die Lehrbefähigung für das Fach, d. h. er kann zugeordnet werden.
 	 * Der Lehrer hat ein Pflichtstunden-Soll von 2 Unterrichtsstunden.
 	 * Es gibt keine Regeln.
 	 *
@@ -90,6 +88,28 @@ class TestUvDynDaten {
 	 */
 	private static UvAlgorithmusDynDaten gibDatenMinimal1(final List<UvBlockungRegel> regeln) {
 		final UvManager man = UvDatensatz1.erzeugeUvManager();
+		final UvRegelManager manRegeln = new UvRegelManager(man, regeln);
+		final @NotNull UvPlanungsabschnitt planungsabschnitt = man.planungsabschnittGetByIdOrException(UvDatensatz1.ID_PLANUNGSABSCHNITT);
+		return new UvAlgorithmusDynDaten(LOG, RND, man, manRegeln, planungsabschnitt);
+	}
+
+
+	/**
+	 * Erzeugt einen {@link UvAlgorithmusDynDaten}-Zustand wie {@link #gibDatenMinimal1(List)}, aber mit angepassten Wochenstunden
+	 * einer Lerngruppe. (Für Tests mit gebrochenen Stunden-Werten.)
+	 *
+	 * @param regeln          die für den Test zu verwendenden Blockungsregeln.
+	 * @param idLerngruppe    die UV-ID der Lerngruppe, deren Wochenstunden angepasst wird.
+	 * @param wochenstunden   die neuen Wochenstunden der Lerngruppe.
+	 *
+	 * @return ein {@link UvAlgorithmusDynDaten}-Objekt mit minimaler Datenmenge.
+	 */
+	private static UvAlgorithmusDynDaten gibDatenMinimal1MitWochenstunden(
+			final List<UvBlockungRegel> regeln,
+			final long idLerngruppe,
+			final double wochenstunden) {
+		final UvManager man = UvDatensatz1.erzeugeUvManager();
+		man.lerngruppeGetByIdOrException(idLerngruppe).wochenstunden = wochenstunden;
 		final UvRegelManager manRegeln = new UvRegelManager(man, regeln);
 		final @NotNull UvPlanungsabschnitt planungsabschnitt = man.planungsabschnittGetByIdOrException(UvDatensatz1.ID_PLANUNGSABSCHNITT);
 		return new UvAlgorithmusDynDaten(LOG, RND, man, manRegeln, planungsabschnitt);
@@ -128,23 +148,23 @@ class TestUvDynDaten {
 	 *
 	 *
 	 * Es gibt 4 Klassen:
-	 * 8 Malus-HOCH, weil Leitung 1 und 2 fehlt.
+	 * 8 SEHR_HOCH-Malus, weil die Leitungen 1 und 2 fehlen.
 	 *
-	 * Es gibt 12 Lerngruppen je 2 Bedarf an SOLL-Stunden:
-	 * 12 Malus-HOCH
+	 * Es gibt 12 Lerngruppen mit einem Bedarf von je 2 SOLL-Stunden:
+	 * 12 SEHR_HOCH-Malus
 	 *
-	 * Also insgesamt 20 Malus-HOCH.
+	 * Also insgesamt 20 SEHR_HOCH-Malus.
 	 *
 	 *
 	 * Es gibt 6 Lehrkräfte mit SOLL 6, 6, 4, 4, 2, 2:
-	 * 6² + 6² + 4² + 4² + 2² + 2² = 112 Malus-MITTEL.
+	 * 6² + 6² + 4² + 4² + 2² + 2² = 112 MITTEL-Malus.
 	 *
-	 * Also insgesamt 112 Malus-MITTEL.
+	 * Also insgesamt 112 MITTEL-Malus.
 	 *
 	 *
 	 * @param regeln   die für den Test zu verwendenden Blockungsregeln.
 	 *
-	 * @return ein {@link UvAlgorithmusDynDaten}-Objekt mit zwei Klassen, zwei Lerngruppen und zwei Lehrern.
+	 * @return ein {@link UvAlgorithmusDynDaten}-Objekt mit vier Klassen, zwölf Lerngruppen und sechs Lehrkräften.
 	 */
 	private static UvAlgorithmusDynDaten gibDatenMinimal3(final List<UvBlockungRegel> regeln) {
 		final UvManager man = UvDatensatz3.erzeugeUvManager();
@@ -335,7 +355,7 @@ class TestUvDynDaten {
 	}
 
 
-	private static UvBlockungRegel gibRegel19LehrkraftVerbotenInStufe(final long idLehrer, final long idJahrgang, final int prioritaet) {
+	private static UvBlockungRegel gibRegel19LehrkraftVerbotenInJahrgang(final long idLehrer, final long idJahrgang, final int prioritaet) {
 		final UvBlockungRegel regel = new UvBlockungRegel();
 		regel.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_IN_JAHRGANG_B.nr;
 		regel.prioritaet = prioritaet;
@@ -720,21 +740,27 @@ class TestUvDynDaten {
 		final List<UvLerngruppenLehrer> zuordnung3 = dyn3.gibAktuelleZuordnung();
 		assertEquals(0, zuordnung3.size(), "Die Zuordnung sollte wieder entfernt sein.");
 
-		// Szenario 4: Fixierte Zuordnung kann nicht entfernt werden.
+		// Szenario 4: Fixierte Zuordnung kann nicht entfernt werden (Log) und bleibt erhalten.
 		final UvAlgorithmusDynDaten dyn4 = gibDatenMinimal1(new ArrayList<>());
 		dyn4.setzeLerngruppeLehrkraftAdd(1L, 5L, true);
 		checkMalus(dyn4, 2, 0, 0, 0, 0);
 		assertEquals(1, dyn4.gibAktuelleZuordnung().size(), "Fixierte Zuordnung muss vorhanden sein.");
-		assertThrows(DeveloperNotificationException.class, () -> dyn4.setzeLerngruppeLehrkraftDel(1L, 5L));
+		assertDoesNotThrow(() -> dyn4.setzeLerngruppeLehrkraftDel(1L, 5L));
+		checkMalus(dyn4, 2, 0, 0, 0, 0);
+		assertEquals(1, dyn4.gibAktuelleZuordnung().size(), "Fixierte Zuordnung muss erhalten bleiben.");
 
-		// Szenario 5: Eine nicht vorhandene Beziehung zu löschen wirft eine Exception.
+		// Szenario 5: Eine nicht vorhandene Beziehung zu löschen wird ignoriert (Log) und lässt den Malus unverändert.
 		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(new ArrayList<>());
-		assertThrows(DeveloperNotificationException.class, () -> dyn5.setzeLerngruppeLehrkraftDel(1L, 5L));
+		assertDoesNotThrow(() -> dyn5.setzeLerngruppeLehrkraftDel(1L, 5L));
+		checkMalus(dyn5, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn5.gibAktuelleZuordnung().size(), "Es darf keine Zuordnung geben.");
 
-		// Szenario 6: Doppelte Zuordnung wirft eine Exception.
+		// Szenario 6: Doppelte Zuordnung wird ignoriert (Log) und lässt Malus und Zustand unverändert.
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(new ArrayList<>());
 		dyn6.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
-		assertThrows(DeveloperNotificationException.class, () -> dyn6.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		assertDoesNotThrow(() -> dyn6.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		checkMalus(dyn6, 2, 0, 0, 0, 0);
+		assertEquals(1, dyn6.gibAktuelleZuordnung().size(), "Es darf nur 1 Zuordnung geben.");
 	}
 
 
@@ -763,21 +789,27 @@ class TestUvDynDaten {
 		checkMalus(dyn3, 3, 0, 4, 0, 0);
 		assertEquals(0, dyn3.gibAktuelleKlassenleitungen().size(), "Die Zuordnung sollte wieder entfernt sein.");
 
-		// Szenario 4: Doppelt hinzufügen wirft eine DeveloperNotificationException.
+		// Szenario 4: Doppelt hinzufügen wird ignoriert (Log) und lässt Malus und Zustand unverändert.
 		final UvAlgorithmusDynDaten dyn4 = gibDatenMinimal1(new ArrayList<>());
 		dyn4.setzeKlassenLeitung1Add(4L, 5L, false);
-		assertThrows(DeveloperNotificationException.class, () -> dyn4.setzeKlassenLeitung1Add(4L, 5L, false));
+		assertDoesNotThrow(() -> dyn4.setzeKlassenLeitung1Add(4L, 5L, false));
+		checkMalus(dyn4, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn4.gibAktuelleKlassenleitungen().size(), "Es darf nur 1 Zuordnung geben.");
 
-		// Szenario 5: Entfernen ohne Zuordnung wirft eine DeveloperNotificationException.
+		// Szenario 5: Entfernen ohne Zuordnung wird ignoriert (Log) und lässt den Malus unverändert.
 		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(new ArrayList<>());
-		assertThrows(DeveloperNotificationException.class, () -> dyn5.setzeKlassenLeitung1Del(4L, 5L));
+		assertDoesNotThrow(() -> dyn5.setzeKlassenLeitung1Del(4L, 5L));
+		checkMalus(dyn5, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn5.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung geben.");
 
-		// Szenario 6: Fixierte Klassenleitung kann nicht entfernt werden.
+		// Szenario 6: Fixierte Klassenleitung kann nicht entfernt werden (Log) und bleibt erhalten.
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(new ArrayList<>());
 		dyn6.setzeKlassenLeitung1Add(4L, 5L, true);
 		checkMalus(dyn6, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn6.gibAktuelleKlassenleitungen().size(), "Fixierte Zuordnung muss vorhanden sein.");
-		assertThrows(DeveloperNotificationException.class, () -> dyn6.setzeKlassenLeitung1Del(4L, 5L));
+		assertDoesNotThrow(() -> dyn6.setzeKlassenLeitung1Del(4L, 5L));
+		checkMalus(dyn6, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn6.gibAktuelleKlassenleitungen().size(), "Fixierte Zuordnung muss erhalten bleiben.");
 
 		// Szenario 7: Add -> Del -> Add funktioniert wieder sauber.
 		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(new ArrayList<>());
@@ -814,21 +846,27 @@ class TestUvDynDaten {
 		final List<UvKlassenLehrer> zuordnung3 = dyn3.gibAktuelleKlassenleitungen();
 		assertEquals(0, zuordnung3.size(), "Die Zuordnung sollte wieder entfernt sein.");
 
-		// Szenario 4: Doppelt hinzufügen wirft eine DeveloperNotificationException.
+		// Szenario 4: Doppelt hinzufügen wird ignoriert (Log) und lässt Malus und Zustand unverändert.
 		final UvAlgorithmusDynDaten dyn4 = gibDatenMinimal1(new ArrayList<>());
 		dyn4.setzeKlassenLeitung2Add(4L, 5L, false);
-		assertThrows(DeveloperNotificationException.class, () -> dyn4.setzeKlassenLeitung2Add(4L, 5L, false));
+		assertDoesNotThrow(() -> dyn4.setzeKlassenLeitung2Add(4L, 5L, false));
+		checkMalus(dyn4, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn4.gibAktuelleKlassenleitungen().size(), "Es darf nur 1 Zuordnung geben.");
 
-		// Szenario 5: Entfernen ohne Zuordnung wirft eine DeveloperNotificationException.
+		// Szenario 5: Entfernen ohne Zuordnung wird ignoriert (Log) und lässt den Malus unverändert.
 		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(new ArrayList<>());
-		assertThrows(DeveloperNotificationException.class, () -> dyn5.setzeKlassenLeitung2Del(4L, 5L));
+		assertDoesNotThrow(() -> dyn5.setzeKlassenLeitung2Del(4L, 5L));
+		checkMalus(dyn5, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn5.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung geben.");
 
-		// Szenario 6: Fixierte stellv. Klassenleitung kann nicht entfernt werden.
+		// Szenario 6: Fixierte stellv. Klassenleitung kann nicht entfernt werden (Log) und bleibt erhalten.
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(new ArrayList<>());
 		dyn6.setzeKlassenLeitung2Add(4L, 5L, true);
 		checkMalus(dyn6, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn6.gibAktuelleKlassenleitungen().size(), "Fixierte Zuordnung muss vorhanden sein.");
-		assertThrows(DeveloperNotificationException.class, () -> dyn6.setzeKlassenLeitung2Del(4L, 5L));
+		assertDoesNotThrow(() -> dyn6.setzeKlassenLeitung2Del(4L, 5L));
+		checkMalus(dyn6, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn6.gibAktuelleKlassenleitungen().size(), "Fixierte Zuordnung muss erhalten bleiben.");
 
 		// Szenario 7: Add -> Del -> Add funktioniert wieder sauber.
 		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(new ArrayList<>());
@@ -838,11 +876,38 @@ class TestUvDynDaten {
 		checkMalus(dyn7, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn7.gibAktuelleKlassenleitungen().size(), "Zuordnung muss nach erneutem Add wieder vorhanden sein.");
 
-		// Szenario 8: Andere Lehrkraft wird als stellv. Klassenleitung gesetzt.
+		// Szenario 8: Wie Szenario 2 - erneute Prüfung auf einem frischen Zustand.
 		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(new ArrayList<>());
 		dyn8.setzeKlassenLeitung2Add(4L, 5L, false);
 		checkMalus(dyn8, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn8.gibAktuelleKlassenleitungen().size(), "Es sollte genau eine stellv. Klassenleitung existieren.");
+	}
+
+
+	@Test
+	@DisplayName("testRegel00KlasseKlassenleitung2Sonderfaelle")
+	void testRegel00KlasseKlassenleitung2Sonderfaelle() {
+		// Szenario 9: Lehrkraft ist bereits Leitung 1 - der Leitung-2-Add wird ignoriert und lässt den Malus unverändert (Bugfix).
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(new ArrayList<>());
+		dyn9.setzeKlassenLeitung1Add(4L, 5L, false);
+		checkMalus(dyn9, 2, 0, 4, 0, 0);
+		assertDoesNotThrow(() -> dyn9.setzeKlassenLeitung2Add(4L, 5L, false));
+		checkMalus(dyn9, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn9.gibAktuelleKlassenleitungen().size(), "Es darf keine zweite Klassenleitung entstehen.");
+
+		// Szenario 10: Unbekannte Klassen-ID bei Add/Del wird ignoriert (Log) und lässt den Malus unverändert.
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(new ArrayList<>());
+		assertDoesNotThrow(() -> dyn10.setzeKlassenLeitung2Add(999L, 5L, false));
+		assertDoesNotThrow(() -> dyn10.setzeKlassenLeitung2Del(999L, 5L));
+		checkMalus(dyn10, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn10.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung geben.");
+
+		// Szenario 11: Unbekannte Lehrkraft-ID bei Add/Del wird ignoriert (Log) und lässt den Malus unverändert.
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal1(new ArrayList<>());
+		assertDoesNotThrow(() -> dyn11.setzeKlassenLeitung2Add(4L, 999L, false));
+		assertDoesNotThrow(() -> dyn11.setzeKlassenLeitung2Del(4L, 999L));
+		checkMalus(dyn11, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn11.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung geben.");
 	}
 
 
@@ -918,7 +983,12 @@ class TestUvDynDaten {
 				UvRegelManager.KLASSENLEITUNG1_ANZAHL_MAX + 1, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
 		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+	}
 
+
+	@Test
+	@DisplayName("testRegel01KlasseDefaultBenoetigtKlassenlehrer2")
+	void testRegel01KlasseDefaultBenoetigtKlassenlehrer2() {
 		// Szenario 6: Deterministische Klassenleitung 1 wird gesetzt und wieder entfernt.
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(new ArrayList<>());
 		dyn6.setzeKlassenLeitung1Add(4L, 5L, false);
@@ -930,22 +1000,33 @@ class TestUvDynDaten {
 		checkMalus(dyn6, 3, 0, 4, 0, 0);
 		assertEquals(0, dyn6.gibAktuelleKlassenleitungen().size(), "Die Zuordnung sollte wieder entfernt sein.");
 
-		// Szenario 7: Doppelt hinzufügen erzeugt eine DeveloperNotificationException.
+		// Szenario 7: Doppelt hinzufügen wird ignoriert (Log) und lässt Malus und Zustand unverändert.
 		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(new ArrayList<>());
 		dyn7.setzeKlassenLeitung1Add(4L, 5L, false);
-		assertThrows(DeveloperNotificationException.class, () -> dyn7.setzeKlassenLeitung1Add(4L, 5L, false));
+		assertDoesNotThrow(() -> dyn7.setzeKlassenLeitung1Add(4L, 5L, false));
+		checkMalus(dyn7, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn7.gibAktuelleKlassenleitungen().size(), "Es darf nur 1 Zuordnung geben.");
 
-		// Szenario 8: Entfernen ohne Zuordnung erzeugt eine DeveloperNotificationException.
+		// Szenario 8: Entfernen ohne Zuordnung wird ignoriert (Log) und lässt den Malus unverändert.
 		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(new ArrayList<>());
-		assertThrows(DeveloperNotificationException.class, () -> dyn8.setzeKlassenLeitung1Del(4L, 5L));
+		assertDoesNotThrow(() -> dyn8.setzeKlassenLeitung1Del(4L, 5L));
+		checkMalus(dyn8, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn8.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung geben.");
 
-		// Szenario 9: Fixierte Zuordnung kann nicht entfernt werden.
+		// Szenario 9: Fixierte Zuordnung kann nicht entfernt werden (Log) und bleibt erhalten.
 		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(new ArrayList<>());
 		dyn9.setzeKlassenLeitung1Add(4L, 5L, true);
 		checkMalus(dyn9, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn9.gibAktuelleKlassenleitungen().size(), "Fixierte Zuordnung muss vorhanden sein.");
-		assertThrows(DeveloperNotificationException.class, () -> dyn9.setzeKlassenLeitung1Del(4L, 5L));
+		assertDoesNotThrow(() -> dyn9.setzeKlassenLeitung1Del(4L, 5L));
+		checkMalus(dyn9, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn9.gibAktuelleKlassenleitungen().size(), "Fixierte Zuordnung muss erhalten bleiben.");
+	}
 
+
+	@Test
+	@DisplayName("testRegel01KlasseDefaultBenoetigtKlassenlehrer3")
+	void testRegel01KlasseDefaultBenoetigtKlassenlehrer3() {
 		// Szenario 10: Add -> Del -> Add funktioniert wieder sauber.
 		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(new ArrayList<>());
 		dyn10.setzeKlassenLeitung1Add(4L, 5L, false);
@@ -953,11 +1034,49 @@ class TestUvDynDaten {
 		dyn10.setzeKlassenLeitung1Add(4L, 5L, false);
 		checkMalus(dyn10, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn10.gibAktuelleKlassenleitungen().size(), "Zuordnung muss nach erneutem Add wieder vorhanden sein.");
+
+		// Szenario 11: Lehrkraft ist bereits Leitung 2 - der Leitung-1-Add wird ignoriert und lässt den Malus unverändert (Bugfix).
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal1(new ArrayList<>());
+		dyn11.setzeKlassenLeitung2Add(4L, 5L, false);
+		checkMalus(dyn11, 2, 0, 4, 0, 0);
+		assertDoesNotThrow(() -> dyn11.setzeKlassenLeitung1Add(4L, 5L, false));
+		checkMalus(dyn11, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn11.gibAktuelleKlassenleitungen().size(), "Es darf keine zweite Klassenleitung entstehen.");
+
+		// Szenario 12: Unbekannte Klassen-ID bei Add/Del wird ignoriert (Log) und lässt den Malus unverändert.
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal1(new ArrayList<>());
+		assertDoesNotThrow(() -> dyn12.setzeKlassenLeitung1Add(999L, 5L, false));
+		assertDoesNotThrow(() -> dyn12.setzeKlassenLeitung1Del(999L, 5L));
+		checkMalus(dyn12, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn12.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung geben.");
+
+		// Szenario 13: Unbekannte Lehrkraft-ID bei Add/Del wird ignoriert (Log) und lässt den Malus unverändert.
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal1(new ArrayList<>());
+		assertDoesNotThrow(() -> dyn13.setzeKlassenLeitung1Add(4L, 999L, false));
+		assertDoesNotThrow(() -> dyn13.setzeKlassenLeitung1Del(4L, 999L));
+		checkMalus(dyn13, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn13.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung geben.");
 	}
 
 
 	@Test
-	@DisplayName("testRegel02KlasseBenoetigtKlassenlehrer: Individuelles Klassenleiter-Soll überschreibt den Default.")
+	@DisplayName("testRegel01KlasseDefaultBenoetigtKlassenlehrer4")
+	void testRegel01KlasseDefaultBenoetigtKlassenlehrer4() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 14: Zwei Parameter statt einem werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel14 = new UvBlockungRegel();
+		regel14.typ = UvBlockungRegelTyp.KLASSE_DEFAULT_BENOETIGT_A_KLASSENLEHRER.nr;
+		regel14.prioritaet = prioritaetSehrHoch;
+		regel14.parameter.add(0L);
+		regel14.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn14 = gibDatenMinimal1(List.of(regel14));
+		assertTrue(dyn14.gibIstRegelFehlerhaft(regel14));
+	}
+
+
+	@Test
+	@DisplayName("testRegel02KlasseBenoetigtKlassenlehrer: Individuelles Klassenlehrer-Soll überschreibt den Default.")
 	void testRegel02KlasseBenoetigtKlassenlehrer() {
 		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
 		final int prioritaetDeaktiviert = UvBlockungRegelPrioritaet.DEAKTIVIERT.nr;
@@ -1000,6 +1119,13 @@ class TestUvDynDaten {
 		regel6.prioritaet = prioritaetSehrHoch;
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal2(List.of(regel6));
 		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+	}
+
+
+	@Test
+	@DisplayName("testRegel02KlasseBenoetigtKlassenlehrer2")
+	void testRegel02KlasseBenoetigtKlassenlehrer2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
 
 		// Szenario 7: Regel 02 überschreibt Regel 01 für Klasse 4, Klasse 7 bleibt beim Default = MIN.
 		final UvBlockungRegel regel7a = gibRegel01KlasseDefaultBenoetigtKlassenlehrer(
@@ -1035,6 +1161,63 @@ class TestUvDynDaten {
 		dyn10.setzeKlassenLeitung1Add(7L, 6L, false);
 		checkMalus(dyn10, 4, 0, 8, 0, 0);
 		assertEquals(2, dyn10.gibAktuelleKlassenleitungen().size(), "Es sollten zwei Klassenleitungen vorhanden sein.");
+
+		// Szenario 11: Soll=0 - eine zusätzliche Klassenleitung erzeugt Malus (absolute Abweichung).
+		final UvBlockungRegel regel11 = gibRegel02KlasseBenoetigtKlassenlehrer(4L, 0, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal2(List.of(regel11));
+		checkMalus(dyn11, 5, 0, 8, 0, 0);
+		dyn11.setzeKlassenLeitung1Add(4L, 5L, false);
+		checkMalus(dyn11, 6, 0, 8, 0, 0);
+		assertEquals(1, dyn11.gibAktuelleKlassenleitungen().size(), "Es sollte genau 1 Zuordnung geben.");
+		dyn11.setzeKlassenLeitung1Del(4L, 5L);
+		checkMalus(dyn11, 5, 0, 8, 0, 0);
+	}
+
+
+	@Test
+	@DisplayName("testRegel02KlasseBenoetigtKlassenlehrer3")
+	void testRegel02KlasseBenoetigtKlassenlehrer3() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 12: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel12 = new UvBlockungRegel();
+		regel12.typ = UvBlockungRegelTyp.KLASSE_A_BENOETIGT_B_KLASSENLEHRER.nr;
+		regel12.prioritaet = prioritaetSehrHoch;
+		regel12.parameter.add(4L);
+		regel12.parameter.add(1L);
+		regel12.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal2(List.of(regel12));
+		assertTrue(dyn12.gibIstRegelFehlerhaft(regel12));
+	}
+
+
+	@Test
+	@DisplayName("testRegel02PrioritaetsGuard: Deaktivierte oder ungueltige Prioritaet erzeugt keinen Malusbeitrag.")
+	void testRegel02PrioritaetsGuard() {
+		// Direkter Test der Regel-Klasse: Prioritaet DEAKTIVIERT (5) traegt keinen Malus bei.
+		final int[] malus = new int[UvBlockungRegelPrioritaet.values().length];
+		final UvManager man = UvDatensatz1.erzeugeUvManager();
+		final UvAlgorithmusDynDatenKlasse klasse = new UvAlgorithmusDynDatenKlasse(LOG, RND, 0,
+				man.klasseGetByIdOrException(UvDatensatz1.ID_KLASSE), new UvAlgorithmusDynDatenLehrkraft[0]);
+		final UvAlgorithmusDynDatenRegel02 regel = new UvAlgorithmusDynDatenRegel02(LOG, malus, klasse, 1, UvBlockungRegelPrioritaet.DEAKTIVIERT.nr);
+		assertEquals(0, malus[UvBlockungRegelPrioritaet.DEAKTIVIERT.nr], "Deaktivierte Prioritaet darf keinen Malus erhalten.");
+		regel.changeMalus(1);
+		assertEquals(0, malus[UvBlockungRegelPrioritaet.DEAKTIVIERT.nr], "Deaktivierte Prioritaet darf keinen Malus erhalten.");
+
+		// Setter mit gueltiger Prioritaet: Der Malus erscheint im richtigen Slot.
+		regel.setzeLeitung1AnzahlUndPrioritaet(2, UvBlockungRegelPrioritaet.SEHR_HOCH.nr);
+		assertEquals(2, malus[UvBlockungRegelPrioritaet.SEHR_HOCH.nr], "Soll=2 bei 0 Zuordnungen ergibt Malus 2.");
+		assertEquals(0, malus[UvBlockungRegelPrioritaet.DEAKTIVIERT.nr], "Slot DEAKTIVIERT muss leer bleiben.");
+
+		// Setter mit ungueltiger Prioritaet (99): Die Aenderung wird ignoriert.
+		regel.setzeLeitung1AnzahlUndPrioritaet(3, 99);
+		assertEquals(2, malus[UvBlockungRegelPrioritaet.SEHR_HOCH.nr], "Ungueltige Prioritaet darf nichts aendern.");
+
+		// Integration: Regel mit ungueltiger Prioritaet 99 verhaelt sich wie der Default.
+		final UvBlockungRegel regel99 = gibRegel02KlasseBenoetigtKlassenlehrer(UvDatensatz2.ID_KLASSE1, 2, 99);
+		final UvAlgorithmusDynDaten dyn = gibDatenMinimal2(List.of(regel99));
+		checkMalus(dyn, 6, 0, 8, 0, 0);
+		assertFalse(dyn.gibIstRegelFehlerhaft(regel99));
 	}
 
 
@@ -1105,7 +1288,34 @@ class TestUvDynDaten {
 
 
 	@Test
-	@DisplayName("testRegel04KlasseBenoetigtStellvKlassenlehrer: Individuelles stellv. Klassenleiter-Soll überschreibt den Default.")
+	@DisplayName("testRegel03KlasseDefaultBenoetigtStellvKlassenlehrer2")
+	void testRegel03KlasseDefaultBenoetigtStellvKlassenlehrer2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 9: Zwei Parameter statt einem werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = new UvBlockungRegel();
+		regel9.typ = UvBlockungRegelTyp.KLASSE_DEFAULT_BENOETIGT_A_STELLV_KLASSENLEHRER.nr;
+		regel9.prioritaet = prioritaetSehrHoch;
+		regel9.parameter.add(0L);
+		regel9.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Doppeltes Add und Del ohne Zuordnung werden ignoriert (Log).
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(new ArrayList<>());
+		dyn10.setzeKlassenLeitung2Add(4L, 5L, false);
+		assertDoesNotThrow(() -> dyn10.setzeKlassenLeitung2Add(4L, 5L, false));
+		checkMalus(dyn10, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn10.gibAktuelleKlassenleitungen().size(), "Es darf nur 1 Zuordnung geben.");
+		dyn10.setzeKlassenLeitung2Del(4L, 5L);
+		assertDoesNotThrow(() -> dyn10.setzeKlassenLeitung2Del(4L, 5L));
+		checkMalus(dyn10, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn10.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung geben.");
+	}
+
+
+	@Test
+	@DisplayName("testRegel04KlasseBenoetigtStellvKlassenlehrer: Individuelles stellv. Klassenlehrer-Soll überschreibt den Default.")
 	void testRegel04KlasseBenoetigtStellvKlassenlehrer() {
 		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
 		final int prioritaetDeaktiviert = UvBlockungRegelPrioritaet.DEAKTIVIERT.nr;
@@ -1148,6 +1358,13 @@ class TestUvDynDaten {
 		regel6.prioritaet = prioritaetSehrHoch;
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal2(List.of(regel6));
 		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+	}
+
+
+	@Test
+	@DisplayName("testRegel04KlasseBenoetigtStellvKlassenlehrer2")
+	void testRegel04KlasseBenoetigtStellvKlassenlehrer2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
 
 		// Szenario 7: Regel 04 überschreibt Regel 03 für Klasse 4, Klasse 7 bleibt beim Default = MIN.
 		final UvBlockungRegel regel7a = gibRegel03KlasseDefaultBenoetigtStellvKlassenlehrer(UvRegelManager.KLASSENLEITUNG2_ANZAHL_MIN, prioritaetSehrHoch);
@@ -1187,6 +1404,33 @@ class TestUvDynDaten {
 		dyn11.setzeKlassenLeitung2Add(7L, 6L, false);
 		checkMalus(dyn11, 4, 0, 8, 0, 0);
 		assertEquals(2, dyn11.gibAktuelleKlassenleitungen().size(), "Es sollten zwei stellv. Klassenleitungen vorhanden sein.");
+
+		// Szenario 12: Soll=0 - eine zusätzliche stellv. Klassenleitung erzeugt Malus (absolute Abweichung).
+		final UvBlockungRegel regel12 = gibRegel04KlasseBenoetigtStellvKlassenlehrer(4L, 0, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal2(List.of(regel12));
+		checkMalus(dyn12, 5, 0, 8, 0, 0);
+		dyn12.setzeKlassenLeitung2Add(4L, 5L, false);
+		checkMalus(dyn12, 6, 0, 8, 0, 0);
+		assertEquals(1, dyn12.gibAktuelleKlassenleitungen().size(), "Es sollte genau 1 Zuordnung geben.");
+		dyn12.setzeKlassenLeitung2Del(4L, 5L);
+		checkMalus(dyn12, 5, 0, 8, 0, 0);
+	}
+
+
+	@Test
+	@DisplayName("testRegel04KlasseBenoetigtStellvKlassenlehrer3")
+	void testRegel04KlasseBenoetigtStellvKlassenlehrer3() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 13: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel13 = new UvBlockungRegel();
+		regel13.typ = UvBlockungRegelTyp.KLASSE_A_BENOETIGT_B_STELLV_KLASSENLEHRER.nr;
+		regel13.prioritaet = prioritaetSehrHoch;
+		regel13.parameter.add(4L);
+		regel13.parameter.add(1L);
+		regel13.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal2(List.of(regel13));
+		assertTrue(dyn13.gibIstRegelFehlerhaft(regel13));
 	}
 
 
@@ -1237,7 +1481,7 @@ class TestUvDynDaten {
 		assertEquals(0, dyn5.gibAktuelleZuordnung().size());
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5));
 
-		// Szenario 6: Zwei Lerngruppen derselben Lehrkraft erfüllen die Mindeststunden in gibDatenMinimal2.
+		// Szenario 6: Zwei Lerngruppen derselben Lehrkraft reichen nicht: In der Klasse fehlen 2 der geforderten 4 Stunden.
 		final UvBlockungRegel regel6 = gibRegel05LehrkraftDefaultWennKlassenlehrerDann(4, prioritaetHoch);
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal2(List.of(regel6));
 		dyn6.setzeKlassenLeitung1Add(4L, 5L, false);
@@ -1259,6 +1503,31 @@ class TestUvDynDaten {
 		regel8.prioritaet = prioritaetHoch;
 		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
 		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+	}
+
+
+	@Test
+	@DisplayName("testRegel05LehrkraftDefaultWennKlassenlehrerDannMindestensAStunden2")
+	void testRegel05LehrkraftDefaultWennKlassenlehrerDannMindestensAStunden2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 9: Zwei Parameter statt einem werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = new UvBlockungRegel();
+		regel9.typ = UvBlockungRegelTyp.LEHRKRAFT_DEFAULT_WENN_KLASSENLEHRER_DANN_MINDESTENS_A_STUNDEN_IN_KLASSE.nr;
+		regel9.prioritaet = prioritaetHoch;
+		regel9.parameter.add(2L);
+		regel9.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Eine fixierte Klassenleitung zählt für die Stundenregel.
+		final UvBlockungRegel regel10 = gibRegel05LehrkraftDefaultWennKlassenlehrerDann(2, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(List.of(regel10));
+		dyn10.setzeKlassenLeitung1Add(4L, 5L, true);
+		checkMalus(dyn10, 2, 2, 4, 0, 0);
+		dyn10.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn10, 1, 0, 0, 0, 0);
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regel10));
 	}
 
 
@@ -1311,8 +1580,15 @@ class TestUvDynDaten {
 		assertEquals(1, dyn5.gibAktuelleKlassenleitungen().size());
 		assertEquals(0, dyn5.gibAktuelleZuordnung().size());
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5));
+	}
 
-		// Szenario 6: Die zweite Lerngruppe aus gibDatenMinimal2 wird genutzt; dadurch hat die Lehrkraft 4 Stunden in der Klasse.
+
+	@Test
+	@DisplayName("testRegel06LehrkraftAWennKlassenlehrerDannMindestensBStundenInKlasse2")
+	void testRegel06LehrkraftAWennKlassenlehrerDannMindestensBStundenInKlasse2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 6: Die Lehrkraft hat 4 Stunden insgesamt, aber nur 2 in der Klasse 4; es fehlen 2 der geforderten 4 Stunden.
 		final UvBlockungRegel regel6 = gibRegel06LehrkraftAWennKlassenlehrerDann(5L, 4, prioritaetHoch);
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal2(List.of(regel6));
 		dyn6.setzeKlassenLeitung1Add(4L, 5L, false);
@@ -1336,6 +1612,67 @@ class TestUvDynDaten {
 		regel8.parameter.add(5L);
 		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
 		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: Regel 06 überschreibt den Default (Regel 05) für Lehrkraft 5 - unabhängig von der Reihenfolge.
+		final UvBlockungRegel regel9a = gibRegel05LehrkraftDefaultWennKlassenlehrerDann(2, prioritaetHoch);
+		final UvBlockungRegel regel9b = gibRegel06LehrkraftAWennKlassenlehrerDann(5L, 4, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9a, regel9b));
+		dyn9.setzeKlassenLeitung1Add(4L, 5L, false);
+		checkMalus(dyn9, 2, 4, 4, 0, 0);
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regel9a));
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regel9b));
+
+		final UvBlockungRegel regel10a = gibRegel06LehrkraftAWennKlassenlehrerDann(5L, 4, prioritaetHoch);
+		final UvBlockungRegel regel10b = gibRegel05LehrkraftDefaultWennKlassenlehrerDann(2, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(List.of(regel10a, regel10b));
+		dyn10.setzeKlassenLeitung1Add(4L, 5L, false);
+		checkMalus(dyn10, 2, 4, 4, 0, 0);
+
+		// Szenario 10: Ungültiger Wert (negativ) wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel11 = gibRegel06LehrkraftAWennKlassenlehrerDann(5L, -1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal1(List.of(regel11));
+		assertTrue(dyn11.gibIstRegelFehlerhaft(regel11));
+
+		// Szenario 11: Abweichung von genau 0,5 Stunden (2,5 statt 3) erzeugt noch keinen Malus.
+		final UvBlockungRegel regel12 = gibRegel06LehrkraftAWennKlassenlehrerDann(5L, 3, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal1MitWochenstunden(List.of(regel12), 1L, 2.5);
+		dyn12.setzeKlassenLeitung1Add(4L, 5L, false);
+		checkMalus(dyn12, 2, 3, 4, 0, 0);
+		dyn12.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn12, 1, 0, 0, 0, 0);
+
+		// Szenario 12: Abweichung von mehr als 0,5 Stunden (2,4 statt 3) erzeugt einen Malus.
+		final UvBlockungRegel regel13 = gibRegel06LehrkraftAWennKlassenlehrerDann(5L, 3, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal1MitWochenstunden(List.of(regel13), 1L, 2.4);
+		dyn13.setzeKlassenLeitung1Add(4L, 5L, false);
+		dyn13.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn13, 1, 1, 0, 0, 0);
+	}
+
+
+	@Test
+	@DisplayName("testRegel06LehrkraftAWennKlassenlehrerDannMindestensBStundenInKlasse3")
+	void testRegel06LehrkraftAWennKlassenlehrerDannMindestensBStundenInKlasse3() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 13: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel13 = new UvBlockungRegel();
+		regel13.typ = UvBlockungRegelTyp.LEHRKRAFT_A_WENN_KLASSENLEHRER_DANN_MINDESTENS_B_STUNDEN_IN_KLASSE.nr;
+		regel13.prioritaet = prioritaetHoch;
+		regel13.parameter.add(5L);
+		regel13.parameter.add(2L);
+		regel13.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal1(List.of(regel13));
+		assertTrue(dyn13.gibIstRegelFehlerhaft(regel13));
+
+		// Szenario 14: Eine fixierte Klassenleitung zählt für die Stundenregel.
+		final UvBlockungRegel regel14 = gibRegel06LehrkraftAWennKlassenlehrerDann(5L, 2, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn14 = gibDatenMinimal1(List.of(regel14));
+		dyn14.setzeKlassenLeitung1Add(4L, 5L, true);
+		checkMalus(dyn14, 2, 2, 4, 0, 0);
+		dyn14.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn14, 1, 0, 0, 0, 0);
+		assertFalse(dyn14.gibIstRegelFehlerhaft(regel14));
 	}
 
 
@@ -1387,7 +1724,7 @@ class TestUvDynDaten {
 		assertEquals(0, dyn5.gibAktuelleZuordnung().size());
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5));
 
-		// Szenario 6: Ungültiger Wert negativ wird als fehlerhaft erkannt.
+		// Szenario 6: Ungültiger Wert (negativ) wird als fehlerhaft erkannt.
 		final UvBlockungRegel regel6 = gibRegel07LehrkraftDefaultWennStellvKlassenlehrerDann(-1, prioritaetHoch);
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
 		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
@@ -1399,7 +1736,7 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
 		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
 
-		// Szenario 8: Zweite Lerngruppe aus gibDatenMinimal2 zeigt denselben Effekt in einem größeren Datensatz.
+		// Szenario 8: Größerer Datensatz (gibDatenMinimal2) mit beiden Lerngruppen; in der Klasse 4 fehlen weiterhin 2 der geforderten 4 Stunden.
 		final UvBlockungRegel regel8 = gibRegel07LehrkraftDefaultWennStellvKlassenlehrerDann(4, prioritaetHoch);
 		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal2(List.of(regel8));
 		dyn8.setzeKlassenLeitung2Add(4L, 5L, false);
@@ -1409,6 +1746,31 @@ class TestUvDynDaten {
 		assertEquals(1, dyn8.gibAktuelleKlassenleitungen().size());
 		assertEquals(2, dyn8.gibAktuelleZuordnung().size());
 		assertFalse(dyn8.gibIstRegelFehlerhaft(regel8));
+	}
+
+
+	@Test
+	@DisplayName("testRegel07LehrkraftDefaultWennStellvKlassenlehrerDannMindestensAStundenInKlasse2")
+	void testRegel07LehrkraftDefaultWennStellvKlassenlehrerDannMindestensAStundenInKlasse2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 9: Zwei Parameter statt einem werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = new UvBlockungRegel();
+		regel9.typ = UvBlockungRegelTyp.LEHRKRAFT_DEFAULT_WENN_STELLV_KLASSENLEHRER_DANN_MINDESTENS_A_STUNDEN_IN_KLASSE.nr;
+		regel9.prioritaet = prioritaetHoch;
+		regel9.parameter.add(2L);
+		regel9.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Eine fixierte stellv. Klassenleitung zählt für die Stundenregel.
+		final UvBlockungRegel regel10 = gibRegel07LehrkraftDefaultWennStellvKlassenlehrerDann(2, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(List.of(regel10));
+		dyn10.setzeKlassenLeitung2Add(4L, 5L, true);
+		checkMalus(dyn10, 2, 2, 4, 0, 0);
+		dyn10.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn10, 1, 0, 0, 0, 0);
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regel10));
 	}
 
 
@@ -1461,8 +1823,15 @@ class TestUvDynDaten {
 		assertEquals(1, dyn5.gibAktuelleKlassenleitungen().size());
 		assertEquals(0, dyn5.gibAktuelleZuordnung().size());
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5));
+	}
 
-		// Szenario 6: Ungültiger Wert negativ wird als fehlerhaft erkannt.
+
+	@Test
+	@DisplayName("testRegel08LehrkraftAWennStellvKlassenlehrerDannMindestensBStundenInKlasse2")
+	void testRegel08LehrkraftAWennStellvKlassenlehrerDannMindestensBStundenInKlasse2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 6: Ungültiger Wert (negativ) wird als fehlerhaft erkannt.
 		final UvBlockungRegel regel6 = gibRegel08LehrkraftAWennStellvKlassenlehrerDann(5L, -1, prioritaetHoch);
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
 		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
@@ -1481,7 +1850,7 @@ class TestUvDynDaten {
 		checkMalus(dyn8, 3, 0, 4, 0, 0);
 		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
 
-		// Szenario 9: Größerer Datensatz mit zwei Lerngruppen, damit die Mindeststunden exakt erreicht werden.
+		// Szenario 9: Größerer Datensatz mit zwei Lerngruppen; in der Klasse 4 fehlen dennoch 2 der geforderten 4 Stunden.
 		final UvBlockungRegel regel9 = gibRegel08LehrkraftAWennStellvKlassenlehrerDann(5L, 4, prioritaetHoch);
 		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal2(List.of(regel9));
 		dyn9.setzeKlassenLeitung2Add(4L, 5L, false);
@@ -1491,6 +1860,61 @@ class TestUvDynDaten {
 		assertEquals(1, dyn9.gibAktuelleKlassenleitungen().size());
 		assertEquals(2, dyn9.gibAktuelleZuordnung().size());
 		assertFalse(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Regel 08 überschreibt den Default (Regel 07) für Lehrkraft 5 - unabhängig von der Reihenfolge.
+		final UvBlockungRegel regel10a = gibRegel07LehrkraftDefaultWennStellvKlassenlehrerDann(2, prioritaetHoch);
+		final UvBlockungRegel regel10b = gibRegel08LehrkraftAWennStellvKlassenlehrerDann(5L, 4, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(List.of(regel10a, regel10b));
+		dyn10.setzeKlassenLeitung2Add(4L, 5L, false);
+		checkMalus(dyn10, 2, 4, 4, 0, 0);
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regel10a));
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regel10b));
+
+		final UvBlockungRegel regel11a = gibRegel08LehrkraftAWennStellvKlassenlehrerDann(5L, 4, prioritaetHoch);
+		final UvBlockungRegel regel11b = gibRegel07LehrkraftDefaultWennStellvKlassenlehrerDann(2, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal1(List.of(regel11a, regel11b));
+		dyn11.setzeKlassenLeitung2Add(4L, 5L, false);
+		checkMalus(dyn11, 2, 4, 4, 0, 0);
+
+		// Szenario 11: Abweichung von genau 0,5 Stunden (2,5 statt 3) erzeugt noch keinen Malus.
+		final UvBlockungRegel regel12 = gibRegel08LehrkraftAWennStellvKlassenlehrerDann(5L, 3, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal1MitWochenstunden(List.of(regel12), 1L, 2.5);
+		dyn12.setzeKlassenLeitung2Add(4L, 5L, false);
+		dyn12.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn12, 1, 0, 0, 0, 0);
+
+		// Szenario 12: Abweichung von mehr als 0,5 Stunden (2,4 statt 3) erzeugt einen Malus.
+		final UvBlockungRegel regel13 = gibRegel08LehrkraftAWennStellvKlassenlehrerDann(5L, 3, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal1MitWochenstunden(List.of(regel13), 1L, 2.4);
+		dyn13.setzeKlassenLeitung2Add(4L, 5L, false);
+		dyn13.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn13, 1, 1, 0, 0, 0);
+	}
+
+
+	@Test
+	@DisplayName("testRegel08LehrkraftAWennStellvKlassenlehrerDannMindestensBStundenInKlasse3")
+	void testRegel08LehrkraftAWennStellvKlassenlehrerDannMindestensBStundenInKlasse3() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 13: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel13 = new UvBlockungRegel();
+		regel13.typ = UvBlockungRegelTyp.LEHRKRAFT_A_WENN_STELLV_KLASSENLEHRER_DANN_MINDESTENS_B_STUNDEN_IN_KLASSE.nr;
+		regel13.prioritaet = prioritaetHoch;
+		regel13.parameter.add(5L);
+		regel13.parameter.add(2L);
+		regel13.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal1(List.of(regel13));
+		assertTrue(dyn13.gibIstRegelFehlerhaft(regel13));
+
+		// Szenario 14: Eine fixierte stellv. Klassenleitung zählt für die Stundenregel.
+		final UvBlockungRegel regel14 = gibRegel08LehrkraftAWennStellvKlassenlehrerDann(5L, 2, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn14 = gibDatenMinimal1(List.of(regel14));
+		dyn14.setzeKlassenLeitung2Add(4L, 5L, true);
+		checkMalus(dyn14, 2, 2, 4, 0, 0);
+		dyn14.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn14, 1, 0, 0, 0, 0);
+		assertFalse(dyn14.gibIstRegelFehlerhaft(regel14));
 	}
 
 
@@ -1556,6 +1980,39 @@ class TestUvDynDaten {
 		regel8.prioritaet = prioritaetSehrHoch;
 		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal2(List.of(regel8));
 		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: max=MIN - auch eine zweite Klassenleitung bleibt malusneutral (Klassen-Malus -1, Lehrkraft-Malus +1).
+		final UvBlockungRegel regel9 = gibRegel09LehrerDefaultMaxKlassenlehrer(UvRegelManager.LEHRER_LEITUNG1_MIN, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal2(List.of(regel9));
+		dyn9.setzeKlassenLeitung1Add(4L, 5L, false);
+		dyn9.setzeKlassenLeitung1Add(7L, 5L, false);
+		checkMalus(dyn9, 6, 0, 8, 0, 0);
+		assertEquals(2, dyn9.gibAktuelleKlassenleitungen().size(), "Beide Zuweisungen müssen erfolgen, da der Malus nicht schlechter wird.");
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regel9));
+	}
+
+
+	@Test
+	@DisplayName("testRegel09LehrerDefaultMaxKlassenlehrer2")
+	void testRegel09LehrerDefaultMaxKlassenlehrer2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 10: Zwei Parameter statt einem werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel10 = new UvBlockungRegel();
+		regel10.typ = UvBlockungRegelTyp.LEHRKRAFT_DEFAULT_IST_MAXIMAL_A_MAL_KLASSENLEHRER.nr;
+		regel10.prioritaet = prioritaetSehrHoch;
+		regel10.parameter.add(0L);
+		regel10.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal2(List.of(regel10));
+		assertTrue(dyn10.gibIstRegelFehlerhaft(regel10));
+
+		// Szenario 11: Eine fixierte Klassenleitung zählt für das Maximum mit.
+		final UvBlockungRegel regel11 = gibRegel09LehrerDefaultMaxKlassenlehrer(UvRegelManager.LEHRER_LEITUNG1_MIN, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal2(List.of(regel11));
+		dyn11.setzeKlassenLeitung1Add(4L, 5L, true);
+		checkMalus(dyn11, 6, 0, 8, 0, 0);
+		assertEquals(1, dyn11.gibAktuelleKlassenleitungen().size(), "Die fixierte Zuweisung muss erfolgen.");
+		assertFalse(dyn11.gibIstRegelFehlerhaft(regel11));
 	}
 
 
@@ -1630,6 +2087,48 @@ class TestUvDynDaten {
 		final UvBlockungRegel regel9 = gibRegel10LehrerMaxKlassenlehrer(5L, UvRegelManager.LEHRER_LEITUNG1_MAX + 1, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
 		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel10 = new UvBlockungRegel();
+		regel10.typ = UvBlockungRegelTyp.LEHRKRAFT_A_IST_MAXIMAL_B_MAL_KLASSENLEHRER.nr;
+		regel10.prioritaet = prioritaetSehrHoch;
+		regel10.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(List.of(regel10));
+		assertTrue(dyn10.gibIstRegelFehlerhaft(regel10));
+	}
+
+
+	@Test
+	@DisplayName("testRegel10LehrerMaxKlassenlehrer2")
+	void testRegel10LehrerMaxKlassenlehrer2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 11: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel11 = gibRegel10LehrerMaxKlassenlehrer(5L, 2, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal1(List.of(regel11));
+		dyn11.setzeKlassenLeitung1Add(4L, 5L, false);
+		checkMalus(dyn11, 2, 0, 4, 0, 0);
+		dyn11.setzeKlassenLeitung1Del(4L, 5L);
+		checkMalus(dyn11, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn11.gibAktuelleKlassenleitungen().size());
+
+		// Szenario 12: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel12 = new UvBlockungRegel();
+		regel12.typ = UvBlockungRegelTyp.LEHRKRAFT_A_IST_MAXIMAL_B_MAL_KLASSENLEHRER.nr;
+		regel12.prioritaet = prioritaetSehrHoch;
+		regel12.parameter.add(5L);
+		regel12.parameter.add(0L);
+		regel12.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal1(List.of(regel12));
+		assertTrue(dyn12.gibIstRegelFehlerhaft(regel12));
+
+		// Szenario 13: Eine fixierte Klassenleitung zählt für das Maximum mit.
+		final UvBlockungRegel regel13 = gibRegel10LehrerMaxKlassenlehrer(5L, UvRegelManager.LEHRER_LEITUNG1_MIN, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal1(List.of(regel13));
+		dyn13.setzeKlassenLeitung1Add(4L, 5L, true);
+		checkMalus(dyn13, 3, 0, 4, 0, 0);
+		assertEquals(1, dyn13.gibAktuelleKlassenleitungen().size(), "Die fixierte Zuweisung muss erfolgen.");
+		assertFalse(dyn13.gibIstRegelFehlerhaft(regel13));
 	}
 
 
@@ -1678,6 +2177,13 @@ class TestUvDynDaten {
 		assertEquals(1, dyn5.gibAktuelleKlassenleitungen().size(), "Zuweisung muss erfolgen, da Malus nicht schlechter wird.");
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5a));
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5b));
+	}
+
+
+	@Test
+	@DisplayName("testRegel11LehrerDefaultMaxStellvKlassenlehrer2")
+	void testRegel11LehrerDefaultMaxStellvKlassenlehrer2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
 
 		// Szenario 6: Alternativer Datensatz: andere Klasse und andere Lehrkraft, damit die deterministische API nicht nur den Default-Fall prüft.
 		final UvBlockungRegel regel6 = gibRegel11LehrerDefaultMaxStellvKlassenlehrer(2, prioritaetSehrHoch);
@@ -1714,6 +2220,39 @@ class TestUvDynDaten {
 		regel10.prioritaet = prioritaetSehrHoch;
 		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal2(List.of(regel10));
 		assertTrue(dyn10.gibIstRegelFehlerhaft(regel10));
+
+		// Szenario 11: max=MIN - auch eine zweite stellv. Klassenleitung bleibt malusneutral (Klassen-Malus -1, Lehrkraft-Malus +1).
+		final UvBlockungRegel regel11 = gibRegel11LehrerDefaultMaxStellvKlassenlehrer(UvRegelManager.LEHRER_LEITUNG2_MIN, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal2(List.of(regel11));
+		dyn11.setzeKlassenLeitung2Add(4L, 5L, false);
+		dyn11.setzeKlassenLeitung2Add(7L, 5L, false);
+		checkMalus(dyn11, 6, 0, 8, 0, 0);
+		assertEquals(2, dyn11.gibAktuelleKlassenleitungen().size(), "Beide Zuweisungen müssen erfolgen, da der Malus nicht schlechter wird.");
+		assertFalse(dyn11.gibIstRegelFehlerhaft(regel11));
+	}
+
+
+	@Test
+	@DisplayName("testRegel11LehrerDefaultMaxStellvKlassenlehrer3")
+	void testRegel11LehrerDefaultMaxStellvKlassenlehrer3() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 12: Zwei Parameter statt einem werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel12 = new UvBlockungRegel();
+		regel12.typ = UvBlockungRegelTyp.LEHRKRAFT_DEFAULT_IST_MAXIMAL_A_MAL_STELLV_KLASSENLEHRER.nr;
+		regel12.prioritaet = prioritaetSehrHoch;
+		regel12.parameter.add(0L);
+		regel12.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal2(List.of(regel12));
+		assertTrue(dyn12.gibIstRegelFehlerhaft(regel12));
+
+		// Szenario 13: Eine fixierte stellv. Klassenleitung zählt für das Maximum mit.
+		final UvBlockungRegel regel13 = gibRegel11LehrerDefaultMaxStellvKlassenlehrer(UvRegelManager.LEHRER_LEITUNG2_MIN, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal2(List.of(regel13));
+		dyn13.setzeKlassenLeitung2Add(4L, 5L, true);
+		checkMalus(dyn13, 6, 0, 8, 0, 0);
+		assertEquals(1, dyn13.gibAktuelleKlassenleitungen().size(), "Die fixierte Zuweisung muss erfolgen.");
+		assertFalse(dyn13.gibIstRegelFehlerhaft(regel13));
 	}
 
 
@@ -1800,16 +2339,52 @@ class TestUvDynDaten {
 
 
 	@Test
+	@DisplayName("testRegel12LehrerMaxStellvKlassenlehrer2")
+	void testRegel12LehrerMaxStellvKlassenlehrer2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 11: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel11 = gibRegel12LehrerMaxStellvKlassenlehrer(5L, 2, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal1(List.of(regel11));
+		dyn11.setzeKlassenLeitung2Add(4L, 5L, false);
+		checkMalus(dyn11, 2, 0, 4, 0, 0);
+		dyn11.setzeKlassenLeitung2Del(4L, 5L);
+		checkMalus(dyn11, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn11.gibAktuelleKlassenleitungen().size());
+
+		// Szenario 12: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel12 = new UvBlockungRegel();
+		regel12.typ = UvBlockungRegelTyp.LEHRKRAFT_A_IST_MAXIMAL_B_MAL_STELLV_KLASSENLEHRER.nr;
+		regel12.prioritaet = prioritaetSehrHoch;
+		regel12.parameter.add(5L);
+		regel12.parameter.add(0L);
+		regel12.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal1(List.of(regel12));
+		assertTrue(dyn12.gibIstRegelFehlerhaft(regel12));
+
+		// Szenario 13: Eine fixierte stellv. Klassenleitung zählt für das Maximum mit.
+		final UvBlockungRegel regel13 = gibRegel12LehrerMaxStellvKlassenlehrer(5L, UvRegelManager.LEHRER_LEITUNG2_MIN, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal1(List.of(regel13));
+		dyn13.setzeKlassenLeitung2Add(4L, 5L, true);
+		checkMalus(dyn13, 3, 0, 4, 0, 0);
+		assertEquals(1, dyn13.gibAktuelleKlassenleitungen().size(), "Die fixierte Zuweisung muss erfolgen.");
+		assertFalse(dyn13.gibIstRegelFehlerhaft(regel13));
+	}
+
+
+	@Test
 	@DisplayName("testRegel13LerngruppeLehrkraftVerbot: Die einzige Lehrkraft ist in der Lerngruppe verboten.")
 	void testRegel13LerngruppeLehrkraftVerbot() {
 		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
 		final int prioritaetDeaktiviert = UvBlockungRegelPrioritaet.DEAKTIVIERT.nr;
 
-		// Szenario 1: Lehrkraft 5 ist in Lerngruppe 1 verboten, Add wird ignoriert.
+		// Szenario 1: Lehrkraft 5 ist in Lerngruppe 1 verboten, Add wird ignoriert (Log).
 		final UvBlockungRegel regel1 = gibRegel13LehrkraftVerbotenInLerngruppe(5L, 1L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn1 = gibDatenMinimal1(List.of(regel1));
 		checkMalus(dyn1, 3, 0, 4, 0, 0);
-		assertThrows(DeveloperNotificationException.class, () -> dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		assertDoesNotThrow(() -> dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		checkMalus(dyn1, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn1.gibAktuelleZuordnung().size(), "Es darf keine Zuordnung entstehen.");
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
 
 		// Szenario 2: Regel deaktiviert, das Verbot wirkt nicht und Add funktioniert normal.
@@ -1842,6 +2417,39 @@ class TestUvDynDaten {
 
 
 	@Test
+	@DisplayName("testRegel13LerngruppeLehrkraftVerbot2")
+	void testRegel13LerngruppeLehrkraftVerbot2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 5: Eine andere Lerngruppe darf der Lehrkraft zugeordnet werden.
+		final UvBlockungRegel regel5 = gibRegel13LehrkraftVerbotenInLerngruppe(UvDatensatz3.LEHRER1, UvDatensatz3.LG1, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal3(List.of(regel5));
+		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5));
+		dyn5.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn5, 19, 0, 92, 0, 0);
+		assertEquals(1, dyn5.gibAktuelleZuordnung().size(), "Die Zuordnung zur anderen Lerngruppe muss erlaubt sein.");
+
+		// Szenario 6: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_IN_LERNGRUPPE_B.nr;
+		regel6.prioritaet = prioritaetSehrHoch;
+		regel6.parameter.add(UvDatensatz3.LEHRER1);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_IN_LERNGRUPPE_B.nr;
+		regel7.prioritaet = prioritaetSehrHoch;
+		regel7.parameter.add(UvDatensatz3.LEHRER1);
+		regel7.parameter.add(UvDatensatz3.LG1);
+		regel7.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+	}
+
+
+	@Test
 	@DisplayName("testRegel14LerngruppeLehrkraftFixierung: Die einzige Lehrkraft ist in der Lerngruppe fixiert.")
 	void testRegel14LerngruppeLehrkraftFixierung() {
 		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
@@ -1862,11 +2470,13 @@ class TestUvDynDaten {
 		checkMalus(dyn2, 3, 0, 4, 0, 0);
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 
-		// Szenario 3: Fixierung bleibt bestehen, auch wenn man anschließend versucht, die Zuordnung zu löschen.
+		// Szenario 3: Fixierung bleibt bestehen, auch wenn man anschließend versucht, die Zuordnung zu löschen (Log).
 		final UvBlockungRegel regel3 = gibRegel14LehrkraftFixiertInLerngruppe(5L, 1L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn3 = gibDatenMinimal1(List.of(regel3));
 		assertFalse(dyn3.gibIstRegelFehlerhaft(regel3));
-		assertThrows(DeveloperNotificationException.class, () -> dyn3.setzeLerngruppeLehrkraftDel(1L, 5L));
+		assertDoesNotThrow(() -> dyn3.setzeLerngruppeLehrkraftDel(1L, 5L));
+		checkMalus(dyn3, 2, 0, 0, 0, 0);
+		assertEquals(1, dyn3.gibAktuelleZuordnung().size(), "Fixierte Zuordnung muss erhalten bleiben.");
 
 		// Szenario 4: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
 		final UvBlockungRegel regel4 = gibRegel14LehrkraftFixiertInLerngruppe(999L, 1L, prioritaetSehrHoch);
@@ -1881,6 +2491,39 @@ class TestUvDynDaten {
 		checkMalus(dyn5, 3, 0, 4, 0, 0);
 		assertEquals(0, dyn5.gibAktuelleZuordnung().size(), "Keine Zuordnung bei ungültiger Lerngruppen-ID.");
 		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+	}
+
+
+	@Test
+	@DisplayName("testRegel14LerngruppeLehrkraftFixierung2")
+	void testRegel14LerngruppeLehrkraftFixierung2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 6: Eine zweite (nicht fixierte) Lerngruppe darf zusätzlich zugeordnet werden.
+		final UvBlockungRegel regel6 = gibRegel14LehrkraftFixiertInLerngruppe(UvDatensatz3.LEHRER1, UvDatensatz3.LG1, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
+		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
+		assertDoesNotThrow(() -> dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false));
+		checkMalus(dyn6, 18, 0, 80, 0, 0);
+		assertEquals(2, dyn6.gibAktuelleZuordnung().size(), "Beide Zuordnungen müssen vorhanden sein.");
+
+		// Szenario 7: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_FIXIERT_IN_LERNGRUPPE_B.nr;
+		regel7.prioritaet = prioritaetSehrHoch;
+		regel7.parameter.add(UvDatensatz3.LEHRER1);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = new UvBlockungRegel();
+		regel8.typ = UvBlockungRegelTyp.LEHRKRAFT_A_FIXIERT_IN_LERNGRUPPE_B.nr;
+		regel8.prioritaet = prioritaetSehrHoch;
+		regel8.parameter.add(UvDatensatz3.LEHRER1);
+		regel8.parameter.add(UvDatensatz3.LG1);
+		regel8.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
 	}
 
 
@@ -1921,6 +2564,47 @@ class TestUvDynDaten {
 		checkMalus(dyn4, 3, 0, 4, 1, 0);
 		assertEquals(0, dyn4.gibAktuelleZuordnung().size(), "Es sollte keine Zuordnung geben.");
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
+
+		// Szenario 5: Unbekannte Lehrkraft- bzw. Lerngruppen-ID werden aussortiert.
+		final UvBlockungRegel regel5a = gibRegel15LehrkraftGerneInLerngruppe(999L, 1L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn5a = gibDatenMinimal1(List.of(regel5a));
+		assertTrue(dyn5a.gibIstRegelFehlerhaft(regel5a));
+		final UvBlockungRegel regel5b = gibRegel15LehrkraftGerneInLerngruppe(5L, 999L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn5b = gibDatenMinimal1(List.of(regel5b));
+		assertTrue(dyn5b.gibIstRegelFehlerhaft(regel5b));
+	}
+
+
+	@Test
+	@DisplayName("testRegel15LerngruppeLehrkraftGerne2")
+	void testRegel15LerngruppeLehrkraftGerne2() {
+		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
+
+		// Szenario 6: Eine fixierte Zuordnung erfüllt den Wunsch.
+		final UvBlockungRegel regel6 = gibRegel15LehrkraftGerneInLerngruppe(5L, 1L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		dyn6.setzeLerngruppeLehrkraftAdd(1L, 5L, true);
+		checkMalus(dyn6, 2, 0, 0, 0, 0);
+		assertEquals(1, dyn6.gibAktuelleZuordnung().size(), "Es sollte genau 1 Zuordnung geben.");
+		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_GERNE_IN_LERNGRUPPE_B.nr;
+		regel7.prioritaet = prioritaetGering;
+		regel7.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = new UvBlockungRegel();
+		regel8.typ = UvBlockungRegelTyp.LEHRKRAFT_A_GERNE_IN_LERNGRUPPE_B.nr;
+		regel8.prioritaet = prioritaetGering;
+		regel8.parameter.add(5L);
+		regel8.parameter.add(1L);
+		regel8.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
 	}
 
 
@@ -1961,6 +2645,47 @@ class TestUvDynDaten {
 		checkMalus(dyn4, 3, 0, 4, 0, 0);
 		assertEquals(0, dyn4.gibAktuelleZuordnung().size(), "Es sollte keine Zuordnung geben.");
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
+
+		// Szenario 5: Unbekannte Lehrkraft- bzw. Lerngruppen-ID werden aussortiert.
+		final UvBlockungRegel regel5a = gibRegel16LehrkraftUngerneInLerngruppe(999L, 1L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn5a = gibDatenMinimal1(List.of(regel5a));
+		assertTrue(dyn5a.gibIstRegelFehlerhaft(regel5a));
+		final UvBlockungRegel regel5b = gibRegel16LehrkraftUngerneInLerngruppe(5L, 999L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn5b = gibDatenMinimal1(List.of(regel5b));
+		assertTrue(dyn5b.gibIstRegelFehlerhaft(regel5b));
+	}
+
+
+	@Test
+	@DisplayName("testRegel16LerngruppeLehrkraftUngerne2")
+	void testRegel16LerngruppeLehrkraftUngerne2() {
+		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
+
+		// Szenario 6: Eine fixierte Zuordnung verletzt den Wunsch.
+		final UvBlockungRegel regel6 = gibRegel16LehrkraftUngerneInLerngruppe(5L, 1L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		dyn6.setzeLerngruppeLehrkraftAdd(1L, 5L, true);
+		checkMalus(dyn6, 2, 0, 0, 1, 0);
+		assertEquals(1, dyn6.gibAktuelleZuordnung().size(), "Es sollte genau 1 Zuordnung geben.");
+		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_UNGERNE_IN_LERNGRUPPE_B.nr;
+		regel7.prioritaet = prioritaetGering;
+		regel7.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = new UvBlockungRegel();
+		regel8.typ = UvBlockungRegelTyp.LEHRKRAFT_A_UNGERNE_IN_LERNGRUPPE_B.nr;
+		regel8.prioritaet = prioritaetGering;
+		regel8.parameter.add(5L);
+		regel8.parameter.add(1L);
+		regel8.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
 	}
 
 
@@ -1983,12 +2708,12 @@ class TestUvDynDaten {
 		dyn1.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
 		checkMalus(dyn1, 19, 0, 92, 0, 0);
 		dyn1.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
-		checkMalus(dyn1, 18, 1, 80, 0, 0);
+		checkMalus(dyn1, 18, 2, 80, 0, 0);
 		assertEquals(2, dyn1.gibAktuelleZuordnung().size(), "Es sollten genau 2 Zuordnungen vorhanden sein.");
 
 		// Szenario 2:
 		// Drei Lerngruppen liegen im selben Zeitslot.
-		// Eine Lehrkraft erhält alle drei Lerngruppen --> 2 HOCH-Mali.
+		// Eine Lehrkraft erhält alle drei Lerngruppen --> 2 HOCH-Malus.
 		final @NotNull List<UvBlockungRegel> regeln2 = new ArrayList<>();
 		regeln2.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 2L, 3L, 0L, prioritaetHoch));
 		regeln2.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 2L, 3L, 0L, prioritaetHoch));
@@ -2001,9 +2726,9 @@ class TestUvDynDaten {
 		dyn2.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
 		checkMalus(dyn2, 19, 0, 92, 0, 0);
 		dyn2.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
-		checkMalus(dyn2, 18, 1, 80, 0, 0);
+		checkMalus(dyn2, 18, 2, 80, 0, 0);
 		dyn2.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG8, UvDatensatz3.LEHRER1, false);
-		checkMalus(dyn2, 17, 2, 76, 0, 0);
+		checkMalus(dyn2, 17, 6, 76, 0, 0);
 		assertEquals(3, dyn2.gibAktuelleZuordnung().size(), "Es sollten genau 3 Zuordnungen vorhanden sein.");
 
 		// Szenario 3:
@@ -2040,9 +2765,9 @@ class TestUvDynDaten {
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regeln4.get(2)));
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regeln4.get(3)));
 		assertEquals(2, dyn4.gibAktuelleZuordnung().size(), "Beide Lerngruppen müssen durch Regel 14 direkt zugeordnet sein.");
-		checkMalus(dyn4, 18, 1, 80, 0, 0);
+		checkMalus(dyn4, 18, 2, 80, 0, 0);
 
-		// Szenario 4: Wie Szenario 1 + Lerngruppen-Lehrkraft-Zuordnungen werden über Regel14 forciert (DAVOR).
+		// Szenario 5: Wie Szenario 1 + Lerngruppen-Lehrkraft-Zuordnungen werden über Regel14 forciert (DAVOR).
 		final @NotNull List<UvBlockungRegel> regeln5 = new ArrayList<>();
 		regeln5.add(gibRegel14LehrkraftFixiertInLerngruppe(UvDatensatz3.LEHRER1, UvDatensatz3.LG2, UvBlockungRegelPrioritaet.SEHR_HOCH.nr));
 		regeln5.add(gibRegel14LehrkraftFixiertInLerngruppe(UvDatensatz3.LEHRER1, UvDatensatz3.LG5, UvBlockungRegelPrioritaet.SEHR_HOCH.nr));
@@ -2054,8 +2779,202 @@ class TestUvDynDaten {
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regeln5.get(2)));
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regeln5.get(3)));
 		assertEquals(2, dyn5.gibAktuelleZuordnung().size(), "Beide Lerngruppen müssen durch Regel 14 direkt zugeordnet sein.");
-		checkMalus(dyn5, 18, 1, 80, 0, 0);
+		checkMalus(dyn5, 18, 2, 80, 0, 0);
 
+		// Szenario 6: Fehlerhafte Parameter bzw. Referenzen werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel6a = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(999L, 1L, 1L, 0L, prioritaetHoch);
+		assertTrue(gibDatenMinimal3(List.of(regel6a)).gibIstRegelFehlerhaft(regel6a));
+		final UvBlockungRegel regel6b = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 8L, 1L, 0L, prioritaetHoch);
+		assertTrue(gibDatenMinimal3(List.of(regel6b)).gibIstRegelFehlerhaft(regel6b));
+		final UvBlockungRegel regel6c = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 33L, 0L, prioritaetHoch);
+		assertTrue(gibDatenMinimal3(List.of(regel6c)).gibIstRegelFehlerhaft(regel6c));
+		final UvBlockungRegel regel6d = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 9L, prioritaetHoch);
+		assertTrue(gibDatenMinimal3(List.of(regel6d)).gibIstRegelFehlerhaft(regel6d));
+		final UvBlockungRegel regel6e = new UvBlockungRegel();
+		regel6e.typ = UvBlockungRegelTyp.LERNGRUPPE_A_LIEGT_AM_WOCHENTAG_B_STUNDE_C_WOCHENTYP_D.nr;
+		regel6e.prioritaet = prioritaetHoch;
+		regel6e.parameter.add(UvDatensatz3.LG2);
+		assertTrue(gibDatenMinimal3(List.of(regel6e)).gibIstRegelFehlerhaft(regel6e));
+		final UvBlockungRegel regel6f = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 17L, 0L, prioritaetHoch);
+		assertTrue(gibDatenMinimal3(List.of(regel6f)).gibIstRegelFehlerhaft(regel6f), "Stunde 17 liegt über dem Maximum.");
+		final UvBlockungRegel regel6g = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 4L, prioritaetHoch);
+		assertTrue(gibDatenMinimal3(List.of(regel6g)).gibIstRegelFehlerhaft(regel6g), "Wochentyp 4 liegt über dem Modell.");
+
+		// Szenario 6h: Ein doppelter Zeitslot derselben Lerngruppe wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel6h1 = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetHoch);
+		final UvBlockungRegel regel6h2 = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn6h = gibDatenMinimal3(List.of(regel6h1, regel6h2));
+		assertFalse(dyn6h.gibIstRegelFehlerhaft(regel6h1));
+		assertTrue(dyn6h.gibIstRegelFehlerhaft(regel6h2));
+
+		// Szenario 6i: Derselbe Wochentag und dieselbe Stunde, aber ein anderer Wochentyp derselben Lerngruppe ist erlaubt.
+		final UvBlockungRegel regel6i = gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 1L, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn6i = gibDatenMinimal3(List.of(regel6h1, regel6i));
+		assertFalse(dyn6i.gibIstRegelFehlerhaft(regel6h1));
+		assertFalse(dyn6i.gibIstRegelFehlerhaft(regel6i));
+	}
+
+
+	@Test
+	@DisplayName("testRegel17LerngruppeLiegtAmWochentagStundeWochentyp3")
+	void testRegel17LerngruppeLiegtAmWochentagStundeWochentyp3() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 7:
+		// Zwei Lerngruppen liegen im selben Zeitslot mit Wochentyp 2 (B-Woche).
+		// Eine Lehrkraft erhält beide Lerngruppen --> 1 HOCH-Malus.
+		final @NotNull List<UvBlockungRegel> regeln7 = new ArrayList<>();
+		regeln7.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 2L, prioritaetHoch));
+		regeln7.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 2L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(regeln7);
+		assertFalse(dyn7.gibIstRegelFehlerhaft(regeln7.get(0)));
+		assertFalse(dyn7.gibIstRegelFehlerhaft(regeln7.get(1)));
+		checkMalus(dyn7, 20, 0, 112, 0, 0);
+		dyn7.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn7, 19, 0, 92, 0, 0);
+		dyn7.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn7, 18, 2, 80, 0, 0);
+		assertEquals(2, dyn7.gibAktuelleZuordnung().size(), "Es sollten genau 2 Zuordnungen vorhanden sein.");
+
+		// Szenario 8:
+		// Eine Lerngruppe liegt in der A-Woche (1), die andere in der B-Woche (2) im selben Zeitslot.
+		// Eine Lehrkraft erhält beide Lerngruppen --> kein Malus, da keine echte Kollision.
+		final @NotNull List<UvBlockungRegel> regeln8 = new ArrayList<>();
+		regeln8.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 1L, prioritaetHoch));
+		regeln8.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 2L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(regeln8);
+		assertFalse(dyn8.gibIstRegelFehlerhaft(regeln8.get(0)));
+		assertFalse(dyn8.gibIstRegelFehlerhaft(regeln8.get(1)));
+		checkMalus(dyn8, 20, 0, 112, 0, 0);
+		dyn8.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn8, 19, 0, 92, 0, 0);
+		dyn8.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn8, 18, 0, 80, 0, 0);
+		assertEquals(2, dyn8.gibAktuelleZuordnung().size(), "Es sollten genau 2 Zuordnungen vorhanden sein.");
+
+	}
+
+
+	@Test
+	@DisplayName("testRegel17PrioritaetSehrHoch: Der Kollisionsmalus landet bei SEHR_HOCH.")
+	void testRegel17PrioritaetSehrHoch() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Zwei Lerngruppen im selben Zeitslot, beide mit derselben Lehrkraft.
+		final @NotNull List<UvBlockungRegel> regeln = new ArrayList<>();
+		regeln.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetSehrHoch));
+		regeln.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 0L, prioritaetSehrHoch));
+		final UvAlgorithmusDynDaten dyn = gibDatenMinimal3(regeln);
+		checkMalus(dyn, 20, 0, 112, 0, 0);
+		dyn.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		dyn.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn, 20, 0, 80, 0, 0);
+	}
+
+
+	@Test
+	@DisplayName("testRegel17KollisionsMalusZurechnung: Der Kollisionsmalus wird deterministisch zugerechnet.")
+	void testRegel17KollisionsMalusZurechnung() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 9: Eine Lerngruppe im Wochentyp 0 verbindet alle Wochen.
+		// Drei Lerngruppen im selben Zeitslot, dieselbe Lehrkraft --> 2 HOCH-Malus.
+		final @NotNull List<UvBlockungRegel> regeln9 = new ArrayList<>();
+		regeln9.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 1L, prioritaetHoch));
+		regeln9.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG8, 1L, 1L, 2L, prioritaetHoch));
+		regeln9.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(regeln9);
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regeln9.get(0)));
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regeln9.get(1)));
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regeln9.get(2)));
+		checkMalus(dyn9, 20, 0, 112, 0, 0);
+		dyn9.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn9, 19, 0, 92, 0, 0);
+		dyn9.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG8, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn9, 18, 0, 80, 0, 0);
+		dyn9.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn9, 17, 2, 76, 0, 0);
+		assertEquals(3, dyn9.gibAktuelleZuordnung().size(), "Es sollten genau 3 Zuordnungen vorhanden sein.");
+
+		// Szenario 10: Drei Lerngruppen in drei verschiedenen Wochen (Wochentyp 1, 2, 3) --> kein Malus.
+		final @NotNull List<UvBlockungRegel> regeln10 = new ArrayList<>();
+		regeln10.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 1L, prioritaetHoch));
+		regeln10.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 2L, prioritaetHoch));
+		regeln10.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG8, 1L, 1L, 3L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(regeln10);
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regeln10.get(0)));
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regeln10.get(1)));
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regeln10.get(2)));
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG8, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn10, 17, 0, 76, 0, 0);
+		assertEquals(3, dyn10.gibAktuelleZuordnung().size(), "Es sollten genau 3 Zuordnungen vorhanden sein.");
+
+		// Szenario 11: Der Kollisionsmalus wird dem Träger (kleinste interne ID) zugerechnet, unabhängig von der Reihenfolge.
+		final @NotNull List<UvBlockungRegel> regeln11 = new ArrayList<>();
+		regeln11.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetHoch));
+		regeln11.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 0L, prioritaetSehrHoch));
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(regeln11);
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn11, 19, 1, 80, 0, 0);
+		assertEquals(2, dyn11.gibAktuelleZuordnung().size(), "Es sollten genau 2 Zuordnungen vorhanden sein.");
+
+		final @NotNull List<UvBlockungRegel> regeln12 = new ArrayList<>();
+		regeln12.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 0L, prioritaetSehrHoch));
+		regeln12.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal3(regeln12);
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn12, 19, 1, 80, 0, 0);
+		assertEquals(2, dyn12.gibAktuelleZuordnung().size(), "Es sollten genau 2 Zuordnungen vorhanden sein.");
+	}
+
+
+	@Test
+	@DisplayName("testRegel17KollisionenWochentypen: Wochentyp 0 kollidiert mit allem, Wochentypen > 0 nur untereinander.")
+	void testRegel17KollisionenWochentypen() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario A: Beide Lerngruppen haben Wochentyp 0 (jede Woche) --> Kollision.
+		final @NotNull List<UvBlockungRegel> regelnA = new ArrayList<>();
+		regelnA.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetHoch));
+		regelnA.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 0L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dynA = gibDatenMinimal3(regelnA);
+		dynA.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		dynA.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		checkMalus(dynA, 18, 2, 80, 0, 0);
+
+		// Szenario B: Wochentyp 0 und Wochentyp 1 --> Kollision in der A-Woche.
+		final @NotNull List<UvBlockungRegel> regelnB = new ArrayList<>();
+		regelnB.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetHoch));
+		regelnB.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 1L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dynB = gibDatenMinimal3(regelnB);
+		dynB.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		dynB.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		checkMalus(dynB, 18, 1, 80, 0, 0);
+
+		// Szenario C: Wochentyp 1 und Wochentyp 2 --> keine Kollision, da verschiedene Wochen.
+		final @NotNull List<UvBlockungRegel> regelnC = new ArrayList<>();
+		regelnC.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 1L, prioritaetHoch));
+		regelnC.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 2L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dynC = gibDatenMinimal3(regelnC);
+		dynC.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		dynC.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		checkMalus(dynC, 18, 0, 80, 0, 0);
+
+		// Szenario D: Wochentyp 0, 1 und 2 --> 2 Kollisionen (Wochentyp 1 mit 0 und Wochentyp 2 mit 0).
+		final @NotNull List<UvBlockungRegel> regelnD = new ArrayList<>();
+		regelnD.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG2, 1L, 1L, 0L, prioritaetHoch));
+		regelnD.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG5, 1L, 1L, 1L, prioritaetHoch));
+		regelnD.add(gibRegel17LerngruppeLiegtAmWochentagStundeWochentyp(UvDatensatz3.LG8, 1L, 1L, 2L, prioritaetHoch));
+		final UvAlgorithmusDynDaten dynD = gibDatenMinimal3(regelnD);
+		dynD.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		dynD.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG5, UvDatensatz3.LEHRER1, false);
+		dynD.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG8, UvDatensatz3.LEHRER1, false);
+		checkMalus(dynD, 17, 2, 76, 0, 0);
 	}
 
 
@@ -2066,12 +2985,14 @@ class TestUvDynDaten {
 		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
 		final int prioritaetDeaktiviert = UvBlockungRegelPrioritaet.DEAKTIVIERT.nr;
 
-		// Szenario 1: Lehrkraft 5 ist in Klasse 4 verboten, Add wird ignoriert.
+		// Szenario 1: Lehrkraft 5 ist in Klasse 4 verboten, Add wird ignoriert (Log).
 		final UvBlockungRegel regel1 = gibRegel18LehrkraftVerbotenInKlasse(5L, 4L, prioritaetGering);
 		final UvAlgorithmusDynDaten dyn1 = gibDatenMinimal1(List.of(regel1));
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
 		checkMalus(dyn1, 3, 0, 4, 0, 0);
-		assertThrows(DeveloperNotificationException.class, () -> dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		assertDoesNotThrow(() -> dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		checkMalus(dyn1, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn1.gibAktuelleZuordnung().size(), "Es darf keine Zuordnung entstehen.");
 
 		// Szenario 2: Regel deaktiviert, das Verbot wirkt nicht und Add funktioniert normal.
 		final UvBlockungRegel regel2 = gibRegel18LehrkraftVerbotenInKlasse(5L, 4L, prioritaetDeaktiviert);
@@ -2111,20 +3032,47 @@ class TestUvDynDaten {
 
 
 	@Test
-	@DisplayName("testRegel19LehrkraftVerbotenInStufe: Die einzige Lehrkraft ist in der Stufe verboten.")
-	void testRegel19LehrkraftVerbotenInStufe() {
+	@DisplayName("testRegel18LehrkraftVerbotenInKlasse2")
+	void testRegel18LehrkraftVerbotenInKlasse2() {
+		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
+
+		// Szenario 6: Eine Lerngruppe einer anderen Klasse darf zugeordnet werden.
+		final UvBlockungRegel regel6 = gibRegel18LehrkraftVerbotenInKlasse(UvDatensatz3.LEHRER1, UvDatensatz3.KLASSE_5A, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
+		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
+		dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG7, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn6, 19, 0, 92, 0, 0);
+		assertEquals(1, dyn6.gibAktuelleZuordnung().size(), "Die Zuordnung in einer anderen Klasse muss erlaubt sein.");
+
+		// Szenario 7: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_IN_KLASSE_B.nr;
+		regel7.prioritaet = prioritaetGering;
+		regel7.parameter.add(UvDatensatz3.LEHRER1);
+		regel7.parameter.add(UvDatensatz3.KLASSE_5A);
+		regel7.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+	}
+
+
+	@Test
+	@DisplayName("testRegel19LehrkraftVerbotenInJahrgang: Die einzige Lehrkraft ist im Jahrgang verboten.")
+	void testRegel19LehrkraftVerbotenInJahrgang() {
 		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
 		final int prioritaetDeaktiviert = UvBlockungRegelPrioritaet.DEAKTIVIERT.nr;
 
-		// Szenario 1: Lehrkraft 5 ist in Jahrgang 5 verboten, Add wird ignoriert.
-		final UvBlockungRegel regel1 = gibRegel19LehrkraftVerbotenInStufe(5L, UvDatensatz1.JAHRGANG, prioritaetGering);
+		// Szenario 1: Lehrkraft 5 ist in Jahrgang 5 verboten, Add wird ignoriert (Log).
+		final UvBlockungRegel regel1 = gibRegel19LehrkraftVerbotenInJahrgang(5L, UvDatensatz1.JAHRGANG, prioritaetGering);
 		final UvAlgorithmusDynDaten dyn1 = gibDatenMinimal1(List.of(regel1));
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
 		checkMalus(dyn1, 3, 0, 4, 0, 0);
-		assertThrows(DeveloperNotificationException.class, () -> dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		assertDoesNotThrow(() -> dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		checkMalus(dyn1, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn1.gibAktuelleZuordnung().size(), "Es darf keine Zuordnung entstehen.");
 
 		// Szenario 2: Regel deaktiviert, das Verbot wirkt nicht und Add funktioniert normal.
-		final UvBlockungRegel regel2 = gibRegel19LehrkraftVerbotenInStufe(5L, UvDatensatz1.JAHRGANG, prioritaetDeaktiviert);
+		final UvBlockungRegel regel2 = gibRegel19LehrkraftVerbotenInJahrgang(5L, UvDatensatz1.JAHRGANG, prioritaetDeaktiviert);
 		final UvAlgorithmusDynDaten dyn2 = gibDatenMinimal1(List.of(regel2));
 		checkMalus(dyn2, 3, 0, 4, 0, 0);
 		dyn2.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
@@ -2133,7 +3081,7 @@ class TestUvDynDaten {
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 
 		// Szenario 3: Unbekannte Lehrkraft-ID im Verbot, Regel wird aussortiert.
-		final UvBlockungRegel regel3 = gibRegel19LehrkraftVerbotenInStufe(999L, UvDatensatz1.JAHRGANG, prioritaetGering);
+		final UvBlockungRegel regel3 = gibRegel19LehrkraftVerbotenInJahrgang(999L, UvDatensatz1.JAHRGANG, prioritaetGering);
 		final UvAlgorithmusDynDaten dyn3 = gibDatenMinimal1(List.of(regel3));
 		checkMalus(dyn3, 3, 0, 4, 0, 0);
 		dyn3.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
@@ -2142,13 +3090,46 @@ class TestUvDynDaten {
 		assertTrue(dyn3.gibIstRegelFehlerhaft(regel3));
 
 		// Szenario 4: Unbekannte Jahrgangs-ID im Verbot, Regel wird aussortiert.
-		final UvBlockungRegel regel4 = gibRegel19LehrkraftVerbotenInStufe(5L, 999L, prioritaetGering);
+		final UvBlockungRegel regel4 = gibRegel19LehrkraftVerbotenInJahrgang(5L, 999L, prioritaetGering);
 		final UvAlgorithmusDynDaten dyn4 = gibDatenMinimal1(List.of(regel4));
 		checkMalus(dyn4, 3, 0, 4, 0, 0);
 		dyn4.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
 		checkMalus(dyn4, 2, 0, 0, 0, 0);
-		assertEquals(1, dyn4.gibAktuelleZuordnung().size(), "Zuordnung muss erfolgen, da das Verbot eine unbekannte Stufe betrifft.");
+		assertEquals(1, dyn4.gibAktuelleZuordnung().size(), "Zuordnung muss erfolgen, da das Verbot einen unbekannten Jahrgang betrifft.");
 		assertTrue(dyn4.gibIstRegelFehlerhaft(regel4));
+
+		// Szenario 5: Regel mit fehlendem Parameter wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel5 = new UvBlockungRegel();
+		regel5.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_IN_JAHRGANG_B.nr;
+		regel5.prioritaet = prioritaetGering;
+		regel5.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
+		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+	}
+
+
+	@Test
+	@DisplayName("testRegel19LehrkraftVerbotenInJahrgang2")
+	void testRegel19LehrkraftVerbotenInJahrgang2() {
+		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
+
+		// Szenario 6: Eine Lerngruppe eines anderen Jahrgangs darf zugeordnet werden.
+		final UvBlockungRegel regel6 = gibRegel19LehrkraftVerbotenInJahrgang(UvDatensatz3.LEHRER1, UvDatensatz3.JAHRGANG_5, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
+		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
+		dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG7, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn6, 19, 0, 92, 0, 0);
+		assertEquals(1, dyn6.gibAktuelleZuordnung().size(), "Die Zuordnung in einem anderen Jahrgang muss erlaubt sein.");
+
+		// Szenario 7: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_IN_JAHRGANG_B.nr;
+		regel7.prioritaet = prioritaetGering;
+		regel7.parameter.add(UvDatensatz3.LEHRER1);
+		regel7.parameter.add(UvDatensatz3.JAHRGANG_5);
+		regel7.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
 	}
 
 
@@ -2206,6 +3187,67 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
 		checkMalus(dyn6, 20, 0, 112, 0, 0);
 		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Unbekannte Lehrkraft-ID wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = gibRegel20LehrkraftHatMindestensBMalFachC(999L, 1, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Unbekannte Fach-ID wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = gibRegel20LehrkraftHatMindestensBMalFachC(UvDatensatz3.LEHRER1, 1, 999L, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: Negativer Mindestwert wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = gibRegel20LehrkraftHatMindestensBMalFachC(UvDatensatz3.LEHRER1, -1, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Fehlender Parameter (nur Lehrkraft-ID) wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel10 = new UvBlockungRegel();
+		regel10.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MINDESTENS_B_MAL_FACH_C.nr;
+		regel10.prioritaet = prioritaetHoch;
+		regel10.parameter.add(UvDatensatz3.LEHRER1);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		assertTrue(dyn10.gibIstRegelFehlerhaft(regel10));
+	}
+
+
+	@Test
+	@DisplayName("testRegel20LehrkraftHatMindestensBMalFachC2")
+	void testRegel20LehrkraftHatMindestensBMalFachC2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 11: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel11 = gibRegel20LehrkraftHatMindestensBMalFachC(UvDatensatz3.LEHRER1, 1, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn11, 19, 0, 92, 0, 0);
+		dyn11.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG1, UvDatensatz3.LEHRER1);
+		checkMalus(dyn11, 20, 1, 112, 0, 0);
+
+		// Szenario 12: Mehrfache Unterschreitung (min=3, nur 1 Deutsch-Zuordnung) ergibt HOCH-Malus 2.
+		final UvBlockungRegel regel12 = gibRegel20LehrkraftHatMindestensBMalFachC(UvDatensatz3.LEHRER1, 3, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal3(List.of(regel12));
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn12, 19, 2, 92, 0, 0);
+
+		// Szenario 13: Vier Parameter statt drei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel13 = new UvBlockungRegel();
+		regel13.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MINDESTENS_B_MAL_FACH_C.nr;
+		regel13.prioritaet = prioritaetHoch;
+		regel13.parameter.add(UvDatensatz3.LEHRER1);
+		regel13.parameter.add(1L);
+		regel13.parameter.add(UvDatensatz3.FACH_DE);
+		regel13.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal3(List.of(regel13));
+		assertTrue(dyn13.gibIstRegelFehlerhaft(regel13));
+
+		// Szenario 14: Eine fixierte Zuordnung zählt für die Mindestanzahl mit.
+		final UvBlockungRegel regel14 = gibRegel20LehrkraftHatMindestensBMalFachC(UvDatensatz3.LEHRER1, 1, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn14 = gibDatenMinimal3(List.of(regel14));
+		dyn14.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn14, 19, 0, 92, 0, 0);
 	}
 
 
@@ -2270,6 +3312,71 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
 		checkMalus(dyn6, 20, 0, 112, 0, 0);
 		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Unbekannte Lehrkraft-ID wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = gibRegel21LehrkraftHatMaximalBMalFachC(999L, 1, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Unbekannte Fach-ID wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = gibRegel21LehrkraftHatMaximalBMalFachC(UvDatensatz3.LEHRER1, 1, 999L, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: Negativer Maximalwert wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = gibRegel21LehrkraftHatMaximalBMalFachC(UvDatensatz3.LEHRER1, -1, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Fehlender Parameter (nur Lehrkraft-ID) wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel10 = new UvBlockungRegel();
+		regel10.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MAXIMAL_B_MAL_FACH_C.nr;
+		regel10.prioritaet = prioritaetHoch;
+		regel10.parameter.add(UvDatensatz3.LEHRER1);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		assertTrue(dyn10.gibIstRegelFehlerhaft(regel10));
+	}
+
+
+	@Test
+	@DisplayName("testRegel21LehrkraftHatMaximalBMalFachC2")
+	void testRegel21LehrkraftHatMaximalBMalFachC2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 11: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel11 = gibRegel21LehrkraftHatMaximalBMalFachC(UvDatensatz3.LEHRER1, 1, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG4, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn11, 18, 1, 80, 0, 0);
+		dyn11.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG4, UvDatensatz3.LEHRER1);
+		checkMalus(dyn11, 19, 0, 92, 0, 0);
+
+		// Szenario 12: Mehrfache Überschreitung (max=0, zwei Deutsch-Zuordnungen) ergibt HOCH-Malus 2.
+		final UvBlockungRegel regel12 = gibRegel21LehrkraftHatMaximalBMalFachC(UvDatensatz3.LEHRER1, 0, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal3(List.of(regel12));
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG4, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn12, 18, 2, 80, 0, 0);
+
+		// Szenario 13: Vier Parameter statt drei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel13 = new UvBlockungRegel();
+		regel13.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MAXIMAL_B_MAL_FACH_C.nr;
+		regel13.prioritaet = prioritaetHoch;
+		regel13.parameter.add(UvDatensatz3.LEHRER1);
+		regel13.parameter.add(1L);
+		regel13.parameter.add(UvDatensatz3.FACH_DE);
+		regel13.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal3(List.of(regel13));
+		assertTrue(dyn13.gibIstRegelFehlerhaft(regel13));
+
+		// Szenario 14: Fixierte Zuordnungen zählen für das Maximum mit.
+		final UvBlockungRegel regel14 = gibRegel21LehrkraftHatMaximalBMalFachC(UvDatensatz3.LEHRER1, 1, UvDatensatz3.FACH_DE, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn14 = gibDatenMinimal3(List.of(regel14));
+		dyn14.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn14, 19, 0, 92, 0, 0);
+		dyn14.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG4, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn14, 18, 1, 80, 0, 0);
 	}
 
 
@@ -2342,6 +3449,50 @@ class TestUvDynDaten {
 		regel9.parameter.add(UvDatensatz3.LEHRER1);
 		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9));
 		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+	}
+
+
+	@Test
+	@DisplayName("testRegel22LehrkraftHatMindestensNKorrekturen2")
+	void testRegel22LehrkraftHatMindestensNKorrekturen2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 10: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel10 = gibRegel22LehrkraftHatMindestensNKorrekturen(UvDatensatz3.LEHRER1, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn10, 19, 0, 92, 0, 0);
+		dyn10.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG1, UvDatensatz3.LEHRER1);
+		checkMalus(dyn10, 20, 1, 112, 0, 0);
+
+		// Szenario 11: Mehrfache Unterschreitung (min=3, nur 1 Korrektur) ergibt HOCH-Malus 2.
+		final UvBlockungRegel regel11 = gibRegel22LehrkraftHatMindestensNKorrekturen(UvDatensatz3.LEHRER1, 3, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn11, 19, 2, 92, 0, 0);
+
+		// Szenario 12: Vier Parameter statt drei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel12 = new UvBlockungRegel();
+		regel12.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MINDESTENS_B_KORREKTUREN.nr;
+		regel12.prioritaet = prioritaetHoch;
+		regel12.parameter.add(UvDatensatz3.LEHRER1);
+		regel12.parameter.add(1L);
+		regel12.parameter.add(0L);
+		regel12.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal3(List.of(regel12));
+		assertTrue(dyn12.gibIstRegelFehlerhaft(regel12));
+
+		// Szenario 13: Eine fixierte Zuordnung erfüllt die Mindestanzahl.
+		final UvBlockungRegel regel13 = gibRegel22LehrkraftHatMindestensNKorrekturen(UvDatensatz3.LEHRER1, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal3(List.of(regel13));
+		dyn13.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn13, 19, 0, 92, 0, 0);
+
+		// Szenario 14: Eine Lerngruppe ohne Korrekturbelastung (Mathematik) erfüllt die Regel nicht.
+		final UvBlockungRegel regel14 = gibRegel22LehrkraftHatMindestensNKorrekturen(UvDatensatz3.LEHRER1, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn14 = gibDatenMinimal3(List.of(regel14));
+		dyn14.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn14, 19, 1, 92, 0, 0);
 	}
 
 
@@ -2419,6 +3570,48 @@ class TestUvDynDaten {
 
 
 	@Test
+	@DisplayName("testRegel23LehrkraftHatMaximalNKorrekturen2")
+	void testRegel23LehrkraftHatMaximalNKorrekturen2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 10: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel10 = gibRegel23LehrkraftHatMaximalNKorrekturen(UvDatensatz3.LEHRER1, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG4, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn10, 18, 1, 80, 0, 0);
+		dyn10.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG4, UvDatensatz3.LEHRER1);
+		checkMalus(dyn10, 19, 0, 92, 0, 0);
+
+		// Szenario 11: Mehrfache Überschreitung (max=0, zwei Korrekturen) ergibt HOCH-Malus 2.
+		final UvBlockungRegel regel11 = gibRegel23LehrkraftHatMaximalNKorrekturen(UvDatensatz3.LEHRER1, 0, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG4, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn11, 18, 2, 80, 0, 0);
+
+		// Szenario 12: Vier Parameter statt drei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel12 = new UvBlockungRegel();
+		regel12.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MAXIMAL_B_KORREKTUREN.nr;
+		regel12.prioritaet = prioritaetHoch;
+		regel12.parameter.add(UvDatensatz3.LEHRER1);
+		regel12.parameter.add(1L);
+		regel12.parameter.add(0L);
+		regel12.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal3(List.of(regel12));
+		assertTrue(dyn12.gibIstRegelFehlerhaft(regel12));
+
+		// Szenario 13: Fixierte Zuordnungen zählen für das Maximum mit.
+		final UvBlockungRegel regel13 = gibRegel23LehrkraftHatMaximalNKorrekturen(UvDatensatz3.LEHRER1, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn13 = gibDatenMinimal3(List.of(regel13));
+		dyn13.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn13, 19, 0, 92, 0, 0);
+		dyn13.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG4, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn13, 18, 1, 80, 0, 0);
+	}
+
+
+	@Test
 	@DisplayName("testRegel24LehrkraftDarfNichtFachUnterrichtenInJahrgaengen")
 	void testRegel24LehrkraftDarfNichtFachUnterrichtenInJahrgaengen() {
 		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
@@ -2434,7 +3627,9 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn1 = gibDatenMinimal3(List.of(regel1));
 		checkMalus(dyn1, 20, 0, 112, 0, 0);
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
-		assertThrows(DeveloperNotificationException.class, () -> dyn1.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false));
+		assertDoesNotThrow(() -> dyn1.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false));
+		checkMalus(dyn1, 20, 0, 112, 0, 0);
+		assertEquals(0, dyn1.gibAktuelleZuordnung().size(), "Es darf keine Zuordnung entstehen.");
 
 		// Szenario 2: Regel deaktiviert, das Verbot wirkt nicht.
 		final UvBlockungRegel regel2 = gibRegel24LehrkraftADarfFachBNichtUnterrichtenInJahrgaengen(
@@ -2449,8 +3644,8 @@ class TestUvDynDaten {
 		dyn2.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
 		checkMalus(dyn2, 19, 0, 92, 0, 0);
 		assertEquals(1, dyn2.gibAktuelleZuordnung().size(), "Zuordnung muss erfolgen, da die Regel deaktiviert ist.");
-		assertEquals(UvDatensatz3.LG1, dyn2.gibAktuelleZuordnung().get(0).idLerngruppe, "Lerngruppe ID1 erwartet.");
-		assertEquals(UvDatensatz3.LEHRER1, dyn2.gibAktuelleZuordnung().get(0).idLehrer, "Lehrer ID51 erwartet.");
+		assertEquals(UvDatensatz3.LG1, dyn2.gibAktuelleZuordnung().get(0).idLerngruppe, "Lerngruppe ID=1 erwartet.");
+		assertEquals(UvDatensatz3.LEHRER1, dyn2.gibAktuelleZuordnung().get(0).idLehrer, "Lehrer ID=51 erwartet.");
 
 		// Szenario 3: Unbekannte Lehrkraft-ID wird aussortiert.
 		final UvBlockungRegel regel3 = gibRegel24LehrkraftADarfFachBNichtUnterrichtenInJahrgaengen(
@@ -2492,7 +3687,7 @@ class TestUvDynDaten {
 		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
 		dyn5.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
 		checkMalus(dyn5, 19, 0, 92, 0, 0);
-		assertEquals(1, dyn5.gibAktuelleZuordnung().size(), "Zuordnung muss erfolgen, da das Verbot eine unbekannte Stufe betrifft.");
+		assertEquals(1, dyn5.gibAktuelleZuordnung().size(), "Zuordnung muss erfolgen, da das Verbot einen unbekannten Jahrgang betrifft.");
 
 	}
 
@@ -2511,11 +3706,13 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
 		checkMalus(dyn6, 20, 0, 112, 0, 0);
 		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
-		assertThrows(DeveloperNotificationException.class, () -> dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false));
-		assertThrows(DeveloperNotificationException.class, () -> dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG7, UvDatensatz3.LEHRER1, false));
+		assertDoesNotThrow(() -> dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false));
+		assertDoesNotThrow(() -> dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG7, UvDatensatz3.LEHRER1, false));
+		checkMalus(dyn6, 20, 0, 112, 0, 0);
+		assertEquals(0, dyn6.gibAktuelleZuordnung().size(), "Es darf keine Zuordnung entstehen.");
 
 		// Szenario 7: Lehrkraft ist in einer Lerngruppe fixiert und darf zugleich das Fach
-		// in der zugehörigen Stufe nicht unterrichten. Das ist ein Widerspruch.
+		// in dem zugehörigen Jahrgang nicht unterrichten. Das ist ein Widerspruch.
 		final @NotNull List<Long> jahrgaenge7 = new ArrayList<>();
 		jahrgaenge7.add(UvDatensatz3.JAHRGANG_5);
 		final UvBlockungRegel regel7a = gibRegel14LehrkraftFixiertInLerngruppe(
@@ -2532,7 +3729,9 @@ class TestUvDynDaten {
 		final @NotNull List<UvBlockungRegel> regeln7 = new ArrayList<>();
 		regeln7.add(regel7a);
 		regeln7.add(regel7b);
-		assertThrows(DeveloperNotificationException.class, () -> gibDatenMinimal3(regeln7));
+		final UvAlgorithmusDynDaten dyn7 = assertDoesNotThrow(() -> gibDatenMinimal3(regeln7));
+		checkMalus(dyn7, 20, 0, 112, 0, 0);
+		assertEquals(0, dyn7.gibAktuelleZuordnung().size(), "Die Fixierung wird ignoriert (Log).");
 
 		// Szenario 8: Gleicher Widerspruch, aber mit umgekehrter Reihenfolge der Regeln.
 		final @NotNull List<Long> jahrgaenge8 = new ArrayList<>();
@@ -2551,7 +3750,61 @@ class TestUvDynDaten {
 		final @NotNull List<UvBlockungRegel> regeln8 = new ArrayList<>();
 		regeln8.add(regel8a);
 		regeln8.add(regel8b);
-		assertThrows(DeveloperNotificationException.class, () -> gibDatenMinimal3(regeln8));
+		final UvAlgorithmusDynDaten dyn8 = assertDoesNotThrow(() -> gibDatenMinimal3(regeln8));
+		checkMalus(dyn8, 20, 0, 112, 0, 0);
+		assertEquals(0, dyn8.gibAktuelleZuordnung().size(), "Die Fixierung wird ignoriert (Log).");
+
+		// Szenario 9: Zu wenige Parameter (Lehrkraft und Fach, aber kein Jahrgang) wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = new UvBlockungRegel();
+		regel9.typ = UvBlockungRegelTyp.LEHRKRAFT_A_DARF_FACH_B_NICHT_UNTERRICHTEN_IN_DEN_JAHRGAENGEN.nr;
+		regel9.prioritaet = prioritaetHoch;
+		regel9.parameter.add(UvDatensatz3.LEHRER1);
+		regel9.parameter.add(UvDatensatz3.FACH_DE);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Doppelte Jahrgangs-ID in der Liste wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel10 = gibRegel24LehrkraftADarfFachBNichtUnterrichtenInJahrgaengen(
+				UvDatensatz3.LEHRER1,
+				UvDatensatz3.FACH_DE,
+				List.of(UvDatensatz3.JAHRGANG_5, UvDatensatz3.JAHRGANG_5),
+				prioritaetHoch
+		);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		assertTrue(dyn10.gibIstRegelFehlerhaft(regel10));
+	}
+
+
+	@Test
+	@DisplayName("testRegel24LehrkraftDarfNichtFachUnterrichtenInJahrgaengen3")
+	void testRegel24LehrkraftDarfNichtFachUnterrichtenInJahrgaengen3() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 11: Eine Deutsch-Lerngruppe in einem nicht verbotenen Jahrgang darf zugeordnet werden.
+		final UvBlockungRegel regel11 = gibRegel24LehrkraftADarfFachBNichtUnterrichtenInJahrgaengen(
+				UvDatensatz3.LEHRER1,
+				UvDatensatz3.FACH_DE,
+				List.of(UvDatensatz3.JAHRGANG_5),
+				prioritaetHoch
+		);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		assertFalse(dyn11.gibIstRegelFehlerhaft(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG7, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn11, 19, 0, 92, 0, 0);
+		assertEquals(1, dyn11.gibAktuelleZuordnung().size(), "Die Zuordnung im Jahrgang 6 muss erlaubt sein.");
+
+		// Szenario 12: Eine Mathematik-Lerngruppe im verbotenen Jahrgang darf zugeordnet werden.
+		final UvBlockungRegel regel12 = gibRegel24LehrkraftADarfFachBNichtUnterrichtenInJahrgaengen(
+				UvDatensatz3.LEHRER1,
+				UvDatensatz3.FACH_DE,
+				List.of(UvDatensatz3.JAHRGANG_5),
+				prioritaetHoch
+		);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal3(List.of(regel12));
+		assertFalse(dyn12.gibIstRegelFehlerhaft(regel12));
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn12, 19, 0, 92, 0, 0);
+		assertEquals(1, dyn12.gibAktuelleZuordnung().size(), "Die Zuordnung im Fach Mathematik muss erlaubt sein.");
 	}
 
 
@@ -2561,12 +3814,14 @@ class TestUvDynDaten {
 		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
 		final int prioritaetDeaktiviert = UvBlockungRegelPrioritaet.DEAKTIVIERT.nr;
 
-		// Szenario 1: Lehrkraft 5 darf Fach 3 nicht unterrichten, Add wird ignoriert.
+		// Szenario 1: Lehrkraft 5 darf Fach 3 nicht unterrichten, Add wird abgelehnt (DeveloperNotificationException).
 		final UvBlockungRegel regel1 = gibRegel25LehrkraftADarfFachBNichtUnterrichten(5L, UvDatensatz1.ID_FACH, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn1 = gibDatenMinimal1(List.of(regel1));
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
 		checkMalus(dyn1, 3, 0, 4, 0, 0);
-		assertThrows(DeveloperNotificationException.class, () -> dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		assertDoesNotThrow(() -> dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false));
+		checkMalus(dyn1, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn1.gibAktuelleZuordnung().size(), "Es darf keine Zuordnung entstehen.");
 
 		// Szenario 2: Regel deaktiviert, das Verbot wirkt nicht und Add funktioniert normal.
 		final UvBlockungRegel regel2 = gibRegel25LehrkraftADarfFachBNichtUnterrichten(5L, UvDatensatz1.ID_FACH, prioritaetDeaktiviert);
@@ -2575,8 +3830,8 @@ class TestUvDynDaten {
 		dyn2.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
 		checkMalus(dyn2, 2, 0, 0, 0, 0);
 		assertEquals(1, dyn2.gibAktuelleZuordnung().size(), "Zuordnung muss erfolgen, da die Regel deaktiviert ist.");
-		assertEquals(1L, dyn2.gibAktuelleZuordnung().get(0).idLerngruppe, "Lerngruppe ID1 erwartet.");
-		assertEquals(5L, dyn2.gibAktuelleZuordnung().get(0).idLehrer, "Lehrer ID5 erwartet.");
+		assertEquals(1L, dyn2.gibAktuelleZuordnung().get(0).idLerngruppe, "Lerngruppe ID=1 erwartet.");
+		assertEquals(5L, dyn2.gibAktuelleZuordnung().get(0).idLehrer, "Lehrer ID=5 erwartet.");
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 
 		// Szenario 3: Unbekannte Lehrkraft-ID im Verbot, Regel wird aussortiert.
@@ -2608,6 +3863,31 @@ class TestUvDynDaten {
 
 
 	@Test
+	@DisplayName("testRegel25LehrkraftDarfFachNichtUnterrichten2")
+	void testRegel25LehrkraftDarfFachNichtUnterrichten2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 6: Eine Lerngruppe mit einem anderen Fach darf zugeordnet werden.
+		final UvBlockungRegel regel6 = gibRegel25LehrkraftADarfFachBNichtUnterrichten(UvDatensatz3.LEHRER1, UvDatensatz3.FACH_DE, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
+		assertFalse(dyn6.gibIstRegelFehlerhaft(regel6));
+		dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn6, 19, 0, 92, 0, 0);
+		assertEquals(1, dyn6.gibAktuelleZuordnung().size(), "Die Zuordnung im Fach Mathematik muss erlaubt sein.");
+
+		// Szenario 7: Drei Parameter statt zwei werden als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_DARF_FACH_B_NICHT_UNTERRICHTEN.nr;
+		regel7.prioritaet = prioritaetSehrHoch;
+		regel7.parameter.add(UvDatensatz3.LEHRER1);
+		regel7.parameter.add(UvDatensatz3.FACH_DE);
+		regel7.parameter.add(0L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+	}
+
+
+	@Test
 	@DisplayName("testRegel26LehrkraftAIstInMaximalBJahrgaengen")
 	void testRegel26LehrkraftAIstInMaximalBJahrgaengen() {
 		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
@@ -2625,9 +3905,9 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn2 = gibDatenMinimal3(List.of(regel2));
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 		checkMalus(dyn2, 20, 0, 112, 0, 0);
-		dyn2.setzeLerngruppeLehrkraftAdd(1L, 51L, false); // Lehrkraft-Soll --> 6² zu 4² --> 20 MITTEL-malus weniger.
+		dyn2.setzeLerngruppeLehrkraftAdd(1L, 51L, false); // Lehrkraft-Soll --> 6² zu 4² --> 20 MITTEL-Malus weniger.
 		checkMalus(dyn2, 19, 0, 92, 0, 0);
-		dyn2.setzeLerngruppeLehrkraftAdd(7L, 51L, false); // Lehrkraft-Soll --> 4² zu 2² --> 12 MITTEL-malus weniger.
+		dyn2.setzeLerngruppeLehrkraftAdd(7L, 51L, false); // Lehrkraft-Soll --> 4² zu 2² --> 12 MITTEL-Malus weniger.
 		checkMalus(dyn2, 18, 1, 80, 0, 0);
 		assertEquals(2, dyn2.gibAktuelleZuordnung().size());
 
@@ -2636,9 +3916,9 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn3 = gibDatenMinimal3(List.of(regel3));
 		assertFalse(dyn3.gibIstRegelFehlerhaft(regel3));
 		checkMalus(dyn3, 20, 0, 112, 0, 0);
-		dyn3.setzeLerngruppeLehrkraftAdd(1L, 51L, false); // Lehrkraft-Soll --> 6² zu 4² --> 20 MITTEL-malus weniger.
+		dyn3.setzeLerngruppeLehrkraftAdd(1L, 51L, false); // Lehrkraft-Soll --> 6² zu 4² --> 20 MITTEL-Malus weniger.
 		checkMalus(dyn3, 19, 0, 92, 0, 0);
-		dyn3.setzeLerngruppeLehrkraftAdd(7L, 51L, false); // Lehrkraft-Soll --> 4² zu 2² --> 12 MITTEL-malus weniger.
+		dyn3.setzeLerngruppeLehrkraftAdd(7L, 51L, false); // Lehrkraft-Soll --> 4² zu 2² --> 12 MITTEL-Malus weniger.
 		checkMalus(dyn3, 18, 0, 80, 0, 0);
 		assertEquals(2, dyn3.gibAktuelleZuordnung().size());
 
@@ -2647,9 +3927,9 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn4 = gibDatenMinimal3(List.of(regel4));
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
 		checkMalus(dyn4, 20, 0, 112, 0, 0);
-		dyn4.setzeLerngruppeLehrkraftAdd(1L, 51L, false); // Lehrkraft-Soll --> 6² zu 4² --> 20 MITTEL-malus weniger.
+		dyn4.setzeLerngruppeLehrkraftAdd(1L, 51L, false); // Lehrkraft-Soll --> 6² zu 4² --> 20 MITTEL-Malus weniger.
 		checkMalus(dyn4, 19, 0, 92, 0, 0);
-		dyn4.setzeLerngruppeLehrkraftAdd(7L, 51L, false); // Lehrkraft-Soll --> 4² zu 2² --> 12 MITTEL-malus weniger.
+		dyn4.setzeLerngruppeLehrkraftAdd(7L, 51L, false); // Lehrkraft-Soll --> 4² zu 2² --> 12 MITTEL-Malus weniger.
 		checkMalus(dyn4, 18, 0, 80, 0, 0);
 		assertEquals(2, dyn4.gibAktuelleZuordnung().size());
 
@@ -2672,7 +3952,7 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
 		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
 
-		// Szenario 8: Drei Parameter statt zwei wird ebenfalls als fehlerhaft erkannt.
+		// Szenario 8: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
 		final UvBlockungRegel regel8 = new UvBlockungRegel();
 		regel8.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MAXIMAL_B_VERSCHIEDENE_JAHRGAENGE.nr;
 		regel8.prioritaet = prioritaetHoch;
@@ -2681,6 +3961,38 @@ class TestUvDynDaten {
 		regel8.parameter.add(2L);
 		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
 		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+	}
+
+
+	@Test
+	@DisplayName("testRegel26LehrkraftAIstInMaximalBJahrgaengen2")
+	void testRegel26LehrkraftAIstInMaximalBJahrgaengen2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 9: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel9 = gibRegel26LehrkraftAIstInMaximalBJahrgaengen(UvDatensatz3.LEHRER1, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9));
+		dyn9.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn9, 19, 0, 92, 0, 0);
+		dyn9.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG7, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn9, 18, 1, 80, 0, 0);
+		dyn9.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG7, UvDatensatz3.LEHRER1);
+		checkMalus(dyn9, 19, 0, 92, 0, 0);
+
+		// Szenario 10: Mehrfache Überschreitung (max=0, zwei Jahrgänge) ergibt HOCH-Malus 2.
+		final UvBlockungRegel regel10 = gibRegel26LehrkraftAIstInMaximalBJahrgaengen(UvDatensatz3.LEHRER1, 0, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG7, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn10, 18, 2, 80, 0, 0);
+
+		// Szenario 11: Fixierte Zuordnungen zählen für das Maximum mit.
+		final UvBlockungRegel regel11 = gibRegel26LehrkraftAIstInMaximalBJahrgaengen(UvDatensatz3.LEHRER1, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn11, 19, 0, 92, 0, 0);
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG7, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn11, 18, 1, 80, 0, 0);
 	}
 
 
@@ -2757,7 +4069,7 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal2(List.of(regel7));
 		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
 
-		// Szenario 8: Drei Parameter statt zwei wird ebenfalls als fehlerhaft erkannt.
+		// Szenario 8: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
 		final UvBlockungRegel regel8 = new UvBlockungRegel();
 		regel8.typ = UvBlockungRegelTyp.LEHRKRAEFTE_A_UND_B_NICHT_IN_DER_SELBEN_KLASSE.nr;
 		regel8.prioritaet = prioritaetGering;
@@ -2787,7 +4099,7 @@ class TestUvDynDaten {
 		checkMalus(dyn2, 3, 0, 4, 0, 0);
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 
-		// Szenario 3: Soll=0 und es wird zugewiesen. Malus-Leitung 1 + Malus Leitung 2 + Malus Lerngruppenanzahl.
+		// Szenario 3: Soll=0 und es wird zugewiesen. Malus Leitung 1 + Malus Leitung 2 + Malus Lerngruppenanzahl.
 		final UvBlockungRegel regel3 = gibRegel28LerngruppeBenoetigtBLehrkraefte(1L, 0L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn3 = gibDatenMinimal1(List.of(regel3));
 		dyn3.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
@@ -2815,6 +4127,50 @@ class TestUvDynDaten {
 		final UvBlockungRegel regel6 = gibRegel28LerngruppeBenoetigtBLehrkraefte(1L, -1L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
 		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Unbekannte Lerngruppe-ID wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = gibRegel28LerngruppeBenoetigtBLehrkraefte(999L, 1L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = new UvBlockungRegel();
+		regel8.typ = UvBlockungRegelTyp.LERNGRUPPE_A_BENOETIGT_B_LEHRKRAEFTE.nr;
+		regel8.prioritaet = prioritaetSehrHoch;
+		regel8.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = new UvBlockungRegel();
+		regel9.typ = UvBlockungRegelTyp.LERNGRUPPE_A_BENOETIGT_B_LEHRKRAEFTE.nr;
+		regel9.prioritaet = prioritaetSehrHoch;
+		regel9.parameter.add(1L);
+		regel9.parameter.add(1L);
+		regel9.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+	}
+
+
+	@Test
+	@DisplayName("testRegel28LerngruppeBenoetigtBLehrkraefte2")
+	void testRegel28LerngruppeBenoetigtBLehrkraefte2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 10: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel10 = gibRegel28LerngruppeBenoetigtBLehrkraefte(1L, 2L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1(List.of(regel10));
+		dyn10.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn10, 3, 0, 0, 0, 0);
+		dyn10.setzeLerngruppeLehrkraftDel(1L, 5L);
+		checkMalus(dyn10, 4, 0, 4, 0, 0);
+
+		// Szenario 11: Eine fixierte Zuordnung zählt für das Soll mit.
+		final UvBlockungRegel regel11 = gibRegel28LerngruppeBenoetigtBLehrkraefte(1L, 2L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal1(List.of(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(1L, 5L, true);
+		checkMalus(dyn11, 3, 0, 0, 0, 0);
 	}
 
 
@@ -2899,6 +4255,40 @@ class TestUvDynDaten {
 		dyn8.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG8, UvDatensatz3.LEHRER4, false);
 		checkMalus(dyn8, 17, 2, 60, 0, 0);
 		assertEquals(3, dyn8.gibAktuelleZuordnung().size());
+
+		// Szenario 9: Unbekannte Lerngruppe-ID wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = gibRegel29LerngruppenHabenSelbeLehrkraft(prioritaetHoch, UvDatensatz3.LG1, 999L);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Doppelte Lerngruppen-ID (nicht benachbart) wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel10 = gibRegel29LerngruppenHabenSelbeLehrkraft(
+				prioritaetHoch, UvDatensatz3.LG1, UvDatensatz3.LG2, UvDatensatz3.LG1);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		assertTrue(dyn10.gibIstRegelFehlerhaft(regel10));
+	}
+
+
+	@Test
+	@DisplayName("testRegel29LerngruppenHabenSelbeLehrkraft2")
+	void testRegel29LerngruppenHabenSelbeLehrkraft2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 11: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel11 = gibRegel29LerngruppenHabenSelbeLehrkraft(prioritaetHoch, UvDatensatz3.LG1, UvDatensatz3.LG2);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER2, false);
+		checkMalus(dyn11, 18, 1, 72, 0, 0);
+		dyn11.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG2, UvDatensatz3.LEHRER2);
+		checkMalus(dyn11, 19, 0, 92, 0, 0);
+
+		// Szenario 12: Fixierte Zuordnungen erfüllen die Regel.
+		final UvBlockungRegel regel12 = gibRegel29LerngruppenHabenSelbeLehrkraft(prioritaetHoch, UvDatensatz3.LG1, UvDatensatz3.LG2);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal3(List.of(regel12));
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn12, 18, 0, 80, 0, 0);
 	}
 
 
@@ -2972,6 +4362,48 @@ class TestUvDynDaten {
 		dyn7.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG8, UvDatensatz3.LEHRER2, false);
 		checkMalus(dyn7, 17, 1, 60, 0, 0);
 		assertEquals(3, dyn7.gibAktuelleZuordnung().size());
+
+		// Szenario 8: Unbekannte Lerngruppe-ID wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = gibRegel30LerngruppenVerschiedeneLehrkraefte(prioritaetHoch, UvDatensatz3.LG1, 999L);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: Doppelte Lerngruppen-ID wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel9 = gibRegel30LerngruppenVerschiedeneLehrkraefte(prioritaetHoch, UvDatensatz3.LG1, UvDatensatz3.LG1);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+
+		// Szenario 10: Null-Parameter wird als fehlerhaft erkannt (statt einer NullPointerException).
+		final UvBlockungRegel regel10 = new UvBlockungRegel();
+		regel10.typ = UvBlockungRegelTyp.LERNGRUPPEN_ERHALTEN_VERSCHIEDENE_LEHRKRAEFTE.nr;
+		regel10.prioritaet = prioritaetHoch;
+		regel10.parameter.add(UvDatensatz3.LG1);
+		regel10.parameter.add(null);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		assertTrue(dyn10.gibIstRegelFehlerhaft(regel10));
+	}
+
+
+	@Test
+	@DisplayName("testRegel30LerngruppenHabenVerschiedeneLehrkraefte2")
+	void testRegel30LerngruppenHabenVerschiedeneLehrkraefte2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 11: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel11 = gibRegel30LerngruppenVerschiedeneLehrkraefte(prioritaetHoch, UvDatensatz3.LG1, UvDatensatz3.LG2);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn11, 18, 1, 80, 0, 0);
+		dyn11.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG2, UvDatensatz3.LEHRER1);
+		checkMalus(dyn11, 19, 0, 92, 0, 0);
+
+		// Szenario 12: Fixierte Zuordnungen verletzen die Regel weiterhin.
+		final UvBlockungRegel regel12 = gibRegel30LerngruppenVerschiedeneLehrkraefte(prioritaetHoch, UvDatensatz3.LG1, UvDatensatz3.LG2);
+		final UvAlgorithmusDynDaten dyn12 = gibDatenMinimal3(List.of(regel12));
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		dyn12.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn12, 18, 1, 80, 0, 0);
 	}
 
 
@@ -3100,6 +4532,43 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
 		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
 		checkMalus(dyn7, 20, 0, 112, 0, 0);
+
+		// Szenario 8: Doppelte Lerngruppe innerhalb einer Regel wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 =
+				gibRegel31LerngruppenGemeinsamKuerzenAufAStunden(1L, prioritaetHoch, UvDatensatz3.LG2, UvDatensatz3.LG5, UvDatensatz3.LG2);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+		checkMalus(dyn8, 20, 0, 112, 0, 0);
+
+		// Szenario 9: Zwei Regeln 31 verwenden dieselbe Lerngruppe -> die zweite Regel ist fehlerhaft.
+		final UvBlockungRegel regel9a = gibRegel31LerngruppenGemeinsamKuerzenAufAStunden(1L, prioritaetHoch, UvDatensatz3.LG2);
+		final UvBlockungRegel regel9b = gibRegel31LerngruppenGemeinsamKuerzenAufAStunden(2L, prioritaetHoch, UvDatensatz3.LG5, UvDatensatz3.LG2);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9a, regel9b));
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regel9a));
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9b));
+		checkMalus(dyn9, 20, 0, 112, 0, 0);
+	}
+
+
+	@Test
+	@DisplayName("testRegel31LerngruppenGemeinsamKuerzenAufAStunden2")
+	void testRegel31LerngruppenGemeinsamKuerzenAufAStunden2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 10: Wert oberhalb der Ist-Stunden erhöht die Wochenstunden der Lerngruppe.
+		final UvBlockungRegel regel10 = gibRegel31LerngruppenGemeinsamKuerzenAufAStunden(3L, prioritaetHoch, UvDatensatz3.LG2);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal3(List.of(regel10));
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regel10));
+		checkMalus(dyn10, 20, 0, 112, 0, 0);
+		dyn10.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn10, 19, 0, 85, 0, 0);
+
+		// Szenario 11: Wert gleich der Ist-Stunden lässt die Wochenstunden unverändert.
+		final UvBlockungRegel regel11 = gibRegel31LerngruppenGemeinsamKuerzenAufAStunden(2L, prioritaetHoch, UvDatensatz3.LG2);
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal3(List.of(regel11));
+		assertFalse(dyn11.gibIstRegelFehlerhaft(regel11));
+		dyn11.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn11, 19, 0, 92, 0, 0);
 	}
 
 
@@ -3124,11 +4593,13 @@ class TestUvDynDaten {
 		checkMalus(dyn2, 3, 0, 4, 0, 0);
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 
-		// Szenario 3: Fixierung kann nicht entfernt werden.
+		// Szenario 3: Fixierung kann nicht entfernt werden (Log), Zuordnung und Malus bleiben erhalten.
 		final UvBlockungRegel regel3 = gibRegel32LehrkraftInKlasseFixiertAlsLeitung1(5L, 4L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn3 = gibDatenMinimal1(List.of(regel3));
 		assertFalse(dyn3.gibIstRegelFehlerhaft(regel3));
-		assertThrows(DeveloperNotificationException.class, () -> dyn3.setzeKlassenLeitung1Del(4L, 5L));
+		assertDoesNotThrow(() -> dyn3.setzeKlassenLeitung1Del(4L, 5L));
+		checkMalus(dyn3, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn3.gibAktuelleKlassenleitungen().size(), "Fixierte Zuordnung muss erhalten bleiben.");
 
 		// Szenario 4: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
 		final UvBlockungRegel regel4 = gibRegel32LehrkraftInKlasseFixiertAlsLeitung1(999L, 4L, prioritaetSehrHoch);
@@ -3141,8 +4612,48 @@ class TestUvDynDaten {
 		final UvBlockungRegel regel5 = gibRegel32LehrkraftInKlasseFixiertAlsLeitung1(5L, 999L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
 		checkMalus(dyn5, 3, 0, 4, 0, 0);
-		assertEquals(0, dyn5.gibAktuelleKlassenleitungen().size(), "Keine Zuordnung bei ungültiger Klasse-ID.");
+		assertEquals(0, dyn5.gibAktuelleKlassenleitungen().size(), "Keine Zuordnung bei ungültiger Klassen-ID.");
 		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_IST_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel6.prioritaet = prioritaetSehrHoch;
+		regel6.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_IST_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel7.prioritaet = prioritaetSehrHoch;
+		regel7.parameter.add(5L);
+		regel7.parameter.add(4L);
+		regel7.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+	}
+
+
+	@Test
+	@DisplayName("testRegel32LehrkraftFixiertAlsLeitung1_2")
+	void testRegel32LehrkraftFixiertAlsLeitung1_2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 8: Ist die Lehrkraft als Leitung 1 fixiert, wird ein Leitung-2-Add derselben Klasse ignoriert (Log).
+		final UvBlockungRegel regel8 = gibRegel32LehrkraftInKlasseFixiertAlsLeitung1(5L, 4L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		assertFalse(dyn8.gibIstRegelFehlerhaft(regel8));
+		assertDoesNotThrow(() -> dyn8.setzeKlassenLeitung2Add(4L, 5L, false));
+		checkMalus(dyn8, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn8.gibAktuelleKlassenleitungen().size(), "Es darf nur die fixierte Leitung 1 existieren.");
+
+		// Szenario 9: Eine Fixierung in einer anderen Klasse ist unabhängig möglich.
+		final UvBlockungRegel regel9 = gibRegel32LehrkraftInKlasseFixiertAlsLeitung1(5L, 4L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal2(List.of(regel9));
+		dyn9.setzeKlassenLeitung1Add(7L, 5L, false);
+		checkMalus(dyn9, 4, 0, 8, 0, 0);
+		assertEquals(2, dyn9.gibAktuelleKlassenleitungen().size(), "Beide Klassenleitungen müssen vorhanden sein.");
 	}
 
 
@@ -3167,11 +4678,13 @@ class TestUvDynDaten {
 		checkMalus(dyn2, 3, 0, 4, 0, 0);
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 
-		// Szenario 3: Fixierung kann nicht entfernt werden.
+		// Szenario 3: Fixierung kann nicht entfernt werden (Log), Zuordnung und Malus bleiben erhalten.
 		final UvBlockungRegel regel3 = gibRegel33LehrkraftInKlasseFixiertAlsLeitung2(5L, 4L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn3 = gibDatenMinimal1(List.of(regel3));
 		assertFalse(dyn3.gibIstRegelFehlerhaft(regel3));
-		assertThrows(DeveloperNotificationException.class, () -> dyn3.setzeKlassenLeitung2Del(4L, 5L));
+		assertDoesNotThrow(() -> dyn3.setzeKlassenLeitung2Del(4L, 5L));
+		checkMalus(dyn3, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn3.gibAktuelleKlassenleitungen().size(), "Fixierte Zuordnung muss erhalten bleiben.");
 
 		// Szenario 4: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
 		final UvBlockungRegel regel4 = gibRegel33LehrkraftInKlasseFixiertAlsLeitung2(999L, 4L, prioritaetSehrHoch);
@@ -3184,8 +4697,48 @@ class TestUvDynDaten {
 		final UvBlockungRegel regel5 = gibRegel33LehrkraftInKlasseFixiertAlsLeitung2(5L, 999L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
 		checkMalus(dyn5, 3, 0, 4, 0, 0);
-		assertEquals(0, dyn5.gibAktuelleKlassenleitungen().size(), "Keine Zuordnung bei ungültiger Klasse-ID.");
+		assertEquals(0, dyn5.gibAktuelleKlassenleitungen().size(), "Keine Zuordnung bei ungültiger Klassen-ID.");
 		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_IST_STELLV_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel6.prioritaet = prioritaetSehrHoch;
+		regel6.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_IST_STELLV_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel7.prioritaet = prioritaetSehrHoch;
+		regel7.parameter.add(5L);
+		regel7.parameter.add(4L);
+		regel7.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+	}
+
+
+	@Test
+	@DisplayName("testRegel33LehrkraftFixiertAlsLeitung2_2")
+	void testRegel33LehrkraftFixiertAlsLeitung2_2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 8: Ist die Lehrkraft als Leitung 2 fixiert, wird ein Leitung-1-Add derselben Klasse ignoriert (Log).
+		final UvBlockungRegel regel8 = gibRegel33LehrkraftInKlasseFixiertAlsLeitung2(5L, 4L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		assertFalse(dyn8.gibIstRegelFehlerhaft(regel8));
+		assertDoesNotThrow(() -> dyn8.setzeKlassenLeitung1Add(4L, 5L, false));
+		checkMalus(dyn8, 2, 0, 4, 0, 0);
+		assertEquals(1, dyn8.gibAktuelleKlassenleitungen().size(), "Es darf nur die fixierte Leitung 2 existieren.");
+
+		// Szenario 9: Eine Fixierung in einer anderen Klasse ist unabhängig möglich.
+		final UvBlockungRegel regel9 = gibRegel33LehrkraftInKlasseFixiertAlsLeitung2(5L, 4L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal2(List.of(regel9));
+		dyn9.setzeKlassenLeitung2Add(7L, 5L, false);
+		checkMalus(dyn9, 4, 0, 8, 0, 0);
+		assertEquals(2, dyn9.gibAktuelleKlassenleitungen().size(), "Beide stellv. Klassenleitungen müssen vorhanden sein.");
 	}
 
 
@@ -3207,11 +4760,13 @@ class TestUvDynDaten {
 		checkMalus(dyn2, 3, 0, 4, 0, 0);
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 
-		// Szenario 3: Add wird deterministisch gesetzt, aber es ist "VERBOTEN".
+		// Szenario 3: Add wird ignoriert (Log), da es "VERBOTEN" ist - Malus und Zustand bleiben unverändert.
 		final UvBlockungRegel regel3 = gibRegel34LehrkraftVerbotenAlsLeitung1(5L, 4L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn3 = gibDatenMinimal1(List.of(regel3));
 		assertFalse(dyn3.gibIstRegelFehlerhaft(regel3));
-		assertThrows(DeveloperNotificationException.class, () -> dyn3.setzeKlassenLeitung1Add(4L, 5L, false));
+		assertDoesNotThrow(() -> dyn3.setzeKlassenLeitung1Add(4L, 5L, false));
+		checkMalus(dyn3, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn3.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung entstehen.");
 
 		// Szenario 4: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
 		final UvBlockungRegel regel4 = gibRegel34LehrkraftVerbotenAlsLeitung1(999L, 4L, prioritaetSehrHoch);
@@ -3219,11 +4774,44 @@ class TestUvDynDaten {
 		checkMalus(dyn4, 3, 0, 4, 0, 0);
 		assertTrue(dyn4.gibIstRegelFehlerhaft(regel4));
 
-		// Szenario 5: Unbekannte Klasse-ID -> Regel wird aussortiert.
+		// Szenario 5: Unbekannte Klassen-ID -> Regel wird aussortiert.
 		final UvBlockungRegel regel5 = gibRegel34LehrkraftVerbotenAlsLeitung1(5L, 999L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
 		checkMalus(dyn5, 3, 0, 4, 0, 0);
 		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_ALS_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel6.prioritaet = prioritaetSehrHoch;
+		regel6.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_ALS_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel7.prioritaet = prioritaetSehrHoch;
+		regel7.parameter.add(5L);
+		regel7.parameter.add(4L);
+		regel7.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+	}
+
+
+	@Test
+	@DisplayName("testRegel34LehrkraftVerbotenAlsLeitung1_2")
+	void testRegel34LehrkraftVerbotenAlsLeitung1_2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 8: Eine Klassenleitung in einer anderen Klasse ist weiterhin möglich.
+		final UvBlockungRegel regel8 = gibRegel34LehrkraftVerbotenAlsLeitung1(5L, 4L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal2(List.of(regel8));
+		assertFalse(dyn8.gibIstRegelFehlerhaft(regel8));
+		assertDoesNotThrow(() -> dyn8.setzeKlassenLeitung1Add(7L, 5L, false));
+		checkMalus(dyn8, 5, 0, 8, 0, 0);
+		assertEquals(1, dyn8.gibAktuelleKlassenleitungen().size(), "Die Zuordnung in Klasse 7 muss erlaubt sein.");
 	}
 
 
@@ -3245,11 +4833,13 @@ class TestUvDynDaten {
 		checkMalus(dyn2, 3, 0, 4, 0, 0);
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 
-		// Szenario 3: Add wird deterministisch gesetzt, obwohl die einzige Lehrkraft verboten ist.
+		// Szenario 3: Add wird ignoriert (Log), da die einzige Lehrkraft verboten ist - Malus und Zustand bleiben unverändert.
 		final UvBlockungRegel regel3 = gibRegel35LehrkraftVerbotenAlsLeitung2(5L, 4L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn3 = gibDatenMinimal1(List.of(regel3));
 		assertFalse(dyn3.gibIstRegelFehlerhaft(regel3));
-		assertThrows(DeveloperNotificationException.class, () -> dyn3.setzeKlassenLeitung2Add(4L, 5L, false));
+		assertDoesNotThrow(() -> dyn3.setzeKlassenLeitung2Add(4L, 5L, false));
+		checkMalus(dyn3, 3, 0, 4, 0, 0);
+		assertEquals(0, dyn3.gibAktuelleKlassenleitungen().size(), "Es darf keine Zuordnung entstehen.");
 
 		// Szenario 4: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
 		final UvBlockungRegel regel4 = gibRegel35LehrkraftVerbotenAlsLeitung2(999L, 4L, prioritaetSehrHoch);
@@ -3257,11 +4847,44 @@ class TestUvDynDaten {
 		checkMalus(dyn4, 3, 0, 4, 0, 0);
 		assertTrue(dyn4.gibIstRegelFehlerhaft(regel4));
 
-		// Szenario 5: Unbekannte Klasse-ID -> Regel wird aussortiert.
+		// Szenario 5: Unbekannte Klassen-ID -> Regel wird aussortiert.
 		final UvBlockungRegel regel5 = gibRegel35LehrkraftVerbotenAlsLeitung2(5L, 999L, prioritaetSehrHoch);
 		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
 		checkMalus(dyn5, 3, 0, 4, 0, 0);
 		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_ALS_STELLV_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel6.prioritaet = prioritaetSehrHoch;
+		regel6.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_VERBOTEN_ALS_STELLV_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel7.prioritaet = prioritaetSehrHoch;
+		regel7.parameter.add(5L);
+		regel7.parameter.add(4L);
+		regel7.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+	}
+
+
+	@Test
+	@DisplayName("testRegel35LehrkraftVerbotenAlsLeitung2_2")
+	void testRegel35LehrkraftVerbotenAlsLeitung2_2() {
+		final int prioritaetSehrHoch = UvBlockungRegelPrioritaet.SEHR_HOCH.nr;
+
+		// Szenario 8: Eine stellv. Klassenleitung in einer anderen Klasse ist weiterhin möglich.
+		final UvBlockungRegel regel8 = gibRegel35LehrkraftVerbotenAlsLeitung2(5L, 4L, prioritaetSehrHoch);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal2(List.of(regel8));
+		assertFalse(dyn8.gibIstRegelFehlerhaft(regel8));
+		assertDoesNotThrow(() -> dyn8.setzeKlassenLeitung2Add(7L, 5L, false));
+		checkMalus(dyn8, 5, 0, 8, 0, 0);
+		assertEquals(1, dyn8.gibAktuelleKlassenleitungen().size(), "Die Zuordnung in Klasse 7 muss erlaubt sein.");
 	}
 
 
@@ -3290,8 +4913,8 @@ class TestUvDynDaten {
 		dyn3.setzeKlassenLeitung1Add(4L, 5L, false);
 		checkMalus(dyn3, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn3.gibAktuelleKlassenleitungen().size(), "Es sollte genau 1 Zuordnung geben.");
-		assertEquals(4L, dyn3.gibAktuelleKlassenleitungen().get(0).idKlasse, "Klasse ID4 erwartet.");
-		assertEquals(5L, dyn3.gibAktuelleKlassenleitungen().get(0).idLehrer, "Lehrer ID5 erwartet.");
+		assertEquals(4L, dyn3.gibAktuelleKlassenleitungen().get(0).idKlasse, "Klasse ID=4 erwartet.");
+		assertEquals(5L, dyn3.gibAktuelleKlassenleitungen().get(0).idLehrer, "Lehrer ID=5 erwartet.");
 		assertFalse(dyn3.gibIstRegelFehlerhaft(regel3));
 
 		// Szenario 4: Hinzufügen und Entfernen heben sich wieder auf.
@@ -3300,7 +4923,7 @@ class TestUvDynDaten {
 		dyn4.setzeKlassenLeitung1Add(4L, 5L, false);
 		dyn4.setzeKlassenLeitung1Del(4L, 5L);
 		checkMalus(dyn4, 3, 0, 4, 1, 0);
-		assertEquals(0, dyn4.gibAktuelleZuordnung().size(), "Es sollte keine Zuordnung geben.");
+		assertEquals(0, dyn4.gibAktuelleKlassenleitungen().size(), "Es sollte keine Zuordnung geben.");
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
 
 		// Szenario 5: Fixierte Zuordnung erfüllt den Wunsch direkt.
@@ -3310,6 +4933,51 @@ class TestUvDynDaten {
 		checkMalus(dyn5, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn5.gibAktuelleKlassenleitungen().size(), "Die fixierte Zuordnung soll vorhanden sein.");
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_GERNE_ALS_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel6.prioritaet = prioritaetGering;
+		regel6.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_GERNE_ALS_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel7.prioritaet = prioritaetGering;
+		regel7.parameter.add(5L);
+		regel7.parameter.add(4L);
+		regel7.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel8 = gibRegel36LehrkraftGerneAlsLeitung1(999L, 4L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		checkMalus(dyn8, 3, 0, 4, 0, 0);
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: Unbekannte Klassen-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel9 = gibRegel36LehrkraftGerneAlsLeitung1(5L, 999L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		checkMalus(dyn9, 3, 0, 4, 0, 0);
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+	}
+
+
+	@Test
+	@DisplayName("testRegel36LehrkraftGerneAlsLeitung12")
+	void testRegel36LehrkraftGerneAlsLeitung12() {
+		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
+
+		// Szenario 10: Eine Klassenleitung in einer anderen Klasse lässt den Wunsch unbeeinflusst.
+		final UvBlockungRegel regel10 = gibRegel36LehrkraftGerneAlsLeitung1(5L, 4L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal2(List.of(regel10));
+		checkMalus(dyn10, 6, 0, 8, 1, 0);
+		dyn10.setzeKlassenLeitung1Add(7L, 6L, false);
+		checkMalus(dyn10, 5, 0, 8, 1, 0);
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regel10));
 	}
 
 
@@ -3338,8 +5006,8 @@ class TestUvDynDaten {
 		dyn3.setzeKlassenLeitung2Add(4L, 5L, false);
 		checkMalus(dyn3, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn3.gibAktuelleKlassenleitungen().size(), "Es sollte genau 1 Zuordnung geben.");
-		assertEquals(4L, dyn3.gibAktuelleKlassenleitungen().get(0).idKlasse, "Klasse ID4 erwartet.");
-		assertEquals(5L, dyn3.gibAktuelleKlassenleitungen().get(0).idLehrer, "Lehrer ID5 erwartet.");
+		assertEquals(4L, dyn3.gibAktuelleKlassenleitungen().get(0).idKlasse, "Klasse ID=4 erwartet.");
+		assertEquals(5L, dyn3.gibAktuelleKlassenleitungen().get(0).idLehrer, "Lehrer ID=5 erwartet.");
 		assertFalse(dyn3.gibIstRegelFehlerhaft(regel3));
 
 		// Szenario 4: Hinzufügen und Entfernen heben sich wieder auf.
@@ -3348,7 +5016,7 @@ class TestUvDynDaten {
 		dyn4.setzeKlassenLeitung2Add(4L, 5L, false);
 		dyn4.setzeKlassenLeitung2Del(4L, 5L);
 		checkMalus(dyn4, 3, 0, 4, 1, 0);
-		assertEquals(0, dyn4.gibAktuelleZuordnung().size(), "Es sollte keine Zuordnung geben.");
+		assertEquals(0, dyn4.gibAktuelleKlassenleitungen().size(), "Es sollte keine Zuordnung geben.");
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
 
 		// Szenario 5: Fixierte Zuordnung erfüllt den Wunsch direkt.
@@ -3358,6 +5026,51 @@ class TestUvDynDaten {
 		checkMalus(dyn5, 2, 0, 4, 0, 0);
 		assertEquals(1, dyn5.gibAktuelleKlassenleitungen().size(), "Die fixierte Zuordnung soll vorhanden sein.");
 		assertFalse(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_GERNE_ALS_STELLV_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel6.prioritaet = prioritaetGering;
+		regel6.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_GERNE_ALS_STELLV_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel7.prioritaet = prioritaetGering;
+		regel7.parameter.add(5L);
+		regel7.parameter.add(4L);
+		regel7.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel8 = gibRegel37LehrkraftGerneAlsLeitung2(999L, 4L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		checkMalus(dyn8, 3, 0, 4, 0, 0);
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: Unbekannte Klassen-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel9 = gibRegel37LehrkraftGerneAlsLeitung2(5L, 999L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		checkMalus(dyn9, 3, 0, 4, 0, 0);
+		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+	}
+
+
+	@Test
+	@DisplayName("testRegel37LehrkraftGerneAlsStellvKlassenleitung2")
+	void testRegel37LehrkraftGerneAlsStellvKlassenleitung2() {
+		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
+
+		// Szenario 10: Eine stellv. Klassenleitung in einer anderen Klasse lässt den Wunsch unbeeinflusst.
+		final UvBlockungRegel regel10 = gibRegel37LehrkraftGerneAlsLeitung2(5L, 4L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal2(List.of(regel10));
+		checkMalus(dyn10, 6, 0, 8, 1, 0);
+		dyn10.setzeKlassenLeitung2Add(7L, 6L, false);
+		checkMalus(dyn10, 5, 0, 8, 1, 0);
+		assertFalse(dyn10.gibIstRegelFehlerhaft(regel10));
 	}
 
 
@@ -3398,11 +5111,56 @@ class TestUvDynDaten {
 		checkMalus(dyn4, 3, 0, 4, 0, 0);
 		assertEquals(0, dyn4.gibAktuelleKlassenleitungen().size());
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
+
+		// Szenario 5: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel5 = new UvBlockungRegel();
+		regel5.typ = UvBlockungRegelTyp.LEHRKRAFT_A_UNGERNE_ALS_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel5.prioritaet = prioritaetGering;
+		regel5.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
+		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_UNGERNE_ALS_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel6.prioritaet = prioritaetGering;
+		regel6.parameter.add(5L);
+		regel6.parameter.add(4L);
+		regel6.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel7 = gibRegel38LehrkraftUngerneAlsLeitung1(999L, 4L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		checkMalus(dyn7, 3, 0, 4, 0, 0);
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Unbekannte Klassen-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel8 = gibRegel38LehrkraftUngerneAlsLeitung1(5L, 999L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		checkMalus(dyn8, 3, 0, 4, 0, 0);
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
 	}
 
 
 	@Test
-	@DisplayName("testRegel39LehrkraftUngerneAlsLeitung2 Lehrkraft ist ungerne als stellv. Klassenlehrer.")
+	@DisplayName("testRegel38LehrkraftUngerneAlsLeitung1_2")
+	void testRegel38LehrkraftUngerneAlsLeitung1_2() {
+		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
+
+		// Szenario 9: Eine fixierte Zuordnung verletzt den Wunsch ebenfalls.
+		final UvBlockungRegel regel9 = gibRegel38LehrkraftUngerneAlsLeitung1(5L, 4L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		dyn9.setzeKlassenLeitung1Add(4L, 5L, true);
+		checkMalus(dyn9, 2, 0, 4, 1, 0);
+		assertEquals(1, dyn9.gibAktuelleKlassenleitungen().size(), "Es sollte genau 1 Zuordnung geben.");
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regel9));
+	}
+
+
+	@Test
+	@DisplayName("testRegel39LehrkraftUngerneAlsLeitung2: Lehrkraft ist ungerne als stellv. Klassenlehrer.")
 	void testRegel39LehrkraftUngerneAlsLeitung2() {
 		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
 		final int prioritaetDeaktiviert = UvBlockungRegelPrioritaet.DEAKTIVIERT.nr;
@@ -3438,6 +5196,51 @@ class TestUvDynDaten {
 		checkMalus(dyn4, 3, 0, 4, 0, 0);
 		assertEquals(0, dyn4.gibAktuelleKlassenleitungen().size());
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
+
+		// Szenario 5: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel5 = new UvBlockungRegel();
+		regel5.typ = UvBlockungRegelTyp.LEHRKRAFT_A_UNGERNE_ALS_STELLV_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel5.prioritaet = prioritaetGering;
+		regel5.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
+		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel6 = new UvBlockungRegel();
+		regel6.typ = UvBlockungRegelTyp.LEHRKRAFT_A_UNGERNE_ALS_STELLV_KLASSENLEHRER_IN_KLASSE_B.nr;
+		regel6.prioritaet = prioritaetGering;
+		regel6.parameter.add(5L);
+		regel6.parameter.add(4L);
+		regel6.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel7 = gibRegel39LehrkraftUngerneAlsLeitung2(999L, 4L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		checkMalus(dyn7, 3, 0, 4, 0, 0);
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Unbekannte Klassen-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel8 = gibRegel39LehrkraftUngerneAlsLeitung2(5L, 999L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		checkMalus(dyn8, 3, 0, 4, 0, 0);
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+	}
+
+
+	@Test
+	@DisplayName("testRegel39LehrkraftUngerneAlsLeitung2_2")
+	void testRegel39LehrkraftUngerneAlsLeitung2_2() {
+		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
+
+		// Szenario 9: Eine fixierte Zuordnung verletzt den Wunsch ebenfalls.
+		final UvBlockungRegel regel9 = gibRegel39LehrkraftUngerneAlsLeitung2(5L, 4L, prioritaetGering);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		dyn9.setzeKlassenLeitung2Add(4L, 5L, true);
+		checkMalus(dyn9, 2, 0, 4, 1, 0);
+		assertEquals(1, dyn9.gibAktuelleKlassenleitungen().size(), "Es sollte genau 1 Zuordnung geben.");
+		assertFalse(dyn9.gibIstRegelFehlerhaft(regel9));
 	}
 
 
@@ -3456,8 +5259,8 @@ class TestUvDynDaten {
 		dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
 		checkMalus(dyn1, 2, 0, 0, 0, 0);
 		assertEquals(1, dyn1.gibAktuelleZuordnung().size(), "Es sollte genau 1 Zuordnung geben.");
-		assertEquals(1L, dyn1.gibAktuelleZuordnung().get(0).idLerngruppe, "Lerngruppe ID1 erwartet.");
-		assertEquals(5L, dyn1.gibAktuelleZuordnung().get(0).idLehrer, "Lehrer ID5 erwartet.");
+		assertEquals(1L, dyn1.gibAktuelleZuordnung().get(0).idLerngruppe, "Lerngruppe ID=1 erwartet.");
+		assertEquals(5L, dyn1.gibAktuelleZuordnung().get(0).idLehrer, "Lehrer ID=5 erwartet.");
 
 		// Szenario 2: Max = 0
 		final UvBlockungRegel regel2 = gibRegel40LehrkraftHatMaximalBLerngruppen(5L, 0, prioritaetHoch);
@@ -3484,6 +5287,43 @@ class TestUvDynDaten {
 		checkMalus(dyn4, 2, 0, 0, 0, 0);
 		assertEquals(1, dyn4.gibAktuelleZuordnung().size(), "Es sollte genau 1 Zuordnung geben.");
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
+
+		// Szenario 5: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel5 = gibRegel40LehrkraftHatMaximalBLerngruppen(999L, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
+		checkMalus(dyn5, 3, 0, 4, 0, 0);
+		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Negativer Maximalwert ist ungültig.
+		final UvBlockungRegel regel6 = gibRegel40LehrkraftHatMaximalBLerngruppen(5L, -1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MAXIMAL_B_LERNGRUPPEN.nr;
+		regel7.prioritaet = prioritaetHoch;
+		regel7.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = new UvBlockungRegel();
+		regel8.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MAXIMAL_B_LERNGRUPPEN.nr;
+		regel8.prioritaet = prioritaetHoch;
+		regel8.parameter.add(5L);
+		regel8.parameter.add(1L);
+		regel8.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+
+		// Szenario 9: Add und Del gleichen sich aus (Regression: fehlender faktor-Multiplikator in Regel 40).
+		final UvBlockungRegel regel9 = gibRegel40LehrkraftHatMaximalBLerngruppen(5L, 0, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		dyn9.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn9, 2, 1, 0, 0, 0);
+		dyn9.setzeLerngruppeLehrkraftDel(1L, 5L);
+		checkMalus(dyn9, 3, 0, 4, 0, 0);
 	}
 
 
@@ -3493,7 +5333,7 @@ class TestUvDynDaten {
 		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
 		final int prioritaetDeaktiviert = UvBlockungRegelPrioritaet.DEAKTIVIERT.nr;
 
-		// Szenario 1: Min = 1 (Malus wird direkt verletzt)
+		// Szenario 1: Min = 1 (Regel wird direkt verletzt)
 		final UvBlockungRegel regel1 = gibRegel41LehrkraftHatMindestensBLerngruppen(5L, 1, prioritaetHoch);
 		final UvAlgorithmusDynDaten dyn1 = gibDatenMinimal1(List.of(regel1));
 		checkMalus(dyn1, 3, 1, 4, 0, 0);
@@ -3501,17 +5341,17 @@ class TestUvDynDaten {
 		dyn1.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
 		checkMalus(dyn1, 2, 0, 0, 0, 0);
 		assertEquals(1, dyn1.gibAktuelleZuordnung().size(), "Es sollte genau 1 Zuordnung geben.");
-		assertEquals(1L, dyn1.gibAktuelleZuordnung().get(0).idLerngruppe, "Lerngruppe ID1 erwartet.");
-		assertEquals(5L, dyn1.gibAktuelleZuordnung().get(0).idLehrer, "Lehrer ID5 erwartet.");
+		assertEquals(1L, dyn1.gibAktuelleZuordnung().get(0).idLerngruppe, "Lerngruppe ID=1 erwartet.");
+		assertEquals(5L, dyn1.gibAktuelleZuordnung().get(0).idLehrer, "Lehrer ID=5 erwartet.");
 
-		// Szenario 2: Min = 2 (Malus wird direkt doppelt verletzt)
+		// Szenario 2: Min = 2 (Regel wird direkt doppelt verletzt)
 		final UvBlockungRegel regel2 = gibRegel41LehrkraftHatMindestensBLerngruppen(5L, 2, prioritaetHoch);
 		final UvAlgorithmusDynDaten dyn2 = gibDatenMinimal1(List.of(regel2));
 		checkMalus(dyn2, 3, 2, 4, 0, 0);
 		assertFalse(dyn2.gibIstRegelFehlerhaft(regel2));
 		dyn2.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
 		checkMalus(dyn2, 2, 1, 0, 0, 0);
-		assertEquals(1, dyn2.gibAktuelleZuordnung().size(), "Es sollte genau 1 Zuordnung geben und noch einen HOCH Malus.");
+		assertEquals(1, dyn2.gibAktuelleZuordnung().size(), "Es sollte genau 1 Zuordnung geben und noch einen HOCH-Malus.");
 
 		// Szenario 3: Deaktivierte Regel hat keine Wirkung.
 		final UvBlockungRegel regel3 = gibRegel41LehrkraftHatMindestensBLerngruppen(5L, 3, prioritaetDeaktiviert);
@@ -3529,6 +5369,50 @@ class TestUvDynDaten {
 		checkMalus(dyn4, 2, 0, 0, 0, 0);
 		assertEquals(1, dyn4.gibAktuelleZuordnung().size(), "Es sollte genau 1 Zuordnung geben.");
 		assertFalse(dyn4.gibIstRegelFehlerhaft(regel4));
+
+		// Szenario 5: Unbekannte Lehrkraft-ID -> Regel wird aussortiert.
+		final UvBlockungRegel regel5 = gibRegel41LehrkraftHatMindestensBLerngruppen(999L, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn5 = gibDatenMinimal1(List.of(regel5));
+		checkMalus(dyn5, 3, 0, 4, 0, 0);
+		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// Szenario 6: Negativer Mindestwert ist ungültig.
+		final UvBlockungRegel regel6 = gibRegel41LehrkraftHatMindestensBLerngruppen(5L, -1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal1(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+
+		// Szenario 7: Nur ein Parameter statt zwei wird als fehlerhaft erkannt.
+		final UvBlockungRegel regel7 = new UvBlockungRegel();
+		regel7.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MINDESTENS_B_LERNGRUPPEN.nr;
+		regel7.prioritaet = prioritaetHoch;
+		regel7.parameter.add(5L);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal1(List.of(regel7));
+		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
+
+		// Szenario 8: Drei Parameter statt zwei werden ebenfalls als fehlerhaft erkannt.
+		final UvBlockungRegel regel8 = new UvBlockungRegel();
+		regel8.typ = UvBlockungRegelTyp.LEHRKRAFT_A_HAT_MINDESTENS_B_LERNGRUPPEN.nr;
+		regel8.prioritaet = prioritaetHoch;
+		regel8.parameter.add(5L);
+		regel8.parameter.add(1L);
+		regel8.parameter.add(1L);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal1(List.of(regel8));
+		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
+	}
+
+
+	@Test
+	@DisplayName("testRegel41LehrkraftHatMindestensBLerngruppen2")
+	void testRegel41LehrkraftHatMindestensBLerngruppen2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Szenario 9: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel9 = gibRegel41LehrkraftHatMindestensBLerngruppen(5L, 1, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1(List.of(regel9));
+		dyn9.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn9, 2, 0, 0, 0, 0);
+		dyn9.setzeLerngruppeLehrkraftDel(1L, 5L);
+		checkMalus(dyn9, 3, 1, 4, 0, 0);
 	}
 
 
@@ -3548,7 +5432,7 @@ class TestUvDynDaten {
 		gruppe123.add(UvDatensatz3.LG2);
 		gruppe123.add(UvDatensatz3.LG3);
 
-		// Szenario 1: Mindestens 1 mal in 2 Lerngruppen.
+		// Szenario 1: Mindestens 1-mal in 2 Lerngruppen.
 		UvBlockungRegel regel1 = gibRegel42LehrkraftMindestensBMalInLerngruppen(UvDatensatz3.LEHRER1, 1, gruppe12, prioritaetHoch);
 		UvAlgorithmusDynDaten dyn1 = gibDatenMinimal3(List.of(regel1));
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
@@ -3556,7 +5440,7 @@ class TestUvDynDaten {
 		dyn1.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
 		checkMalus(dyn1, 19, 0, 92, 0, 0);
 
-		// Szenario 2: Mindestens 1 mal in 3 Lerngruppen.
+		// Szenario 2: Mindestens 1-mal in 3 Lerngruppen.
 		regel1 = gibRegel42LehrkraftMindestensBMalInLerngruppen(UvDatensatz3.LEHRER1, 1, gruppe123, prioritaetHoch);
 		dyn1 = gibDatenMinimal3(List.of(regel1));
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
@@ -3564,7 +5448,7 @@ class TestUvDynDaten {
 		dyn1.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
 		checkMalus(dyn1, 19, 0, 92, 0, 0);
 
-		// Szenario 3: Mindestens 2 mal in 3 Lerngruppen.
+		// Szenario 3: Mindestens 2-mal in 3 Lerngruppen.
 		regel1 = gibRegel42LehrkraftMindestensBMalInLerngruppen(UvDatensatz3.LEHRER1, 2, gruppe123, prioritaetHoch);
 		dyn1 = gibDatenMinimal3(List.of(regel1));
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
@@ -3574,7 +5458,7 @@ class TestUvDynDaten {
 		dyn1.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
 		checkMalus(dyn1, 18, 0, 80, 0, 0);
 
-		// Szenario 4: Mindestens 3 mal in 3 Lerngruppen.
+		// Szenario 4: Mindestens 3-mal in 3 Lerngruppen.
 		regel1 = gibRegel42LehrkraftMindestensBMalInLerngruppen(UvDatensatz3.LEHRER1, 3, gruppe123, prioritaetHoch);
 		dyn1 = gibDatenMinimal3(List.of(regel1));
 		assertFalse(dyn1.gibIstRegelFehlerhaft(regel1));
@@ -3652,6 +5536,66 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dynE = gibDatenMinimal3(List.of(regelE));
 		assertTrue(dynE.gibIstRegelFehlerhaft(regelE), "Regel 42 mit negativer Mindest-Anzahl muss als fehlerhaft markiert werden.");
 		checkMalus(dynE, 20, 0, 112, 0, 0);
+
+		// Szenario F: Doppelte Lerngruppen-ID in der Liste -> ungültig.
+		final @NotNull List<Long> gruppeDoppelt = new ArrayList<>();
+		gruppeDoppelt.add(UvDatensatz3.LG1);
+		gruppeDoppelt.add(UvDatensatz3.LG2);
+		gruppeDoppelt.add(UvDatensatz3.LG1);
+		final UvBlockungRegel regelF = gibRegel42LehrkraftMindestensBMalInLerngruppen(UvDatensatz3.LEHRER1, 1, gruppeDoppelt, prioritaetHoch);
+		final UvAlgorithmusDynDaten dynF = gibDatenMinimal3(List.of(regelF));
+		assertTrue(dynF.gibIstRegelFehlerhaft(regelF), "Regel 42 mit doppelter Lerngruppen-ID muss als fehlerhaft markiert werden.");
+		checkMalus(dynF, 20, 0, 112, 0, 0);
+
+		// Szenario G: Unbekannte Lehrkraft-ID -> ungültig.
+		final UvBlockungRegel regelG = gibRegel42LehrkraftMindestensBMalInLerngruppen(999L, 1, gruppe12, prioritaetHoch);
+		final UvAlgorithmusDynDaten dynG = gibDatenMinimal3(List.of(regelG));
+		assertTrue(dynG.gibIstRegelFehlerhaft(regelG), "Regel 42 mit unbekannter Lehrkraft-ID muss als fehlerhaft markiert werden.");
+		checkMalus(dynG, 20, 0, 112, 0, 0);
+
+		// Szenario H: Unbekannte Lerngruppen-ID in der Liste -> ungültig.
+		final UvBlockungRegel regelH = gibRegel42LehrkraftMindestensBMalInLerngruppen(
+				UvDatensatz3.LEHRER1, 1, List.of(UvDatensatz3.LG1, 999L), prioritaetHoch);
+		final UvAlgorithmusDynDaten dynH = gibDatenMinimal3(List.of(regelH));
+		assertTrue(dynH.gibIstRegelFehlerhaft(regelH), "Regel 42 mit unbekannter Lerngruppen-ID muss als fehlerhaft markiert werden.");
+		checkMalus(dynH, 20, 0, 112, 0, 0);
+	}
+
+
+	@Test
+	@DisplayName("testRegel42LehrkraftMindestensBMalInLerngruppen2")
+	void testRegel42LehrkraftMindestensBMalInLerngruppen2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Basis: gültige Lerngruppenmenge für Datensatz 3.
+		final @NotNull List<Long> gruppe12 = new ArrayList<>();
+		gruppe12.add(UvDatensatz3.LG1);
+		gruppe12.add(UvDatensatz3.LG2);
+
+		// Szenario 6: Add und Del gleichen sich aus.
+		final UvBlockungRegel regel6 = gibRegel42LehrkraftMindestensBMalInLerngruppen(UvDatensatz3.LEHRER1, 2, gruppe12, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
+		checkMalus(dyn6, 20, 2, 112, 0, 0);
+		dyn6.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn6, 19, 1, 92, 0, 0);
+		dyn6.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG1, UvDatensatz3.LEHRER1);
+		checkMalus(dyn6, 20, 2, 112, 0, 0);
+
+		// Szenario 7: Eine fixierte Zuordnung erfüllt die Mindestanzahl.
+		final UvBlockungRegel regel7 = gibRegel42LehrkraftMindestensBMalInLerngruppen(UvDatensatz3.LEHRER1, 1, gruppe12, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		checkMalus(dyn7, 20, 1, 112, 0, 0);
+		dyn7.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn7, 19, 0, 92, 0, 0);
+
+		// Szenario 8: Mehrfache Unterschreitung (min=3, nur 1 Zuordnung) wird korrekt gezählt.
+		final UvBlockungRegel regel8 = gibRegel42LehrkraftMindestensBMalInLerngruppen(UvDatensatz3.LEHRER1, 3, gruppe12, prioritaetHoch);
+		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
+		checkMalus(dyn8, 20, 3, 112, 0, 0);
+		dyn8.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn8, 19, 2, 92, 0, 0);
+		dyn8.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn8, 18, 1, 80, 0, 0);
 	}
 
 
@@ -3751,6 +5695,47 @@ class TestUvDynDaten {
 		final @NotNull UvBlockungRegel regel4 = gibRegel43LehrkraftMaximalBMalInLerngruppen(UvDatensatz3.LEHRER1, 1, new ArrayList<>(), prioritaetHoch);
 		final @NotNull UvAlgorithmusDynDaten dyn4 = gibDatenMinimal3(List.of(regel4));
 		assertTrue(dyn4.gibIstRegelFehlerhaft(regel4));
+
+		// 5) Doppelte Lerngruppen-ID in der Liste.
+		final @NotNull List<Long> gruppeDoppelt = new ArrayList<>();
+		gruppeDoppelt.add(UvDatensatz3.LG1);
+		gruppeDoppelt.add(UvDatensatz3.LG1);
+		final @NotNull UvBlockungRegel regel5 = gibRegel43LehrkraftMaximalBMalInLerngruppen(UvDatensatz3.LEHRER1, 1, gruppeDoppelt, prioritaetHoch);
+		final @NotNull UvAlgorithmusDynDaten dyn5 = gibDatenMinimal3(List.of(regel5));
+		assertTrue(dyn5.gibIstRegelFehlerhaft(regel5));
+
+		// 6) Unbekannte Lerngruppen-ID in der Liste.
+		final @NotNull UvBlockungRegel regel6 = gibRegel43LehrkraftMaximalBMalInLerngruppen(
+				UvDatensatz3.LEHRER1, 1, List.of(UvDatensatz3.LG1, 999L), prioritaetHoch);
+		final @NotNull UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
+		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
+	}
+
+
+	@Test
+	@DisplayName("testRegel43LehrkraftMaximalBMalInLerngruppen2")
+	void testRegel43LehrkraftMaximalBMalInLerngruppen2() {
+		final int prioritaetHoch = UvBlockungRegelPrioritaet.HOCH.nr;
+
+		// Hilfslisten für die Lerngruppen-IDs aus UvDatensatz3.
+		final @NotNull List<Long> gruppe12 = new ArrayList<>();
+		gruppe12.add(UvDatensatz3.LG1);
+		gruppe12.add(UvDatensatz3.LG2);
+
+		// Szenario 7: Add und Del gleichen sich aus.
+		final @NotNull UvBlockungRegel regel7 = gibRegel43LehrkraftMaximalBMalInLerngruppen(UvDatensatz3.LEHRER1, 1, gruppe12, prioritaetHoch);
+		final @NotNull UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
+		dyn7.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, false);
+		dyn7.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG2, UvDatensatz3.LEHRER1, false);
+		checkMalus(dyn7, 18, 1, 80, 0, 0);
+		dyn7.setzeLerngruppeLehrkraftDel(UvDatensatz3.LG2, UvDatensatz3.LEHRER1);
+		checkMalus(dyn7, 19, 0, 92, 0, 0);
+
+		// Szenario 8: Eine fixierte Zuordnung zählt als Vertretung mit.
+		final @NotNull UvBlockungRegel regel8 = gibRegel43LehrkraftMaximalBMalInLerngruppen(UvDatensatz3.LEHRER1, 1, gruppe12, prioritaetHoch);
+		final @NotNull UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
+		dyn8.setzeLerngruppeLehrkraftAdd(UvDatensatz3.LG1, UvDatensatz3.LEHRER1, true);
+		checkMalus(dyn8, 19, 0, 92, 0, 0);
 	}
 
 
@@ -3883,25 +5868,25 @@ class TestUvDynDaten {
 	void testRegel45LehrkraftSollIstAktivierung_UngueltigeParameter() {
 		final int prioritaetGering = UvBlockungRegelPrioritaet.GERING.nr;
 
-		// Szenario 6: Unbekannte Lehrkraft-ID wird als fehlerhaft erkannt, Standard bleibt erhalten.
+		// Szenario 5: Unbekannte Lehrkraft-ID wird als fehlerhaft erkannt, Standard bleibt erhalten.
 		final UvBlockungRegel regel6 = gibRegel45LehrkraftSollIstAktivierung(999L, 1, prioritaetGering);
 		final UvAlgorithmusDynDaten dyn6 = gibDatenMinimal3(List.of(regel6));
 		checkMalus(dyn6, 20, 0, 112, 0, 0);
 		assertTrue(dyn6.gibIstRegelFehlerhaft(regel6));
 
-		// Szenario 7: Ungültige Aktivierung -1 wird als fehlerhaft erkannt.
+		// Szenario 6: Ungültige Aktivierung -1 wird als fehlerhaft erkannt.
 		final UvBlockungRegel regel7 = gibRegel45LehrkraftSollIstAktivierung(UvDatensatz3.LEHRER1, -1, prioritaetGering);
 		final UvAlgorithmusDynDaten dyn7 = gibDatenMinimal3(List.of(regel7));
 		checkMalus(dyn7, 20, 0, 112, 0, 0);
 		assertTrue(dyn7.gibIstRegelFehlerhaft(regel7));
 
-		// Szenario 8: Ungültige Aktivierung 2 wird als fehlerhaft erkannt.
+		// Szenario 7: Ungültige Aktivierung 2 wird als fehlerhaft erkannt.
 		final UvBlockungRegel regel8 = gibRegel45LehrkraftSollIstAktivierung(UvDatensatz3.LEHRER1, 2, prioritaetGering);
 		final UvAlgorithmusDynDaten dyn8 = gibDatenMinimal3(List.of(regel8));
 		checkMalus(dyn8, 20, 0, 112, 0, 0);
 		assertTrue(dyn8.gibIstRegelFehlerhaft(regel8));
 
-		// Szenario 9: Fehlender zweiter Parameter wird als fehlerhaft erkannt.
+		// Szenario 8: Fehlender zweiter Parameter wird als fehlerhaft erkannt.
 		final UvBlockungRegel regel9 = new UvBlockungRegel();
 		regel9.typ = UvBlockungRegelTyp.LEHRKRAFT_A_SOLL_IST_AKTIVIERUNG_B.nr;
 		regel9.prioritaet = prioritaetGering;
@@ -3909,6 +5894,30 @@ class TestUvDynDaten {
 		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal3(List.of(regel9));
 		checkMalus(dyn9, 20, 0, 112, 0, 0);
 		assertTrue(dyn9.gibIstRegelFehlerhaft(regel9));
+	}
+
+
+	@Test
+	@DisplayName("testRegel45LehrkraftSollIstAktivierung2")
+	void testRegel45LehrkraftSollIstAktivierung2() {
+		// Szenario 9: Abweichung von genau 0,5 Stunden erzeugt noch keinen Malus (PRE-DEFAULT-Regel 45).
+		final UvAlgorithmusDynDaten dyn9 = gibDatenMinimal1MitWochenstunden(new ArrayList<>(), 1L, 1.5);
+		checkMalus(dyn9, 3, 0, 4, 0, 0);
+		dyn9.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn9, 2, 0, 0, 0, 0);
+
+		// Szenario 10: Abweichung von 0,75 Stunden erzeugt einen Malus von 1 (0,75² = 0,5625).
+		final UvAlgorithmusDynDaten dyn10 = gibDatenMinimal1MitWochenstunden(new ArrayList<>(), 1L, 1.25);
+		checkMalus(dyn10, 3, 0, 4, 0, 0);
+		dyn10.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn10, 2, 0, 1, 0, 0);
+
+		// Szenario 11: Add und Del gleichen sich aus.
+		final UvAlgorithmusDynDaten dyn11 = gibDatenMinimal1MitWochenstunden(new ArrayList<>(), 1L, 2.0);
+		dyn11.setzeLerngruppeLehrkraftAdd(1L, 5L, false);
+		checkMalus(dyn11, 2, 0, 0, 0, 0);
+		dyn11.setzeLerngruppeLehrkraftDel(1L, 5L);
+		checkMalus(dyn11, 3, 0, 4, 0, 0);
 	}
 
 

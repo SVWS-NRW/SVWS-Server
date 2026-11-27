@@ -241,17 +241,21 @@ import { Teilleistungsart } from '../core/data/kataloge/Teilleistungsart';
 import { Teilstandort } from '../core/data/schule/Teilstandort';
 import { Telefonart } from '../core/data/schule/Telefonart';
 import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
+import { UvBlockungRegel } from '../core/data/uv/regel/UvBlockungRegel';
 import { UvFach } from '../core/data/uv/UvFach';
 import { UvGrunddatenBundle } from '../core/data/uv/UvGrunddatenBundle';
 import { UvKlasse } from '../core/data/uv/UvKlasse';
+import { UvKlasseAnlageRequest } from '../core/data/uv/UvKlasseAnlageRequest';
 import { UvKlassenLehrer } from '../core/data/uv/UvKlassenLehrer';
 import { UvKurs } from '../core/data/uv/UvKurs';
 import { UvKursImportDaten } from '../core/data/uv/UvKursImportDaten';
+import { UvKursunterrichtAnlageRequest } from '../core/data/uv/UvKursunterrichtAnlageRequest';
 import { UvLehrer } from '../core/data/uv/UvLehrer';
 import { UvLehrerAnrechnungsstunden } from '../core/data/uv/UvLehrerAnrechnungsstunden';
 import { UvLehrerPflichtstundensoll } from '../core/data/uv/UvLehrerPflichtstundensoll';
 import { UvLerngruppe } from '../core/data/uv/UvLerngruppe';
 import { UvLerngruppenLehrer } from '../core/data/uv/UvLerngruppenLehrer';
+import { UvLerngruppenLehrerCreateRequest } from '../core/data/uv/UvLerngruppenLehrerCreateRequest';
 import { UvLerngruppenSchiene } from '../core/data/uv/UvLerngruppenSchiene';
 import { UvPlanungsabschnitt } from '../core/data/uv/UvPlanungsabschnitt';
 import { UvPlanungsabschnittLehrer } from '../core/data/uv/UvPlanungsabschnittLehrer';
@@ -262,6 +266,7 @@ import { UvRaum } from '../core/data/uv/UvRaum';
 import { UvRaumgruppe } from '../core/data/uv/UvRaumgruppe';
 import { UvSchiene } from '../core/data/uv/UvSchiene';
 import { UvSchuelergruppe } from '../core/data/uv/UvSchuelergruppe';
+import { UvSchuelergruppeCreateRequest } from '../core/data/uv/UvSchuelergruppeCreateRequest';
 import { UvSchuelergruppeSchueler } from '../core/data/uv/UvSchuelergruppeSchueler';
 import { UvSchuelerImportOptions } from '../core/data/uv/UvSchuelerImportOptions';
 import { UvStundentafel } from '../core/data/uv/UvStundentafel';
@@ -23010,6 +23015,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createUvSchuelergruppeFuerKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/klassen/{id: \d+}/schuelergruppe/create
+	 *
+	 * Legt eine Schülergruppe an und ordnet sie einer Klasse atomar zu. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Vorgang wurde vollständig gespeichert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: UvPlanungsabschnittsdatenBundle
+	 *   Code 400: Die Eingaben sind ungültig.
+	 *   Code 403: Keine Berechtigung zur Änderung der Unterrichtsverteilung.
+	 *
+	 * @param {Partial<UvSchuelergruppeCreateRequest>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Vorgang wurde vollständig gespeichert.
+	 */
+	public async createUvSchuelergruppeFuerKlasse(data: Partial<UvSchuelergruppeCreateRequest>, schema: string, id: number): Promise<UvPlanungsabschnittsdatenBundle> {
+		const path = "/db/{schema}/unterrichtsverteilung/klassen/{id: \\d+}/schuelergruppe/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = UvSchuelergruppeCreateRequest.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return UvPlanungsabschnittsdatenBundle.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createUvKlasse für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/klassen/create
 	 *
 	 * Erstellt eine neue UvKlasse und gibt sie zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
@@ -23033,6 +23067,33 @@ export class ApiServer extends BaseApi {
 		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvKlasse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createUvKlasseMitSchuelergruppe für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/klassen/create-mit-schuelergruppe
+	 *
+	 * Legt Klasse und gegebenenfalls Schülergruppe atomar an. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Vorgang wurde vollständig gespeichert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: UvPlanungsabschnittsdatenBundle
+	 *   Code 400: Die Eingaben sind ungültig.
+	 *   Code 403: Keine Berechtigung zur Änderung der Unterrichtsverteilung.
+	 *
+	 * @param {Partial<UvKlasseAnlageRequest>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Vorgang wurde vollständig gespeichert.
+	 */
+	public async createUvKlasseMitSchuelergruppe(data: Partial<UvKlasseAnlageRequest>, schema: string): Promise<UvPlanungsabschnittsdatenBundle> {
+		const path = "/db/{schema}/unterrichtsverteilung/klassen/create-mit-schuelergruppe"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = UvKlasseAnlageRequest.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return UvPlanungsabschnittsdatenBundle.transpilerFromJSON(text);
 	}
 
 
@@ -23249,6 +23310,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createUvSchuelergruppeFuerKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/kurse/{id: \d+}/schuelergruppe/create
+	 *
+	 * Legt eine Schülergruppe an und ordnet sie einem Kurs atomar zu. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Vorgang wurde vollständig gespeichert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: UvPlanungsabschnittsdatenBundle
+	 *   Code 400: Die Eingaben sind ungültig.
+	 *   Code 403: Keine Berechtigung zur Änderung der Unterrichtsverteilung.
+	 *
+	 * @param {Partial<UvSchuelergruppeCreateRequest>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Vorgang wurde vollständig gespeichert.
+	 */
+	public async createUvSchuelergruppeFuerKurs(data: Partial<UvSchuelergruppeCreateRequest>, schema: string, id: number): Promise<UvPlanungsabschnittsdatenBundle> {
+		const path = "/db/{schema}/unterrichtsverteilung/kurse/{id: \\d+}/schuelergruppe/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = UvSchuelergruppeCreateRequest.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return UvPlanungsabschnittsdatenBundle.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createUvKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/kurse/create
 	 *
 	 * Erstellt einen neuen UvKurs und gibt ihn zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
@@ -23272,6 +23362,33 @@ export class ApiServer extends BaseApi {
 		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvKurs.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createUvKursMitLerngruppe für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/kurse/create-mit-lerngruppe
+	 *
+	 * Legt Kursunterricht mit Lerngruppe und optionaler Schülergruppe atomar an. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Vorgang wurde vollständig gespeichert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: UvPlanungsabschnittsdatenBundle
+	 *   Code 400: Die Eingaben sind ungültig.
+	 *   Code 403: Keine Berechtigung zur Änderung der Unterrichtsverteilung.
+	 *
+	 * @param {Partial<UvKursunterrichtAnlageRequest>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Vorgang wurde vollständig gespeichert.
+	 */
+	public async createUvKursMitLerngruppe(data: Partial<UvKursunterrichtAnlageRequest>, schema: string): Promise<UvPlanungsabschnittsdatenBundle> {
+		const path = "/db/{schema}/unterrichtsverteilung/kurse/create-mit-lerngruppe"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = UvKursunterrichtAnlageRequest.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return UvPlanungsabschnittsdatenBundle.transpilerFromJSON(text);
 	}
 
 
@@ -24003,7 +24120,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchUvLerngruppenLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer/{id : \d+}
+	 * Implementierung der PATCH-Methode patchUvLerngruppenLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer
 	 *
 	 * Patcht eine bestehende UvLerngruppenLehrer-Zuordnung anhand der ID.
 	 *
@@ -24017,7 +24134,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
 	public async patchUvLerngruppenLehrer(data: Partial<UvLerngruppenLehrer>, schema: string): Promise<void> {
-		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer/{id : \\d+}"
+		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = UvLerngruppenLehrer.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
@@ -24718,30 +24835,178 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchUvPlanungsabschnittZeitraster für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/planungsabschnitte/{idPlanungsabschnitt : \d+}/zeitraster/{idZeitraster : \d+}
+	 * Implementierung der POST-Methode replaceUvLerngruppenLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \d+}/lerngruppen/lehrer/replace
 	 *
-	 * Patcht ein bestehendes UvPlanungsabschnittZeitraster.
+	 * Ersetzt alle Lehrkraftzuordnungen des Planungsabschnitts atomar. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: UvPlanungsabschnittZeitraster wurde erfolgreich gepatcht.
+	 *   Code 200: Der Vorgang wurde vollständig gespeichert.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: UvPlanungsabschnittZeitraster
-	 *   Code 400: Fehlerhafte Daten.
-	 *   Code 403: Keine Rechte.
-	 *   Code 404: Nicht gefunden.
+	 *     - Rückgabe-Typ: List<UvLerngruppenLehrer>
+	 *   Code 400: Die Eingaben sind ungültig.
+	 *   Code 403: Keine Berechtigung zur Änderung der Unterrichtsverteilung.
 	 *
-	 * @param {Partial<UvPlanungsabschnittZeitraster>} data - der Request-Body für die HTTP-Methode
+	 * @param {List<UvLerngruppenLehrerCreateRequest>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns UvPlanungsabschnittZeitraster wurde erfolgreich gepatcht.
+	 * @returns Der Vorgang wurde vollständig gespeichert.
 	 */
-	public async patchUvPlanungsabschnittZeitraster(data: Partial<UvPlanungsabschnittZeitraster>, schema: string): Promise<UvPlanungsabschnittZeitraster> {
-		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{idPlanungsabschnitt : \\d+}/zeitraster/{idZeitraster : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = UvPlanungsabschnittZeitraster.transpilerToJSONPatch(data);
+	public async replaceUvLerngruppenLehrer(data: List<UvLerngruppenLehrerCreateRequest>, schema: string, id: number): Promise<List<UvLerngruppenLehrer>> {
+		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \\d+}/lerngruppen/lehrer/replace"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = "[" + (data.toArray() as Array<UvLerngruppenLehrerCreateRequest>).map(d => UvLerngruppenLehrerCreateRequest.transpilerToJSON(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<UvLerngruppenLehrer>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(UvLerngruppenLehrer.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getUvRegeln für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \d+}/regeln
+	 *
+	 * Gibt die Regeln der Stundenplankonfiguration des angegebenen UV-Planungsabschnitts zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Regeln
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<UvBlockungRegel>
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Regeln
+	 */
+	public async getUvRegeln(schema: string, id: number): Promise<List<UvBlockungRegel>> {
+		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \\d+}/regeln"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<UvBlockungRegel>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(UvBlockungRegel.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createUvRegel für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \d+}/regeln
+	 *
+	 * Speichert eine neue Blockungsregel mit Priorität und Parametern im angegebenen UV-Planungsabschnitt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die gespeicherte Regel
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: UvBlockungRegel
+	 *
+	 * @param {UvBlockungRegel} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die gespeicherte Regel
+	 */
+	public async createUvRegel(data: UvBlockungRegel, schema: string, id: number): Promise<UvBlockungRegel> {
+		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \\d+}/regeln"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = UvBlockungRegel.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return UvBlockungRegel.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchUvRegel für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \d+}/regeln/{idRegel: \d+}
+	 *
+	 * Ersetzt Typ, Priorität und Parameter einer Blockungsregel im angegebenen UV-Planungsabschnitt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die gespeicherte Regel
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: UvBlockungRegel
+	 *
+	 * @param {Partial<UvBlockungRegel>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idRegel - der Pfad-Parameter idRegel
+	 *
+	 * @returns Die gespeicherte Regel
+	 */
+	public async patchUvRegel(data: Partial<UvBlockungRegel>, schema: string, id: number, idRegel: number): Promise<UvBlockungRegel> {
+		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \\d+}/regeln/{idRegel: \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idRegel\s*(:[^{}]+({[^{}]+})*)?}/g, idRegel.toString());
+		const body: string = UvBlockungRegel.transpilerToJSONPatch(data);
 		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
-		return UvPlanungsabschnittZeitraster.transpilerFromJSON(text);
+		return UvBlockungRegel.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteUvRegel für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \d+}/regeln/{idRegel: \d+}
+	 *
+	 * Entfernt die Blockungsregel und ihre Parameter aus dem angegebenen UV-Planungsabschnitt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Regel gelöscht
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idRegel - der Pfad-Parameter idRegel
+	 */
+	public async deleteUvRegel(schema: string, id: number, idRegel: number): Promise<void> {
+		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \\d+}/regeln/{idRegel: \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idRegel\s*(:[^{}]+({[^{}]+})*)?}/g, idRegel.toString());
+		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchUvRegeln für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \d+}/regeln/patch/multiple
+	 *
+	 * Ändert mehrere UV-Regeln samt Parametern atomar. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Vorgang wurde vollständig gespeichert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<UvBlockungRegel>
+	 *   Code 400: Die Eingaben sind ungültig.
+	 *   Code 403: Keine Berechtigung zur Änderung der Unterrichtsverteilung.
+	 *
+	 * @param {List<Partial<UvBlockungRegel>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Vorgang wurde vollständig gespeichert.
+	 */
+	public async patchUvRegeln(data: List<Partial<UvBlockungRegel>>, schema: string, id: number): Promise<List<UvBlockungRegel>> {
+		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id: \\d+}/regeln/patch/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = "[" + (data.toArray() as Array<UvBlockungRegel>).map(d => UvBlockungRegel.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<UvBlockungRegel>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(UvBlockungRegel.transpilerFromJSON(text));
+		});
+		return ret;
 	}
 
 
@@ -24868,6 +25133,34 @@ export class ApiServer extends BaseApi {
 			ret.add(UvPlanungsabschnitt.transpilerFromJSON(text));
 		});
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchUvPlanungsabschnittZeitraster für den Zugriff auf die URL https://{hostname}/db/{schema}/unterrichtsverteilung/planungsabschnitte/zeitraster
+	 *
+	 * Patcht ein bestehendes UvPlanungsabschnittZeitraster.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: UvPlanungsabschnittZeitraster wurde erfolgreich gepatcht.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: UvPlanungsabschnittZeitraster
+	 *   Code 400: Fehlerhafte Daten.
+	 *   Code 403: Keine Rechte.
+	 *   Code 404: Nicht gefunden.
+	 *
+	 * @param {Partial<UvPlanungsabschnittZeitraster>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns UvPlanungsabschnittZeitraster wurde erfolgreich gepatcht.
+	 */
+	public async patchUvPlanungsabschnittZeitraster(data: Partial<UvPlanungsabschnittZeitraster>, schema: string): Promise<UvPlanungsabschnittZeitraster> {
+		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/zeitraster"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = UvPlanungsabschnittZeitraster.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return UvPlanungsabschnittZeitraster.transpilerFromJSON(text);
 	}
 
 

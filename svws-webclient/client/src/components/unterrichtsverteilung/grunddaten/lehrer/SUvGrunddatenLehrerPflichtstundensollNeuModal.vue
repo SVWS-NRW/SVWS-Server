@@ -5,7 +5,13 @@
 		<template #modalContent>
 			<svws-ui-notification v-if="actionError" type="error" class="mb-3">{{ actionError }}</svws-ui-notification>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-input-number :disabled="loading || !hatKompetenzAendern" v-model="item.pflichtstdSoll" required placeholder="Stundenanzahl" :decimal-places="2" :steps="0.5" :min="0" />
+				<svws-ui-input-number :disabled="loading || !hatKompetenzAendern"
+					v-model="item.pflichtstdSoll"
+					required
+					placeholder="Stundenanzahl"
+					:decimal-places="2"
+					:steps="0.5"
+					:min="0" />
 				<div class="col-span-full grid min-w-0 grid-cols-2 gap-4">
 					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Gültig ab" v-model="item.gueltigVon" type="date" required />
 					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Gültig bis" v-model="item.gueltigBis" type="date" />
@@ -14,7 +20,11 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button :disabled="loading || !hatKompetenzAendern" type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="loading || !hatKompetenzAendern || false"> Pflichtstundensoll hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary"
+				@click="importer()"
+				:disabled="loading || !hatKompetenzAendern || false">
+				Pflichtstundensoll hinzufügen
+			</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -59,7 +69,7 @@
 		actionError.value = '';
 		try {
 			item.value.idLehrer = props.lehrer.id;
-			await state.addPflichtstundensoll(item.value);
+			await state.grunddaten.addPflichtstundensoll(item.value);
 			item.value = new UvLehrerPflichtstundensoll();
 			show.value = false;
 		} catch {

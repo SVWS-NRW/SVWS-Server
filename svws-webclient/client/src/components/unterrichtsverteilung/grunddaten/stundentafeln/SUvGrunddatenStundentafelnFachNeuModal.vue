@@ -4,7 +4,7 @@
 		<template #modalTitle>Fach zur Stundentafel hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select v-model="fach" :items="listFaecher" :item-text="getFachBezeichnung" placeholder="Fach" class="col-span-2" />
+				<ui-select v-model="fach" :manager="fachSelectManager" label="Fach" required :removable="false" class="col-span-2" />
 				<svws-ui-input-number v-model="wochenstunden" placeholder="Wochenstunden" :min="0" :step="1" />
 				<svws-ui-input-number v-model="ergaenzungsstunden" placeholder="davon Ergänzungsstunden" :min="0" :max="wochenstunden" :step="1" />
 			</svws-ui-input-wrapper>
@@ -22,6 +22,7 @@
 	import type { UvFach } from "@core/core/data/uv/UvFach";
 	import type { UvStundentafel } from "@core/core/data/uv/UvStundentafel";
 	import { useUvState } from "@ui/states/UvState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<{
 		stundentafel: UvStundentafel;
@@ -38,8 +39,15 @@
 
 	function getFachBezeichnung(f: UvFach): string {
 		const fachdaten = state.uvManager.fachdatenGetByFach(f);
-		return fachdaten.bezeichnung;
+		return `${fachdaten.kuerzel} – ${fachdaten.bezeichnung}`;
 	}
+
+	const fachSelectManager = new SelectManager<UvFach>({
+		options: listFaecher,
+		optionDisplayText: getFachBezeichnung,
+		selectionDisplayText: getFachBezeichnung,
+		sort: 'unsorted',
+	});
 
 	const isValid = computed(() => fach.value !== null && wochenstunden.value > 0);
 
@@ -54,7 +62,7 @@
 		if (!isValid.value || !fach.value) {
 			return;
 		}
-		await state.addStundentafelFach({
+		await state.grunddaten.addStundentafelFach({
 			idStundentafel: props.stundentafel.id,
 			abschnitt: props.abschnitt,
 			idFach: fach.value.id,

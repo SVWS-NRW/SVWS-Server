@@ -4,8 +4,7 @@ import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Jahrgang-Objekt (Stufe) für schnelle, dynamische Manipulationen
- * und zur Speicherung von Referenzen.
+ * Ein Jahrgangs-Objekt (Stufe) für schnelle, dynamische Manipulationen.
  *
  * @author Benjamin A. Bartsch
  */
@@ -32,7 +31,7 @@ public final class UvAlgorithmusDynDatenJahrgang {
 
 	@Override
 	public @NotNull String toString() {
-		return "UvAlgorithmusDynJahrgang[interneID=%d, uvID=%d]"
+		return "UvAlgorithmusDynDatenJahrgang[interneID=%d, uvID=%d]"
 				.formatted(this.interneID, this.uvID);
 	}
 

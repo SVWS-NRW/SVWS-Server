@@ -173,6 +173,7 @@ public final class UvKursImportManager {
 		return result;
 	}
 
+	/* Erzeugt die zusammengehörige Schülergruppe, den Kurs und die Lerngruppe mit temporären IDs. */
 	private void addKurs(final @NotNull UvKursImportDaten daten, final @NotNull UvKursImportQuellkurs quellkurs,
 			final @NotNull UvFach fach, final @NotNull Map<String, Long> schieneByBezeichnung,
 			final @NotNull Set<String> gruppenbezeichnungen) {

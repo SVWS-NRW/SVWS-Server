@@ -13,7 +13,7 @@ import de.svws_nrw.core.utils.uv.UvManager;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Eine Lehrkraft-Objekt für schnelle, dynamische Manipulationen.
+ * Ein Lehrkraft-Objekt für schnelle, dynamische Manipulationen.
  *
  * @author Benjamin A. Bartsch
  */
@@ -28,7 +28,7 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 	/** Die externe ID der DB/GUI. */
 	final long uvID;
 
-	/** Der Pflichtstunden-Soll. */
+	/** Das Pflichtstunden-Soll. */
 	final double stundenSoll;
 
 	/** Die Summe aller Entlastungen. */
@@ -37,14 +37,14 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 	/** Die Summe aller Stunden der zugeordneten Lerngruppen. */
 	double istStundensummeLerngruppen;
 
-	/** Die aktuelle Anzahl an Stunden in denen die Lehrkraft in der jeweiligen Klasse unterrichtet. */
-	final @NotNull double @NotNull [] istStundenProKlasse;
+	/** Die aktuelle Anzahl an Stunden, in denen die Lehrkraft in der jeweiligen Klasse unterrichtet. */
+	final double @NotNull [] istStundenProKlasse;
 
 	/** Die aktuelle Definition, ob die Lehrkraft in der Klasse Klassenlehrer ist. */
-	final @NotNull boolean @NotNull [] istLeitung1InKlasse;
+	final boolean @NotNull [] istLeitung1InKlasse;
 
 	/** Die aktuelle Definition, ob die Lehrkraft in der Klasse stellv. Klassenlehrer ist. */
-	final @NotNull boolean @NotNull [] istLeitung2InKlasse;
+	final boolean @NotNull [] istLeitung2InKlasse;
 
 	/** Die aktuelle Anzahl an Klassenlehrer-Einsätzen (Leitung 1). */
 	int istAnzahlLeitung1;
@@ -59,18 +59,21 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 	int istAnzahlKorrekturen;
 
 	/** Die aktuelle Anzahl an zugeordneten Lerngruppen pro Fach. */
-	final @NotNull int @NotNull [] istFachZuLerngruppenAnzahl;
+	final int @NotNull [] istFachZuLerngruppenAnzahl;
 
 	/** Die aktuelle Anzahl an Stunden, die diese Lehrkraft im jeweiligen Jahrgang unterrichtet. */
-	final @NotNull double @NotNull [] istStundenProJahrgang;
+	final double @NotNull [] istStundenProJahrgang;
 
-	/** Die aktuelle Anzahl an verschiedenen Jahrgängen in denen diese Lehrkraft unterrichtet. */
+	/** Die aktuelle Anzahl an verschiedenen Jahrgängen, in denen diese Lehrkraft unterrichtet. */
 	int istJahrgangAnzahl;
 
-	/** Die aktuelle Anzahl an Lerngruppen-Zuordnungen im Zeitslot [Wochentag][Stunde][Wochentyp] (Regel 17). */
-	final @NotNull int @NotNull [] @NotNull [] @NotNull [] istWochentagStundeWochentypCounter;
+	/** Der Stundenplan dieser Lehrkraft: [Wochentag][Stunde][Wochentyp] --> Anzahl der belegenden Lerngruppen (Regel 17). */
+	final int @NotNull [] @NotNull [] @NotNull [] stundenplanAnzahl;
 
-	/** Die Menge aller Regel-Objekte die sich auf diese Lehrkraft beziehen. */
+	/** Alle Lerngruppen, denen diese Lehrkraft aktuell zugeordnet ist. */
+	final @NotNull List<UvAlgorithmusDynDatenLerngruppe> istLerngruppenZugeordnet;
+
+	/** Die Menge aller Regel-Objekte, die sich auf diese Lehrkraft beziehen. */
 	final @NotNull List<UvAlgorithmusDynDatenRegel> regeln;
 
 
@@ -116,17 +119,9 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 			istFachZuLerngruppenAnzahl[i] = 0;
 		}
 
-		final int maxWochentag = man.zeitrasterGetMaxWochentag();
-		final int maxStunde = man.zeitrasterGetMaxStunde();
-		final int maxWochentyp = man.zeitrasterGetWochentypmodell();
-		this.istWochentagStundeWochentypCounter = new int[maxWochentag + 1][maxStunde + 1][maxWochentyp + 1];
-		for (int iWochentag = 0; iWochentag <= maxWochentag; iWochentag++) {
-			for (int iStunde = 0; iStunde <= maxStunde; iStunde++) {
-				for (int iWochentyp = 0; iWochentyp <= maxWochentyp; iWochentyp++) {
-					this.istWochentagStundeWochentypCounter[iWochentag][iStunde][iWochentyp] = 0;
-				}
-			}
-		}
+		this.stundenplanAnzahl =
+				new int[man.zeitrasterGetMaxWochentag() + 1][man.zeitrasterGetMaxStunde() + 1][man.zeitrasterGetWochentypmodell() + 1];
+		this.istLerngruppenZugeordnet = new ArrayList<>();
 
 		this.regeln = new ArrayList<>();
 	}
@@ -140,14 +135,14 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 
 
 	/**
-	 * Erhöht die Leitung-1-Anzahl der Lehrkraft und aktualisiert den Leitung-1-Malus.
+	 * Erhöht die Leitung-1-Anzahl der Lehrkraft. Den Leitung-1-Malus aktualisiert der Aufrufer.
 	 *
 	 * @param klasse   Die {@link UvAlgorithmusDynDatenKlasse}.
 	 */
 	public void stateLeitung1Inc(final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
 		// Konsistenz prüfen.
 		if (istLeitung1InKlasse[klasse.interneID]) {
-			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s ist bereits Leitung1 in Klasse %s!".formatted(this.toString(), klasse.toString()));
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s ist bereits Leitung 1 in Klasse %s!".formatted(this.toString(), klasse.toString()));
 			return;
 		}
 
@@ -158,18 +153,18 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 
 
 	/**
-	 * Verringert die Leitung-1-Anzahl der Lehrkraft und aktualisiert den Leitung-1-Malus.
+	 * Verringert die Leitung-1-Anzahl der Lehrkraft. Den Leitung-1-Malus aktualisiert der Aufrufer.
 	 *
 	 * @param klasse   Die {@link UvAlgorithmusDynDatenKlasse}.
 	 */
 	public void stateLeitung1Dec(final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
 		// Konsistenz prüfen.
 		if (!istLeitung1InKlasse[klasse.interneID]) {
-			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s ist gar nicht Leitung1 in Klasse %s!".formatted(this.toString(), klasse.toString()));
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s ist gar nicht Leitung 1 in Klasse %s!".formatted(this.toString(), klasse.toString()));
 			return;
 		}
 		if (istAnzahlLeitung1 <= 0) {
-			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s hätte nach dem Entfernen von Leitung1 einen negativen Wert!".formatted(this.toString()));
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s hätte nach dem Entfernen von Leitung 1 einen negativen Wert!".formatted(this.toString()));
 			return;
 		}
 
@@ -180,14 +175,14 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 
 
 	/**
-	 * Erhöht die Leitung-2-Anzahl der Lehrkraft und aktualisiert den Leitung-2-Malus.
+	 * Erhöht die Leitung-2-Anzahl der Lehrkraft. Den Leitung-2-Malus aktualisiert der Aufrufer.
 	 *
 	 * @param klasse   Die {@link UvAlgorithmusDynDatenKlasse}.
 	 */
 	public void stateLeitung2Inc(final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
 		// Konsistenz prüfen.
 		if (istLeitung2InKlasse[klasse.interneID]) {
-			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s ist bereits Leitung2 in Klasse %s!".formatted(this.toString(), klasse.toString()));
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s ist bereits Leitung 2 in Klasse %s!".formatted(this.toString(), klasse.toString()));
 			return;
 		}
 
@@ -198,18 +193,18 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 
 
 	/**
-	 * Verringert die Leitung-2-Anzahl der Lehrkraft und aktualisiert den Leitung-2-Malus.
+	 * Verringert die Leitung-2-Anzahl der Lehrkraft. Den Leitung-2-Malus aktualisiert der Aufrufer.
 	 *
 	 * @param klasse   Die {@link UvAlgorithmusDynDatenKlasse}.
 	 */
 	public void stateLeitung2Dec(final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
 		// Konsistenz prüfen.
 		if (!istLeitung2InKlasse[klasse.interneID]) {
-			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s ist gar nicht Leitung2 in Klasse %s!".formatted(this.toString(), klasse.toString()));
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s ist gar nicht Leitung 2 in Klasse %s!".formatted(this.toString(), klasse.toString()));
 			return;
 		}
 		if (istAnzahlLeitung2 <= 0) {
-			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s hätte nach dem Entfernen von Leitung2 einen negativen Wert!".formatted(this.toString()));
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s hätte nach dem Entfernen von Leitung 2 einen negativen Wert!".formatted(this.toString()));
 			return;
 		}
 
@@ -220,11 +215,18 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 
 
 	/**
-	 * Fügt der Lehrkraft eine zugeordnete Lerngruppe hinzu und aktualisiert den Stunden-Malus.
+	 * Fügt der Lehrkraft eine zugeordnete Lerngruppe hinzu. Den Stunden-Malus aktualisiert der Aufrufer.
 	 *
 	 * @param lerngruppe   Die hinzuzufügende Lerngruppe.
 	 */
 	public void stateLerngruppeZugeordnetAdd(final @NotNull UvAlgorithmusDynDatenLerngruppe lerngruppe) {
+		// Konsistenz prüfen. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
+		if (lerngruppe.fach == null) {
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s kann die Lerngruppe %s nicht hinzufügen, da das Fach der Lerngruppe nicht gemappt ist!"
+					.formatted(this.toString(), lerngruppe.toString()));
+			return;
+		}
+
 		// Zustand verändern.
 		istStundensummeLerngruppen += lerngruppe.wochenstundenVorgesehenGekuerzt;
 		istAnzahlLerngruppen++;
@@ -242,47 +244,78 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 		istFachZuLerngruppenAnzahl[lerngruppe.fach.interneID]++;
 		istAnzahlKorrekturen += lerngruppe.korrekturBelastung;
 		for (final @NotNull UvAlgorithmusDynDatenRegel17 zeitslot : lerngruppe.zeitslots) {
-			istWochentagStundeWochentypCounter[zeitslot.wochentag][zeitslot.stunde][zeitslot.wochentyp]++;
+			if (zeitslot.wochentyp == 0) {
+				// Eine Lerngruppe mit Wochentyp 0 findet jede Woche statt. Der Index 0 wird dabei ignoriert.
+				for (int wochentyp = 1; wochentyp < stundenplanAnzahl[zeitslot.wochentag][zeitslot.stunde].length; wochentyp++) {
+					stundenplanAnzahl[zeitslot.wochentag][zeitslot.stunde][wochentyp]++;
+				}
+			} else {
+				stundenplanAnzahl[zeitslot.wochentag][zeitslot.stunde][zeitslot.wochentyp]++;
+			}
+		}
+		istLerngruppenZugeordnet.add(lerngruppe);
+	}
+
+
+	/**
+	 * Entfernt bei der Lehrkraft eine zugeordnete Lerngruppe. Den Stunden-Malus aktualisiert der Aufrufer.
+	 *
+	 * @param lerngruppe  Die zu entfernende Lerngruppe.
+	 */
+	public void stateLerngruppeZugeordnetDel(final @NotNull UvAlgorithmusDynDatenLerngruppe lerngruppe) {
+		if (istEntfernenMoeglich(lerngruppe)) {
+			entferneLerngruppeZustand(lerngruppe);
 		}
 	}
 
 
 	/**
-	 * Entfernt bei der Lehrkraft eine zugeordnete Lerngruppe und aktualisiert den Stunden-Malus.
+	 * Prüft, ob die Lerngruppe bei dieser Lehrkraft entfernt werden kann.
 	 *
-	 * @param lerngruppe  Die zu entfernende Lerngruppe.
+	 * @param lerngruppe   Die zu entfernende Lerngruppe.
+	 *
+	 * @return TRUE, falls das Entfernen möglich ist.
 	 */
-	public void stateLerngruppeZugeordnetDel(final @NotNull UvAlgorithmusDynDatenLerngruppe lerngruppe) {
-		// Konsistenzprüfung.
+	private boolean istEntfernenMoeglich(final @NotNull UvAlgorithmusDynDatenLerngruppe lerngruppe) {
+		// Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.
+		if (lerngruppe.fach == null) {
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s kann die Lerngruppe %s nicht entfernen, da das Fach der Lerngruppe nicht gemappt ist!"
+					.formatted(this.toString(), lerngruppe.toString()));
+			return false;
+		}
 		final double stundenDanach = istStundensummeLerngruppen - lerngruppe.wochenstundenVorgesehenGekuerzt;
 		if (stundenDanach < 0) {
-			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s hätte nach dem Entfernen der Lerngruppe %s eine negative Stundenzahl %f!"
+			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s hätte nach dem Entfernen der Lerngruppe %s eine negative Stunden-Anzahl %f!"
 					.formatted(this.toString(), lerngruppe.toString(), stundenDanach));
-			return;
+			return false;
 		}
-
-		final int lerngruppenAnzahlDanach = istAnzahlLerngruppen - 1;
-		if (lerngruppenAnzahlDanach < 0) {
+		if ((istAnzahlLerngruppen - 1) < 0) {
 			log.logLn(LogLevel.ERROR, "Die Lehrkraft %s hätte nach dem Entfernen der Lerngruppe %s eine negative Lerngruppen-Anzahl %d!"
-					.formatted(this.toString(), lerngruppe.toString(), lerngruppenAnzahlDanach));
-			return;
+					.formatted(this.toString(), lerngruppe.toString(), istAnzahlLerngruppen - 1));
+			return false;
 		}
-
 		for (final @NotNull UvAlgorithmusDynDatenKlasse klasse : lerngruppe.klassenmenge) {
 			if (istStundenProKlasse[klasse.interneID] - lerngruppe.wochenstundenVorgesehenGekuerzt < 0) {
 				log.logLn(LogLevel.ERROR, "Die Lehrkraft %s hätte nach dem Entfernen der Lerngruppe %s in Klasse %s eine negative Stunden-Anzahl!"
 						.formatted(this.toString(), lerngruppe.toString(), klasse.toString()));
-				return;
+				return false;
 			}
 		}
+		return true;
+	}
 
-		// Zustand verändern.
-		istStundensummeLerngruppen = stundenDanach;
-		istAnzahlLerngruppen = lerngruppenAnzahlDanach;
+
+	/**
+	 * Entfernt die Lerngruppe aus dem Zustand der Lehrkraft.
+	 *
+	 * @param lerngruppe   Die zu entfernende Lerngruppe.
+	 */
+	private void entferneLerngruppeZustand(final @NotNull UvAlgorithmusDynDatenLerngruppe lerngruppe) {
+		istStundensummeLerngruppen -= lerngruppe.wochenstundenVorgesehenGekuerzt;
+		istAnzahlLerngruppen--;
 		for (final @NotNull UvAlgorithmusDynDatenKlasse klasse : lerngruppe.klassenmenge) {
 			istStundenProKlasse[klasse.interneID] -= lerngruppe.wochenstundenVorgesehenGekuerzt;
 		}
-
 		for (final @NotNull UvAlgorithmusDynDatenJahrgang jahrgang : lerngruppe.jahrgangmenge) {
 			final double vorher = istStundenProJahrgang[jahrgang.interneID];
 			final double nachher = istStundenProJahrgang[jahrgang.interneID] - lerngruppe.wochenstundenVorgesehenGekuerzt;
@@ -291,11 +324,58 @@ public final class UvAlgorithmusDynDatenLehrkraft {
 				istJahrgangAnzahl--;
 			}
 		}
-		istFachZuLerngruppenAnzahl[lerngruppe.fach.interneID]--;
+		final UvAlgorithmusDynDatenFach fach = lerngruppe.fach;
+		if (fach != null) {
+			istFachZuLerngruppenAnzahl[fach.interneID]--;
+		}
 		istAnzahlKorrekturen -= lerngruppe.korrekturBelastung;
 		for (final @NotNull UvAlgorithmusDynDatenRegel17 zeitslot : lerngruppe.zeitslots) {
-			istWochentagStundeWochentypCounter[zeitslot.wochentag][zeitslot.stunde][zeitslot.wochentyp]--;
+			if (zeitslot.wochentyp == 0) {
+				// Eine Lerngruppe mit Wochentyp 0 findet jede Woche statt. Der Index 0 wird dabei ignoriert.
+				for (int wt = 1; wt < stundenplanAnzahl[zeitslot.wochentag][zeitslot.stunde].length; wt++) {
+					stundenplanAnzahl[zeitslot.wochentag][zeitslot.stunde][wt]--;
+				}
+			} else {
+				stundenplanAnzahl[zeitslot.wochentag][zeitslot.stunde][zeitslot.wochentyp]--;
+			}
 		}
+		istLerngruppenZugeordnet.remove(lerngruppe);
+	}
+
+
+	boolean gibIstLeitung1IncMoeglich(final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
+		return !istLeitung1InKlasse[klasse.interneID];
+	}
+
+
+	boolean gibIstLeitung1DecMoeglich(final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
+		return istLeitung1InKlasse[klasse.interneID] && (istAnzahlLeitung1 > 0);
+	}
+
+
+	boolean gibIstLeitung2IncMoeglich(final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
+		return !istLeitung2InKlasse[klasse.interneID];
+	}
+
+
+	boolean gibIstLeitung2DecMoeglich(final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
+		return istLeitung2InKlasse[klasse.interneID] && (istAnzahlLeitung2 > 0);
+	}
+
+
+	boolean gibIstLerngruppeZugeordnetDelMoeglich(final @NotNull UvAlgorithmusDynDatenLerngruppe lerngruppe) {
+		if (istAnzahlLerngruppen <= 0) {
+			return false;
+		}
+		if (istStundensummeLerngruppen - lerngruppe.wochenstundenVorgesehenGekuerzt < 0) {
+			return false;
+		}
+		for (final @NotNull UvAlgorithmusDynDatenKlasse klasse : lerngruppe.klassenmenge) {
+			if (istStundenProKlasse[klasse.interneID] - lerngruppe.wochenstundenVorgesehenGekuerzt < 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 

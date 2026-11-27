@@ -93,6 +93,8 @@ public final class UvExportService {
 		return result;
 	}
 
+	// Grunddaten und ihre abhängigen Exporteinträge
+
 	private static UVv1GrunddatenExport mapGrunddaten(final UvGrunddatenBundle bundle) {
 		final UVv1GrunddatenExport result = new UVv1GrunddatenExport();
 		final Map<Long, List<LehrerUnterrichtsfach>> unterrichtsfaecherByLehrerId = bundle.lehrerUnterrichtsfaecher.stream()
@@ -173,51 +175,6 @@ public final class UvExportService {
 		}).toList();
 	}
 
-	private static UVv1PlanungsabschnittExport mapPlanungsabschnitt(final UvPlanungsabschnittsdatenBundle bundle) {
-		final UVv1PlanungsabschnittExport result = new UVv1PlanungsabschnittExport();
-		final UvPlanungsabschnitt planungsabschnitt = bundle.planungsabschnitt;
-		final Map<Long, List<UvKlassenLehrer>> klassenlehrerByKlasseId = bundle.klassenlehrer.stream()
-				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idKlasse));
-		final Map<Long, List<Long>> schuelerIdsBySchuelergruppeId = bundle.schuelergruppenschueler.stream()
-				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idSchuelergruppe,
-						Collectors.mapping(zuordnung -> zuordnung.idSchueler, Collectors.toList())));
-		final Map<Long, List<UvLerngruppenLehrer>> lerngruppenlehrerByLerngruppeId = bundle.lerngruppenlehrer.stream()
-				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idLerngruppe));
-		final Map<Long, List<Long>> schienenIdsByLerngruppeId = bundle.lerngruppenschienen.stream()
-				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idLerngruppe,
-						Collectors.mapping(zuordnung -> zuordnung.idSchiene, Collectors.toList())));
-		final Map<Long, List<Long>> raumIdsByUnterrichtId = bundle.unterrichtraeume.stream()
-				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idUnterricht,
-						Collectors.mapping(zuordnung -> zuordnung.idRaum, Collectors.toList())));
-		final Map<Long, List<Long>> lerngruppenlehrerIdsByUnterrichtId = bundle.unterrichtlerngruppenlehrer.stream()
-				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idUnterricht,
-						Collectors.mapping(zuordnung -> zuordnung.idLerngruppenLehrer, Collectors.toList())));
-		result.uvId = planungsabschnitt.id;
-		result.schuljahr = planungsabschnitt.schuljahr;
-		result.aktiv = planungsabschnitt.aktiv;
-		result.gueltigVon = planungsabschnitt.gueltigVon;
-		result.gueltigBis = planungsabschnitt.gueltigBis;
-		result.beschreibung = planungsabschnitt.beschreibung;
-		result.lehrerUvIds = bundle.planungsabschnittlehrer.stream().map(l -> l.idLehrer).toList();
-		result.schueler = bundle.planungsabschnittschueler.stream().map(UvExportService::mapPlanungsabschnittSchueler).toList();
-		result.zeitraster = bundle.planungsabschnittzeitraster.stream().map(UvExportService::mapPlanungsabschnittZeitraster).toList();
-		result.klassen = bundle.klassen.stream()
-				.map(klasse -> mapKlasse(klasse, klassenlehrerByKlasseId))
-				.toList();
-		result.kurse = bundle.kurse.stream().map(UvExportService::mapKurs).toList();
-		result.schuelergruppen = bundle.schuelergruppen.stream()
-				.map(schuelergruppe -> mapSchuelergruppe(schuelergruppe, schuelerIdsBySchuelergruppeId))
-				.toList();
-		result.schienen = bundle.schienen.stream().map(UvExportService::mapSchiene).toList();
-		result.lerngruppen = bundle.lerngruppen.stream()
-				.map(lerngruppe -> mapLerngruppe(lerngruppe, lerngruppenlehrerByLerngruppeId, schienenIdsByLerngruppeId))
-				.toList();
-		result.unterrichte = bundle.unterrichte.stream()
-				.map(unterricht -> mapUnterricht(unterricht, raumIdsByUnterrichtId, lerngruppenlehrerIdsByUnterrichtId))
-				.toList();
-		return result;
-	}
-
 	private static UVv1FachExport mapFach(final UvFach fach) {
 		final UVv1FachExport result = new UVv1FachExport();
 		result.uvId = fach.id;
@@ -296,6 +253,54 @@ public final class UvExportService {
 		return result;
 	}
 
+	// Planungsabschnitt und zugehörige Exporteinträge
+
+	/* Gruppiert abhängige Einträge nach ihren IDs, damit der Export sie beim Zuordnen direkt findet. */
+	private static UVv1PlanungsabschnittExport mapPlanungsabschnitt(final UvPlanungsabschnittsdatenBundle bundle) {
+		final UVv1PlanungsabschnittExport result = new UVv1PlanungsabschnittExport();
+		final UvPlanungsabschnitt planungsabschnitt = bundle.planungsabschnitt;
+		final Map<Long, List<UvKlassenLehrer>> klassenlehrerByKlasseId = bundle.klassenlehrer.stream()
+				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idKlasse));
+		final Map<Long, List<Long>> schuelerIdsBySchuelergruppeId = bundle.schuelergruppenschueler.stream()
+				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idSchuelergruppe,
+						Collectors.mapping(zuordnung -> zuordnung.idSchueler, Collectors.toList())));
+		final Map<Long, List<UvLerngruppenLehrer>> lerngruppenlehrerByLerngruppeId = bundle.lerngruppenlehrer.stream()
+				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idLerngruppe));
+		final Map<Long, List<Long>> schienenIdsByLerngruppeId = bundle.lerngruppenschienen.stream()
+				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idLerngruppe,
+						Collectors.mapping(zuordnung -> zuordnung.idSchiene, Collectors.toList())));
+		final Map<Long, List<Long>> raumIdsByUnterrichtId = bundle.unterrichtraeume.stream()
+				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idUnterricht,
+						Collectors.mapping(zuordnung -> zuordnung.idRaum, Collectors.toList())));
+		final Map<Long, List<Long>> lerngruppenlehrerIdsByUnterrichtId = bundle.unterrichtlerngruppenlehrer.stream()
+				.collect(Collectors.groupingBy(zuordnung -> zuordnung.idUnterricht,
+						Collectors.mapping(zuordnung -> zuordnung.idLerngruppenLehrer, Collectors.toList())));
+		result.uvId = planungsabschnitt.id;
+		result.schuljahr = planungsabschnitt.schuljahr;
+		result.aktiv = planungsabschnitt.aktiv;
+		result.gueltigVon = planungsabschnitt.gueltigVon;
+		result.gueltigBis = planungsabschnitt.gueltigBis;
+		result.beschreibung = planungsabschnitt.beschreibung;
+		result.lehrerUvIds = bundle.planungsabschnittlehrer.stream().map(l -> l.idLehrer).toList();
+		result.schueler = bundle.planungsabschnittschueler.stream().map(UvExportService::mapPlanungsabschnittSchueler).toList();
+		result.zeitraster = bundle.planungsabschnittzeitraster.stream().map(UvExportService::mapPlanungsabschnittZeitraster).toList();
+		result.klassen = bundle.klassen.stream()
+				.map(klasse -> mapKlasse(klasse, klassenlehrerByKlasseId))
+				.toList();
+		result.kurse = bundle.kurse.stream().map(UvExportService::mapKurs).toList();
+		result.schuelergruppen = bundle.schuelergruppen.stream()
+				.map(schuelergruppe -> mapSchuelergruppe(schuelergruppe, schuelerIdsBySchuelergruppeId))
+				.toList();
+		result.schienen = bundle.schienen.stream().map(UvExportService::mapSchiene).toList();
+		result.lerngruppen = bundle.lerngruppen.stream()
+				.map(lerngruppe -> mapLerngruppe(lerngruppe, lerngruppenlehrerByLerngruppeId, schienenIdsByLerngruppeId))
+				.toList();
+		result.unterrichte = bundle.unterrichte.stream()
+				.map(unterricht -> mapUnterricht(unterricht, raumIdsByUnterrichtId, lerngruppenlehrerIdsByUnterrichtId))
+				.toList();
+		return result;
+	}
+
 	private static UVv1PlanungsabschnittSchuelerExport mapPlanungsabschnittSchueler(final UvPlanungsabschnittSchueler schueler) {
 		final UVv1PlanungsabschnittSchuelerExport result = new UVv1PlanungsabschnittSchuelerExport();
 		result.idSchueler = schueler.idSchueler;
@@ -347,7 +352,8 @@ public final class UvExportService {
 		return result;
 	}
 
-	private static UVv1SchuelergruppeExport mapSchuelergruppe(final UvSchuelergruppe schuelergruppe, final Map<Long, List<Long>> schuelerIdsBySchuelergruppeId) {
+	private static UVv1SchuelergruppeExport mapSchuelergruppe(final UvSchuelergruppe schuelergruppe,
+			final Map<Long, List<Long>> schuelerIdsBySchuelergruppeId) {
 		final UVv1SchuelergruppeExport result = new UVv1SchuelergruppeExport();
 		result.uvId = schuelergruppe.id;
 		result.bezeichnung = schuelergruppe.bezeichnung;

@@ -2,17 +2,57 @@
 	<div v-if="raum !== undefined" class="page page-grid-cards">
 		<svws-ui-content-card title="Raumdaten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input :readonly="!hatKompetenzAendern" :disabled="loading" placeholder="Kürzel" :model-value="form.kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? undefined })" required />
-				<svws-ui-input-number :readonly="!hatKompetenzAendern" :disabled="loading" placeholder="Größe" :model-value="form.groesse" @change="groesse => patch({ groesse: groesse ?? undefined })" :min="0" required />
-				<svws-ui-text-input :readonly="!hatKompetenzAendern" :disabled="loading" placeholder="Beschreibung" :model-value="form.beschreibung" @change="beschreibung => patch({ beschreibung: beschreibung })" span="full" />
+				<svws-ui-text-input :readonly="!hatKompetenzAendern"
+					:disabled="loading"
+					placeholder="Kürzel"
+					:model-value="form.kuerzel"
+					@change="kuerzel => patch({ kuerzel: kuerzel ?? undefined })"
+					required />
+				<svws-ui-input-number :readonly="!hatKompetenzAendern"
+					:disabled="loading"
+					placeholder="Größe"
+					:model-value="form.groesse"
+					@change="groesse => patch({ groesse: groesse ?? undefined })"
+					:min="0"
+					required />
+				<svws-ui-text-input :readonly="!hatKompetenzAendern"
+					:disabled="loading"
+					placeholder="Beschreibung"
+					:model-value="form.beschreibung"
+					@change="beschreibung => patch({ beschreibung: beschreibung })"
+					span="full" />
 				<div class="col-span-full grid min-w-0 grid-cols-2 gap-4">
-					<svws-ui-text-input :readonly="!hatKompetenzAendern" :disabled="loading" placeholder="Gültig von" :model-value="form.gueltigVon" @change="onGueltigVonChange" type="date" required />
-					<svws-ui-text-input :readonly="!hatKompetenzAendern" :disabled="loading" placeholder="Gültig bis" :model-value="form.gueltigBis" @change="onGueltigBisChange" type="date" />
+					<svws-ui-text-input :readonly="!hatKompetenzAendern"
+						:disabled="loading"
+						placeholder="Gültig von"
+						:model-value="form.gueltigVon"
+						@change="onGueltigVonChange"
+						type="date"
+						required />
+					<svws-ui-text-input :readonly="!hatKompetenzAendern"
+						:disabled="loading"
+						placeholder="Gültig bis"
+						:model-value="form.gueltigBis"
+						@change="onGueltigBisChange"
+						type="date" />
 				</div>
 				<div class="col-span-full flex items-center gap-2 min-w-0">
-					<svws-ui-select :readonly="!hatKompetenzAendern" :disabled="loading" :key="raum.id" title="Raumgruppe" :empty-text="() => 'Keine Raumgruppe zugeordnet'" :items="raumgruppenMitLeer" :item-text="raumgruppentext"
-						:model-value="selectedRaumgruppe" @update:model-value="onRaumgruppeChange" class="flex-1 min-w-0" />
-					<svws-ui-button v-if="raum.idRaumgruppe !== null" type="icon" title="Raumgruppe öffnen" @click="gotoRaumgruppe(raum.idRaumgruppe)"><span class="icon i-ri-link" /></svws-ui-button>
+					<svws-ui-select :readonly="!hatKompetenzAendern"
+						:disabled="loading"
+						:key="raum.id"
+						title="Raumgruppe"
+						:empty-text="() => 'Keine Raumgruppe zugeordnet'"
+						:items="raumgruppenMitLeer"
+						:item-text="raumgruppentext"
+						:model-value="selectedRaumgruppe"
+						@update:model-value="onRaumgruppeChange"
+						class="flex-1 min-w-0" />
+					<svws-ui-button v-if="raum.idRaumgruppe !== null"
+						type="icon"
+						title="Raumgruppe öffnen"
+						@click="gotoRaumgruppe(raum.idRaumgruppe)">
+						<span class="icon i-ri-link" />
+					</svws-ui-button>
 				</div>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -43,7 +83,7 @@
 		}
 		loading.value = true;
 		try {
-			await state.patchRaum(props.raum.id, changes);
+			await state.grunddaten.patchRaum(props.raum.id, changes);
 		} finally {
 			loading.value = false;
 		}

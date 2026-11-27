@@ -8,11 +8,11 @@ import { RouteNode } from '~/router/RouteNode';
 import { uvStateImpl } from "~/states/UvStateImpl";
 
 interface RouteStateUvGrunddatenLehrer extends RouteStateInterface {
-	auswahl: UvLehrer | undefined;
+	idAuswahl: number | undefined;
 }
 
 const defaultState = <RouteStateUvGrunddatenLehrer> {
-	auswahl: undefined,
+	idAuswahl: undefined,
 };
 
 export class RouteDataUvGrunddatenLehrer extends RouteData<RouteStateUvGrunddatenLehrer> {
@@ -22,16 +22,15 @@ export class RouteDataUvGrunddatenLehrer extends RouteData<RouteStateUvGrunddate
 	}
 
 	public get auswahl(): UvLehrer | undefined {
-		const auswahl = this._state.value.auswahl;
-		if (auswahl === undefined) {
+		const idAuswahl = this._state.value.idAuswahl;
+		if (idAuswahl === undefined) {
 			return undefined;
 		}
-		// Nach DTO-Patches immer die aktuelle Managerinstanz verwenden.
-		return uvStateImpl.uvManager.lehrerGetByIdOrNull(auswahl.id) ?? undefined;
+		return uvStateImpl.uvManager.lehrerGetByIdOrNull(idAuswahl) ?? undefined;
 	}
 
-	public setAuswahlFromRoute = (lehrer: UvLehrer | undefined): void => {
-		this.setPatchedState({ auswahl: lehrer });
+	public setAuswahlFromRoute = (idAuswahl: number | undefined): void => {
+		this.setPatchedState({ idAuswahl });
 	};
 
 	public gotoUvLehrer = async (lehrer: UvLehrer | undefined): Promise<void> => {

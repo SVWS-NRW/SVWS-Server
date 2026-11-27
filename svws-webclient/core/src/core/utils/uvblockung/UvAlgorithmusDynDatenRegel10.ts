@@ -1,10 +1,16 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { UvAlgorithmusDynDatenLehrkraft } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenLehrkraft';
+import { UvBlockungRegelPrioritaet } from '../../../core/data/uv/regel/UvBlockungRegelPrioritaet';
 import type { UvAlgorithmusDynDatenRegel } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenRegel';
 import { cast_de_svws_nrw_core_utils_uvblockung_UvAlgorithmusDynDatenRegel } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenRegel';
 import { Class } from '../../../java/lang/Class';
+import { JavaString } from '../../../java/lang/JavaString';
+import { Logger } from '../../../core/logger/Logger';
+import { LogLevel } from '../../../core/logger/LogLevel';
 
 export class UvAlgorithmusDynDatenRegel10 extends JavaObject implements UvAlgorithmusDynDatenRegel {
+
+	private readonly log: Logger;
 
 	private readonly malus: Array<number>;
 
@@ -18,13 +24,15 @@ export class UvAlgorithmusDynDatenRegel10 extends JavaObject implements UvAlgori
 	/**
 	 * Erzeugt eine neue Instanz der Regel und passt den Anfangs-Malus an.
 	 *
+	 * @param log          Der Logger für Debug-Zwecke.
 	 * @param malus        Das globale Malus-Array.
 	 * @param lehrkraft    Die {@link UvAlgorithmusDynDatenLehrkraft}.
 	 * @param max1         Die maximale Anzahl an Klassenleitungen (Leitung 1).
 	 * @param prioritaet   Die Priorität der Regel.
 	 */
-	public constructor(malus: Array<number>, lehrkraft: UvAlgorithmusDynDatenLehrkraft, max1: number, prioritaet: number) {
+	public constructor(log: Logger, malus: Array<number>, lehrkraft: UvAlgorithmusDynDatenLehrkraft, max1: number, prioritaet: number) {
 		super();
+		this.log = log;
 		this.malus = malus;
 		this.lehrkraft = lehrkraft;
 		this.maxKlassenleitungen1 = max1;
@@ -33,8 +41,12 @@ export class UvAlgorithmusDynDatenRegel10 extends JavaObject implements UvAlgori
 	}
 
 	public changeMalus(faktor: number): void {
+		if ((this.prioritaet < 0) || (this.prioritaet >= UvBlockungRegelPrioritaet.DEAKTIVIERT.nr)) {
+			this.log.logLn(LogLevel.ERROR, JavaString.format("UvAlgorithmusDynDatenRegel10: Ungültige oder deaktivierte Priorität %d - Malus-Änderung wird ignoriert.", this.prioritaet));
+			return;
+		}
 		const ueberschreitung: number = this.lehrkraft.istAnzahlLeitung1 - this.maxKlassenleitungen1;
-		if ((this.prioritaet >= 0) && (ueberschreitung > 0)) {
+		if (ueberschreitung > 0) {
 			this.malus[this.prioritaet] += faktor * ueberschreitung;
 		}
 	}

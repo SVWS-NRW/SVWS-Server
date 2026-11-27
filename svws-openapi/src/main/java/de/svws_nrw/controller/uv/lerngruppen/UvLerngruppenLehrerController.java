@@ -65,4 +65,13 @@ public interface UvLerngruppenLehrerController {
 	 */
 	Response deleteMultiple(Collection<Long> ids);
 
+	/**
+	 * Speichert die zusammengehörigen Änderungen atomar.
+	 *
+	 * @param idPlanungsabschnitt die zugehörigen Daten
+	 * @param requests die zugehörigen Daten
+	 * @return die HTTP-Antwort
+	 */
+	Response replaceByPlanungsabschnitt(long idPlanungsabschnitt, Collection<UvLerngruppenLehrerCreateRequest> requests);
+
 }

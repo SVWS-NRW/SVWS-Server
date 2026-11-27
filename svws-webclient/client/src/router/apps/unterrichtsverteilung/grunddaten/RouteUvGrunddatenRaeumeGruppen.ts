@@ -28,7 +28,6 @@ export class RouteUvGrunddatenRaeumeGruppen extends RouteNode<any, RouteUv> {
 		];
 		super.defaultChild = routeUvGrunddatenRaeume;
 		this.isHidden = (params?: RouteParams) => RouteUv.tabsCheckHidden(true, false, params);
-		// super.setView("eintraege", SUvGrunddatenRaeumeAuswahl, () => this.getAuswahlProps());
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
@@ -63,7 +62,6 @@ export class RouteUvGrunddatenRaeumeGruppen extends RouteNode<any, RouteUv> {
 			throw new DeveloperNotificationException("Unbekannte Route");
 		}
 		await RouteManager.doRoute(node.getRoute());
-		this.data.setView(node, this.children);
 	};
 
 }

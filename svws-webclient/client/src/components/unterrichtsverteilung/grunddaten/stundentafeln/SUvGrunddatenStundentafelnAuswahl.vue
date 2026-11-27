@@ -3,8 +3,22 @@
 		<template #title>
 			<h1 class="select-none">Stundentafeln</h1>
 		</template>
-		<svws-ui-table :items="filteredItems" :columns clickable :clicked="auswahl" @update:clicked="gotoStundentafel" :selectable="hatKompetenzAendern" v-model="selectedStundentafeln" count
-			scroll scroll-into-view allow-arrow-key-selection :focus-switching-enabled :focus-help-visible :filter-open="true" :filtered="hasActiveFilter" :filter-reset="resetFilter">
+		<svws-ui-table :items="filteredItems"
+			:columns
+			clickable
+			:clicked="auswahl"
+			@update:clicked="gotoStundentafel"
+			:selectable="hatKompetenzAendern"
+			v-model="selectedStundentafeln"
+			count
+			scroll
+			scroll-into-view
+			allow-arrow-key-selection
+			:focus-switching-enabled
+			:focus-help-visible
+			:filter-open="true"
+			:filtered="hasActiveFilter"
+			:filter-reset="resetFilter">
 			<template #search><svws-ui-text-input v-model="search" type="search" placeholder="Stundentafel suchen" removable /></template>
 			<template #cell(jahrgangId)="{ rowData }">
 				{{ state.uvManager.jahrgangsdatenGetByStundentafel(rowData).kuerzel }}
@@ -20,7 +34,11 @@
 				<span v-else class="text-ui-disabled">unbegrenzt</span>
 			</template>
 			<template #actions v-if="hatKompetenzAendern">
-				<s-uv-auswahl-loeschen :items="selectedStundentafeln" art="Stundentafeln" :bezeichnung="item => item.bezeichnung" :loeschen="state.delStundentafel" @deleted="onDeleted" />
+				<s-uv-auswahl-loeschen :items="selectedStundentafeln"
+					art="Stundentafeln"
+					:bezeichnung="item => item.bezeichnung"
+					:loeschen="state.grunddaten.delStundentafel"
+					@deleted="onDeleted" />
 				<s-uv-grunddaten-stundentafeln-neu-modal v-slot="{ openModal }">
 					<svws-ui-button @click="openModal" type="icon" title="Stundentafel neu erstellen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 				</s-uv-grunddaten-stundentafeln-neu-modal>

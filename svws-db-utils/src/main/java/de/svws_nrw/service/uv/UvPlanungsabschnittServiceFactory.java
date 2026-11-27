@@ -18,6 +18,7 @@ import de.svws_nrw.service.uv.lerngruppen.UvLerngruppenLehrerService;
 import de.svws_nrw.service.uv.lerngruppen.UvLerngruppenSchieneService;
 import de.svws_nrw.service.uv.lerngruppen.UvUnterrichtLerngruppenlehrerService;
 import de.svws_nrw.service.uv.planungsabschnitte.UvPlanungsabschnittService;
+import de.svws_nrw.service.uv.regeln.UvRegelService;
 import de.svws_nrw.service.uv.schienen.UvSchieneService;
 import de.svws_nrw.service.uv.schueler.UvPlanungsabschnittSchuelerImportService;
 import de.svws_nrw.service.uv.schueler.UvPlanungsabschnittSchuelerService;
@@ -83,7 +84,28 @@ public final class UvPlanungsabschnittServiceFactory {
 	 * @return eine Instanz des {@link UvPlanungsabschnittService}
 	 */
 	public UvPlanungsabschnittService getUvPlanungsabschnittService() {
-		return new UvPlanungsabschnittService(planungsabschnittRepositoryFactory.getUvPlanungsabschnittRepository());
+		return new UvPlanungsabschnittService(
+				planungsabschnittRepositoryFactory.getUvPlanungsabschnittRepository(),
+				planungsabschnittRepositoryFactory.getUvPlanungsabschnittSchuelerRepository(),
+				planungsabschnittRepositoryFactory.getUvKlasseRepository(),
+				planungsabschnittRepositoryFactory.getUvKursRepository());
+	}
+
+	/**
+	 * Erzeugt den Service für die UV-Blockungsregeln.
+	 *
+	 * @return der Regelservice
+	 */
+	public UvRegelService getUvRegelService() {
+		return new UvRegelService(
+				planungsabschnittRepositoryFactory.getUvPlanungsabschnittRepository(),
+				planungsabschnittRepositoryFactory.getUvStundenplanKonfigurationRepository(),
+				planungsabschnittRepositoryFactory.getUvStundenplanRegelRepository(),
+				planungsabschnittRepositoryFactory.getUvStundenplanRegelparameterRepository(),
+				planungsabschnittRepositoryFactory.getUvPlanungsabschnittLehrerRepository(),
+				planungsabschnittRepositoryFactory.getUvKlasseRepository(),
+				planungsabschnittRepositoryFactory.getUvLerngruppeRepository(),
+				grunddatenRepositoryFactory.getUvFachRepository());
 	}
 
 	/**
@@ -119,7 +141,7 @@ public final class UvPlanungsabschnittServiceFactory {
 				getUvPlanungsabschnittService(),
 				getUvPlanungsabschnittSchuelerService(),
 				getUvKlasseService(),
-				getUvSchuelergruppeService(),
+				getUvUnterrichtsstrukturService(),
 				getUvSchuelergruppeSchuelerService());
 	}
 
@@ -261,7 +283,7 @@ public final class UvPlanungsabschnittServiceFactory {
 		return new UvKursImportService(getUvPlanungsabschnittService(), getUvPlanungsabschnittLehrerService(),
 				getUvSchieneService(),
 				getUvSchuelergruppeService(),
-				getUvKursService(),
+				getUvUnterrichtsstrukturService(),
 				getUvLerngruppeService(),
 				getUvLerngruppenLehrerService(),
 				getUvLerngruppenSchieneService(), getUvSchuelergruppeSchuelerService());
@@ -299,6 +321,16 @@ public final class UvPlanungsabschnittServiceFactory {
 				getUvKlassenLehrerService(), getUvKursService(), getUvSchuelergruppeService(), getUvLerngruppenLehrerService(),
 				getUvLerngruppenSchieneService(), getUvLerngruppeService(), getUvSchuelergruppeSchuelerService(), getUvUnterrichtService(),
 				getUvUnterrichtRaumService(), getUvUnterrichtLerngruppenlehrerService());
+	}
+
+	/**
+	 * Erzeugt den Service für atomare Anlagen und Schülergruppenzuordnungen.
+	 *
+	 * @return der Fachservice für Unterrichtsstrukturen
+	 */
+	public UvUnterrichtsstrukturService getUvUnterrichtsstrukturService() {
+		return new UvUnterrichtsstrukturService(getUvKlasseService(), getUvKursService(), getUvLerngruppeService(),
+				getUvSchuelergruppeService(), getUvSchuelergruppeSchuelerService());
 	}
 
 }

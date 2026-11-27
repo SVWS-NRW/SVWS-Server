@@ -28,9 +28,6 @@ export class RouteUvGrunddatenZeitraster extends RouteNode<RouteDataUvGrunddaten
 		isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		const items = uvStateImpl.uvManager.zeitrasterGetMengeAsList();
 		this.data.setAuswahlFromRoute(RouteUv.resolveAuswahl(to_params.idZeitraster, items, item => item.id));
-		if (isEntering) {
-			await this.data.ladeZeitraster();
-		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}
 

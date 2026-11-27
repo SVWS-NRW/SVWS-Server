@@ -13,7 +13,7 @@ public final class UvAlgorithmusDynDatenUndo {
 	private final int typ;
 
 	/** Undo-Informationen (abhängig vom Typ). */
-	private final @NotNull int @NotNull [] data;
+	private final int @NotNull [] data;
 
 
 	/**
@@ -44,7 +44,7 @@ public final class UvAlgorithmusDynDatenUndo {
 	 *
 	 * @return die Referenzen in Form eines Arrays.
 	 */
-	public @NotNull int @NotNull [] gibData() {
+	public int @NotNull [] gibData() {
 		return data;
 	}
 

@@ -11,6 +11,8 @@ import de.svws_nrw.core.data.lehrer.LehrerUnterrichtsfach;
 import de.svws_nrw.core.data.uv.UvFach;
 import de.svws_nrw.core.data.uv.UvGrunddatenBundle;
 import de.svws_nrw.core.data.uv.UvKlasse;
+import de.svws_nrw.core.data.uv.UvKlasseAnlageRequest;
+import de.svws_nrw.core.data.uv.UvKursunterrichtAnlageRequest;
 import de.svws_nrw.core.data.uv.UvKlassenLehrer;
 import de.svws_nrw.core.data.uv.UvKurs;
 import de.svws_nrw.core.data.uv.UvKursImportDaten;
@@ -38,6 +40,7 @@ import de.svws_nrw.core.data.uv.UvUnterrichtLerngruppenlehrer;
 import de.svws_nrw.core.data.uv.UvUnterrichtRaum;
 import de.svws_nrw.core.data.uv.UvZeitraster;
 import de.svws_nrw.core.data.uv.UvZeitrasterEintrag;
+import de.svws_nrw.core.data.uv.regel.UvBlockungRegel;
 import de.svws_nrw.core.data.uv.export.UVv1Export;
 import de.svws_nrw.db.dto.current.uv.DTOUvLerngruppeSchienePK;
 import de.svws_nrw.db.dto.current.uv.DTOUvPlanungsabschnittLehrerPK;
@@ -135,6 +138,92 @@ public class APIUnterrichtsverteilung {
 	 */
 	public APIUnterrichtsverteilung() {
 		// leer
+	}
+
+	/**
+	 * Liefert die Blockungsregeln eines UV-Planungsabschnitts.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id die ID des Planungsabschnitts
+	 * @param request der HTTP-Request
+	 * @return die Regeln
+	 */
+	@GET
+	@Path("/planungsabschnitte/{id: \\d+}/regeln")
+	@Operation(summary = "Liefert die UV-Blockungsregeln eines Planungsabschnitts.",
+			description = "Gibt die Regeln der Stundenplankonfiguration des angegebenen UV-Planungsabschnitts zurück.")
+	@ApiResponse(responseCode = "200", description = "Die Regeln", content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = UvBlockungRegel.class))))
+	public Response getUvRegeln(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withReadAccess(request).getUvRegelController().getList(id);
+	}
+
+	/**
+	 * Erstellt eine Blockungsregel im Planungsabschnitt.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id die ID des Planungsabschnitts
+	 * @param regel die neue Regel
+	 * @param request der HTTP-Request
+	 * @return die gespeicherte Regel
+	 */
+	@POST
+	@Path("/planungsabschnitte/{id: \\d+}/regeln")
+	@Operation(summary = "Erstellt eine UV-Blockungsregel.",
+			description = "Speichert eine neue Blockungsregel mit Priorität und Parametern im angegebenen UV-Planungsabschnitt.")
+	@ApiResponse(responseCode = "200", description = "Die gespeicherte Regel", content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			schema = @Schema(implementation = UvBlockungRegel.class)))
+	public Response createUvRegel(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Die neue UV-Blockungsregel", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = UvBlockungRegel.class))) final @Valid UvBlockungRegel regel,
+			@Context final HttpServletRequest request) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvRegelController().create(id, regel);
+	}
+
+	/**
+	 * Ändert eine Blockungsregel im Planungsabschnitt.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id die ID des Planungsabschnitts
+	 * @param idRegel die ID der Regel
+	 * @param regel die neuen Werte
+	 * @param request der HTTP-Request
+	 * @return die gespeicherte Regel
+	 */
+	@PATCH
+	@Path("/planungsabschnitte/{id: \\d+}/regeln/{idRegel: \\d+}")
+	@Operation(summary = "Ändert eine UV-Blockungsregel.",
+			description = "Ersetzt Typ, Priorität und Parameter einer Blockungsregel im angegebenen UV-Planungsabschnitt.")
+	@ApiResponse(responseCode = "200", description = "Die gespeicherte Regel", content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			schema = @Schema(implementation = UvBlockungRegel.class)))
+	public Response patchUvRegel(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@PathParam("idRegel") final long idRegel,
+			@RequestBody(description = "Die geänderte UV-Blockungsregel", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = UvBlockungRegel.class))) final @Valid UvBlockungRegel regel,
+			@Context final HttpServletRequest request) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvRegelController().update(id, idRegel, regel);
+	}
+
+	/**
+	 * Löscht eine Blockungsregel aus dem Planungsabschnitt.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id die ID des Planungsabschnitts
+	 * @param idRegel die ID der Regel
+	 * @param request der HTTP-Request
+	 * @return eine leere erfolgreiche Antwort
+	 */
+	@DELETE
+	@Path("/planungsabschnitte/{id: \\d+}/regeln/{idRegel: \\d+}")
+	@Operation(summary = "Löscht eine UV-Blockungsregel.",
+			description = "Entfernt die Blockungsregel und ihre Parameter aus dem angegebenen UV-Planungsabschnitt.")
+	@ApiResponse(responseCode = "204", description = "Regel gelöscht")
+	public Response deleteUvRegel(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@PathParam("idRegel") final long idRegel, @Context final HttpServletRequest request) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvRegelController().delete(id, idRegel);
 	}
 
 	/**
@@ -2365,7 +2454,7 @@ public class APIUnterrichtsverteilung {
 	 * @return die HTTP-Antwort mit dem gepatchten {@link UvPlanungsabschnittZeitraster}
 	 */
 	@PATCH
-	@Path("/planungsabschnitte/{idPlanungsabschnitt : \\d+}/zeitraster/{idZeitraster : \\d+}")
+	@Path("/planungsabschnitte/zeitraster")
 	@Operation(summary = "Patcht ein bestehendes UvPlanungsabschnittZeitraster.",
 			description = "Patcht ein bestehendes UvPlanungsabschnittZeitraster.")
 	@ApiResponse(responseCode = "200", description = "UvPlanungsabschnittZeitraster wurde erfolgreich gepatcht.",
@@ -3066,7 +3155,7 @@ public class APIUnterrichtsverteilung {
 	 * @return die HTTP-Antwort
 	 */
 	@PATCH
-	@Path("/lerngruppen/lehrer/{id : \\d+}")
+	@Path("/lerngruppen/lehrer")
 	@Operation(summary = "Patcht eine bestehende UvLerngruppenLehrer-Zuordnung.",
 			description = "Patcht eine bestehende UvLerngruppenLehrer-Zuordnung anhand der ID.")
 	@ApiResponse(responseCode = "200", description = "Patch erfolgreich.")
@@ -3910,5 +3999,151 @@ public class APIUnterrichtsverteilung {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvUnterrichtLerngruppenCreateController().createByLerngruppen(ids);
 	}
 
+
+	/**
+	 * Legt Klasse und gegebenenfalls Schülergruppe atomar an.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param request der HTTP-Request
+	 * @param daten die zu speichernden Daten
+	 * @return die HTTP-Antwort mit dem Ergebnis
+	 */
+	@POST
+	@Path("/klassen/create-mit-schuelergruppe")
+	@Operation(summary = "Legt Klasse und gegebenenfalls Schülergruppe atomar an.", description = "Legt Klasse und gegebenenfalls Schülergruppe atomar an. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.")
+	@ApiResponse(responseCode = "201", description = "Der Vorgang wurde vollständig gespeichert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UvPlanungsabschnittsdatenBundle.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingaben sind ungültig.")
+	@ApiResponse(responseCode = "403", description = "Keine Berechtigung zur Änderung der Unterrichtsverteilung.")
+	public Response createUvKlasseMitSchuelergruppe(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request,
+			@RequestBody(description = "Die Daten für den atomaren Vorgang", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UvKlasseAnlageRequest.class)))
+			final @Valid UvKlasseAnlageRequest daten) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvUnterrichtsstrukturController().createKlasseMitSchuelergruppe(daten);
+	}
+
+	/**
+	 * Legt Kursunterricht mit Lerngruppe und optionaler Schülergruppe atomar an.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param request der HTTP-Request
+	 * @param daten die zu speichernden Daten
+	 * @return die HTTP-Antwort mit dem Ergebnis
+	 */
+	@POST
+	@Path("/kurse/create-mit-lerngruppe")
+	@Operation(summary = "Legt Kursunterricht mit Lerngruppe und optionaler Schülergruppe atomar an.", description = "Legt Kursunterricht mit Lerngruppe und optionaler Schülergruppe atomar an. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.")
+	@ApiResponse(responseCode = "201", description = "Der Vorgang wurde vollständig gespeichert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UvPlanungsabschnittsdatenBundle.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingaben sind ungültig.")
+	@ApiResponse(responseCode = "403", description = "Keine Berechtigung zur Änderung der Unterrichtsverteilung.")
+	public Response createUvKursMitLerngruppe(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request,
+			@RequestBody(description = "Die Daten für den atomaren Vorgang", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UvKursunterrichtAnlageRequest.class)))
+			final @Valid UvKursunterrichtAnlageRequest daten) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvUnterrichtsstrukturController().createKursMitLerngruppe(daten);
+	}
+
+	/**
+	 * Legt eine Schülergruppe an und ordnet sie einer Klasse atomar zu.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id die ID des Zielobjekts oder Planungsabschnitts
+	 * @param request der HTTP-Request
+	 * @param daten die zu speichernden Daten
+	 * @return die HTTP-Antwort mit dem Ergebnis
+	 */
+	@POST
+	@Path("/klassen/{id: \\d+}/schuelergruppe/create")
+	@Operation(summary = "Legt eine Schülergruppe an und ordnet sie einer Klasse atomar zu.", description = "Legt eine Schülergruppe an und ordnet sie einer Klasse atomar zu. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.")
+	@ApiResponse(responseCode = "201", description = "Der Vorgang wurde vollständig gespeichert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UvPlanungsabschnittsdatenBundle.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingaben sind ungültig.")
+	@ApiResponse(responseCode = "403", description = "Keine Berechtigung zur Änderung der Unterrichtsverteilung.")
+	public Response createUvSchuelergruppeFuerKlasse(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@Context final HttpServletRequest request,
+			@RequestBody(description = "Die Daten für den atomaren Vorgang", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UvSchuelergruppeCreateRequest.class)))
+			final @Valid UvSchuelergruppeCreateRequest daten) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvUnterrichtsstrukturController().createSchuelergruppeFuerKlasse(id, daten);
+	}
+
+	/**
+	 * Legt eine Schülergruppe an und ordnet sie einem Kurs atomar zu.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id die ID des Zielobjekts oder Planungsabschnitts
+	 * @param request der HTTP-Request
+	 * @param daten die zu speichernden Daten
+	 * @return die HTTP-Antwort mit dem Ergebnis
+	 */
+	@POST
+	@Path("/kurse/{id: \\d+}/schuelergruppe/create")
+	@Operation(summary = "Legt eine Schülergruppe an und ordnet sie einem Kurs atomar zu.", description = "Legt eine Schülergruppe an und ordnet sie einem Kurs atomar zu. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.")
+	@ApiResponse(responseCode = "201", description = "Der Vorgang wurde vollständig gespeichert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UvPlanungsabschnittsdatenBundle.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingaben sind ungültig.")
+	@ApiResponse(responseCode = "403", description = "Keine Berechtigung zur Änderung der Unterrichtsverteilung.")
+	public Response createUvSchuelergruppeFuerKurs(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@Context final HttpServletRequest request,
+			@RequestBody(description = "Die Daten für den atomaren Vorgang", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UvSchuelergruppeCreateRequest.class)))
+			final @Valid UvSchuelergruppeCreateRequest daten) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvUnterrichtsstrukturController().createSchuelergruppeFuerKurs(id, daten);
+	}
+
+	/**
+	 * Ersetzt alle Lehrkraftzuordnungen des Planungsabschnitts atomar.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id die ID des Zielobjekts oder Planungsabschnitts
+	 * @param request der HTTP-Request
+	 * @param daten die zu speichernden Daten
+	 * @return die HTTP-Antwort mit dem Ergebnis
+	 */
+	@POST
+	@Path("/planungsabschnitte/{id: \\d+}/lerngruppen/lehrer/replace")
+	@Operation(summary = "Ersetzt alle Lehrkraftzuordnungen des Planungsabschnitts atomar.", description = "Ersetzt alle Lehrkraftzuordnungen des Planungsabschnitts atomar. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.")
+	@ApiResponse(responseCode = "200", description = "Der Vorgang wurde vollständig gespeichert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = UvLerngruppenLehrer.class))))
+	@ApiResponse(responseCode = "400", description = "Die Eingaben sind ungültig.")
+	@ApiResponse(responseCode = "403", description = "Keine Berechtigung zur Änderung der Unterrichtsverteilung.")
+	public Response replaceUvLerngruppenLehrer(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@Context final HttpServletRequest request,
+			@RequestBody(description = "Die Daten für den atomaren Vorgang", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = UvLerngruppenLehrerCreateRequest.class))))
+			final Collection<@Valid UvLerngruppenLehrerCreateRequest> daten) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvLerngruppenLehrerController().replaceByPlanungsabschnitt(id, daten);
+	}
+
+	/**
+	 * Ändert mehrere UV-Regeln samt Parametern atomar.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id die ID des Zielobjekts oder Planungsabschnitts
+	 * @param request der HTTP-Request
+	 * @param daten die zu speichernden Daten
+	 * @return die HTTP-Antwort mit dem Ergebnis
+	 */
+	@PATCH
+	@Path("/planungsabschnitte/{id: \\d+}/regeln/patch/multiple")
+	@Operation(summary = "Ändert mehrere UV-Regeln samt Parametern atomar.", description = "Ändert mehrere UV-Regeln samt Parametern atomar. Alle Änderungen werden gemeinsam gespeichert oder zurückgerollt.")
+	@ApiResponse(responseCode = "200", description = "Der Vorgang wurde vollständig gespeichert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = UvBlockungRegel.class))))
+	@ApiResponse(responseCode = "400", description = "Die Eingaben sind ungültig.")
+	@ApiResponse(responseCode = "403", description = "Keine Berechtigung zur Änderung der Unterrichtsverteilung.")
+	public Response patchUvRegeln(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@Context final HttpServletRequest request,
+			@RequestBody(description = "Die Daten für den atomaren Vorgang", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = UvBlockungRegel.class))))
+			final Collection<@Valid UvBlockungRegel> daten) throws ApiOperationException {
+		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvRegelController().updateMultiple(id, daten);
+	}
 
 }

@@ -13,7 +13,7 @@ import de.svws_nrw.core.utils.uv.UvManager;
  * - zwei Lehrkräfte,
  * - zwei Klassen 5A und 5B,
  * - ein Fach,
- * - einen Jahrgang (5),
+ * - ein Jahrgang (5),
  * - zwei Schülergruppen (für die 5A und für die 5B) mit je einem Schüler pro Schülergruppe.
  * </pre>
  *
@@ -93,7 +93,7 @@ class UvDatensatz2 {
 	 */
 	public static UvManager erzeugeUvManager() {
 		final UvManager man = UvDatensatz.erzeugeUvManager(
-				List.of(UvDatensatz.erzeugeJahrgang(ID_JAHRGANG, "05", "5", "05", "Jahrgang 5", 5, "", true)),
+				List.of(UvDatensatz.erzeugeJahrgang(ID_JAHRGANG, "05", "5", "Jahrgang 5", 5, true)),
 				List.of(UvDatensatz.erzeugeFachDaten(ID_FACH_DATEN, "MA", "MA", "Mathematik", true, 1)));
 
 		man.planungsabschnittAdd(UvDatensatz.erzeugePlanungsabschnitt(ID_PLANUNGSABSCHNITT, "2026-02-01", null));

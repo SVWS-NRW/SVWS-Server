@@ -1,8 +1,10 @@
 <template>
-	<s-uv-auswahl>
+	<s-uv-auswahl :inert="state.bearbeitungAktiv" class="uv-deaktivierbar">
 		<template #title>
-			<h1 class="select-none">Unterrichtsverteilung</h1>
-			<div><abschnitt-auswahl /></div>
+			<div class="secondary-menu--headline">
+				<h1 class="select-none">Unterrichtsverteilung</h1>
+				<div><abschnitt-auswahl /></div>
+			</div>
 		</template>
 		<svws-ui-table :clickable="!manager().liste.auswahlExists()"
 			:clicked="clickedEintrag"
@@ -41,7 +43,10 @@
 			</template>
 			<template #actions>
 				<svws-ui-tooltip position="bottom" v-if="hatKompetenzAendern">
-					<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
+					<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN"
+						type="icon"
+						@click="startCreationMode"
+						:has-focus="rowsFiltered.length === 0">
 						<span class="icon i-ri-add-line" />
 					</svws-ui-button>
 					<template #content>

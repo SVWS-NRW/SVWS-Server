@@ -92,16 +92,14 @@ public final class UvDatensatz {
 	 * @param id                       Die UV-ID.
 	 * @param kuerzel                  Das Kürzel.
 	 * @param kurzbezeichnung          Die Kurzbezeichnung.
-	 * @param kuerzelStatistik         Das Statistik-Kürzel.
 	 * @param bezeichnung              Die Bezeichnung.
 	 * @param sortierung               Die Sortierung.
-	 * @param kuerzelSchulgliederung   Das Kürzel der Schulgliederung.
 	 * @param istSichtbar              {@code true}, falls sichtbar.
 	 *
 	 * @return der erzeugte Jahrgang.
 	 */
-	public static JahrgangsDaten erzeugeJahrgang(final long id, final String kuerzel, final String kurzbezeichnung, final String kuerzelStatistik,
-			final String bezeichnung, final int sortierung, final String kuerzelSchulgliederung, final boolean istSichtbar) {
+	public static JahrgangsDaten erzeugeJahrgang(final long id, final String kuerzel, final String kurzbezeichnung,
+			final String bezeichnung, final int sortierung, final boolean istSichtbar) {
 		final JahrgangsDaten jg = new JahrgangsDaten();
 		jg.id = id;
 		jg.kuerzel = kuerzel;
@@ -304,12 +302,12 @@ public final class UvDatensatz {
 	/**
 	 * Erzeugt einen UvManager.
 	 *
-	 * @param jahraenge   Die Jahrgänge.
-	 * @param faecher     Die Fächer.
+	 * @param jahrgaenge   Die Jahrgänge.
+	 * @param faecher      Die Fächer.
 	 *
 	 * @return der erzeugte Manager.
 	 */
-	public static UvManager erzeugeUvManager(final List<JahrgangsDaten> jahraenge, final List<FachDaten> faecher) {
-		return new UvManager(jahraenge, faecher);
+	public static UvManager erzeugeUvManager(final List<JahrgangsDaten> jahrgaenge, final List<FachDaten> faecher) {
+		return new UvManager(jahrgaenge, faecher);
 	}
 }

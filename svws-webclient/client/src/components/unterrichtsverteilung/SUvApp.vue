@@ -1,5 +1,5 @@
 <template>
-	<header class="svws-ui-header">
+	<header class="uv-deaktivierbar svws-ui-header" :inert="state.bearbeitungAktiv">
 		<div class="svws-ui-header--title">
 			<div class="svws-headline-wrapper">
 				<template v-if="activeViewType === ViewType.DEFAULT">
@@ -26,16 +26,24 @@
 				</template>
 			</div>
 		</div>
-		<div class="svws-ui-header--actions" />
 	</header>
-
-	<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
-		<s-uv-auswahl-layout v-if="props.tabManager().tab.tabContentHatAuswahl">
+	<svws-ui-tab-bar v-if="grunddatenMitTabs" :tab-manager :focus-switching-enabled :focus-help-visible>
+		<s-uv-auswahl-layout v-if="props.tabManager().tab.tabContentHatAuswahl" :bearbeitung-aktiv="state.bearbeitungAktiv">
 			<template #auswahl><router-view name="auswahl" /></template>
 			<router-view />
 		</s-uv-auswahl-layout>
 		<router-view v-else />
 	</svws-ui-tab-bar>
+	<template v-else>
+		<div class="svws-sub-nav-target" />
+		<div class="min-h-0 flex-1">
+			<s-uv-auswahl-layout v-if="props.tabManager().tab.tabContentHatAuswahl" :bearbeitung-aktiv="state.bearbeitungAktiv">
+				<template #auswahl><router-view name="auswahl" /></template>
+				<router-view />
+			</s-uv-auswahl-layout>
+			<router-view v-else />
+		</div>
+	</template>
 </template>
 
 <script setup lang="ts">
@@ -43,6 +51,7 @@
 	import { computed } from "vue";
 
 	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { useUvState } from "@ui/states/UvState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { UvPlanungsabschnitteListeManager } from "@ui/ui/manager/unterrichtsverteilung/UvPlanungsabschnitteListeManager";
 	import type { TabManager } from "@ui/ui/nav/TabManager";
@@ -50,14 +59,16 @@
 
 	import SUvAuswahlLayout from "./SUvAuswahlLayout.vue";
 
+
 	const props = defineProps<{
 		activeViewType: ViewType;
 		tabManager: () => TabManager;
 		manager: () => UvPlanungsabschnitteListeManager;
 	}>();
+	const state = useUvState();
 	const manager = () => props.manager();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-
+	const grunddatenMitTabs = computed(() => props.tabManager().tab.name.startsWith('uv.grunddaten.') && manager().hasDaten() && manager().auswahl().id === -1);
 	function toYear(isoFrom: string, isoTo: string | null): string {
 		if ((typeof isoFrom !== 'string') || (isoFrom.length < 4)) {
 			return '—';
@@ -95,3 +106,10 @@
 	});
 
 </script>
+
+<style>
+	/* Gemeinsame Darstellung der während einer Bearbeitung gesperrten UV-Bereiche. */
+	.uv-deaktivierbar[inert] {
+		opacity: 0.5;
+	}
+</style>

@@ -1,7 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.asd.adt.Pair;
-import de.svws_nrw.db.converter.current.kursblockung.GostKursblockungRegelTypConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -29,8 +28,7 @@ public class Tabelle_UV_StundenplanRegeln extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Typ */
 	public final SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.INT, false)
 			.setNotNull()
-			.setConverter(GostKursblockungRegelTypConverter.class)
-			.setJavaComment("Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp)");
+			.setJavaComment("Die Nummer des UV-Blockungsregeltyps (siehe UvBlockungRegelTyp)");
 
 
 	/** Die Definition des Fremdschlüssels UVStundenplanRegeln_UVStundenplanKonfiguration_FK */

@@ -2,13 +2,36 @@
 	<div v-if="stundentafel !== undefined" class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemeine Daten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input :readonly="!hatKompetenzAendern" :disabled="loading" placeholder="Bezeichnung" :model-value="form.bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? '' })" span="full" />
-				<svws-ui-text-input :disabled="loading" placeholder="Jahrgang" :model-value="state.uvManager.jahrgangsdatenGetByStundentafel(stundentafel).bezeichnung ?? state.uvManager.jahrgangsdatenGetByStundentafel(stundentafel).kuerzel" readonly />
+				<svws-ui-text-input :readonly="!hatKompetenzAendern"
+					:disabled="loading"
+					placeholder="Bezeichnung"
+					:model-value="form.bezeichnung"
+					@change="bezeichnung => patch({ bezeichnung: bezeichnung ?? '' })"
+					span="full" />
+				<svws-ui-text-input :disabled="loading"
+					placeholder="Jahrgang"
+					:model-value="state.uvManager.jahrgangsdatenGetByStundentafel(stundentafel).bezeichnung ?? state.uvManager.jahrgangsdatenGetByStundentafel(stundentafel).kuerzel"
+					readonly />
 				<div class="col-span-full grid min-w-0 grid-cols-2 gap-4">
-					<svws-ui-text-input :readonly="!hatKompetenzAendern" :disabled="loading" placeholder="Gültig von" :model-value="form.gueltigVon" @change="gueltigVon => patch({ gueltigVon: gueltigVon ?? '' })" type="date" />
-					<svws-ui-text-input :readonly="!hatKompetenzAendern" :disabled="loading" placeholder="Gültig bis" :model-value="form.gueltigBis" @change="gueltigBis => patch({ gueltigBis: gueltigBis ?? undefined })" type="date" />
+					<svws-ui-text-input :readonly="!hatKompetenzAendern"
+						:disabled="loading"
+						placeholder="Gültig von"
+						:model-value="form.gueltigVon"
+						@change="gueltigVon => patch({ gueltigVon: gueltigVon ?? '' })"
+						type="date" />
+					<svws-ui-text-input :readonly="!hatKompetenzAendern"
+						:disabled="loading"
+						placeholder="Gültig bis"
+						:model-value="form.gueltigBis"
+						@change="gueltigBis => patch({ gueltigBis: gueltigBis ?? undefined })"
+						type="date" />
 				</div>
-				<svws-ui-textarea-input :disabled="loading" :readonly="!hatKompetenzAendern" placeholder="Beschreibung" :model-value="form.beschreibung" @change="beschreibung => patch({ beschreibung: beschreibung ?? undefined })" span="full" />
+				<svws-ui-textarea-input :disabled="loading"
+					:readonly="!hatKompetenzAendern"
+					placeholder="Beschreibung"
+					:model-value="form.beschreibung"
+					@change="beschreibung => patch({ beschreibung: beschreibung ?? undefined })"
+					span="full" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 
@@ -17,7 +40,7 @@
 				<div class="flex flex-col gap-2">
 					<svws-ui-table :items="faecherAbschnitt1" :columns="colsFaecher" :selectable="hatKompetenzAendern && !loading" v-model="selectedFaecher1" count>
 						<template #cell(fach)="{ rowData }">
-							{{ state.uvManager.fachdatenGetByStundentafelFach(rowData).bezeichnung }} <svws-ui-button type="icon" title="UV-Fach öffnen" @click="gotoFach(rowData.idFach)"><span class="icon i-ri-link" /></svws-ui-button>
+							<s-uv-fach-badge :id-fach="rowData.idFach" /> {{ state.uvManager.fachdatenGetByStundentafelFach(rowData).bezeichnung }} <svws-ui-button type="icon" title="UV-Fach öffnen" @click="gotoFach(rowData.idFach)"><span class="icon i-ri-link" /></svws-ui-button>
 						</template>
 						<template #cell(wochenstunden)="{ rowData }">
 							<svws-ui-input-number headless :readonly="!hatKompetenzAendern" :disabled="loading" :steps="false" :decimal-places="2"
@@ -46,7 +69,7 @@
 				<div class="flex flex-col gap-2">
 					<svws-ui-table :items="faecherAbschnitt2" :columns="colsFaecher" :selectable="hatKompetenzAendern && !loading" v-model="selectedFaecher2" count>
 						<template #cell(fach)="{ rowData }">
-							{{ state.uvManager.fachdatenGetByStundentafelFach(rowData).bezeichnung }} <svws-ui-button type="icon" title="UV-Fach öffnen" @click="gotoFach(rowData.idFach)"><span class="icon i-ri-link" /></svws-ui-button>
+							<s-uv-fach-badge :id-fach="rowData.idFach" /> {{ state.uvManager.fachdatenGetByStundentafelFach(rowData).bezeichnung }} <svws-ui-button type="icon" title="UV-Fach öffnen" @click="gotoFach(rowData.idFach)"><span class="icon i-ri-link" /></svws-ui-button>
 						</template>
 						<template #cell(wochenstunden)="{ rowData }">
 							<svws-ui-input-number headless :readonly="!hatKompetenzAendern" :disabled="loading" :steps="false" :decimal-places="2"
@@ -82,6 +105,8 @@
 	import { useUvState } from "@ui/states/UvState";
 	import type { DataTableColumn } from "@ui/types";
 
+	import SUvFachBadge from "../../SUvFachBadge.vue";
+
 	import SUvGrunddatenStundentafelnFachNeuModal from "./SUvGrunddatenStundentafelnFachNeuModal.vue";
 
 	const props = defineProps<{
@@ -91,43 +116,23 @@
 	const state = useUvState();
 	const hatKompetenzAendern = computed(() => state.hatKompetenzAendern);
 	const loading = ref(false);
+	// Stammdaten der Stundentafel
+
 	const form = computed(() => props.stundentafel ?? new UvStundentafel());
+
 	async function patch(changes: Partial<UvStundentafel>): Promise<void> {
 		if ((props.stundentafel === undefined) || loading.value || !hatKompetenzAendern.value) {
 			return;
 		}
 		loading.value = true;
 		try {
-			await state.patchStundentafel(props.stundentafel.id, changes);
+			await state.grunddaten.patchStundentafel(props.stundentafel.id, changes);
 		} finally {
 			loading.value = false;
 		}
 	}
 
-	async function patchStundentafelFach(id: number, changes: Partial<UvStundentafelFach>): Promise<void> {
-		if (loading.value || !hatKompetenzAendern.value) {
-			return;
-		}
-		loading.value = true;
-		try {
-			await state.patchStundentafelFach(id, changes);
-		} finally {
-			loading.value = false;
-		}
-	}
-
-	async function deleteStundentafelFaecher(faecher: UvStundentafelFach[]): Promise<void> {
-		if (loading.value || !hatKompetenzAendern.value || faecher.length === 0) {
-			return;
-		}
-		loading.value = true;
-		try {
-			await state.delStundentafelFach(faecher);
-		} finally {
-			loading.value = false;
-		}
-	}
-
+	// Auswahl, Fächer und Stundensummen pro Abschnitt
 
 	const selectedFaecher1 = ref<UvStundentafelFach[]>([]);
 	const selectedFaecher2 = ref<UvStundentafelFach[]>([]);
@@ -151,16 +156,40 @@
 		return [...state.uvManager.stundentafelFachGetMengeByStundentafelAndAbschnitt(props.stundentafel, 2)];
 	});
 
-	const summeWochenstunden1 = computed(() => faecherAbschnitt1.value.reduce((sum: number, f: UvStundentafelFach) => sum + f.wochenstunden, 0));
-	const summeErgaenzung1 = computed(() => faecherAbschnitt1.value.reduce((sum: number, f: UvStundentafelFach) => sum + f.davonErgaenzungsstunden, 0));
-
-	const summeWochenstunden2 = computed(() => faecherAbschnitt2.value.reduce((sum: number, f: UvStundentafelFach) => sum + f.wochenstunden, 0));
-	const summeErgaenzung2 = computed(() => faecherAbschnitt2.value.reduce((sum: number, f: UvStundentafelFach) => sum + f.davonErgaenzungsstunden, 0));
+	const summeWochenstunden1 = computed(() => props.stundentafel === undefined ? 0 : state.uvManager.stundentafelWochenstundenGetSumme(props.stundentafel, 1));
+	const summeErgaenzung1 = computed(() => props.stundentafel === undefined ? 0 : state.uvManager.stundentafelErgaenzungsstundenGetSumme(props.stundentafel, 1));
+	const summeWochenstunden2 = computed(() => props.stundentafel === undefined ? 0 : state.uvManager.stundentafelWochenstundenGetSumme(props.stundentafel, 2));
+	const summeErgaenzung2 = computed(() => props.stundentafel === undefined ? 0 : state.uvManager.stundentafelErgaenzungsstundenGetSumme(props.stundentafel, 2));
 
 	const colsFaecher: DataTableColumn[] = [
 		{ key: "fach", label: "Fach", sortable: true },
 		{ key: "wochenstunden", label: "Wstd.", tooltip: "Wochenstunden", sortable: true, align: 'right', fixedWidth: 10 },
 		{ key: "davonErgaenzungsstunden", label: "Ergänz.", tooltip: "Davon Ergänzungsstunden", sortable: true, align: 'right', fixedWidth: 10 },
 	];
+	// Facheinträge bearbeiten und löschen
+
+	async function patchStundentafelFach(id: number, changes: Partial<UvStundentafelFach>): Promise<void> {
+		if (loading.value || !hatKompetenzAendern.value) {
+			return;
+		}
+		loading.value = true;
+		try {
+			await state.grunddaten.patchStundentafelFach(id, changes);
+		} finally {
+			loading.value = false;
+		}
+	}
+
+	async function deleteStundentafelFaecher(faecher: UvStundentafelFach[]): Promise<void> {
+		if (loading.value || !hatKompetenzAendern.value || faecher.length === 0) {
+			return;
+		}
+		loading.value = true;
+		try {
+			await state.grunddaten.delStundentafelFach(faecher);
+		} finally {
+			loading.value = false;
+		}
+	}
 
 </script>

@@ -2,11 +2,25 @@
 	<div v-if="fach !== undefined" class="page page-grid-cards">
 		<svws-ui-content-card title="Fachdaten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Fach" :model-value="state.uvManager.fachdatenGetByFach(fach).bezeichnung" readonly />
+				<div class="flex items-center gap-2"><s-uv-fach-badge :id-fach="fach.id" /><svws-ui-text-input class="min-w-0 flex-1" placeholder="Fach" :model-value="state.uvManager.fachdatenGetByFach(fach).bezeichnung" readonly /></div>
 				<svws-ui-spacing />
 				<div class="col-span-full grid min-w-0 grid-cols-2 gap-4">
-					<svws-ui-text-input placeholder="Gültig von" :model-value="form.gueltigVon" @change="onGueltigVonChange" type="date" :readonly="!hatKompetenzAendern" :disabled="loading" :valid="validGueltig" required />
-					<svws-ui-text-input placeholder="Gültig bis" :model-value="form.gueltigBis" @change="onGueltigBisChange" type="date" :readonly="!hatKompetenzAendern" :disabled="loading" :valid="validGueltig" />
+					<svws-ui-text-input placeholder="Gültig von"
+						v-model="gueltigVon"
+						@change="speichereGueltigkeit"
+						type="date"
+						:readonly="!hatKompetenzAendern"
+						:disabled="loading"
+						:validation="() => gueltigkeitFehler"
+						required />
+					<svws-ui-text-input placeholder="Gültig bis"
+						:model-value="gueltigBis"
+						@update:model-value="value => gueltigBis = value === '' ? null : value"
+						@change="speichereGueltigkeit"
+						type="date"
+						:readonly="!hatKompetenzAendern"
+						:disabled="loading"
+						:validation="() => gueltigkeitFehler" />
 				</div>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -32,13 +46,17 @@
 <script setup lang="ts">
 
 	import type { WritableComputedRef } from "vue";
-	import { computed, ref } from "vue";
+	import { computed, ref, watch } from "vue";
 
+	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import type { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
-	import { UvFach } from "@core/core/data/uv/UvFach";
+	import type { UvFach } from "@core/core/data/uv/UvFach";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useUvState } from "@ui/states/UvState";
+
+	import SUvFachBadge from "../../SUvFachBadge.vue";
+	import { uvFachGueltigkeitValidator } from "../../UvGueltigkeitValidator";
 
 	const props = defineProps<{
 		fach: UvFach | undefined;
@@ -48,14 +66,35 @@
 	const state = useUvState();
 	const hatKompetenzAendern = computed(() => state.hatKompetenzAendern);
 	const loading = ref(false);
-	const form = computed(() => props.fach ?? new UvFach());
+	const gueltigVon = ref<string | null>(null);
+	const gueltigBis = ref<string | null>(null);
+	watch(() => props.fach, fach => {
+		gueltigVon.value = fach?.gueltigVon ?? null;
+		gueltigBis.value = fach?.gueltigBis ?? null;
+	}, { immediate: true });
+
+	const gueltigkeitFehler = computed(() => {
+		if (props.fach === undefined) {
+			return new ArrayList<ValidatorFehler>();
+		}
+		const validator = uvFachGueltigkeitValidator(state.uvManager, props.fach, () => gueltigVon.value, () => gueltigBis.value);
+		validator.run();
+		return validator.getFehler();
+	});
+
+	watch([gueltigVon, gueltigBis, () => props.fach], ([von, bis, fach]) => {
+		props.konfliktMitFach.value = fach === undefined || von === null || !DateUtils.isValidDate(von)
+			|| (bis !== null && !DateUtils.isValidDate(bis)) ? null
+			: state.uvManager.fachGetByGueltigkeitskonfliktMitNeueGueltigkeit(fach, von, bis);
+	});
+
 	async function patch(changes: Partial<UvFach>): Promise<void> {
 		if ((props.fach === undefined) || loading.value || !hatKompetenzAendern.value) {
 			return;
 		}
 		loading.value = true;
 		try {
-			await state.patchFach(props.fach.id, changes);
+			await state.grunddaten.patchFach(props.fach.id, changes);
 		} finally {
 			loading.value = false;
 		}
@@ -73,31 +112,11 @@
 		{ key: "vorname", label: "Vorname", sortable: true },
 	];
 
-	function validGueltig(gueltigVon: string | null): boolean {
-		return props.konfliktMitFach.value === null;
+	async function speichereGueltigkeit(): Promise<void> {
+		if (gueltigVon.value === null || !gueltigkeitFehler.value.isEmpty()) {
+			return;
+		}
+		await patch({ gueltigVon: gueltigVon.value, gueltigBis: gueltigBis.value });
 	}
-
-	async function onGueltigVonChange(gueltigVon: string | null) {
-		if (!props.fach || gueltigVon === null || !DateUtils.isValidDate(gueltigVon)) {
-			return;
-		}
-		props.konfliktMitFach.value = state.uvManager.fachGetByGueltigkeitskonfliktMitNeueGueltigkeit(props.fach, gueltigVon, props.fach.gueltigBis);
-		if (props.konfliktMitFach.value !== null) {
-			return;
-		}
-		await patch({ gueltigVon });
-	}
-
-	async function onGueltigBisChange(gueltigBis: string | null) {
-		if (!props.fach || (gueltigBis !== null && !DateUtils.isValidDate(gueltigBis))) {
-			return;
-		}
-		props.konfliktMitFach.value = state.uvManager.fachGetByGueltigkeitskonfliktMitNeueGueltigkeit(props.fach, props.fach.gueltigVon, gueltigBis);
-		if (props.konfliktMitFach.value !== null) {
-			return;
-		}
-		await patch({ gueltigBis });
-	}
-
 
 </script>

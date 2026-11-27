@@ -11,7 +11,47 @@ import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import type { List } from '../../../../../core/src/java/util/List';
 import { AuswahlManager } from '../AuswahlManager';
 
+export type UvPlanungsabschnittEntwurf = Partial<UvPlanungsabschnitt> & Pick<UvPlanungsabschnitt, 'gueltigVon' | 'gueltigBis' | 'aktiv' | 'beschreibung'>;
+
 export class UvPlanungsabschnitteListeManager extends AuswahlManager<number, UvPlanungsabschnitt, UvPlanungsabschnitt> {
+
+	/** Ermittelt die vorgeschlagenen Daten für einen neuen Planungsabschnitt. */
+	public neuerPlanungsabschnittEntwurf(): UvPlanungsabschnittEntwurf {
+		const abschnitt = this.getSchuljahresabschnittAuswahl();
+		if (abschnitt === null) {
+			throw new Error('Kein Schuljahresabschnitt ausgewählt.');
+		}
+		const letztesEnde = this.getLastAktiv()?.gueltigBis;
+		const abschnittsbeginn = abschnitt.abschnitt === 1 ? `${abschnitt.schuljahr}-08-01` : `${abschnitt.schuljahr + 1}-02-01`;
+		const gueltigVon = letztesEnde === null || letztesEnde === undefined ? abschnittsbeginn : DateUtils.gibDatumFolgetag(letztesEnde);
+		return {
+			gueltigVon,
+			gueltigBis: abschnitt.abschnitt === 1 ? `${abschnitt.schuljahr + 1}-01-31` : `${abschnitt.schuljahr + 1}-07-31`,
+			aktiv: false,
+			beschreibung: 'Neuer Planungsabschnitt',
+		};
+	}
+
+	/** Prüft den vollständigen Entwurf vor dem Anlegen. */
+	public planungsabschnittEntwurfGueltig(entwurf: UvPlanungsabschnittEntwurf): boolean {
+		return UvPlanungsabschnitteListeManager.validateBezeichnung(entwurf.beschreibung)
+			&& this.validateGueltigVon(entwurf.gueltigVon, entwurf.gueltigBis, entwurf.aktiv, false, true)
+			&& this.validateGueltigBis(entwurf.gueltigVon, entwurf.gueltigBis, entwurf.aktiv, false, true);
+	}
+
+	/** Baut den Patch beim Wechsel des Aktiv-Status aus gültigen Entwurfsdaten. */
+	public planungsabschnittAktivPatch(entwurf: Pick<UvPlanungsabschnitt, 'gueltigVon' | 'gueltigBis'>, aktiv: boolean): Partial<UvPlanungsabschnitt> {
+		const patch: Partial<UvPlanungsabschnitt> = { aktiv };
+		if (!aktiv) {
+			if (this.validateGueltigBis(entwurf.gueltigVon, entwurf.gueltigBis, aktiv, false, false)) {
+				patch.gueltigBis = entwurf.gueltigBis;
+			}
+			if (this.validateGueltigVon(entwurf.gueltigVon, entwurf.gueltigBis, aktiv, false, false)) {
+				patch.gueltigVon = entwurf.gueltigVon;
+			}
+		}
+		return patch;
+	}
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Planungsabschnitten in Listen.
@@ -25,7 +65,7 @@ export class UvPlanungsabschnitteListeManager extends AuswahlManager<number, UvP
 		if (cmp !== 0) {
 			return cmp;
 		}
-		cmp = (a.aktiv === b.aktiv) ? 0 : (a.aktiv ? -1 : 1);
+		cmp = Number(b.aktiv) - Number(a.aktiv);
 		if (cmp !== 0) {
 			return cmp;
 		}
@@ -104,7 +144,7 @@ export class UvPlanungsabschnitteListeManager extends AuswahlManager<number, UvP
 		if (cmp !== 0) {
 			return cmp;
 		}
-		cmp = (a.aktiv === b.aktiv) ? 0 : (a.aktiv ? -1 : 1);
+		cmp = Number(b.aktiv) - Number(a.aktiv);
 		if (cmp !== 0) {
 			return cmp;
 		}
@@ -197,7 +237,7 @@ export class UvPlanungsabschnitteListeManager extends AuswahlManager<number, UvP
 	 * wird <code>false</code>, andernfalls <code>true</code> zurückgegeben. Je nach Parameter aktiv wird auch geprüft, ob es sich innerhalb der Gültigkeit eines anderen aktiven Planungsabschnitts befindet.
 	 *
 	 * @param gueltigAb das Datum, ab wann der Planungsabschnitt gültig sein soll
-	 * @param gueltigBis das Datum, bis wann der Planungsabschnitt gültig sein soll. Falls null übergeben wird, wird das Datum der Auswahl verwendet.
+	 * @param gueltigBis das Gültigkeitsende; null bedeutet unbegrenzt.
 	 * @param aktiv falls true, werden zusätzlich die anderen aktiven Planungsabschnitte geprüft
 	 * @param warn falls true, wird zusätzlich geprüft, ob es eine Überschneidung mit einem anderen Planungsabschnitt gibt
 	 * @param neu gibt an, ob es sich um einen neuen Planungsabschnitt handelt
@@ -208,20 +248,10 @@ export class UvPlanungsabschnitteListeManager extends AuswahlManager<number, UvP
 		if (gueltigAb === null || !DateUtils.isValidDate(gueltigAb)) {
 			return false;
 		}
-		const gueltigBisComputed: string | null = (gueltigBis ?? this.auswahl().gueltigBis);
-		if (gueltigBisComputed !== null) {
-			if (JavaString.compareTo(gueltigAb, gueltigBisComputed) > 0) {
-				return false;
-			}
+		if (gueltigBis !== null && JavaString.compareTo(gueltigAb, gueltigBis) > 0) {
+			return false;
 		}
-		if (aktiv || warn) {
-			for (const abschnitt of this.aktive()) {
-				if ((!this.hasDaten() || abschnitt.id !== this.auswahl().id || neu) && (JavaString.compareTo(abschnitt.gueltigVon, gueltigAb) <= 0) && (abschnitt.gueltigBis === null || JavaString.compareTo(abschnitt.gueltigBis, gueltigAb) >= 0)) {
-					return false;
-				}
-			}
-		}
-		return true;
+		return !(aktiv || warn) || this.istKonfliktfreiZuAktivenPlanungsabschnitten(gueltigAb, gueltigBis, neu);
 	}
 
 	/**
@@ -244,14 +274,7 @@ export class UvPlanungsabschnitteListeManager extends AuswahlManager<number, UvP
 		if (JavaString.compareTo(gueltigBis, gueltigAbComputed) < 0) {
 			return false;
 		}
-		if (aktiv || warn) {
-			for (const abschnitt of this.aktive()) {
-				if ((!this.hasDaten() || abschnitt.id !== this.auswahl().id || neu) && (JavaString.compareTo(abschnitt.gueltigVon, gueltigBis) <= 0) && (abschnitt.gueltigBis === null || JavaString.compareTo(abschnitt.gueltigBis, gueltigBis) >= 0)) {
-					return false;
-				}
-			}
-		}
-		return true;
+		return !(aktiv || warn) || this.istKonfliktfreiZuAktivenPlanungsabschnitten(gueltigAb, gueltigBis, neu);
 	}
 
 	/**
@@ -262,22 +285,16 @@ export class UvPlanungsabschnitteListeManager extends AuswahlManager<number, UvP
 	 * @param neu gibt an, ob es sich um einen neuen Planungsabschnitt handelt
 	 *
 	 *
-	 * @return <code>true</code> wenn es eine Überschneidung gibt, ansonsten <code>false</code>
+	 * @return <code>true</code>, wenn keine Überschneidung vorliegt, ansonsten <code>false</code>
 	 */
 	public istKonfliktfreiZuAktivenPlanungsabschnitten(gueltigAb: string | null, gueltigBis: string | null, neu: boolean = false): boolean {
-		const ab = (gueltigAb ?? this.auswahl().gueltigVon);
-		const bis = (gueltigBis ?? this.auswahl().gueltigBis);
-		for (const sp of this.aktive()) {
-			if (!this.hasDaten() || this.auswahl().id !== sp.id || neu) {
-				if (bis !== null && sp.gueltigBis !== null && DateUtils.berechneGemeinsameTage(ab, bis, sp.gueltigVon, sp.gueltigBis).length > 0) {
-					return false;
-				} else if (bis === null && sp.gueltigBis !== null && JavaString.compareTo(sp.gueltigBis, ab) >= 0) {
-					return false;
-				} else if (bis !== null && sp.gueltigBis === null && JavaString.compareTo(bis, sp.gueltigVon) >= 0) {
-					return false;
-				} else if (bis === null && sp.gueltigBis === null) {
-					return false;
-				}
+		const ab = gueltigAb ?? this.auswahl().gueltigVon;
+		for (const abschnitt of this.aktive()) {
+			if (!neu && this.hasDaten() && this.auswahl().id === abschnitt.id) {
+				continue;
+			}
+			if (DateUtils.intervallUeberlappt(ab, gueltigBis, abschnitt.gueltigVon, abschnitt.gueltigBis)) {
+				return false;
 			}
 		}
 		return true;

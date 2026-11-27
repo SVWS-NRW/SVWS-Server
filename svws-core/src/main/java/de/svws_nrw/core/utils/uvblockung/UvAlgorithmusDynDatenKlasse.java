@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Random;
 
 import de.svws_nrw.core.data.uv.UvKlasse;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Klasse-Objekt (Schulklasse) für schnelle, dynamische Manipulationen
+ * Ein Klassen-Objekt (Schulklasse) für schnelle, dynamische Manipulationen
  * und zur Speicherung von Referenzen.
  *
  * @author Benjamin A. Bartsch
@@ -49,7 +49,7 @@ public final class UvAlgorithmusDynDatenKlasse {
 	final @NotNull List<UvAlgorithmusDynDatenLehrkraft> leitung2ZugeordnetFixiert;
 
 
-	/** Die Menge aller Regel-Objekte die sich auf diese Klasse beziehen. */
+	/** Die Menge aller Regel-Objekte, die sich auf diese Klasse beziehen. */
 	final @NotNull List<UvAlgorithmusDynDatenRegel> regeln;
 
 
@@ -59,8 +59,8 @@ public final class UvAlgorithmusDynDatenKlasse {
 	 * @param log           Ein Logger für Debug-Zwecke.
 	 * @param rnd           Ein Random-Objekt für zufällige Entscheidungen.
 	 * @param index         Der Index, unter dem dieses Objekt im Array der aufrufenden Klasse gespeichert ist.
-	 * @param uvKlasse      Die UV-Klasse deren Daten teils kopiert werden.
-	 * @param lehrerMenge   Alle {@link UvAlgorithmusDynDatenLehrkraft}-Objekte, die potentiell die Klasse Leiten.
+	 * @param uvKlasse      Die UV-Klasse, deren Daten teils kopiert werden.
+	 * @param lehrerMenge   Alle {@link UvAlgorithmusDynDatenLehrkraft}-Objekte, die potentiell die Klasse leiten.
 	 */
 	public UvAlgorithmusDynDatenKlasse(
 			final @NotNull Logger log,
@@ -93,8 +93,8 @@ public final class UvAlgorithmusDynDatenKlasse {
 	@Override
 	public @NotNull String toString() {
 		return ("UvAlgorithmusDynDatenKlasse { interneID=%d, uvID=%d,"
-				+ " sollLeitung1=%d, prioLeitung1=%d,"
-				+ " sollLeitung2=%d, prioLeitung2=%d}")
+				+ " leitung1Zugeordnet=%d, leitung1Fixiert=%d,"
+				+ " leitung2Zugeordnet=%d, leitung2Fixiert=%d}")
 				.formatted(
 						interneID,
 						uvID,
@@ -131,6 +131,30 @@ public final class UvAlgorithmusDynDatenKlasse {
 
 
 	/**
+	 * Liefert TRUE, falls die Lehrkraft aktuell als Leitung 1 zugeordnet ist.
+	 *
+	 * @param lehrkraft   Die {@link UvAlgorithmusDynDatenLehrkraft}.
+	 *
+	 * @return TRUE, falls die Lehrkraft aktuell als Leitung 1 zugeordnet ist.
+	 */
+	boolean gibIstLeitung1Zugeordnet(@NotNull final UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		return leitung1Zugeordnet.contains(lehrkraft);
+	}
+
+
+	/**
+	 * Liefert TRUE, falls die Lehrkraft aktuell als Leitung 2 zugeordnet ist.
+	 *
+	 * @param lehrkraft   Die {@link UvAlgorithmusDynDatenLehrkraft}.
+	 *
+	 * @return TRUE, falls die Lehrkraft aktuell als Leitung 2 zugeordnet ist.
+	 */
+	boolean gibIstLeitung2Zugeordnet(@NotNull final UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		return leitung2Zugeordnet.contains(lehrkraft);
+	}
+
+
+	/**
 	 * Liefert TRUE, falls die Lehrkraft als Leitung 1 eingesetzt werden darf.
 	 *
 	 * @param lehrkraft   Die {@link UvAlgorithmusDynDatenLehrkraft}.
@@ -155,9 +179,9 @@ public final class UvAlgorithmusDynDatenKlasse {
 
 
 	/**
-	 * Liefert die Menge aller momentan zugeordneten zuerst Klassenlehrer (Leitung 1), gefolgt von stellv. Klassenlehrer (Leitung 2).
+	 * Liefert die Menge aller momentan zugeordneten Klassenlehrer (Leitung 1) zuerst, gefolgt von stellv. Klassenlehrer (Leitung 2).
 	 *
-	 * @return die Menge aller momentan zugeordneten zuerst Klassenlehrer (Leitung 1), gefolgt von stellv. Klassenlehrer (Leitung 2).
+	 * @return die Menge aller momentan zugeordneten Klassenlehrer (Leitung 1) zuerst, gefolgt von stellv. Klassenlehrer (Leitung 2).
 	 */
 	@NotNull
 	List<UvAlgorithmusDynDatenLehrkraft> gibAktuelleMengeLeitung1und2() {
@@ -190,7 +214,7 @@ public final class UvAlgorithmusDynDatenKlasse {
 	 * <br>Hinweis: Eine Optimierung lohnt sich hier nicht,
 	 *              denn die zugeordneten Lehrkräfte sind fast immer 0 oder 1.
 	 *
-	 * @return eine potentielle Lehrkraft, welche der Klassenleitung (Leitung 1) noch nicht zugeordnet ist.
+	 * @return eine potentielle Lehrkraft, welche der Klassenleitung (Leitung 1) noch nicht zugeordnet ist, oder null.
 	 */
 	UvAlgorithmusDynDatenLehrkraft gibLeitung1PotentiellZufaelligOderNull() {
 		final int size = leitung1Potentiell.size();
@@ -218,7 +242,7 @@ public final class UvAlgorithmusDynDatenKlasse {
 	 * <br>Hinweis: Eine Optimierung lohnt sich hier nicht,
 	 *              denn die zugeordneten Lehrkräfte sind fast immer 0 oder 1.
 	 *
-	 * @return eine potentielle Lehrkraft, welche der stellv. Klassenleitung (Leitung 2) noch nicht zugeordnet ist.
+	 * @return eine potentielle Lehrkraft, welche der stellv. Klassenleitung (Leitung 2) noch nicht zugeordnet ist, oder null.
 	 */
 	UvAlgorithmusDynDatenLehrkraft gibLeitung2PotentiellZufaelligOderNull() {
 		final int size = leitung2Potentiell.size();
@@ -241,9 +265,9 @@ public final class UvAlgorithmusDynDatenKlasse {
 
 
 	/**
-	 * Liefert eine zufällige derzeit zugeordnete Klassenleitung (Leitung 1) die nicht fixiert ist, oder null.
+	 * Liefert eine zufällige derzeit zugeordnete Klassenleitung (Leitung 1), die nicht fixiert ist, oder null.
 	 *
-	 * @return eine zufällige derzeit zugeordnete Klassenleitung (Leitung 1) die nicht fixiert ist, oder null.
+	 * @return eine zufällige derzeit zugeordnete Klassenleitung (Leitung 1), die nicht fixiert ist, oder null.
 	 */
 	UvAlgorithmusDynDatenLehrkraft gibLeitung1ZugeordnetAberNichtFixiertZufaellig() {
 		final int size = leitung1Zugeordnet.size();
@@ -255,9 +279,9 @@ public final class UvAlgorithmusDynDatenKlasse {
 
 
 	/**
-	 * Liefert eine zufällige derzeit zugeordnete stellv. Klassenleitung (Leitung 2) die nicht fixiert ist, oder null.
+	 * Liefert eine zufällige derzeit zugeordnete stellv. Klassenleitung (Leitung 2), die nicht fixiert ist, oder null.
 	 *
-	 * @return eine zufällige derzeit zugeordnete stellv. Klassenleitung (Leitung 2) die nicht fixiert ist, oder null.
+	 * @return eine zufällige derzeit zugeordnete stellv. Klassenleitung (Leitung 2), die nicht fixiert ist, oder null.
 	 */
 	UvAlgorithmusDynDatenLehrkraft gibLeitung2ZugeordnetAberNichtFixiertZufaellig() {
 		final int size = leitung2Zugeordnet.size();
@@ -275,11 +299,14 @@ public final class UvAlgorithmusDynDatenKlasse {
 	 * @param lehrkraft   Die zu entfernende potentielle Lehrkraft.
 	 */
 	void entferneLeitung1(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		// Konsistenzprüfung. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (leitung1Zugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Leitung 1 %s soll verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Leitung 1 %s soll verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			return;
 		}
 		if (leitung1ZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Leitung 1 %s soll verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Leitung 1 %s soll verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			return;
 		}
 
 		leitung1Potentiell.remove(lehrkraft);
@@ -293,11 +320,14 @@ public final class UvAlgorithmusDynDatenKlasse {
 	 * @param lehrkraft   Die zu entfernende potentielle Lehrkraft.
 	 */
 	void entferneLeitung2(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		// Konsistenzprüfung. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (leitung2Zugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Leitung 2 %s soll verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Leitung 2 %s soll verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			return;
 		}
 		if (leitung2ZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Leitung 2 %s soll verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Leitung 2 %s soll verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			return;
 		}
 
 		leitung2Potentiell.remove(lehrkraft);
@@ -305,7 +335,7 @@ public final class UvAlgorithmusDynDatenKlasse {
 
 
 	/**
-	 * Fügt dieser Klasse eine Klassenleitung (Leitung 1) hinzu und aktualisiert den Malus.
+	 * Fügt dieser Klasse eine Klassenleitung (Leitung 1) hinzu. Den Malus aktualisiert der Aufrufer.
 	 *
 	 * <br>Die Lehrkraft darf dabei weder bereits als Leitung 1 noch als Leitung 2 zugeordnet oder fixiert sein.
 	 *
@@ -314,18 +344,22 @@ public final class UvAlgorithmusDynDatenKlasse {
 	 *                    sonst in die normale Menge.
 	 */
 	void stateLeitung1ZugeordnetAdd(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft, final boolean fixiert) {
-		// Konsistenz überprüfen.
+		// Konsistenz überprüfen. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (leitung1Zugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung1 hat Lehrkraft bereits (normal)!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 1 hat die Lehrkraft bereits (normal)!");
+			return;
 		}
 		if (leitung1ZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung1 hat Lehrkraft bereits (fixiert)!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 1 hat die Lehrkraft bereits (fixiert)!");
+			return;
 		}
 		if (leitung2Zugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung2 hat Lehrkraft bereits (normal)!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 2 hat die Lehrkraft bereits (normal)!");
+			return;
 		}
 		if (leitung2ZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung2 hat Lehrkraft bereits (fixiert)!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 2 hat die Lehrkraft bereits (fixiert)!");
+			return;
 		}
 
 		// Zustand verändern
@@ -334,21 +368,21 @@ public final class UvAlgorithmusDynDatenKlasse {
 		} else {
 			leitung1Zugeordnet.add(lehrkraft);
 		}
-
 	}
 
 
 	/**
-	 * Entfernt eine zuvor zugeordnete Klassenleitung (Leitung 1) und aktualisiert den Malus.
+	 * Entfernt eine zuvor zugeordnete Klassenleitung (Leitung 1). Den Malus aktualisiert der Aufrufer.
 	 *
 	 * <br>Die Lehrkraft muss aktuell als normale Leitung 1 zugeordnet sein.
 	 *
 	 * @param lehrkraft   Die aktuell zugeordnete Lehrkraft.
 	 */
 	void stateLeitung1ZugeordnetDel(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
-		// Konsistenz überprüfen.
+		// Konsistenz überprüfen. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (!leitung1Zugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung 1 kann nicht entfernt werden, da sie gar nicht zugeordnet ist!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 1 kann nicht entfernt werden, da sie gar nicht zugeordnet ist!");
+			return;
 		}
 
 		// Zustand verändern
@@ -357,7 +391,7 @@ public final class UvAlgorithmusDynDatenKlasse {
 
 
 	/**
-	 * Fügt dieser Klasse eine stellv. Klassenleitung (Leitung 2) hinzu und aktualisiert den Malus.
+	 * Fügt dieser Klasse eine stellv. Klassenleitung (Leitung 2) hinzu. Den Malus aktualisiert der Aufrufer.
 	 *
 	 * <br>Die Lehrkraft darf dabei weder bereits als Leitung 1 noch als Leitung 2
 	 * zugeordnet oder fixiert sein.
@@ -367,18 +401,22 @@ public final class UvAlgorithmusDynDatenKlasse {
 	 *                    sonst in die normale Menge.
 	 */
 	void stateLeitung2ZugeordnetAdd(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft, final boolean fixiert) {
-		// Konsistenz überprüfen.
+		// Konsistenz überprüfen. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (leitung1Zugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung1 hat Lehrkraft bereits (normal)!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 1 hat die Lehrkraft bereits (normal)!");
+			return;
 		}
 		if (leitung1ZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung1 hat Lehrkraft bereits (fixiert)!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 1 hat die Lehrkraft bereits (fixiert)!");
+			return;
 		}
 		if (leitung2Zugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung2 hat Lehrkraft bereits (normal)!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 2 hat die Lehrkraft bereits (normal)!");
+			return;
 		}
 		if (leitung2ZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung2 hat Lehrkraft bereits (fixiert)!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 2 hat die Lehrkraft bereits (fixiert)!");
+			return;
 		}
 
 		// Zustand verändern
@@ -391,20 +429,49 @@ public final class UvAlgorithmusDynDatenKlasse {
 
 
 	/**
-	 * Entfernt eine zuvor zugeordnete stellv. Klassenleitung (Leitung 2) und aktualisiert den Malus.
+	 * Entfernt eine zuvor zugeordnete stellv. Klassenleitung (Leitung 2). Den Malus aktualisiert der Aufrufer.
 	 *
 	 * <br>Die Lehrkraft muss aktuell als normale Leitung 2 zugeordnet sein.
 	 *
 	 * @param lehrkraft   Die aktuell zugeordnete Lehrkraft.
 	 */
 	void stateLeitung2ZugeordnetDel(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
-		// Konsistenz überprüfen.
+		// Konsistenz überprüfen. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (!leitung2Zugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Klassenleitung 2 kann nicht entfernt werden, da sie gar nicht zugeordnet ist!");
+			log.logLn(LogLevel.ERROR, "Klassenleitung 2 kann nicht entfernt werden, da sie gar nicht zugeordnet ist!");
+			return;
 		}
 
 		// Zustand verändern
 		leitung2Zugeordnet.remove(lehrkraft);
+	}
+
+
+	boolean gibIstLeitung1ZugeordnetAddMoeglich(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		return gibIstLeitung1Potentiell(lehrkraft)
+				&& !gibIstLeitung1Zugeordnet(lehrkraft)
+				&& !gibIstLeitung1Fixiert(lehrkraft)
+				&& !gibIstLeitung2Zugeordnet(lehrkraft)
+				&& !gibIstLeitung2Fixiert(lehrkraft);
+	}
+
+
+	boolean gibIstLeitung1ZugeordnetDelMoeglich(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		return gibIstLeitung1Zugeordnet(lehrkraft) && !gibIstLeitung1Fixiert(lehrkraft);
+	}
+
+
+	boolean gibIstLeitung2ZugeordnetAddMoeglich(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		return gibIstLeitung2Potentiell(lehrkraft)
+				&& !gibIstLeitung1Zugeordnet(lehrkraft)
+				&& !gibIstLeitung1Fixiert(lehrkraft)
+				&& !gibIstLeitung2Zugeordnet(lehrkraft)
+				&& !gibIstLeitung2Fixiert(lehrkraft);
+	}
+
+
+	boolean gibIstLeitung2ZugeordnetDelMoeglich(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		return gibIstLeitung2Zugeordnet(lehrkraft) && !gibIstLeitung2Fixiert(lehrkraft);
 	}
 
 

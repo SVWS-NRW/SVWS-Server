@@ -6,16 +6,36 @@
 			<svws-ui-notification v-if="actionError" type="error" class="mb-3">{{ actionError }}</svws-ui-notification>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Bezeichnung" v-model="bezeichnung" span="full" required />
-				<svws-ui-select :disabled="loading || !hatKompetenzAendern" title="Jahrgang" v-model="jahrgang" :items="jahrgaenge" :item-text="j => ''+j.bezeichnung" required class="col-span-2" />
+				<svws-ui-select :disabled="loading || !hatKompetenzAendern"
+					title="Jahrgang"
+					v-model="jahrgang"
+					:items="jahrgaenge"
+					:item-text="j => ''+j.bezeichnung"
+					required
+					class="col-span-2" />
 				<div class="col-span-full grid min-w-0 grid-cols-2 gap-4">
 					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Gültig von" v-model="gueltigVon" type="date" required />
 					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Gültig bis" v-model="gueltigBis" type="date" />
 				</div>
 				<svws-ui-textarea-input placeholder="Beschreibung" v-model="beschreibung" span="full" />
 				<div class="col-span-full border-t border-ui pt-4 mt-2 font-bold">Import</div>
-				<svws-ui-select :disabled="loading || !hatKompetenzAendern" title="Schuljahr" v-model="importSchuljahr" :items="schuljahre" :item-text="schuljahrText" class="col-span-full" />
-				<svws-ui-select title="Klasse" v-model="importKlasse" :items="importKlassen" :item-text="k => k.kuerzel ?? ''" class="col-span-full" :disabled="loading || !hatKompetenzAendern || importSchuljahr === null || jahrgang === null" />
-				<svws-ui-checkbox :disabled="loading || !hatKompetenzAendern" v-model="fehlendeUvFaecherAnlegen" class="col-span-full">Fehlende UV-Fächer anlegen</svws-ui-checkbox>
+				<svws-ui-select :disabled="loading || !hatKompetenzAendern"
+					title="Schuljahr"
+					v-model="importSchuljahr"
+					:items="schuljahre"
+					:item-text="schuljahrText"
+					class="col-span-full" />
+				<svws-ui-select title="Klasse"
+					v-model="importKlasse"
+					:items="importKlassen"
+					:item-text="k => k.kuerzel ?? ''"
+					class="col-span-full"
+					:disabled="loading || !hatKompetenzAendern || importSchuljahr === null || jahrgang === null" />
+				<svws-ui-checkbox :disabled="loading || !hatKompetenzAendern"
+					v-model="fehlendeUvFaecherAnlegen"
+					class="col-span-full">
+					Fehlende UV-Fächer anlegen
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -82,7 +102,7 @@
 			klassenImImportAbschnitt.value = [];
 			return;
 		}
-		klassenImImportAbschnitt.value = await state.getImportKlassen(abschnitt1.id, selectedJahrgang.id);
+		klassenImImportAbschnitt.value = await state.planung.getImportKlassen(abschnitt1.id, selectedJahrgang.id);
 	});
 
 	const openModal = () => {
@@ -120,9 +140,9 @@
 				beschreibung: beschreibung.value === "" ? null : beschreibung.value,
 			};
 			if ((importSchuljahr.value !== null) && (importKlasse.value !== null)) {
-				await state.importStundentafel({ ...daten, schuljahr: importSchuljahr.value, idKlasse: importKlasse.value.id, fehlendeUvFaecherAnlegen: fehlendeUvFaecherAnlegen.value });
+				await state.grunddaten.importStundentafel({ ...daten, schuljahr: importSchuljahr.value, idKlasse: importKlasse.value.id, fehlendeUvFaecherAnlegen: fehlendeUvFaecherAnlegen.value });
 			} else {
-				await state.createStundentafel(daten);
+				await state.grunddaten.createStundentafel(daten);
 			}
 			show.value = false;
 		} catch {

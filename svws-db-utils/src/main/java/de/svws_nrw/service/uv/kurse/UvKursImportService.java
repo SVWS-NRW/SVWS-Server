@@ -5,7 +5,6 @@ import static de.svws_nrw.data.TransactionSupport.transactional;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.svws_nrw.core.data.uv.UvKurs;
 import de.svws_nrw.core.data.uv.UvKursCreateRequest;
 import de.svws_nrw.core.data.uv.UvKursImportDaten;
 import de.svws_nrw.core.data.uv.UvLerngruppe;
@@ -21,6 +20,8 @@ import de.svws_nrw.core.data.uv.UvSchuelergruppeCreateRequest;
 import de.svws_nrw.core.data.uv.UvSchuelergruppeSchuelerCreateRequest;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.uv.lerngruppen.UvLerngruppeService;
+import de.svws_nrw.service.uv.UvUnterrichtsstrukturService;
+import de.svws_nrw.core.data.uv.UvKursunterrichtAnlageRequest;
 import de.svws_nrw.service.uv.lerngruppen.UvLerngruppenLehrerService;
 import de.svws_nrw.service.uv.lerngruppen.UvLerngruppenSchieneService;
 import de.svws_nrw.service.uv.lehrer.UvPlanungsabschnittLehrerService;
@@ -37,7 +38,7 @@ public final class UvKursImportService {
 	private final UvPlanungsabschnittLehrerService uvPlanungsabschnittLehrerService;
 	private final UvSchieneService uvSchieneService;
 	private final UvSchuelergruppeService uvSchuelergruppeService;
-	private final UvKursService uvKursService;
+	private final UvUnterrichtsstrukturService struktur;
 	private final UvLerngruppeService uvLerngruppeService;
 	private final UvLerngruppenLehrerService uvLerngruppenLehrerService;
 	private final UvLerngruppenSchieneService uvLerngruppenSchieneService;
@@ -50,7 +51,7 @@ public final class UvKursImportService {
 	 * @param uvPlanungsabschnittLehrerService der Service für Planungsabschnitt-Lehrer-Zuordnungen
 	 * @param uvSchieneService der Service für Schienen
 	 * @param uvSchuelergruppeService der Service für Schülergruppen
-	 * @param uvKursService der Service für Kurse
+	 * @param struktur der Service für atomaren Kursunterricht
 	 * @param uvLerngruppeService der Service für Lerngruppen
 	 * @param uvLerngruppenLehrerService der Service für Lehrer-Lerngruppen-Zuordnungen
 	 * @param uvLerngruppenSchieneService der Service für Schienen-Lerngruppen-Zuordnungen
@@ -58,7 +59,7 @@ public final class UvKursImportService {
 	 */
 	public UvKursImportService(final UvPlanungsabschnittService uvPlanungsabschnittService,
 			final UvPlanungsabschnittLehrerService uvPlanungsabschnittLehrerService, final UvSchieneService uvSchieneService,
-			final UvSchuelergruppeService uvSchuelergruppeService, final UvKursService uvKursService,
+			final UvSchuelergruppeService uvSchuelergruppeService, final UvUnterrichtsstrukturService struktur,
 			final UvLerngruppeService uvLerngruppeService, final UvLerngruppenLehrerService uvLerngruppenLehrerService,
 			final UvLerngruppenSchieneService uvLerngruppenSchieneService,
 			final UvSchuelergruppeSchuelerService uvSchuelergruppeSchuelerService) {
@@ -66,7 +67,7 @@ public final class UvKursImportService {
 		this.uvPlanungsabschnittLehrerService = uvPlanungsabschnittLehrerService;
 		this.uvSchieneService = uvSchieneService;
 		this.uvSchuelergruppeService = uvSchuelergruppeService;
-		this.uvKursService = uvKursService;
+		this.struktur = struktur;
 		this.uvLerngruppeService = uvLerngruppeService;
 		this.uvLerngruppenLehrerService = uvLerngruppenLehrerService;
 		this.uvLerngruppenSchieneService = uvLerngruppenSchieneService;
@@ -124,18 +125,38 @@ public final class UvKursImportService {
 	}
 
 	private void createKurse(final UvKursImportDaten daten, final UvPlanungsabschnittsdatenBundle result, final Map<Long, Long> ids) {
-		for (final UvKursCreateRequest request : daten.kurse) {
-			request.idSchuelergruppe = resolveId(ids, request.idSchuelergruppe);
-			final UvKurs erstellt = uvKursService.create(request);
-			ids.put(request.id, erstellt.id);
-			result.kurse.add(erstellt);
+		final Map<Long, UvLerngruppeCreateRequest> lerngruppenByKurs = new HashMap<>();
+		for (final UvLerngruppeCreateRequest lerngruppe : daten.lerngruppen) {
+			if ((lerngruppe.idKurs != null) && (lerngruppenByKurs.putIfAbsent(lerngruppe.idKurs, lerngruppe) != null)) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Zu einem Kurs darf nur eine Lerngruppe importiert werden.");
+			}
+		}
+		for (final UvKursCreateRequest kurs : daten.kurse) {
+			final UvLerngruppeCreateRequest lerngruppe = lerngruppenByKurs.get(kurs.id);
+			if (lerngruppe == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Zu jedem importierten Kurs muss genau eine Lerngruppe angegeben werden.");
+			}
+			kurs.idSchuelergruppe = resolveId(ids, kurs.idSchuelergruppe);
+			final UvKursunterrichtAnlageRequest request = new UvKursunterrichtAnlageRequest();
+			request.kurs = kurs;
+			request.lerngruppe = lerngruppe;
+			final UvPlanungsabschnittsdatenBundle erstellt = struktur.createKursMitLerngruppe(request);
+			ids.put(kurs.id, erstellt.kurse.getFirst().id);
+			ids.put(lerngruppe.id, erstellt.lerngruppen.getFirst().id);
+			result.kurse.addAll(erstellt.kurse);
+			result.lerngruppen.addAll(erstellt.lerngruppen);
 		}
 	}
 
 	private void createLerngruppen(final UvKursImportDaten daten, final UvPlanungsabschnittsdatenBundle result,
 			final Map<Long, Long> ids) {
 		for (final UvLerngruppeCreateRequest request : daten.lerngruppen) {
-			request.idKurs = resolveId(ids, request.idKurs);
+			if (request.idKurs != null) {
+				if (!ids.containsKey(request.id)) {
+					throw new ApiOperationException(Status.BAD_REQUEST, "Eine Kurslerngruppe muss zu einem importierten Kurs gehören.");
+				}
+				continue;
+			}
 			final UvLerngruppe erstellt = uvLerngruppeService.create(request);
 			ids.put(request.id, erstellt.id);
 			result.lerngruppen.add(erstellt);

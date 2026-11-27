@@ -6,7 +6,7 @@ export interface UvAlgorithmusDynDatenRegel extends JavaObject {
 	/**
 	 * Addiert oder subtrahiert den Malus der Regel, je nach Faktor.
 	 *
-	 * @param faktor   Der Faktor mit dem der Malus multipliziert wird (1 oder -1).
+	 * @param faktor   Der Faktor, mit dem der Malus multipliziert wird (1 oder -1).
 	 */
 	changeMalus(faktor: number): void;
 

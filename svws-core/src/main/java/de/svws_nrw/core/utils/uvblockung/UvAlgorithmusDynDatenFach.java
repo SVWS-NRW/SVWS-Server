@@ -4,8 +4,7 @@ import de.svws_nrw.core.data.uv.UvFach;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Fach-Objekt (z. B. Mathematik) für schnelle, dynamische Manipulationen
- * und zur Speicherung der Referenzen.
+ * Ein Fach-Objekt (z. B. Mathematik) für schnelle, dynamische Manipulationen.
  *
  * @author Benjamin A. Bartsch
  */

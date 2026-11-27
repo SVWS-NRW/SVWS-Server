@@ -8,6 +8,7 @@ import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { UvSchuelergruppeSchueler } from '../../../core/data/uv/UvSchuelergruppeSchueler';
 import { DateUtils } from '../../../core/utils/DateUtils';
+import { JavaMath } from '../../../java/lang/JavaMath';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { ListMap2DLongKeys } from '../../../core/adt/map/ListMap2DLongKeys';
 import type { Comparator } from '../../../java/util/Comparator';
@@ -21,6 +22,7 @@ import { UvLerngruppenSchiene } from '../../../core/data/uv/UvLerngruppenSchiene
 import { ListMap1DLongKeys } from '../../../core/adt/map/ListMap1DLongKeys';
 import { UvRaumgruppe } from '../../../core/data/uv/UvRaumgruppe';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { JavaDouble } from '../../../java/lang/JavaDouble';
 import { UvLerngruppe, cast_de_svws_nrw_core_data_uv_UvLerngruppe } from '../../../core/data/uv/UvLerngruppe';
 import { UvUnterrichtRaum } from '../../../core/data/uv/UvUnterrichtRaum';
 import { JavaLong } from '../../../java/lang/JavaLong';
@@ -36,6 +38,7 @@ import { UvLehrerPflichtstundensoll } from '../../../core/data/uv/UvLehrerPflich
 import { ListMap3DLongKeys } from '../../../core/adt/map/ListMap3DLongKeys';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { UvGrunddatenBundle } from '../../../core/data/uv/UvGrunddatenBundle';
+import { ZulaessigeKursart } from '../../../asd/types/kurse/ZulaessigeKursart';
 import { UvZeitraster } from '../../../core/data/uv/UvZeitraster';
 import { UvRaum } from '../../../core/data/uv/UvRaum';
 import { UvUnterricht } from '../../../core/data/uv/UvUnterricht';
@@ -50,6 +53,7 @@ import { UvFach } from '../../../core/data/uv/UvFach';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { UvLehrerAnrechnungsstunden } from '../../../core/data/uv/UvLehrerAnrechnungsstunden';
 import { UvUnterrichtLerngruppenlehrer } from '../../../core/data/uv/UvUnterrichtLerngruppenlehrer';
+import { ZulaessigeKursartKatalogEintrag } from '../../../asd/data/kurse/ZulaessigeKursartKatalogEintrag';
 import { UvPlanungsabschnittLehrer } from '../../../core/data/uv/UvPlanungsabschnittLehrer';
 import { UvKlasse } from '../../../core/data/uv/UvKlasse';
 import { UvKlassenLehrer } from '../../../core/data/uv/UvKlassenLehrer';
@@ -146,6 +150,11 @@ export class UvManager extends JavaObject {
 	private readonly schuelergruppeSchuelerMenge: List<UvSchuelergruppeSchueler> = new ArrayList<UvSchuelergruppeSchueler>();
 
 	private planungsabschnittSchuelerMengeByIdPlanungsabschnittAndIdSchuelergruppe: ListMap2DLongKeys<UvPlanungsabschnittSchueler> = new ListMap2DLongKeys<UvPlanungsabschnittSchueler>();
+
+	/**
+	 * Die direkt zugeordneten Klassen und Klassen der Schüler einer Schülergruppe, ohne Duplikate und sortiert.
+	 */
+	private klasseMengeByIdSchuelergruppe: ListMap1DLongKeys<UvKlasse> = new ListMap1DLongKeys<UvKlasse>();
 
 	private klasseByIdPlanungsabschnittAndIdSchuelergruppeAndIdKlasse: ListMap3DLongKeys<UvKlasse> = new ListMap3DLongKeys<UvKlasse>();
 
@@ -584,6 +593,7 @@ export class UvManager extends JavaObject {
 		this.updateFachMengeByIdFach();
 		this.updateSchuelergruppeByIdPlanungsabschnittAndIdSchuelergruppe();
 		this.updateKlasseByIdPlanungsabschnittAndIdSchuelergruppeAndIdKlasse();
+		this.updateKlasseMengeByIdSchuelergruppe();
 		this.updateKlassenLehrerByIdPlanungsabschnittAndIdKlasseAndIdLehrer();
 		this.updateKursByIdPlanungsabschnittAndIdSchuelergruppeAndIdKurs();
 		this.updateSchieneByIdPlanungsabschnittAndNummerAndIdSchiene();
@@ -713,6 +723,35 @@ export class UvManager extends JavaObject {
 		this.klasseByIdPlanungsabschnittAndIdSchuelergruppeAndIdKlasse = new ListMap3DLongKeys();
 		for (const klasse of this.klasseMenge) {
 			this.klasseByIdPlanungsabschnittAndIdSchuelergruppeAndIdKlasse.addSingle(klasse.idPlanungsabschnitt, klasse.idSchuelergruppe, klasse.id, klasse);
+		}
+	}
+
+	private updateKlasseMengeByIdSchuelergruppe(): void {
+		const klassenProGruppe: JavaMap<number, JavaSet<UvKlasse>> = new HashMap<number, JavaSet<UvKlasse>>();
+		for (const klasse of this.klasseMenge) {
+			MapUtils.getOrCreateHashSet(klassenProGruppe, klasse.idSchuelergruppe).add(klasse);
+		}
+		for (const zuordnung of this.schuelergruppeSchuelerMenge) {
+			const schueler: UvPlanungsabschnittSchueler | null = this.planungsabschnittSchuelerGetByIdOrNull(zuordnung.idPlanungsabschnitt, zuordnung.idSchueler);
+			if ((schueler === null) || (schueler.idKlasse === null)) {
+				continue;
+			}
+			const klasse: UvKlasse | null = this.klasseGetByIdOrNull(schueler.idKlasse);
+			if (klasse !== null) {
+				MapUtils.getOrCreateHashSet(klassenProGruppe, zuordnung.idSchuelergruppe).add(klasse);
+			}
+		}
+		this.klasseMengeByIdSchuelergruppe = new ListMap1DLongKeys();
+		for (const gruppe of this.schuelergruppeMenge) {
+			const klassen: JavaSet<UvKlasse> | null = klassenProGruppe.get(gruppe.id);
+			if (klassen === null) {
+				continue;
+			}
+			const sortierteKlassen: List<UvKlasse> = new ArrayList<UvKlasse>(klassen);
+			sortierteKlassen.sort(this.compKlasse);
+			for (const klasse of sortierteKlassen) {
+				this.klasseMengeByIdSchuelergruppe.add(gruppe.id, klasse);
+			}
 		}
 	}
 
@@ -2545,8 +2584,7 @@ export class UvManager extends JavaObject {
 		}
 		DeveloperNotificationException.ifTrue(JavaString.format("Wochentag von UvZeitrasterEintrag mit ID %d muss zwischen 1 und 7 liegen.", eintrag.id), (eintrag.wochentag < 1) || (eintrag.wochentag > 7));
 		DeveloperNotificationException.ifTrue(JavaString.format("Stunde von UvZeitrasterEintrag mit ID %d muss größer als 0 sein.", eintrag.id), eintrag.stunde < 1);
-		DeveloperNotificationException.ifTrue(JavaString.format("Beginn von UvZeitrasterEintrag mit ID %d muss >= 0 sein.", eintrag.id), eintrag.beginn < 0);
-		DeveloperNotificationException.ifTrue(JavaString.format("Ende von UvZeitrasterEintrag mit ID %d muss > Beginn sein.", eintrag.id), eintrag.ende <= eintrag.beginn);
+		DeveloperNotificationException.ifTrue(JavaString.format("Beginn und Ende von UvZeitrasterEintrag mit ID %d müssen ein gültiges Intervall zwischen 00:00 und 23:59 bilden.", eintrag.id), !UvManager.zeitrasterEintragZeitenGueltig(eintrag.beginn, eintrag.ende));
 	}
 
 	/**
@@ -4149,12 +4187,11 @@ export class UvManager extends JavaObject {
 	 * @return die gespeicherte Zuordnung
 	 */
 	public lerngruppenLehrerGetByZuordnungsIdOrException(id: number): UvLerngruppenLehrer {
-		for (const zuordnung of this.lerngruppenLehrerByIdPlanungsabschnittAndIdLerngruppeAndIdLehrer.getAllValues()) {
-			if (zuordnung.id === id) {
-				return zuordnung;
-			}
+		const zuordnung: UvLerngruppenLehrer | null = this.lerngruppenLehrerGetByZuordnungsIdOrNull(id);
+		if (zuordnung === null) {
+			throw new DeveloperNotificationException("Lerngruppenlehrer-Zuordnung mit ID " + id + " existiert nicht.");
 		}
-		throw new DeveloperNotificationException("Lerngruppenlehrer-Zuordnung mit ID " + id + " existiert nicht.");
+		return zuordnung;
 	}
 
 	/**
@@ -4816,7 +4853,7 @@ export class UvManager extends JavaObject {
 	public lehrerGetMengeVerwendetInPlanungsabschnittByLehrerMenge(planungsabschnitt: UvPlanungsabschnitt, lehrer: Collection<UvLehrer>): JavaSet<UvLehrer> {
 		const result: JavaSet<UvLehrer> = new HashSet<UvLehrer>();
 		for (const l of new HashSet(lehrer)) {
-			if (this.lerngruppenLehrerByIdPlanungsabschnittAndIdLerngruppeAndIdLehrer.containsKey13(planungsabschnitt.id, l.id)) {
+			if (this.lerngruppenLehrerByIdPlanungsabschnittAndIdLerngruppeAndIdLehrer.containsKey13(planungsabschnitt.id, l.id) || this.klassenLehrerByIdPlanungsabschnittAndIdKlasseAndIdLehrer.containsKey13(planungsabschnitt.id, l.id)) {
 				result.add(l);
 			}
 		}
@@ -4866,6 +4903,36 @@ export class UvManager extends JavaObject {
 	public stundentafelFachGetMengeByStundentafelAndAbschnitt(stundentafel: UvStundentafel, abschnitt: number): List<UvStundentafelFach> {
 		const list: List<UvStundentafelFach> | null = this.stundentafelFachByIdStundentafelAndAbschnittAndIdFachAndIdStundentafelFach.get12(stundentafel.id, abschnitt);
 		return (list === null) ? new ArrayList() : new ArrayList(list);
+	}
+
+	/**
+	 * Summiert die Wochenstunden einer Stundentafel für einen Schuljahresabschnitt.
+	 *
+	 * @param stundentafel die auszuwertende Stundentafel
+	 * @param abschnitt der Abschnitt des Schuljahres
+	 * @return die Summe der Wochenstunden
+	 */
+	public stundentafelWochenstundenGetSumme(stundentafel: UvStundentafel, abschnitt: number): number {
+		let summe: number = 0;
+		for (const fach of this.stundentafelFachGetMengeByStundentafelAndAbschnitt(stundentafel, abschnitt)) {
+			summe += fach.wochenstunden;
+		}
+		return summe;
+	}
+
+	/**
+	 * Summiert die Ergänzungsstunden einer Stundentafel für einen Schuljahresabschnitt.
+	 *
+	 * @param stundentafel die auszuwertende Stundentafel
+	 * @param abschnitt der Abschnitt des Schuljahres
+	 * @return die Summe der Ergänzungsstunden
+	 */
+	public stundentafelErgaenzungsstundenGetSumme(stundentafel: UvStundentafel, abschnitt: number): number {
+		let summe: number = 0;
+		for (const fach of this.stundentafelFachGetMengeByStundentafelAndAbschnitt(stundentafel, abschnitt)) {
+			summe += fach.davonErgaenzungsstunden;
+		}
+		return summe;
 	}
 
 	/**
@@ -4995,6 +5062,110 @@ export class UvManager extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob Beginn und Ende ein gültiges Zeitintervall innerhalb eines Tages bilden.
+	 *
+	 * @param beginn der Beginn in Minuten seit Mitternacht
+	 * @param ende das Ende in Minuten seit Mitternacht
+	 * @return ob beide Zeiten zwischen 00:00 und 23:59 liegen und das Ende nach dem Beginn liegt
+	 */
+	public static zeitrasterEintragZeitenGueltig(beginn: number, ende: number): boolean {
+		return (beginn === Math.floor(beginn)) && (ende === Math.floor(ende)) && (beginn >= 0) && (beginn < ende) && (ende < 1440);
+	}
+
+	/**
+	 * Liefert den kleinsten vorhandenen Wochentag eines Zeitrasters.
+	 *
+	 * @param idZeitraster die ID des Zeitrasters
+	 * @return der kleinste Wochentag oder 0 bei leerem Raster
+	 */
+	public zeitrasterEintragGetMinWochentag(idZeitraster: number): number {
+		let minimum: number = 0;
+		for (const eintrag of this.zeitrasterEintragGetMengeByZeitraster(idZeitraster)) {
+			minimum = (minimum === 0) ? eintrag.wochentag : Math.min(minimum, eintrag.wochentag);
+		}
+		return minimum;
+	}
+
+	/**
+	 * Liefert den größten vorhandenen Wochentag eines Zeitrasters.
+	 *
+	 * @param idZeitraster die ID des Zeitrasters
+	 * @return der größte Wochentag oder 0 bei leerem Raster
+	 */
+	public zeitrasterEintragGetMaxWochentag(idZeitraster: number): number {
+		let maximum: number = 0;
+		for (const eintrag of this.zeitrasterEintragGetMengeByZeitraster(idZeitraster)) {
+			maximum = Math.max(maximum, eintrag.wochentag);
+		}
+		return maximum;
+	}
+
+	/**
+	 * Liefert die größte vorhandene Unterrichtsstunde eines Zeitrasters.
+	 *
+	 * @param idZeitraster die ID des Zeitrasters
+	 * @return die größte Unterrichtsstunde oder 0 bei leerem Raster
+	 */
+	public zeitrasterEintragGetMaxStunde(idZeitraster: number): number {
+		let maximum: number = 0;
+		for (const eintrag of this.zeitrasterEintragGetMengeByZeitraster(idZeitraster)) {
+			maximum = Math.max(maximum, eintrag.stunde);
+		}
+		return maximum;
+	}
+
+	/**
+	 * Liefert die Einträge eines Rastertages nach Unterrichtsstunde sortiert.
+	 *
+	 * @param idZeitraster die ID des Zeitrasters
+	 * @param wochentag der Wochentag
+	 * @return die sortierten Einträge
+	 */
+	public zeitrasterEintragGetMengeByZeitrasterAndWochentag(idZeitraster: number, wochentag: number): List<UvZeitrasterEintrag> {
+		const result: List<UvZeitrasterEintrag> = new ArrayList<UvZeitrasterEintrag>();
+		for (const eintrag of this.zeitrasterEintragGetMengeByZeitraster(idZeitraster)) {
+			if (eintrag.wochentag === wochentag) {
+				result.add(eintrag);
+			}
+		}
+		result.sort(this.compZeitrasterEintrag);
+		return result;
+	}
+
+	/**
+	 * Liefert die Einträge einer Unterrichtsstunde nach Wochentag sortiert.
+	 *
+	 * @param idZeitraster die ID des Zeitrasters
+	 * @param stunde die Unterrichtsstunde
+	 * @return die sortierten Einträge
+	 */
+	public zeitrasterEintragGetMengeByZeitrasterAndStunde(idZeitraster: number, stunde: number): List<UvZeitrasterEintrag> {
+		const result: List<UvZeitrasterEintrag> = new ArrayList<UvZeitrasterEintrag>();
+		for (const eintrag of this.zeitrasterEintragGetMengeByZeitraster(idZeitraster)) {
+			if (eintrag.stunde === stunde) {
+				result.add(eintrag);
+			}
+		}
+		result.sort(this.compZeitrasterEintrag);
+		return result;
+	}
+
+	/**
+	 * Prüft, ob eine gültige Rasterposition für einen neuen Eintrag noch frei ist.
+	 *
+	 * @param idZeitraster die ID des Zeitrasters
+	 * @param wochentag der Wochentag zwischen Montag und Sonntag
+	 * @param stunde die positive Unterrichtsstunde
+	 */
+	public zeitrasterEintragPruefePosition(idZeitraster: number, wochentag: number, stunde: number): void {
+		this.zeitrasterGetByIdOrException(idZeitraster);
+		DeveloperNotificationException.ifTrue("Wochentag und Unterrichtsstunde müssen gültige ganze Zahlen sein.", (wochentag < 1) || (wochentag > 7) || (stunde < 1) || (wochentag !== Math.floor(wochentag)) || (stunde !== Math.floor(stunde)));
+		for (const eintrag of this.zeitrasterEintragGetMengeByZeitraster(idZeitraster)) {
+			DeveloperNotificationException.ifTrue("Für diesen Wochentag und diese Unterrichtsstunde existiert bereits ein Eintrag.", (eintrag.wochentag === wochentag) && (eintrag.stunde === stunde));
+		}
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link UvPlanungsabschnittZeitraster}-Objekt. <br>
 	 * @param idPlanungsabschnitt Die ID des Planungsabschnitts.
 	 * @param idZeitraster Die ID des Zeitrasters.
@@ -5100,6 +5271,33 @@ export class UvManager extends JavaObject {
 			const fach: UvFach | null = it.next();
 			if (!this.stundentafelFachByIdStundentafelAndAbschnittAndIdFachAndIdStundentafelFach.containsKey3(fach.id)) {
 				it.remove();
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die in Stundentafeln, Kursen oder Lerngruppen verwendeten UV-Fächer.
+	 *
+	 * @return die verwendeten Fächer in der Reihenfolge der Fachliste
+	 */
+	public fachGetMengeVerwendet(): List<UvFach> {
+		const ids: JavaSet<number> = new HashSet<number>();
+		for (const fach of this.stundentafelFachMenge) {
+			ids.add(fach.idFach);
+		}
+		for (const kurs of this.kursMenge) {
+			ids.add(kurs.idFach);
+		}
+		for (const lerngruppe of this.lerngruppeMenge) {
+			if (lerngruppe.idFach !== null) {
+				ids.add(lerngruppe.idFach);
+			}
+		}
+		const result: List<UvFach> = new ArrayList<UvFach>();
+		for (const fach of this.fachMenge) {
+			if (ids.contains(fach.id)) {
+				result.add(fach);
 			}
 		}
 		return result;
@@ -5313,11 +5511,11 @@ export class UvManager extends JavaObject {
 		if (lerngruppe.idKlasse !== null) {
 			return ListUtils.create1(this.klasseGetByIdOrException(lerngruppe.idKlasse));
 		}
-		const kurs: UvKurs | null = this.kursGetByLerngruppe(lerngruppe);
-		if (kurs === null) {
+		const schuelergruppe: UvSchuelergruppe | null = this.schuelergruppeGetByLerngruppe(lerngruppe);
+		if (schuelergruppe === null) {
 			return new ArrayList();
 		}
-		return this.klasseByIdPlanungsabschnittAndIdSchuelergruppeAndIdKlasse.get12(lerngruppe.idPlanungsabschnitt, kurs.idSchuelergruppe);
+		return this.klasseMengeByIdSchuelergruppe.get(schuelergruppe.id);
 	}
 
 	/**
@@ -5381,14 +5579,11 @@ export class UvManager extends JavaObject {
 	 * @return das zugeordnete {@link UvFach} oder {@code null}
 	 */
 	public fachGetByLerngruppe(lerngruppe: UvLerngruppe): UvFach | null {
-		const kurs: UvKurs | null = this.kursGetByLerngruppe(lerngruppe);
-		if (kurs !== null) {
-			return this.fachGetByIdOrException(kurs.idFach);
+		if (lerngruppe.idKurs !== null) {
+			const kurs: UvKurs | null = this.kursGetByIdOrNull(lerngruppe.idKurs);
+			return (kurs === null) ? null : this.fachGetByIdOrNull(kurs.idFach);
 		}
-		if (lerngruppe.idFach === null) {
-			return null;
-		}
-		return this.fachGetByIdOrException(lerngruppe.idFach);
+		return (lerngruppe.idFach === null) ? null : this.fachGetByIdOrNull(lerngruppe.idFach);
 	}
 
 	/**
@@ -5690,6 +5885,316 @@ export class UvManager extends JavaObject {
 	 */
 	public zeitrasterGetWochentypmodell(): number {
 		return 3;
+	}
+
+	/**
+	 * Prüft eine positive ganzzahlige Kursnummer.
+	 *
+	 * @param kursnummer die eingegebene Kursnummer
+	 * @return ob die Kursnummer zulässig ist
+	 */
+	public static kursnummerIstGueltig(kursnummer: number): boolean {
+		return kursnummer >= 1 && kursnummer <= JavaDouble.MAX_VALUE && kursnummer === Math.floor(kursnummer);
+	}
+
+	/**
+	 * Prüft die in der Unterrichtsverteilung angebotenen Kursarten eines Schuljahres.
+	 *
+	 * @param kursart das allgemeine oder spezifische Kursartkürzel
+	 * @param schuljahr das Schuljahr
+	 * @return ob die Kursart für die UV angeboten wird
+	 */
+	public static kursartIstGueltig(kursart: string, schuljahr: number): boolean {
+		for (const art of ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr)) {
+			const daten: ZulaessigeKursartKatalogEintrag | null = art.daten(schuljahr);
+			if (daten === null || JavaObject.equalsTranspiler("PUK", (daten.kuerzel))) {
+				continue;
+			}
+			const kuerzel: string = daten.kuerzelAllg === null ? daten.kuerzel : daten.kuerzelAllg;
+			if (JavaObject.equalsTranspiler(kursart, (kuerzel)) || (JavaObject.equalsTranspiler("DK", (daten.kuerzelAllg)) && JavaObject.equalsTranspiler(kursart, (daten.kuerzel)))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Prüft die nicht negativen, endlichen Wochenstunden einer Lerngruppe.
+	 *
+	 * @param wochenstunden die geplanten Wochenstunden
+	 * @param unterrichtet die unterrichteten Wochenstunden
+	 * @return ob beide Stundenwerte zulässig sind
+	 */
+	public static lerngruppeStundenGueltig(wochenstunden: number, unterrichtet: number): boolean {
+		return wochenstunden >= 0 && wochenstunden <= JavaDouble.MAX_VALUE && unterrichtet >= 0 && unterrichtet <= JavaDouble.MAX_VALUE;
+	}
+
+	/**
+	 * Prüft Reihenfolge, Einsatzstunden und angerechnete Stunden einer Lehrkraftzuordnung.
+	 *
+	 * @param reihenfolge die positive ganzzahlige Reihenfolge
+	 * @param wochenstunden die Einsatzstunden
+	 * @param maxStunden die maximalen Einsatzstunden der Lerngruppe
+	 * @param angerechnet die auf das Deputat angerechneten Stunden
+	 * @return ob die Zuordnungswerte zulässig sind
+	 */
+	public static lehrerZuordnungswerteGueltig(reihenfolge: number, wochenstunden: number, maxStunden: number, angerechnet: number): boolean {
+		return reihenfolge >= 1 && reihenfolge <= JavaDouble.MAX_VALUE && reihenfolge === Math.floor(reihenfolge) && wochenstunden >= 0 && wochenstunden <= JavaDouble.MAX_VALUE && wochenstunden <= maxStunden && angerechnet >= 0 && angerechnet <= JavaDouble.MAX_VALUE && angerechnet <= wochenstunden;
+	}
+
+	/**
+	 * Liefert die Lehrkraftzuordnungen eines Planungsabschnitts zu einer Lehrkraft.
+	 *
+	 * @param plan der Planungsabschnitt
+	 * @param idLehrer die Lehrkraft-ID
+	 * @return eine neue Liste der Zuordnungen
+	 */
+	public lerngruppenLehrerGetMengeByPlanungsabschnittAndLehrer(plan: UvPlanungsabschnitt, idLehrer: number): List<UvLerngruppenLehrer> {
+		return this.lerngruppenLehrerByIdPlanungsabschnittAndIdLerngruppeAndIdLehrer.get13(plan.id, idLehrer);
+	}
+
+	/**
+	 * Liefert eine Zuordnung über ihre Datensatz-ID oder null.
+	 *
+	 * @param id die Datensatz-ID
+	 * @return die gespeicherte Zuordnung oder null
+	 */
+	public lerngruppenLehrerGetByZuordnungsIdOrNull(id: number): UvLerngruppenLehrer | null {
+		for (const zuordnung of this.lerngruppenLehrerMenge) {
+			if (zuordnung.id === id) {
+				return zuordnung;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Prüft, ob eine Lehrkraft einer Lerngruppe zugeordnet ist.
+	 *
+	 * @param gruppe die Lerngruppe
+	 * @param idLehrer die Lehrkraft-ID
+	 * @return ob die Zuordnung vorhanden ist
+	 */
+	public lerngruppeLehrerIstZugeordnet(gruppe: UvLerngruppe, idLehrer: number): boolean {
+		return this.lerngruppenLehrerByIdPlanungsabschnittAndIdLerngruppeAndIdLehrer.containsKey123(gruppe.idPlanungsabschnitt, gruppe.id, idLehrer);
+	}
+
+	/**
+	 * Prüft eine neue Zuordnung. Fachfremde Lehrkräfte bleiben bei der Neuanlage ausdrücklich zulässig.
+	 *
+	 * @param plan der aktuelle Planungsabschnitt
+	 * @param gruppe die Lerngruppe
+	 * @param idLehrer die Lehrkraft-ID
+	 * @param wochenstunden die Einsatzstunden
+	 * @param angerechnet die angerechneten Stunden
+	 * @return ob eine neue Zuordnung zulässig ist
+	 */
+	public lerngruppenLehrerNeuIstGueltig(plan: UvPlanungsabschnitt, gruppe: UvLerngruppe, idLehrer: number, wochenstunden: number, angerechnet: number): boolean {
+		const lehrer: UvLehrer | null = this.lehrerGetByIdOrNull(idLehrer);
+		return gruppe.idPlanungsabschnitt === plan.id && this.lerngruppeGetByIdOrNull(gruppe.id) !== null && lehrer !== null && this.lehrerIsInPlanungsabschnitt(lehrer, plan) && !this.lerngruppeLehrerIstZugeordnet(gruppe, idLehrer) && wochenstunden > 0 && UvManager.lehrerZuordnungswerteGueltig(1, wochenstunden, gruppe.wochenstundenUnterrichtet, angerechnet);
+	}
+
+	/**
+	 * Prüft einen Lehrkraftwechsel. Die bisherige Lehrkraft darf auch ohne passende Lehrbefähigung erhalten bleiben.
+	 *
+	 * @param plan der aktuelle Planungsabschnitt
+	 * @param gruppe die Lerngruppe
+	 * @param idZuordnung die bestehende Zuordnung
+	 * @param idLehrer die gewünschte Lehrkraft
+	 * @return ob die Lehrkraft in dieser Zuordnung zulässig ist
+	 */
+	public lerngruppenLehrerWechselIstGueltig(plan: UvPlanungsabschnitt, gruppe: UvLerngruppe, idZuordnung: number, idLehrer: number): boolean {
+		if (gruppe.idPlanungsabschnitt !== plan.id) {
+			return false;
+		}
+		let bisher: UvLerngruppenLehrer | null = null;
+		for (const zuordnung of this.lerngruppenLehrerGetMengeByLerngruppe(gruppe)) {
+			if (zuordnung.id === idZuordnung) {
+				bisher = zuordnung;
+				break;
+			}
+		}
+		if (bisher === null) {
+			return false;
+		}
+		if (bisher.idLehrer === idLehrer) {
+			return true;
+		}
+		const lehrer: UvLehrer | null = this.lehrerGetByIdOrNull(idLehrer);
+		return lehrer !== null && this.lehrerIsInPlanungsabschnitt(lehrer, plan) && !this.lerngruppeLehrerIstZugeordnet(gruppe, idLehrer) && this.lehrerHatLehrbefaehigungLerngruppe(lehrer, gruppe);
+	}
+
+	/**
+	 * Prüft die Änderung einer bestehenden Lehrkraftzuordnung.
+	 *
+	 * @param plan der aktuelle Planungsabschnitt
+	 * @param gruppe die Lerngruppe
+	 * @param idZuordnung die bestehende Zuordnung
+	 * @param idLehrer die gewünschte Lehrkraft
+	 * @param reihenfolge die Reihenfolge
+	 * @param wochenstunden die Einsatzstunden
+	 * @param angerechnet die angerechneten Stunden
+	 * @return ob die Änderung zulässig ist
+	 */
+	public lerngruppenLehrerAenderungIstGueltig(plan: UvPlanungsabschnitt, gruppe: UvLerngruppe, idZuordnung: number, idLehrer: number, reihenfolge: number, wochenstunden: number, angerechnet: number): boolean {
+		return this.lerngruppenLehrerWechselIstGueltig(plan, gruppe, idZuordnung, idLehrer) && UvManager.lehrerZuordnungswerteGueltig(reihenfolge, wochenstunden, gruppe.wochenstundenUnterrichtet, angerechnet);
+	}
+
+	/**
+	 * Prüft geänderte Lerngruppenstunden gegen die vorhandenen Lehrkraftzuordnungen.
+	 *
+	 * @param plan der aktuelle Planungsabschnitt
+	 * @param entwurf der Lerngruppenentwurf
+	 * @return ob die Stundenänderung zulässig ist
+	 */
+	public lerngruppeStundenAenderungIstGueltig(plan: UvPlanungsabschnitt, entwurf: UvLerngruppe): boolean {
+		if (entwurf.idPlanungsabschnitt !== plan.id || this.lerngruppeGetByIdOrNull(entwurf.id) === null || !UvManager.lerngruppeStundenGueltig(entwurf.wochenstunden, entwurf.wochenstundenUnterrichtet)) {
+			return false;
+		}
+		for (const zuordnung of this.lerngruppenLehrerGetMengeByLerngruppe(entwurf)) {
+			if (!UvManager.lehrerZuordnungswerteGueltig(zuordnung.reihenfolge, zuordnung.wochenstunden, entwurf.wochenstundenUnterrichtet, zuordnung.wochenstundenAngerechnet)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Summiert die Einsatzstunden einer Lehrkraft im Planungsabschnitt.
+	 *
+	 * @param plan der Planungsabschnitt
+	 * @param idLehrer die Lehrkraft-ID
+	 * @return die Stundensumme
+	 */
+	public lehrerUnterrichtsstundenGetByPlanungsabschnitt(plan: UvPlanungsabschnitt, idLehrer: number): number {
+		let summe: number = 0;
+		for (const zuordnung of this.lerngruppenLehrerGetMengeByPlanungsabschnittAndLehrer(plan, idLehrer)) {
+			summe += zuordnung.wochenstunden;
+		}
+		return summe;
+	}
+
+	/**
+	 * Summiert die auf das Deputat angerechneten Einsatzstunden einer Lehrkraft im Planungsabschnitt.
+	 *
+	 * @param plan der Planungsabschnitt
+	 * @param idLehrer die Lehrkraft-ID
+	 * @return die Stundensumme
+	 */
+	public lehrerAngerechneteStundenGetByPlanungsabschnitt(plan: UvPlanungsabschnitt, idLehrer: number): number {
+		let summe: number = 0;
+		for (const zuordnung of this.lerngruppenLehrerGetMengeByPlanungsabschnittAndLehrer(plan, idLehrer)) {
+			summe += zuordnung.wochenstundenAngerechnet;
+		}
+		return summe;
+	}
+
+	/**
+	 * Berechnet die freie Kapazität nach Ersatz oder Ergänzung einer Lehrkraftzuordnung.
+	 *
+	 * @param plan der Planungsabschnitt
+	 * @param idLehrer die Lehrkraft-ID
+	 * @param idZuordnung die zu ersetzende Zuordnung oder eine negative ID bei Neuanlage
+	 * @param angerechnet die künftig angerechneten Einsatzstunden
+	 * @return die Restkapazität oder null bei fehlendem Pflichtstundensoll
+	 */
+	public lehrerReststundenGetNachZuordnung(plan: UvPlanungsabschnitt, idLehrer: number, idZuordnung: number, angerechnet: number): number | null {
+		const lehrer: UvLehrer | null = this.lehrerGetByIdOrNull(idLehrer);
+		if (lehrer === null) {
+			return null;
+		}
+		const soll: number | null = this.lehrerPflichtstundensollGetDoubleByLehrerAndPlanungsabschnitt(lehrer, plan);
+		if (soll === null) {
+			return null;
+		}
+		let bisher: number = 0;
+		for (const zuordnung of this.lerngruppenLehrerGetMengeByPlanungsabschnittAndLehrer(plan, idLehrer)) {
+			if (zuordnung.id !== idZuordnung) {
+				bisher += zuordnung.wochenstundenAngerechnet;
+			}
+		}
+		return soll - this.lehrerAnrechnungsstundenGetDoubleByLehrerAndPlanungsabschnitt(lehrer, plan) - bisher - angerechnet;
+	}
+
+	/**
+	 * Prüft alle Lehrkräfte vor der Aufnahme in einen Planungsabschnitt.
+	 *
+	 * @param plan der Planungsabschnitt
+	 * @param ids die gewünschten Lehrkraft-IDs
+	 * @return die verfügbaren Lehrkräfte ohne doppelte IDs
+	 */
+	public lehrerPlanungsabschnittHinzufuegenPruefen(plan: UvPlanungsabschnitt, ids: List<number>): List<UvLehrer> {
+		const kandidaten: JavaSet<number> = new HashSet<number>();
+		for (const lehrer of this.lehrerGetMengeTaetigAberNichtInPlanungsabschnitt(plan)) {
+			kandidaten.add(lehrer.id);
+		}
+		const result: List<UvLehrer> = new ArrayList<UvLehrer>();
+		const gesehen: JavaSet<number> = new HashSet<number>();
+		for (const id of ids) {
+			if (!kandidaten.contains(id)) {
+				throw new DeveloperNotificationException("Die Auswahl enthält keine verfügbare Lehrkraft.");
+			}
+			if (gesehen.add(id)) {
+				result.add(this.lehrerGetByIdOrException(id));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Prüft Mitgliedschaft und Verwendung aller zu entfernenden Lehrkräfte.
+	 *
+	 * @param plan der Planungsabschnitt
+	 * @param ids die zu entfernenden Lehrkraft-IDs
+	 * @return die unverwendeten Mitglieder ohne doppelte IDs
+	 */
+	public lehrerPlanungsabschnittEntfernenPruefen(plan: UvPlanungsabschnitt, ids: List<number>): List<UvLehrer> {
+		const verwendet: JavaSet<UvLehrer> = this.lehrerGetMengeVerwendetInPlanungsabschnittByLehrerMenge(plan, this.lehrerGetMengeByPlanungsabschnitt(plan));
+		const result: List<UvLehrer> = new ArrayList<UvLehrer>();
+		const gesehen: JavaSet<number> = new HashSet<number>();
+		for (const id of ids) {
+			const lehrer: UvLehrer = this.lehrerGetByIdOrException(id);
+			if (!this.lehrerIsInPlanungsabschnitt(lehrer, plan) || verwendet.contains(lehrer)) {
+				throw new DeveloperNotificationException("Die Lehrkraft gehört nicht zu diesem Planungsabschnitt oder wird dort verwendet.");
+			}
+			if (gesehen.add(id)) {
+				result.add(lehrer);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Prüft den gemeinsamen Planungsabschnitt einer Schülergruppe und ihrer zu ändernden Mitglieder.
+	 *
+	 * @param plan der Planungsabschnitt
+	 * @param idGruppe die Schülergruppe
+	 * @param idsSchueler die zu ändernden Schüler-IDs
+	 * @return die geprüfte Schülergruppe
+	 */
+	public schuelergruppenAenderungPruefen(plan: UvPlanungsabschnitt, idGruppe: number, idsSchueler: List<number>): UvSchuelergruppe {
+		const gruppe: UvSchuelergruppe = this.schuelergruppeGetByIdOrException(idGruppe);
+		if (gruppe.idPlanungsabschnitt !== plan.id) {
+			throw new DeveloperNotificationException("Die Schülergruppe gehört nicht zu diesem Planungsabschnitt.");
+		}
+		for (const id of idsSchueler) {
+			this.planungsabschnittSchuelerGetByIdOrException(plan.id, id);
+		}
+		return gruppe;
+	}
+
+	/**
+	 * Summiert die Einsatzstunden der zugeordneten Lehrkräfte einer Lerngruppe.
+	 *
+	 * @param gruppe die Lerngruppe
+	 * @return die Summe der Einsatzstunden
+	 */
+	public lerngruppeLehrerstundenGet(gruppe: UvLerngruppe): number {
+		let summe: number = 0;
+		for (const zuordnung of this.lerngruppenLehrerGetMengeByLerngruppe(gruppe)) {
+			summe += zuordnung.wochenstunden;
+		}
+		return summe;
 	}
 
 	transpilerCanonicalName(): string {

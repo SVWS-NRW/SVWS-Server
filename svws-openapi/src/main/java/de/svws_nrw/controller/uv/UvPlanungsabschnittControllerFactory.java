@@ -18,6 +18,8 @@ import de.svws_nrw.controller.uv.lerngruppen.UvLerngruppeController;
 import de.svws_nrw.controller.uv.lerngruppen.UvLerngruppeControllerImpl;
 import de.svws_nrw.controller.uv.planungsabschnitte.UvPlanungsabschnittController;
 import de.svws_nrw.controller.uv.planungsabschnitte.UvPlanungsabschnittControllerImpl;
+import de.svws_nrw.controller.uv.regeln.UvRegelController;
+import de.svws_nrw.controller.uv.regeln.UvRegelControllerImpl;
 import de.svws_nrw.controller.uv.lehrer.UvPlanungsabschnittLehrerController;
 import de.svws_nrw.controller.uv.lehrer.UvPlanungsabschnittLehrerControllerImpl;
 import de.svws_nrw.controller.uv.schueler.UvPlanungsabschnittSchuelerImportController;
@@ -117,6 +119,16 @@ public final class UvPlanungsabschnittControllerFactory {
 	 */
 	public UvPlanungsabschnittController getUvPlanungsabschnittController() throws ApiOperationException {
 		return new UvPlanungsabschnittControllerImpl(serviceFactory);
+	}
+
+	/**
+	 * Erstellt den Controller für die UV-Blockungsregeln.
+	 *
+	 * @return der Regel-Controller
+	 * @throws ApiOperationException falls die Berechtigung fehlt
+	 */
+	public UvRegelController getUvRegelController() throws ApiOperationException {
+		return new UvRegelControllerImpl(serviceFactory.getUvRegelService());
 	}
 
 	/**
@@ -326,6 +338,15 @@ public final class UvPlanungsabschnittControllerFactory {
 	 */
 	public UvPlanungsabschnittZeitrasterController getUvPlanungsabschnittZeitrasterController() throws ApiOperationException {
 		return new UvPlanungsabschnittZeitrasterControllerImpl(serviceFactory.getUvPlanungsabschnittZeitrasterService());
+	}
+
+	/**
+	 * Erzeugt den Controller für atomare Unterrichtsstrukturoperationen.
+	 *
+	 * @return der Controller
+	 */
+	public UvUnterrichtsstrukturController getUvUnterrichtsstrukturController() {
+		return new UvUnterrichtsstrukturControllerImpl(serviceFactory.getUvUnterrichtsstrukturService());
 	}
 
 }

@@ -6,8 +6,8 @@ import { UvAlgorithmusDynDaten, cast_de_svws_nrw_core_utils_uvblockung_UvAlgorit
 import { ArrayList } from '../../../java/util/ArrayList';
 import { UvManager } from '../../../core/utils/uv/UvManager';
 import { JavaString } from '../../../java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../../core/logger/Logger';
+import { LogLevel } from '../../../core/logger/LogLevel';
 import { UvAlgorithmusDynDatenJahrgang } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenJahrgang';
 import { UvAlgorithmusDynDatenFach } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenFach';
 import { Random } from '../../../java/util/Random';
@@ -50,7 +50,7 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	wochenstundenVorgesehenGekuerzt: number = 0;
 
 	/**
-	 * Wert für der angibt, ob es sich um ein Korrekturfach handelt (1 = ja, 0 = nein).
+	 * Wert, der angibt, ob es sich um ein Korrekturfach handelt (1 = ja, 0 = nein).
 	 */
 	readonly korrekturBelastung: number;
 
@@ -85,19 +85,19 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	readonly jahrgangmenge: List<UvAlgorithmusDynDatenJahrgang>;
 
 	/**
-	 * Alle Zeitslots denen diese Lerngruppe zugeordnet ist (Regel 17).
+	 * Alle Zeitslots, denen diese Lerngruppe zugeordnet ist (Regel 17).
 	 */
 	readonly zeitslots: List<UvAlgorithmusDynDatenRegel17>;
 
 	/**
-	 * Die Menge aller Regel-Objekte die sich auf diese Lerngruppe beziehen.
+	 * Die Menge aller Regel-Objekte, die sich auf diese Lerngruppe beziehen.
 	 */
 	readonly regeln: List<UvAlgorithmusDynDatenRegel>;
 
 	/**
-	 * Das Fach dieser Lerngruppe.
+	 * Das Fach dieser Lerngruppe (oder null, falls das Mapping nicht gefunden wurde).
 	 */
-	readonly fach: UvAlgorithmusDynDatenFach;
+	readonly fach: UvAlgorithmusDynDatenFach | null;
 
 
 	/**
@@ -106,7 +106,7 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	 * @param index               Der Index, unter dem dieses Objekt im Array der aufrufenden Klasse gespeichert ist.
 	 * @param parent              Das Elternobjekt.
 	 * @param man                 Der {@link UvManager}.
-	 * @param planungsabschnitt   Der {@link UvPlanungsabschnitt} auf den sich die Berechnung bezieht.
+	 * @param planungsabschnitt   Der {@link UvPlanungsabschnitt}, auf den sich die Berechnung bezieht.
 	 * @param klassen             Die {@link UvAlgorithmusDynDatenKlasse}-Menge dieser Lerngruppe.
 	 * @param jahrgaenge          Die {@link UvAlgorithmusDynDatenJahrgang}-Menge dieser Lerngruppe.
 	 */
@@ -127,7 +127,14 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 		this.lehrkraefteZugeordnetAlle = new ArrayList();
 		this.wochenstundenVorgesehenUngekuerzt = lerngruppe.wochenstunden;
 		this.wochenstundenVorgesehenGekuerzt = lerngruppe.wochenstunden;
-		this.korrekturBelastung = man.lerngruppeIstKorrekturfach(lerngruppe) ? 1 : 0;
+		let istKorrekturfach: boolean;
+		try {
+			istKorrekturfach = man.lerngruppeIstKorrekturfach(lerngruppe);
+		} catch (ex: any) {
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Die Korrekturfach-Info der Lerngruppe UV-ID=%d konnte nicht ermittelt werden - false wird verwendet.", lerngruppe.id));
+			istKorrekturfach = false;
+		}
+		this.korrekturBelastung = istKorrekturfach ? 1 : 0;
 		this.zeitslots = new ArrayList();
 		this.regeln = new ArrayList();
 	}
@@ -137,12 +144,12 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	}
 
 	/**
-	 * Liefert true, falls die Lehrkraft der Lerngruppe zugeordnet ist.
+	 * Liefert TRUE, falls die Lehrkraft der Lerngruppe zugeordnet ist.
 	 * Hinweis: Der Vergleich der Objektreferenzen ist hier korrekt und effizienter als "equals".
 	 *
 	 * @param lehrkraft   Die Lehrkraft, die überprüft wird.
 	 *
-	 * @return true, falls die Lehrkraft der Lerngruppe zugeordnet ist.
+	 * @return TRUE, falls die Lehrkraft der Lerngruppe zugeordnet ist.
 	 */
 	gibIstLehrkraftZugeordnet(lehrkraft: UvAlgorithmusDynDatenLehrkraft): boolean {
 		return this.lehrkraefteZugeordnet.contains(lehrkraft) || this.lehrkraefteZugeordnetFixiert.contains(lehrkraft);
@@ -175,7 +182,7 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	 * <br>Hinweis: Eine Optimierung lohnt sich hier nicht,
 	 *              denn die zugeordneten Lehrkräfte sind fast immer 0 oder 1.
 	 *
-	 * @return eine potentielle Lehrkraft, welche dieser Lerngruppe noch nicht zugeordnet ist.
+	 * @return eine potentielle Lehrkraft, welche dieser Lerngruppe noch nicht zugeordnet ist, oder null.
 	 */
 	gibLehrkraftPotentiellZufaelligOderNull(): UvAlgorithmusDynDatenLehrkraft | null {
 		const size: number = this.lehrkraeftePotentiell.size();
@@ -193,9 +200,9 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine zufällige derzeit zugeordnete Lehrkraft die nicht fixiert ist, oder null.
+	 * Liefert eine zufällige derzeit zugeordnete Lehrkraft, die nicht fixiert ist, oder null.
 	 *
-	 * @return eine zufällige derzeit zugeordnete Lehrkraft die nicht fixiert ist, oder null.
+	 * @return eine zufällige derzeit zugeordnete Lehrkraft, die nicht fixiert ist, oder null.
 	 */
 	gibLehrkraftZugeordnetAberNichtFixiertZufaellig(): UvAlgorithmusDynDatenLehrkraft | null {
 		const size: number = this.lehrkraefteZugeordnet.size();
@@ -210,9 +217,10 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	 *
 	 * @param lehrkraft   Die Lehrkraft, welche hinzugefügt wird.
 	 */
-	fuegeLehrkraftHinzuf(lehrkraft: UvAlgorithmusDynDatenLehrkraft): void {
+	fuegeLehrkraftHinzu(lehrkraft: UvAlgorithmusDynDatenLehrkraft): void {
 		if (this.lehrkraeftePotentiell.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Lehrkraft %s Duplikat bei der potentiellen Menge!", lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Lehrkraft %s ist ein Duplikat in der potentiellen Menge!", lehrkraft.toString()));
+			return;
 		}
 		this.lehrkraeftePotentiell.add(lehrkraft);
 	}
@@ -224,10 +232,12 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	 */
 	entferneLehrkraft(lehrkraft: UvAlgorithmusDynDatenLehrkraft): void {
 		if (this.lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Lehrkraft %s soll in Lerngruppe verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Lehrkraft %s soll in der Lerngruppe verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+			return;
 		}
 		if (this.lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Lehrkraft %s soll in Lerngruppe verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Lehrkraft %s soll in der Lerngruppe verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+			return;
 		}
 		this.lehrkraeftePotentiell.remove(lehrkraft);
 	}
@@ -240,10 +250,12 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	 */
 	entferneLehrkraftWennKlasseUebereinstimmt(lehrkraft: UvAlgorithmusDynDatenLehrkraft, klasse: UvAlgorithmusDynDatenKlasse): void {
 		if (this.lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Lehrkraft %s soll verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Lehrkraft %s soll verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+			return;
 		}
 		if (this.lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Lehrkraft %s soll verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Lehrkraft %s soll verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+			return;
 		}
 		if (this.klassenmenge.contains(klasse)) {
 			this.lehrkraeftePotentiell.remove(lehrkraft);
@@ -251,17 +263,19 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	}
 
 	/**
-	 * Entfernt die Lehrkraft aus der Menge der potentiellen Lehrkräfte, falls diese Lerngruppe die Stufe tangiert.
+	 * Entfernt die Lehrkraft aus der Menge der potentiellen Lehrkräfte, falls diese Lerngruppe den Jahrgang tangiert.
 	 *
 	 * @param lehrkraft   Die zu entfernende Lehrkraft.
 	 * @param jahrgang    Der verbotene Jahrgang.
 	 */
-	entferneLehrkraftWennStufeUebereinstimmt(lehrkraft: UvAlgorithmusDynDatenLehrkraft, jahrgang: UvAlgorithmusDynDatenJahrgang): void {
+	entferneLehrkraftWennJahrgangUebereinstimmt(lehrkraft: UvAlgorithmusDynDatenLehrkraft, jahrgang: UvAlgorithmusDynDatenJahrgang): void {
 		if (this.lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Lehrkraft %s soll in Stufe verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Lehrkraft %s soll im Jahrgang verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+			return;
 		}
 		if (this.lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Lehrkraft %s soll in Stufe verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Lehrkraft %s soll im Jahrgang verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+			return;
 		}
 		if (this.jahrgangmenge.contains(jahrgang)) {
 			this.lehrkraeftePotentiell.remove(lehrkraft);
@@ -269,7 +283,7 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	}
 
 	/**
-	 * Entfernt die Lehrkraft aus der Menge der potentiellen Lehrkräfte, falls das Fach und die Lerngruppe übereinstimmen.
+	 * Entfernt die Lehrkraft aus der Menge der potentiellen Lehrkräfte, falls das Fach übereinstimmt und einer der übergebenen Jahrgänge enthalten ist.
 	 *
 	 * @param lehrkraft    Die {@link UvAlgorithmusDynDatenLehrkraft}.
 	 * @param fach         Das {@link UvAlgorithmusDynDatenFach}.
@@ -280,10 +294,12 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 			for (const jahrgang of jahrgaenge) {
 				if (this.jahrgangmenge.contains(jahrgang)) {
 					if (this.lehrkraefteZugeordnet.contains(lehrkraft)) {
-						throw new DeveloperNotificationException(JavaString.format("Regel 24: Lehrkraft %s soll in Stufe verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+						this.log.logLn(LogLevel.ERROR, JavaString.format("Regel 24: Lehrkraft %s soll im Jahrgang verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+						return;
 					}
 					if (this.lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-						throw new DeveloperNotificationException(JavaString.format("Regel 24: Lehrkraft %s soll in Stufe verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+						this.log.logLn(LogLevel.ERROR, JavaString.format("Regel 24: Lehrkraft %s soll im Jahrgang verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+						return;
 					}
 					this.lehrkraeftePotentiell.remove(lehrkraft);
 					return;
@@ -301,10 +317,12 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	entferneLehrkraftWennFachUebereinstimmt(lehrkraft: UvAlgorithmusDynDatenLehrkraft, fach: UvAlgorithmusDynDatenFach): void {
 		if (this.fach as unknown === fach as unknown) {
 			if (this.lehrkraefteZugeordnet.contains(lehrkraft)) {
-				throw new DeveloperNotificationException(JavaString.format("Regel 25: Lehrkraft %s soll in Stufe verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+				this.log.logLn(LogLevel.ERROR, JavaString.format("Regel 25: Lehrkraft %s soll im Fach verboten werden, ist aber bereits zugeordnet!", lehrkraft.toString()));
+				return;
 			}
 			if (this.lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-				throw new DeveloperNotificationException(JavaString.format("Regel 25: Lehrkraft %s soll in Stufe verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+				this.log.logLn(LogLevel.ERROR, JavaString.format("Regel 25: Lehrkraft %s soll im Fach verboten werden, ist aber bereits fixiert!", lehrkraft.toString()));
+				return;
 			}
 			this.lehrkraeftePotentiell.remove(lehrkraft);
 		}
@@ -318,10 +336,12 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	 */
 	stateLehrkraftZugeordnetAdd(lehrkraft: UvAlgorithmusDynDatenLehrkraft, fixiert: boolean): void {
 		if (this.lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Die Lerngruppe %s hat bereits die zugeordnete Lehrkraft %s!", this.toString(), lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Die Lerngruppe %s hat bereits die zugeordnete Lehrkraft %s!", this.toString(), lehrkraft.toString()));
+			return;
 		}
 		if (this.lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Die Lerngruppe %s hat bereits die fixierte Lehrkraft %s!", this.toString(), lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Die Lerngruppe %s hat bereits die fixierte Lehrkraft %s!", this.toString(), lehrkraft.toString()));
+			return;
 		}
 		if (fixiert) {
 			this.lehrkraefteZugeordnetFixiert.add(lehrkraft);
@@ -338,14 +358,23 @@ export class UvAlgorithmusDynDatenLerngruppe extends JavaObject {
 	 */
 	stateLehrkraftZugeordnetDel(lehrkraft: UvAlgorithmusDynDatenLehrkraft): void {
 		if (!this.lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(JavaString.format("Die Lerngruppe %s hat keine zugeordnete Lehrkraft %s!", this.toString(), lehrkraft.toString()));
+			this.log.logLn(LogLevel.ERROR, JavaString.format("Die Lerngruppe %s hat keine zugeordnete Lehrkraft %s!", this.toString(), lehrkraft.toString()));
+			return;
 		}
 		this.lehrkraefteZugeordnet.remove(lehrkraft);
 		this.lehrkraefteZugeordnetAlle.remove(lehrkraft);
 	}
 
+	gibIstLehrkraftZugeordnetAddMoeglich(lehrkraft: UvAlgorithmusDynDatenLehrkraft): boolean {
+		return this.gibIstLehrkraftPotentiell(lehrkraft) && !this.gibIstLehrkraftZugeordnet(lehrkraft) && !this.gibIstLehrkraftFixiert(lehrkraft) && (this.fach !== null);
+	}
+
+	gibIstLehrkraftZugeordnetDelMoeglich(lehrkraft: UvAlgorithmusDynDatenLehrkraft): boolean {
+		return this.gibIstLehrkraftZugeordnet(lehrkraft) && !this.gibIstLehrkraftFixiert(lehrkraft) && (this.fach !== null);
+	}
+
 	/**
-	 * Ändert den Stunden-SOLL dieser Lerngruppe.
+	 * Ändert das Stunden-Soll dieser Lerngruppe.
 	 *
 	 * @param neuerSoll   Der neue Wert.
 	 */

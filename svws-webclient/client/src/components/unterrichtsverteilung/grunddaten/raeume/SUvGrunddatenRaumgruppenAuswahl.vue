@@ -3,14 +3,32 @@
 		<template #title>
 			<h1 class="select-none">Raumgruppen</h1>
 		</template>
-		<svws-ui-table :items="filteredItems" :columns clickable @update:clicked="gotoRaumgruppe" :selectable="hatKompetenzAendern" v-model="selectedRaumgruppen" count :clicked="auswahl"
-			scroll scroll-into-view allow-arrow-key-selection :focus-switching-enabled :focus-help-visible :filter-open="true" :filtered="hasActiveFilter" :filter-reset="resetFilter">
+		<svws-ui-table :items="filteredItems"
+			:columns
+			clickable
+			@update:clicked="gotoRaumgruppe"
+			:selectable="hatKompetenzAendern"
+			v-model="selectedRaumgruppen"
+			count
+			:clicked="auswahl"
+			scroll
+			scroll-into-view
+			allow-arrow-key-selection
+			:focus-switching-enabled
+			:focus-help-visible
+			:filter-open="true"
+			:filtered="hasActiveFilter"
+			:filter-reset="resetFilter">
 			<template #search><svws-ui-text-input v-model="search" type="search" placeholder="Raumgruppe suchen" removable /></template>
 			<template #cell(bezeichnung)="{ rowData, value }">
 				<span :class="{'font-bold': auswahl !== undefined && rowData?.id === auswahl.id}">{{ value }}</span>
 			</template>
 			<template #actions v-if="hatKompetenzAendern">
-				<s-uv-auswahl-loeschen :items="selectedRaumgruppen" art="Raumgruppen" :bezeichnung="item => item.bezeichnung" :loeschen="state.delRaumgruppen" @deleted="onDeleted" />
+				<s-uv-auswahl-loeschen :items="selectedRaumgruppen"
+					art="Raumgruppen"
+					:bezeichnung="item => item.bezeichnung"
+					:loeschen="state.grunddaten.delRaumgruppen"
+					@deleted="onDeleted" />
 				<s-uv-grunddaten-raumgruppen-neu-modal v-slot="{ openModal }">
 					<svws-ui-button @click="openModal" type="icon" title="Raumgruppe neu erstellen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 				</s-uv-grunddaten-raumgruppen-neu-modal>

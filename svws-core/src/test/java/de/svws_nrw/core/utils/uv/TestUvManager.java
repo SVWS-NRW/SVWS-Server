@@ -50,6 +50,130 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TestUvManager {
 
 	@Test
+	@DisplayName("Rasterintervalle schließen 24:00 und umgekehrte Zeiten aus")
+	void testZeitrasterIntervall() {
+		assertTrue(UvManager.zeitrasterEintragZeitenGueltig(0, 1));
+		assertTrue(UvManager.zeitrasterEintragZeitenGueltig(1395, 1439));
+		assertFalse(UvManager.zeitrasterEintragZeitenGueltig(1395, 1440));
+		assertFalse(UvManager.zeitrasterEintragZeitenGueltig(1440, 1440));
+		assertFalse(UvManager.zeitrasterEintragZeitenGueltig(720, 660));
+		assertFalse(UvManager.zeitrasterEintragZeitenGueltig(-1, 10));
+		final UvManager manager = createManagerWithMinimalBasis();
+		manager.zeitrasterAdd(createZeitraster(101L, "Raster A"));
+		final UvZeitrasterEintrag eintrag = createZeitrasterEintrag(111L, 101L);
+		eintrag.ende = 1440;
+		assertThrows(DeveloperNotificationException.class, () -> manager.zeitrasterEintragAdd(eintrag));
+	}
+
+	@Test
+	@DisplayName("Rasterabfragen liefern Grenzen und nach Tag beziehungsweise Stunde sortierte Einträge")
+	void testZeitrasterAbfragen() {
+		final UvManager manager = createManagerWithMinimalBasis();
+		manager.zeitrasterAdd(createZeitraster(101L, "Raster A"));
+		assertEquals(0, manager.zeitrasterEintragGetMinWochentag(101L));
+		assertEquals(0, manager.zeitrasterEintragGetMaxWochentag(101L));
+		assertEquals(0, manager.zeitrasterEintragGetMaxStunde(101L));
+		final UvZeitrasterEintrag montag = createZeitrasterEintrag(111L, 101L);
+		final UvZeitrasterEintrag mittwoch = createZeitrasterEintrag(112L, 101L);
+		mittwoch.wochentag = 3;
+		final UvZeitrasterEintrag zweiteStunde = createZeitrasterEintrag(113L, 101L);
+		zweiteStunde.stunde = 2;
+		manager.zeitrasterEintragAddAll(List.of(mittwoch, zweiteStunde, montag));
+		assertEquals(1, manager.zeitrasterEintragGetMinWochentag(101L));
+		assertEquals(3, manager.zeitrasterEintragGetMaxWochentag(101L));
+		assertEquals(2, manager.zeitrasterEintragGetMaxStunde(101L));
+		assertEquals(List.of(montag, zweiteStunde), manager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(101L, 1));
+		assertEquals(List.of(montag, mittwoch), manager.zeitrasterEintragGetMengeByZeitrasterAndStunde(101L, 1));
+		assertTrue(manager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(101L, 2).isEmpty());
+	}
+
+	@Test
+	@DisplayName("Rasterabfragen bleiben bei Hinzufügen, Verschieben und Löschen sortiert und konsistent")
+	void testZeitrasterAbfragenNachAenderungen() {
+		final UvManager manager = createManagerWithMinimalBasis();
+		manager.zeitrasterAdd(createZeitraster(101L, "Raster A"));
+		manager.zeitrasterAdd(createZeitraster(102L, "Raster B"));
+		final UvZeitrasterEintrag montagZwei = createZeitrasterEintrag(111L, 101L);
+		montagZwei.stunde = 2;
+		final UvZeitrasterEintrag montagEins = createZeitrasterEintrag(112L, 101L);
+		final UvZeitrasterEintrag freitagEins = createZeitrasterEintrag(113L, 101L);
+		freitagEins.wochentag = 5;
+		manager.zeitrasterEintragAddAll(List.of(freitagEins, montagZwei, montagEins));
+		assertEquals(List.of(montagEins, montagZwei), manager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(101L, 1));
+		assertEquals(List.of(montagEins, freitagEins), manager.zeitrasterEintragGetMengeByZeitrasterAndStunde(101L, 1));
+		// Änderungen der Rückgabelisten dürfen die Managerdaten nicht verändern.
+		manager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(101L, 1).clear();
+		assertEquals(2, manager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(101L, 1).size());
+		final UvZeitrasterEintrag dienstagEins = createZeitrasterEintrag(114L, 101L);
+		dienstagEins.wochentag = 2;
+		manager.zeitrasterEintragAdd(dienstagEins);
+		assertEquals(List.of(montagEins, dienstagEins, freitagEins), manager.zeitrasterEintragGetMengeByZeitrasterAndStunde(101L, 1));
+		final UvZeitrasterEintrag verschoben = createZeitrasterEintrag(112L, 102L);
+		verschoben.wochentag = 3;
+		verschoben.stunde = 4;
+		manager.zeitrasterEintragAllPatchAttributes(List.of(verschoben));
+		manager.zeitrasterEintragPruefePosition(101L, 1, 1);
+		assertEquals(List.of(montagZwei), manager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(101L, 1));
+		assertEquals(List.of(dienstagEins, freitagEins), manager.zeitrasterEintragGetMengeByZeitrasterAndStunde(101L, 1));
+		assertEquals(List.of(verschoben), manager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(102L, 3));
+		assertEquals(List.of(verschoben), manager.zeitrasterEintragGetMengeByZeitrasterAndStunde(102L, 4));
+		assertThrows(DeveloperNotificationException.class, () -> manager.zeitrasterEintragPruefePosition(102L, 3, 4));
+		manager.zeitrasterEintragRemoveById(102L, verschoben.id);
+		manager.zeitrasterEintragPruefePosition(102L, 3, 4);
+		assertTrue(manager.zeitrasterEintragGetMengeByZeitrasterAndStunde(102L, 4).isEmpty());
+		manager.zeitrasterEintragRemoveAllByZeitraster(101L);
+		assertTrue(manager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(101L, 1).isEmpty());
+		assertTrue(manager.zeitrasterEintragGetMengeByZeitrasterAndStunde(101L, 1).isEmpty());
+		manager.zeitrasterEintragPruefePosition(101L, 1, 2);
+	}
+
+	@Test
+	@DisplayName("Rasterpositionsprüfung verhindert ungültige Koordinaten und Kollisionen nur im betroffenen Raster")
+	void testZeitrasterPosition() {
+		final UvManager manager = createManagerWithMinimalBasis();
+		manager.zeitrasterAdd(createZeitraster(101L, "Raster A"));
+		manager.zeitrasterAdd(createZeitraster(102L, "Raster B"));
+		manager.zeitrasterEintragAdd(createZeitrasterEintrag(111L, 102L));
+		manager.zeitrasterEintragPruefePosition(101L, 1, 1);
+		assertThrows(DeveloperNotificationException.class, () -> manager.zeitrasterEintragPruefePosition(102L, 1, 1));
+		assertThrows(DeveloperNotificationException.class, () -> manager.zeitrasterEintragPruefePosition(101L, 0, 1));
+		assertThrows(DeveloperNotificationException.class, () -> manager.zeitrasterEintragPruefePosition(101L, 8, 1));
+		assertThrows(DeveloperNotificationException.class, () -> manager.zeitrasterEintragPruefePosition(101L, 1, 0));
+		assertThrows(DeveloperNotificationException.class, () -> manager.zeitrasterEintragPruefePosition(999L, 1, 1));
+		assertEquals(1, manager.zeitrasterEintragGetMengeAsList().size());
+	}
+
+	@Test
+	@DisplayName("Stundentafelsummen trennen Abschnitte und berücksichtigen Ergänzungsstunden")
+	void testStundentafelStundensummen() {
+		final GrundstrukturScenario s = createGrundstrukturScenario();
+		s.stundentafelFach().wochenstunden = 3.5;
+		s.stundentafelFach().davonErgaenzungsstunden = 0.5;
+		final UvStundentafelFach zweiterAbschnitt = createStundentafelFach(999L, s.stundentafel().id, 2, s.fachA().id);
+		zweiterAbschnitt.wochenstunden = 2.5;
+		zweiterAbschnitt.davonErgaenzungsstunden = 1;
+		s.manager().stundentafelFachAdd(zweiterAbschnitt);
+		assertEquals(3.5, s.manager().stundentafelWochenstundenGetSumme(s.stundentafel(), 1));
+		assertEquals(0.5, s.manager().stundentafelErgaenzungsstundenGetSumme(s.stundentafel(), 1));
+		assertEquals(2.5, s.manager().stundentafelWochenstundenGetSumme(s.stundentafel(), 2));
+		assertEquals(1, s.manager().stundentafelErgaenzungsstundenGetSumme(s.stundentafel(), 2));
+		assertEquals(0, s.manager().stundentafelWochenstundenGetSumme(s.stundentafel(), 3));
+	}
+
+	@Test
+	@DisplayName("Fehlende Kurs- und Fachreferenzen einer Lerngruppe liefern kein Fach")
+	void testLerngruppenFachFehlendeReferenzen() {
+		final UvManager manager = new UvManager();
+		final UvLerngruppe lerngruppe = new UvLerngruppe();
+		lerngruppe.idKurs = 999L;
+		assertNull(manager.fachGetByLerngruppe(lerngruppe));
+		lerngruppe.idKurs = null;
+		lerngruppe.idFach = 999L;
+		assertNull(manager.fachGetByLerngruppe(lerngruppe));
+	}
+
+
+	@Test
 	@DisplayName("Schülergruppenjahrgänge berücksichtigen nur Mitglieder, sind eindeutig und fachlich sortiert")
 	void testJahrgangsdatenGetMengeBySchuelergruppe() {
 		final JahrgangsDaten neun = createJahrgang(30L, "9");
@@ -604,7 +728,8 @@ class TestUvManager {
 		final UvManager manager = createManagerWithMinimalBasis();
 		manager.lehrerAdd(createLehrer(31L, "AAA"));
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.lehrerAdd(createLehrer(31L, "BBB")));
+		final UvLehrer eingabe = createLehrer(31L, "BBB");
+		assertThrows(DeveloperNotificationException.class, () -> manager.lehrerAdd(eingabe));
 	}
 
 	@Test
@@ -753,8 +878,9 @@ class TestUvManager {
 		manager.lehrerAdd(createLehrer(31L, "AAA"));
 		manager.lehrerUnterrichtsfachAdd(createLehrerUnterrichtsfach(41L, 31L, 21L, false));
 
+		final LehrerUnterrichtsfach eingabe = createLehrerUnterrichtsfach(41L, 31L, 21L, false);
 		assertThrows(DeveloperNotificationException.class,
-				() -> manager.lehrerUnterrichtsfachAdd(createLehrerUnterrichtsfach(41L, 31L, 21L, false)));
+				() -> manager.lehrerUnterrichtsfachAdd(eingabe));
 	}
 
 	@Test
@@ -824,7 +950,8 @@ class TestUvManager {
 	void testRaumAddUnknownRaumgruppeThrows() {
 		final UvManager manager = createManagerWithMinimalBasis();
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.raumAdd(createRaum(61L, "R201", 999L)));
+		final UvRaum eingabe = createRaum(61L, "R201", 999L);
+		assertThrows(DeveloperNotificationException.class, () -> manager.raumAdd(eingabe));
 	}
 
 	@Test
@@ -971,7 +1098,8 @@ class TestUvManager {
 		final UvManager manager = createManagerWithMinimalBasis();
 		manager.fachAdd(createUvFach(71L, 21L));
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.stundentafelFachAdd(createStundentafelFach(91L, 999L, 1, 71L)));
+		final UvStundentafelFach eingabe = createStundentafelFach(91L, 999L, 1, 71L);
+		assertThrows(DeveloperNotificationException.class, () -> manager.stundentafelFachAdd(eingabe));
 	}
 
 	@Test
@@ -1253,8 +1381,9 @@ class TestUvManager {
 		final UvManager manager = createManagerWithMinimalBasis();
 		manager.planungsabschnittAdd(createPlanungsabschnitt(121L));
 
+		final UvPlanungsabschnittZeitraster eingabe = createPlanungsabschnittZeitraster(121L, 999L);
 		assertThrows(DeveloperNotificationException.class,
-				() -> manager.planungsabschnittZeitrasterAdd(createPlanungsabschnittZeitraster(121L, 999L)));
+				() -> manager.planungsabschnittZeitrasterAdd(eingabe));
 	}
 
 	@Test
@@ -1305,8 +1434,9 @@ class TestUvManager {
 	void testPlanungsabschnittSchuelerAddUnknownPlanungsabschnittThrows() {
 		final UvManager manager = createManagerWithMinimalBasis();
 
+		final UvPlanungsabschnittSchueler eingabe = createPlanungsabschnittSchueler(131L, 501L, 11L, null);
 		assertThrows(DeveloperNotificationException.class,
-				() -> manager.planungsabschnittSchuelerAdd(createPlanungsabschnittSchueler(131L, 501L, 11L, null)));
+				() -> manager.planungsabschnittSchuelerAdd(eingabe));
 	}
 
 	@Test
@@ -1335,8 +1465,9 @@ class TestUvManager {
 		final UvManager manager = createManagerWithMinimalBasis();
 		manager.planungsabschnittAdd(createPlanungsabschnitt(141L));
 
+		final UvSchuelergruppeSchueler eingabe = createSchuelergruppeSchueler(141L, 999L, 501L);
 		assertThrows(DeveloperNotificationException.class,
-				() -> manager.schuelergruppeSchuelerAdd(createSchuelergruppeSchueler(141L, 999L, 501L)));
+				() -> manager.schuelergruppeSchuelerAdd(eingabe));
 	}
 
 	@Test
@@ -1567,7 +1698,8 @@ class TestUvManager {
 	void testSchieneAddUnknownPlanungsabschnittThrows() {
 		final UvManager manager = createManagerWithMinimalBasis();
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.schieneAdd(createSchiene(1001L, 999L, 1)));
+		final UvSchiene eingabe = createSchiene(1001L, 999L, 1);
+		assertThrows(DeveloperNotificationException.class, () -> manager.schieneAdd(eingabe));
 	}
 
 	@Test
@@ -1614,7 +1746,8 @@ class TestUvManager {
 		manager.lehrerAdd(lehrer);
 		manager.lerngruppenLehrerAdd(zuordnung);
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.lerngruppenLehrerAdd(createLerngruppenLehrer(1102L, 181L, 802L, 33L)));
+		final UvLerngruppenLehrer eingabe = createLerngruppenLehrer(1102L, 181L, 802L, 33L);
+		assertThrows(DeveloperNotificationException.class, () -> manager.lerngruppenLehrerAdd(eingabe));
 	}
 
 	@Test
@@ -1662,7 +1795,8 @@ class TestUvManager {
 		manager.schieneAdd(schiene);
 		manager.lerngruppenSchieneAdd(zuordnung);
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.lerngruppenSchieneAdd(createLerngruppenSchiene(191L, 803L, 1002L)));
+		final UvLerngruppenSchiene eingabe = createLerngruppenSchiene(191L, 803L, 1002L);
+		assertThrows(DeveloperNotificationException.class, () -> manager.lerngruppenSchieneAdd(eingabe));
 	}
 
 	@Test
@@ -1745,7 +1879,8 @@ class TestUvManager {
 	void testUnterrichtAddUnknownPlanungsabschnittThrows() {
 		final UvManager manager = createManagerWithMinimalBasis();
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.unterrichtAdd(createUnterricht(1201L, 999L, null, 805L)));
+		final UvUnterricht eingabe = createUnterricht(1201L, 999L, null, 805L);
+		assertThrows(DeveloperNotificationException.class, () -> manager.unterrichtAdd(eingabe));
 	}
 
 	@Test
@@ -1784,7 +1919,8 @@ class TestUvManager {
 		manager.raumAdd(createRaum(63L, "R203", null));
 		manager.unterrichtRaumAdd(createUnterrichtRaum(211L, 1202L, 63L));
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.unterrichtRaumAdd(createUnterrichtRaum(211L, 1202L, 63L)));
+		final UvUnterrichtRaum eingabe = createUnterrichtRaum(211L, 1202L, 63L);
+		assertThrows(DeveloperNotificationException.class, () -> manager.unterrichtRaumAdd(eingabe));
 	}
 
 	@Test
@@ -1824,8 +1960,9 @@ class TestUvManager {
 		manager.unterrichtAdd(createUnterricht(1203L, 221L, null, 807L));
 		manager.unterrichtLerngruppenlehrerAdd(createUnterrichtLerngruppenlehrer(221L, 1203L, 1103L));
 
+		final UvUnterrichtLerngruppenlehrer eingabe = createUnterrichtLerngruppenlehrer(221L, 1203L, 1103L);
 		assertThrows(DeveloperNotificationException.class,
-				() -> manager.unterrichtLerngruppenlehrerAdd(createUnterrichtLerngruppenlehrer(221L, 1203L, 1103L)));
+				() -> manager.unterrichtLerngruppenlehrerAdd(eingabe));
 	}
 
 	@Test
@@ -1999,7 +2136,8 @@ class TestUvManager {
 		manager.lehrerAdd(lehrer);
 		manager.klassenLehrerAdd(createKlassenLehrer(1302L, 242L, 717L, 39L));
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.klassenLehrerAdd(createKlassenLehrer(1303L, 242L, 717L, 39L)));
+		final UvKlassenLehrer eingabe = createKlassenLehrer(1303L, 242L, 717L, 39L);
+		assertThrows(DeveloperNotificationException.class, () -> manager.klassenLehrerAdd(eingabe));
 	}
 
 	@Test
@@ -2068,7 +2206,8 @@ class TestUvManager {
 		final UvManager manager = createManagerWithMinimalBasis();
 		manager.planungsabschnittAdd(createPlanungsabschnitt(252L));
 
-		assertThrows(DeveloperNotificationException.class, () -> manager.planungsabschnittLehrerAdd(createPlanungsabschnittLehrer(252L, 999L)));
+		final UvPlanungsabschnittLehrer eingabe = createPlanungsabschnittLehrer(252L, 999L);
+		assertThrows(DeveloperNotificationException.class, () -> manager.planungsabschnittLehrerAdd(eingabe));
 	}
 
 	@Test
@@ -3779,4 +3918,82 @@ class TestUvManager {
 		assertTrue(s.manager.lerngruppeGetMengeAsList().isEmpty());
 		assertTrue(s.manager.klasseGetMengeAsList().isEmpty());
 	}
+	@Test
+	@DisplayName("Planungswerte lehnen NaN, Unendlichkeit, Bruchteile und widersprüchliche Stunden ab")
+	void testPlanungswerteGueltigkeit() {
+		assertTrue(UvManager.kursnummerIstGueltig(1));
+		assertFalse(UvManager.kursnummerIstGueltig(1.5));
+		assertFalse(UvManager.kursnummerIstGueltig(Double.POSITIVE_INFINITY));
+		assertFalse(UvManager.kursnummerIstGueltig(Double.NaN));
+		assertTrue(UvManager.lerngruppeStundenGueltig(2.5, 2));
+		assertFalse(UvManager.lerngruppeStundenGueltig(-1, 2));
+		assertFalse(UvManager.lerngruppeStundenGueltig(1, Double.POSITIVE_INFINITY));
+		assertTrue(UvManager.lehrerZuordnungswerteGueltig(1, 2, 3, 1.5));
+		assertFalse(UvManager.lehrerZuordnungswerteGueltig(1.5, 2, 3, 1));
+		assertFalse(UvManager.lehrerZuordnungswerteGueltig(1, 4, 3, 1));
+		assertFalse(UvManager.lehrerZuordnungswerteGueltig(1, 2, 3, 3));
+		assertFalse(UvManager.lehrerZuordnungswerteGueltig(1, Double.NaN, 3, 0));
+	}
+
+	@Test
+	@DisplayName("Zuordnungen bewahren die bisherige Behandlung fachfremder Lehrkräfte und prüfen den Abschnitt")
+	void testLehrerZuordnungsPruefungen() {
+		final GrundstrukturScenario s = createGrundstrukturScenario();
+		final UvLerngruppe gruppe = createKlassenLerngruppe(s.lerngruppe.id, s.planungsabschnitt.id, s.klasse.id, s.fachA.id);
+		gruppe.wochenstundenUnterrichtet = 4;
+		s.manager.lerngruppePatchAttributes(gruppe);
+		final UvLehrer neu = createLehrer(71L, "BBB");
+		s.manager.lehrerAdd(neu);
+		s.manager.planungsabschnittLehrerAdd(createPlanungsabschnittLehrer(s.planungsabschnitt.id, neu.id));
+		assertTrue(s.manager.lerngruppenLehrerNeuIstGueltig(s.planungsabschnitt, gruppe, neu.id, 2, 1));
+		assertFalse(s.manager.lerngruppenLehrerNeuIstGueltig(s.planungsabschnitt, gruppe, s.lehrer.id, 2, 1));
+		assertTrue(s.manager.lerngruppenLehrerWechselIstGueltig(s.planungsabschnitt, gruppe, s.lerngruppenLehrer.id, s.lehrer.id));
+		assertFalse(s.manager.lerngruppenLehrerWechselIstGueltig(s.planungsabschnitt, gruppe, s.lerngruppenLehrer.id, neu.id));
+		s.manager.lehrerUnterrichtsfachAdd(createLehrerUnterrichtsfach(9001L, neu.id, 21L, false));
+		assertTrue(s.manager.lerngruppenLehrerWechselIstGueltig(s.planungsabschnitt, gruppe, s.lerngruppenLehrer.id, neu.id));
+		assertTrue(s.manager.lerngruppenLehrerAenderungIstGueltig(s.planungsabschnitt, gruppe, s.lerngruppenLehrer.id, neu.id, 1, 2, 1));
+		assertFalse(s.manager.lerngruppenLehrerAenderungIstGueltig(s.planungsabschnitt, gruppe, s.lerngruppenLehrer.id, neu.id, 1, 5, 1));
+		assertFalse(s.manager.lerngruppenLehrerNeuIstGueltig(createPlanungsabschnitt(999L), gruppe, neu.id, 2, 1));
+		final UvLerngruppe entwurf = createKlassenLerngruppe(gruppe.id, gruppe.idPlanungsabschnitt, s.klasse.id, s.fachA.id);
+		entwurf.wochenstundenUnterrichtet = 2;
+		assertFalse(s.manager.lerngruppeStundenAenderungIstGueltig(s.planungsabschnitt, entwurf));
+	}
+
+	@Test
+	@DisplayName("Einsatzwerte und Restkapazität verwenden nach Änderungen die aktuellen Zuordnungen")
+	void testLehrerEinsatzwerteNachAenderung() {
+		final GrundstrukturScenario s = createGrundstrukturScenario();
+		assertNull(s.manager.lehrerReststundenGetNachZuordnung(s.planungsabschnitt, s.lehrer.id, -1, 0));
+		s.manager.lehrerPflichtstundensollAdd(createLehrerPflichtstundensoll(9001L, s.lehrer.id, 10, "2025-02-01", "2025-07-31"));
+		s.manager.lehrerAnrechnungsstundenAdd(createLehrerAnrechnungsstunden(9002L, s.lehrer.id, "A", 1, "2025-02-01", "2025-07-31"));
+		assertEquals(3, s.manager.lehrerUnterrichtsstundenGetByPlanungsabschnitt(s.planungsabschnitt, s.lehrer.id));
+		assertEquals(6.0, s.manager.lehrerReststundenGetNachZuordnung(s.planungsabschnitt, s.lehrer.id, -1, 0).doubleValue());
+		final UvLerngruppenLehrer aenderung = createLerngruppenLehrer(s.lerngruppenLehrer.id, s.planungsabschnitt.id, s.lerngruppe.id, s.lehrer.id);
+		aenderung.wochenstunden = 1.5;
+		aenderung.wochenstundenAngerechnet = 0.5;
+		s.manager.lerngruppenLehrerAllPatchAttributes(List.of(aenderung));
+		assertEquals(1.5, s.manager.lehrerUnterrichtsstundenGetByPlanungsabschnitt(s.planungsabschnitt, s.lehrer.id));
+		assertEquals(0.5, s.manager.lehrerAngerechneteStundenGetByPlanungsabschnitt(s.planungsabschnitt, s.lehrer.id));
+		assertEquals(8.5, s.manager.lehrerReststundenGetNachZuordnung(s.planungsabschnitt, s.lehrer.id, -1, 0).doubleValue());
+		assertEquals(7.0, s.manager.lehrerReststundenGetNachZuordnung(s.planungsabschnitt, s.lehrer.id, aenderung.id, 2).doubleValue());
+	}
+
+	@Test
+	@DisplayName("Mitgliedschaftsprüfungen berücksichtigen Klassenleitungen und fremde Schülergruppen")
+	void testMitgliedschaftsPruefungen() {
+		final GrundstrukturScenario s = createGrundstrukturScenario();
+		final UvLehrer lehrer = createLehrer(71L, "BBB");
+		s.manager.lehrerAdd(lehrer);
+		assertEquals(List.of(lehrer), s.manager.lehrerPlanungsabschnittHinzufuegenPruefen(s.planungsabschnitt, List.of(71L, 71L)));
+		s.manager.planungsabschnittLehrerAdd(createPlanungsabschnittLehrer(s.planungsabschnitt.id, lehrer.id));
+		assertEquals(List.of(lehrer), s.manager.lehrerPlanungsabschnittEntfernenPruefen(s.planungsabschnitt, List.of(71L, 71L)));
+		s.manager.klassenLehrerAdd(createKlassenLehrer(9001L, s.planungsabschnitt.id, s.klasse.id, lehrer.id));
+		final List<Long> idsLehrer = List.of(71L);
+		assertThrows(DeveloperNotificationException.class, () -> s.manager.lehrerPlanungsabschnittEntfernenPruefen(s.planungsabschnitt, idsLehrer));
+		assertEquals(s.gruppe, s.manager.schuelergruppenAenderungPruefen(s.planungsabschnitt, s.gruppe.id, List.of(s.schueler.idSchueler)));
+		final UvPlanungsabschnitt eingabe = createPlanungsabschnitt(999L);
+		final List<Long> idsSchueler = List.of();
+		assertThrows(DeveloperNotificationException.class, () -> s.manager.schuelergruppenAenderungPruefen(eingabe, s.gruppe.id, idsSchueler));
+	}
+
 }

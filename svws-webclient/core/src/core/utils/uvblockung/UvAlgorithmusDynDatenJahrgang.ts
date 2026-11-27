@@ -29,7 +29,7 @@ export class UvAlgorithmusDynDatenJahrgang extends JavaObject {
 	}
 
 	public toString(): string {
-		return JavaString.format("UvAlgorithmusDynJahrgang[interneID=%d, uvID=%d]", this.interneID, this.uvID);
+		return JavaString.format("UvAlgorithmusDynDatenJahrgang[interneID=%d, uvID=%d]", this.interneID, this.uvID);
 	}
 
 	transpilerCanonicalName(): string {

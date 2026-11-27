@@ -11,7 +11,13 @@
 						<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Gültig ab" v-model="item.gueltigVon" type="date" required />
 						<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Gültig bis" v-model="item.gueltigBis" type="date" />
 					</div>
-					<svws-ui-input-number :disabled="loading || !hatKompetenzAendern" v-model="item.anzahlStunden" required placeholder="Stundenanzahl" :decimal-places="2" :steps="0.5" :min="0" />
+					<svws-ui-input-number :disabled="loading || !hatKompetenzAendern"
+						v-model="item.anzahlStunden"
+						required
+						placeholder="Stundenanzahl"
+						:decimal-places="2"
+						:steps="0.5"
+						:min="0" />
 				</svws-ui-input-wrapper>
 			</div>
 		</template>
@@ -104,7 +110,7 @@
 					gueltigVon: item.value.gueltigVon,
 					gueltigBis: item.value.gueltigBis,
 				};
-				await state.addAnrechnungsstunden(newItem);
+				await state.grunddaten.addAnrechnungsstunden(newItem);
 			}
 			item.value = new UvLehrerAnrechnungsstunden();
 			show.value = false;

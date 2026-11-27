@@ -4,7 +4,14 @@
 		<template #modalTitle>Lehrer importieren</template>
 		<template #modalContent>
 			<svws-ui-notification v-if="actionError" type="error" class="mb-3">{{ actionError }}</svws-ui-notification>
-			<svws-ui-table :items="filteredLehrer" :columns selectable scroll v-model="selectedLehrer" count :no-data="!props.listLehrer.length" no-data-text="Es wurden keine noch nicht importierten Lehrkräfte gefunden.">
+			<svws-ui-table :items="filteredLehrer"
+				:columns
+				selectable
+				scroll
+				v-model="selectedLehrer"
+				count
+				:no-data="!props.listLehrer.length"
+				no-data-text="Es wurden keine noch nicht importierten Lehrkräfte gefunden.">
 				<template #search>
 					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -21,7 +28,11 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button :disabled="loading || !hatKompetenzAendern" type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="primary" @click="importieren()" :disabled="loading || !hatKompetenzAendern || !selectedLehrer.length"> Importieren </svws-ui-button>
+			<svws-ui-button type="primary"
+				@click="importieren()"
+				:disabled="loading || !hatKompetenzAendern || !selectedLehrer.length">
+				Importieren
+			</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -84,7 +95,7 @@
 		loading.value = true;
 		actionError.value = '';
 		try {
-			await state.importLehrerFromSchule(selectedLehrer.value);
+			await state.grunddaten.importLehrerFromSchule(selectedLehrer.value);
 			selectedLehrer.value = [];
 			show.value = false;
 		} catch {

@@ -12,7 +12,12 @@
 					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" v-model="gueltigVon" placeholder="Gültig von" type="date" required />
 					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" v-model="gueltigBis" placeholder="Gültig bis" type="date" />
 				</div>
-				<svws-ui-select :disabled="loading || !hatKompetenzAendern" title="Raumgruppe" :items="raumgruppenMitLeer" :item-text="raumgruppentext"	v-model="selectedRaumgruppe" class="col-span-2" />
+				<svws-ui-select :disabled="loading || !hatKompetenzAendern"
+					title="Raumgruppe"
+					:items="raumgruppenMitLeer"
+					:item-text="raumgruppentext"
+					v-model="selectedRaumgruppe"
+					class="col-span-2" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -86,7 +91,7 @@
 			if (!isValid.value) {
 				return;
 			}
-			await state.createRaum({
+			await state.grunddaten.createRaum({
 				kuerzel: kuerzel.value,
 				beschreibung: beschreibung.value !== null && beschreibung.value.trim().length > 0 ? beschreibung.value : null,
 				groesse: groesse.value,

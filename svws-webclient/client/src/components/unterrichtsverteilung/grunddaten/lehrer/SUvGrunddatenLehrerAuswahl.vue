@@ -33,8 +33,22 @@
 		<template #title>
 			<h1 class="select-none">Lehrkräfte</h1>
 		</template>
-		<svws-ui-table :items="filteredItems" :columns clickable :clicked="auswahl" @update:clicked="gotoUvLehrer" :selectable="hatKompetenzAendern" v-model="selectedLehrer" count
-			scroll scroll-into-view allow-arrow-key-selection :focus-switching-enabled :focus-help-visible :filter-open="true" :filtered="hasActiveFilter" :filter-reset="resetFilter">
+		<svws-ui-table :items="filteredItems"
+			:columns
+			clickable
+			:clicked="auswahl"
+			@update:clicked="gotoUvLehrer"
+			:selectable="hatKompetenzAendern"
+			v-model="selectedLehrer"
+			count
+			scroll
+			scroll-into-view
+			allow-arrow-key-selection
+			:focus-switching-enabled
+			:focus-help-visible
+			:filter-open="true"
+			:filtered="hasActiveFilter"
+			:filter-reset="resetFilter">
 			<template #search><svws-ui-text-input v-model="search" type="search" placeholder="Lehrkraft suchen" removable /></template>
 
 			<template #cell(kuerzel)="{ rowData, value }">
@@ -58,16 +72,27 @@
 			</template>
 			<template #actions v-if="hatKompetenzAendern">
 				<span :title="deleteTooltip">
-					<svws-ui-button @click="deleteSelectedLehrer()" type="trash" :disabled="deleteDisabled" :title="deleteDisabled ? undefined : 'Markierte Lehrer löschen'" />
+					<s-uv-auswahl-loeschen :items="selectedLehrer"
+						art="Lehrkräfte"
+						:bezeichnung="item => item.kuerzel"
+						:loeschen="state.grunddaten.delLehrer"
+						:disabled="deleteDisabled"
+						@deleted="onDeleted" />
 				</span>
 				<template v-if="(state.planungsabschnitt !== null) && (state.planungsabschnitt.id !== -1)">
-					<s-uv-grunddaten-lehrer-liste-modal v-slot="{ openModal }" :add="state.addLehrerToPlanungsabschnitt" :list-lehrer="state.uvManager.lehrerGetMengeTaetigAberNichtInPlanungsabschnitt(state.planungsabschnitt)">
+					<s-uv-grunddaten-lehrer-liste-modal v-slot="{ openModal }"
+						:add="lehrer => state.planung.addLehrerToPlanungsabschnitt(lehrer.map(item => item.id))"
+						:list-lehrer="state.uvManager.lehrerGetMengeTaetigAberNichtInPlanungsabschnitt(state.planungsabschnitt)">
 						<svws-ui-button @click="openModal" type="icon" title="Lehrer importieren"> <span class="icon i-ri-upload-2-line" /> </svws-ui-button>
 					</s-uv-grunddaten-lehrer-liste-modal>
 				</template>
 				<template v-else>
 					<s-uv-grunddaten-lehrer-import-modal v-slot="{ openModal }" :list-lehrer="schulLehrer">
-						<svws-ui-button @click="openImportModal(openModal)" type="icon" title="Lehrer importieren"> <span class="icon i-ri-upload-2-line" /> </svws-ui-button>
+						<svws-ui-button @click="openImportModal(openModal)"
+							type="icon"
+							title="Lehrer importieren">
+							<span class="icon i-ri-upload-2-line" />
+						</svws-ui-button>
 					</s-uv-grunddaten-lehrer-import-modal>
 				</template>
 				<s-uv-grunddaten-lehrer-neu-modal v-slot="{ openModal }">
@@ -89,6 +114,7 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	import SUvAuswahl from "../../SUvAuswahl.vue";
+	import SUvAuswahlLoeschen from "../../SUvAuswahlLoeschen.vue";
 
 	const props = defineProps<{
 		auswahl: UvLehrer | undefined;
@@ -229,15 +255,15 @@
 		return result;
 	});
 
-	async function deleteSelectedLehrer() {
-		if (deleteDisabled.value) {
-			return;
+	function onDeleted(items: UvLehrer[]): void {
+		selectedLehrer.value = [];
+		if (items.some(item => item.id === props.auswahl?.id)) {
+			props.gotoUvLehrer(undefined);
 		}
-		await state.delLehrer(selectedLehrer.value);
 	}
 
 	async function openImportModal(openModal: () => void) {
-		schulLehrer.value = await state.getSchulLehrer();
+		schulLehrer.value = await state.grunddaten.getSchulLehrer();
 		openModal();
 	}
 
@@ -249,19 +275,20 @@
 		actionModalType.value = null;
 	}
 
+	/** Führt die bestätigte Sammelaktion für die ausgewählten Lehrkräfte aus. */
 	async function confirmActionModal() {
 		switch (actionModalType.value) {
 			case "deletePflichtstundensoll":
-				await state.delPflichtstundensollBeiLehrern(selectedLehrer.value);
+				await state.grunddaten.delPflichtstundensollBeiLehrern(selectedLehrer.value);
 				break;
 			case "importPflichtstundensoll":
-				await state.importPflichtstundensollBeiLehrern(selectedLehrer.value);
+				await state.grunddaten.importPflichtstundensollBeiLehrern(selectedLehrer.value);
 				break;
 			case "deleteAnrechnungsstunden":
-				await state.delAnrechnungsstundenBeiLehrern(selectedLehrer.value);
+				await state.grunddaten.delAnrechnungsstundenBeiLehrern(selectedLehrer.value);
 				break;
 			case "importAnrechnungsstunden":
-				await state.importAnrechnungsstundenBeiLehrern(selectedLehrer.value);
+				await state.grunddaten.importAnrechnungsstundenBeiLehrern(selectedLehrer.value);
 				break;
 			default:
 				return;

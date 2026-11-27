@@ -1,25 +1,15 @@
 package de.svws_nrw.db.dto.current.uv;
 
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.converter.current.kursblockung.GostKursblockungRegelTypConverter;
-
-import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
-
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.svws_nrw.csv.converter.current.kursblockung.GostKursblockungRegelTypConverterSerializer;
-import de.svws_nrw.csv.converter.current.kursblockung.GostKursblockungRegelTypConverterDeserializer;
-
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle UV_StundenplanRegeln.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
@@ -72,13 +62,10 @@ public final class DTOUvStundenplanRegel {
 	@JsonProperty
 	public long StundenplanKonfiguration_ID;
 
-	/** Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp) */
+	/** Die Nummer des UV-Blockungsregeltyps (siehe UvBlockungRegelTyp) */
 	@Column(name = "Typ")
 	@JsonProperty
-	@Convert(converter = GostKursblockungRegelTypConverter.class)
-	@JsonSerialize(using = GostKursblockungRegelTypConverterSerializer.class)
-	@JsonDeserialize(using = GostKursblockungRegelTypConverterDeserializer.class)
-	public GostKursblockungRegelTyp Typ;
+	public int Typ;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOUvStundenplanRegel ohne eine Initialisierung der Attribute.
@@ -93,7 +80,7 @@ public final class DTOUvStundenplanRegel {
 	 * @param StundenplanKonfiguration_ID   der Wert für das Attribut StundenplanKonfiguration_ID
 	 * @param Typ   der Wert für das Attribut Typ
 	 */
-	public DTOUvStundenplanRegel(final long ID, final long StundenplanKonfiguration_ID, final GostKursblockungRegelTyp Typ) {
+	public DTOUvStundenplanRegel(final long ID, final long StundenplanKonfiguration_ID, final int Typ) {
 		this.ID = ID;
 		this.StundenplanKonfiguration_ID = StundenplanKonfiguration_ID;
 		this.Typ = Typ;

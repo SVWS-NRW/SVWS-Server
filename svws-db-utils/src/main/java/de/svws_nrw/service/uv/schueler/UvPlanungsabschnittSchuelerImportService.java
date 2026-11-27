@@ -32,7 +32,8 @@ import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
-import de.svws_nrw.service.uv.klassen.UvKlasseCreateRequest;
+import de.svws_nrw.core.data.uv.UvKlasseAnlageRequest;
+import de.svws_nrw.service.uv.UvUnterrichtsstrukturService;
 import de.svws_nrw.service.uv.klassen.UvKlasseService;
 import de.svws_nrw.service.uv.planungsabschnitte.UvPlanungsabschnittService;
 import jakarta.ws.rs.core.Response.Status;
@@ -50,7 +51,7 @@ public final class UvPlanungsabschnittSchuelerImportService {
 	private final UvPlanungsabschnittService uvPlanungsabschnittService;
 	private final UvPlanungsabschnittSchuelerService uvPlanungsabschnittSchuelerService;
 	private final UvKlasseService uvKlasseService;
-	private final UvSchuelergruppeService uvSchuelergruppeService;
+	private final UvUnterrichtsstrukturService struktur;
 	private final UvSchuelergruppeSchuelerService uvSchuelergruppeSchuelerService;
 
 	/**
@@ -64,7 +65,7 @@ public final class UvPlanungsabschnittSchuelerImportService {
 	 * @param uvPlanungsabschnittService         der Service für Planungsabschnitte
 	 * @param uvPlanungsabschnittSchuelerService der Service für UV-Planungsabschnitt-Schüler
 	 * @param uvKlasseService                    der Service für UV-Klassen
-	 * @param uvSchuelergruppeService            der Service für UV-Schülergruppen
+	 * @param struktur                          der Service für atomare Unterrichtsstrukturen
 	 * @param uvSchuelergruppeSchuelerService    der Service für UV-Schülergruppen-Schüler
 	 */
 	public UvPlanungsabschnittSchuelerImportService(
@@ -76,7 +77,7 @@ public final class UvPlanungsabschnittSchuelerImportService {
 			final UvPlanungsabschnittService uvPlanungsabschnittService,
 			final UvPlanungsabschnittSchuelerService uvPlanungsabschnittSchuelerService,
 			final UvKlasseService uvKlasseService,
-			final UvSchuelergruppeService uvSchuelergruppeService,
+			final UvUnterrichtsstrukturService struktur,
 			final UvSchuelergruppeSchuelerService uvSchuelergruppeSchuelerService) {
 		this.schuljahresabschnittService = schuljahresabschnittService;
 		this.schuelerRepository = schuelerRepository;
@@ -86,7 +87,7 @@ public final class UvPlanungsabschnittSchuelerImportService {
 		this.uvPlanungsabschnittService = uvPlanungsabschnittService;
 		this.uvPlanungsabschnittSchuelerService = uvPlanungsabschnittSchuelerService;
 		this.uvKlasseService = uvKlasseService;
-		this.uvSchuelergruppeService = uvSchuelergruppeService;
+		this.struktur = struktur;
 		this.uvSchuelergruppeSchuelerService = uvSchuelergruppeSchuelerService;
 	}
 
@@ -269,13 +270,20 @@ public final class UvPlanungsabschnittSchuelerImportService {
 	}
 
 	/* Ermittelt und erzeugt bei Bedarf die Klassen- und Schülergruppenzuordnungen; wird vom Schülerimport mit Klassenzuweisungen verwendet. */
-	private KlassenZuordnungen ermittleKlassenZuordnungen(final long idPlanungsabschnitt, final ImportKontext kontext, final UvSchuelerImportOptions optionen) {
+	private KlassenZuordnungen ermittleKlassenZuordnungen(final long idPlanungsabschnitt, final ImportKontext kontext,
+			final UvSchuelerImportOptions optionen) {
 		final long idZielAbschnitt = getZielAbschnitt(kontext.quellAbschnitt(), optionen);
 		final Map<String, UvKlasse> uvKlassenByKuerzel = uvKlasseService.getListByPlanungsabschnitt(idPlanungsabschnitt).stream()
 				.collect(Collectors.toMap(klasse -> klasse.kuerzel, Function.identity(), (a, b) -> a));
 		final KlassenZuordnungen neueKlassen = optionen.createMissingKlassen
 				? createFehlendeKlassen(idPlanungsabschnitt, idZielAbschnitt, kontext, optionen, uvKlassenByKuerzel)
 				: new KlassenZuordnungen(Map.of(), Map.of(), Map.of(), Map.of(), List.of(), List.of());
+		return bildeKlassenZuordnungen(kontext, optionen, uvKlassenByKuerzel, neueKlassen);
+	}
+
+	/* Bildet die Zuordnungen für Schüler und Gruppen anhand vorhandener und neu angelegter UV-Klassen. */
+	private KlassenZuordnungen bildeKlassenZuordnungen(final ImportKontext kontext, final UvSchuelerImportOptions optionen,
+			final Map<String, UvKlasse> uvKlassenByKuerzel, final KlassenZuordnungen neueKlassen) {
 		final Map<String, UvKlasse> alleUvKlassenByKuerzel = new LinkedHashMap<>(uvKlassenByKuerzel);
 		neueKlassen.neueKlassen().forEach(klasse -> alleUvKlassenByKuerzel.put(klasse.kuerzel, klasse));
 		return new KlassenZuordnungen(
@@ -306,10 +314,15 @@ public final class UvPlanungsabschnittSchuelerImportService {
 			return new KlassenZuordnungen(Map.of(), Map.of(), Map.of(), Map.of(), List.of(), List.of());
 		}
 
-		final List<UvSchuelergruppe> neueSchuelergruppen = createSchuelergruppen(idPlanungsabschnitt, fehlendeZielklassen);
-		final Map<String, UvSchuelergruppe> schuelergruppenByKuerzel = neueSchuelergruppen.stream()
-				.collect(Collectors.toMap(gruppe -> gruppe.bezeichnung.substring("Klasse ".length()), Function.identity(), (a, b) -> a));
-		final List<UvKlasse> neueKlassen = createKlassen(idPlanungsabschnitt, idZielAbschnitt, fehlendeZielklassen, schuelergruppenByKuerzel);
+		final List<UvKlasseAnlageRequest> requests = fehlendeZielklassen.stream().map(klasse -> {
+			final UvKlasseAnlageRequest request = new UvKlasseAnlageRequest();
+			request.klasse = createKlasseRequest(idPlanungsabschnitt, idZielAbschnitt, klasse);
+			request.schuelergruppe = createSchuelergruppeRequest(idPlanungsabschnitt, klasse);
+			return request;
+		}).toList();
+		final UvPlanungsabschnittsdatenBundle angelegt = struktur.createKlassenMitSchuelergruppen(requests);
+		final List<UvKlasse> neueKlassen = angelegt.klassen;
+		final List<UvSchuelergruppe> neueSchuelergruppen = angelegt.schuelergruppen;
 
 		return new KlassenZuordnungen(
 				Map.of(),
@@ -380,13 +393,6 @@ public final class UvPlanungsabschnittSchuelerImportService {
 	}
 
 
-	/* Legt zu fehlenden Zielklassen die zugehörigen Standard-Schülergruppen an; wird beim Anlegen fehlender Klassen verwendet. */
-	private List<UvSchuelergruppe> createSchuelergruppen(final long idPlanungsabschnitt, final List<DTOKlassen> fehlendeZielklassen) {
-		return uvSchuelergruppeService.createMultiple(fehlendeZielklassen.stream()
-				.map(klasse -> createSchuelergruppeRequest(idPlanungsabschnitt, klasse))
-				.toList());
-	}
-
 	/* Erstellt die Anlegeanfrage für die Schülergruppe einer Klasse; wird von createSchuelergruppen verwendet. */
 	private UvSchuelergruppeCreateRequest createSchuelergruppeRequest(final long idPlanungsabschnitt, final DTOKlassen klasse) {
 		final UvSchuelergruppeCreateRequest request = new UvSchuelergruppeCreateRequest();
@@ -398,24 +404,15 @@ public final class UvPlanungsabschnittSchuelerImportService {
 		return request;
 	}
 
-	/* Legt UV-Klassen für die fehlenden Zielklassen an; wird nach dem Anlegen der Schülergruppen verwendet. */
-	private List<UvKlasse> createKlassen(final long idPlanungsabschnitt, final long idZielAbschnitt, final List<DTOKlassen> fehlendeZielklassen,
-			final Map<String, UvSchuelergruppe> schuelergruppenByKuerzel) {
-		return uvKlasseService.createMultiple(fehlendeZielklassen.stream()
-				.map(klasse -> createKlasseRequest(idPlanungsabschnitt, idZielAbschnitt, klasse, schuelergruppenByKuerzel.get(klasse.Klasse)))
-				.toList());
-	}
-
 	/* Überträgt die relevanten Schild-Klassendaten in eine UV-Klassen-Anfrage; wird von createKlassen verwendet. */
-	private UvKlasseCreateRequest createKlasseRequest(final long idPlanungsabschnitt, final long idZielAbschnitt,
-			final DTOKlassen klasse, final UvSchuelergruppe schuelergruppe) {
-		final UvKlasseCreateRequest request = new UvKlasseCreateRequest();
+	private UvKlasse createKlasseRequest(final long idPlanungsabschnitt, final long idZielAbschnitt,
+			final DTOKlassen klasse) {
+		final UvKlasse request = new UvKlasse();
 		request.idPlanungsabschnitt = idPlanungsabschnitt;
 		request.idSchuljahresabschnitt = idZielAbschnitt;
 		request.bezeichnung = klasse.Bezeichnung;
 		request.kuerzel = klasse.Klasse;
 		request.parallelitaet = getParallelitaet(klasse.Klasse);
-		request.idSchuelergruppe = schuelergruppe.id;
 		request.orgFormKrz = klasse.OrgFormKrz;
 		request.idFachklasse = klasse.Fachklasse_ID;
 		request.asdSchulformNr = klasse.ASDSchulformNr;

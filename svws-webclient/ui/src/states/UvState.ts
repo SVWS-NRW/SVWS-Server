@@ -11,6 +11,7 @@ import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { UvBlockungRegel } from "@core/core/data/uv/regel/UvBlockungRegel";
 import type { UvFach } from "@core/core/data/uv/UvFach";
 import type { UvKlasse } from "@core/core/data/uv/UvKlasse";
 import type { UvKlassenLehrer } from "@core/core/data/uv/UvKlassenLehrer";
@@ -31,9 +32,6 @@ import type { UvSchiene } from "@core/core/data/uv/UvSchiene";
 import type { UvSchuelergruppe } from "@core/core/data/uv/UvSchuelergruppe";
 import type { UvStundentafel } from "@core/core/data/uv/UvStundentafel";
 import type { UvStundentafelFach } from "@core/core/data/uv/UvStundentafelFach";
-import type { UvUnterricht } from "@core/core/data/uv/UvUnterricht";
-import type { UvUnterrichtLerngruppenlehrer } from "@core/core/data/uv/UvUnterrichtLerngruppenlehrer";
-import type { UvUnterrichtRaum } from "@core/core/data/uv/UvUnterrichtRaum";
 import type { UvZeitraster } from "@core/core/data/uv/UvZeitraster";
 import type { UvZeitrasterEintrag } from "@core/core/data/uv/UvZeitrasterEintrag";
 import type { UvManager } from "@core/core/utils/uv/UvManager";
@@ -42,84 +40,9 @@ import type { List } from "@core/java/util/List";
 import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
 import { AppContext } from "../AppContext";
 
-export interface UvZeitrasterBlockOptions {
-	idZeitraster: number;
-	wochentagMin?: number;
-	wochentagMax?: number;
-	stundeMin?: number;
-	stundeMax?: number;
-	beginn?: number;
-	dauer?: number;
-	pause?: number;
-}
+export type UvZuordnungArt = 'lerngruppe-lehrer' | 'lerngruppe-schiene' | 'schiene-lerngruppe' | 'gruppe-schueler' | 'klasse-lehrer' | 'abschnitt-zeitraster' | 'schiene-jahrgang' | 'gruppe-jahrgang' | 'zeitraster-jahrgang';
 
-export interface UvState {
-
-	get uvManager(): UvManager;
-	get planungsabschnitt(): UvPlanungsabschnitt | null;
-	get hatKompetenzAllgemeinAendern(): boolean;
-	get hatKompetenzFunktionsbezogenAendern(): boolean;
-	get hatKompetenzAendern(): boolean;
-
-	reset(): void;
-	setSchuljahresabschnitt(idSchuljahresabschnitt: number, forceReload?: boolean): Promise<List<UvPlanungsabschnitt> | null>;
-	ladeDaten(auswahl: UvPlanungsabschnitt | null, planungsabschnitte: Iterable<UvPlanungsabschnitt>): Promise<UvPlanungsabschnitt | null>;
-	patch(id: number, data: Partial<UvPlanungsabschnitt>): Promise<boolean>;
-	deletePlanungsabschnitte(ids: List<number>): Promise<List<SimpleOperationResponse>>;
-	add(partial: Partial<UvPlanungsabschnitt>): Promise<UvPlanungsabschnitt>;
-	addAsCopy(partial: Partial<UvPlanungsabschnitt>, idFromUvPlanungsabschnitt?: number): Promise<UvPlanungsabschnitt>;
-
-	addZeitrasterZuordnung(idZeitraster: number): Promise<void>;
-	patchZeitrasterZuordnung(id: UvPlanungsabschnittZeitraster, data: JahrgangsDaten[]): Promise<void>;
-	addZeitrasterZuordnungen(idZeitrasterList: number[]): Promise<void>;
-	removeZeitrasterZuordnung(idZeitraster: number): Promise<void>;
-	removeZeitrasterZuordnungen(idZeitrasterList: number[]): Promise<void>;
-
-	createKlasse(klasse: Partial<UvKlasse>, idSchuelergruppe: number | null, idsJahrgaenge: number[]): Promise<void>;
-	delKlasse(klassen: UvKlasse[]): Promise<void>;
-	patchKlasse(idPlanungsabschnitt: number, idKlasse: number, klasse: Partial<UvKlasse>): Promise<void>;
-	addKlassenLehrer(data: Partial<UvKlassenLehrer>): Promise<void>;
-	patchKlassenLehrer(id: number, data: Partial<UvKlassenLehrer>, zuordnung: UvKlassenLehrer): Promise<void>;
-	delKlassenLehrer(lehrerList: UvKlassenLehrer[]): Promise<void>;
-
-	createKurs(kurs: Partial<UvKurs>, idSchuelergruppe: number | null, idsJahrgaenge: number[]): Promise<UvKurs>;
-	delKurs(kurse: UvKurs[]): Promise<void>;
-	patchKurs(idPlanungsabschnitt: number, idKurs: number, kurs: Partial<UvKurs>): Promise<void>;
-	importKursdaten(daten: UvKursImportDaten): Promise<void>;
-
-	createSchiene(schiene: Partial<UvSchiene>): Promise<void>;
-	delSchiene(schienen: UvSchiene[]): Promise<void>;
-	patchSchiene(idSchiene: number, schiene: Partial<UvSchiene>): Promise<void>;
-
-	createLerngruppe(lerngruppe: Partial<UvLerngruppe>): Promise<void>;
-	createLerngruppenFromKlassen(): Promise<void>;
-	delLerngruppe(lerngruppen: UvLerngruppe[]): Promise<void>;
-	patchLerngruppe(idLerngruppe: number, lerngruppe: Partial<UvLerngruppe>): Promise<void>;
-	erzeugeUnterrichteByLerngruppen(lerngruppen: UvLerngruppe[]): Promise<void>;
-	createLerngruppenLehrerMultiple(lerngruppenLehrerList: List<Partial<UvLerngruppenLehrer>>): Promise<void>;
-	addLerngruppenLehrer(data: Partial<UvLerngruppenLehrer>): Promise<void>;
-	patchLerngruppenLehrer(id: number, data: Partial<UvLerngruppenLehrer>, zuordnung: UvLerngruppenLehrer): Promise<void>;
-	delLerngruppenLehrer(lehrerList: UvLerngruppenLehrer[]): Promise<void>;
-	addLerngruppenSchiene(data: Partial<UvLerngruppenSchiene>): Promise<void>;
-	delLerngruppenSchiene(schienenList: UvLerngruppenSchiene[]): Promise<void>;
-
-	delSchueler(schueler: UvPlanungsabschnittSchueler[]): Promise<void>;
-	patchSchueler(idPlanungsabschnitt: number, idSchueler: number, schueler: Partial<UvPlanungsabschnittSchueler>): Promise<void>;
-	importSchueler(options: { idSchuljahresabschnitt: number; folgejahrgang: boolean; klassenzuweisungenUebernehmen: boolean; versetzungsvermerkeBeruecksichtigen: boolean; createMissingKlassen: boolean }): Promise<void>;
-
-	createSchuelergruppe(schuelergruppe: Partial<UvSchuelergruppe>): Promise<void>;
-	delSchuelergruppe(schuelergruppen: UvSchuelergruppe[]): Promise<void>;
-	patchSchuelergruppe(idSchuelergruppe: number, schuelergruppe: Partial<UvSchuelergruppe>): Promise<void>;
-	addSchuelerToSchuelergruppe(idSchuelergruppe: number, idsSchueler: number[]): Promise<void>;
-	removeSchuelerFromSchuelergruppe(idSchuelergruppe: number, idsSchueler: number[]): Promise<void>;
-
-	delUnterricht(unterrichte: UvUnterricht[]): Promise<void>;
-	patchUnterricht(idUnterricht: number, unterricht: Partial<UvUnterricht>): Promise<void>;
-	addUnterrichtLerngruppenlehrer(data: Partial<UvUnterrichtLerngruppenlehrer>): Promise<void>;
-	delUnterrichtLerngruppenlehrer(list: UvUnterrichtLerngruppenlehrer[]): Promise<void>;
-	addUnterrichtRaum(data: Partial<UvUnterrichtRaum>): Promise<void>;
-	delUnterrichtRaum(list: UvUnterrichtRaum[]): Promise<void>;
-
+interface UvGrunddatenAktionen {
 	delFaecher(faecher: UvFach[]): Promise<void>;
 	patchFach(idFach: number, fach: Partial<UvFach>): Promise<void>;
 	addFaecher(fachdaten: FachDaten[]): Promise<void>;
@@ -148,9 +71,7 @@ export interface UvState {
 	addZeitrasterEintraege(eintraege: Partial<UvZeitrasterEintrag>[]): Promise<UvZeitrasterEintrag[]>;
 	patchZeitrasterEintrag(idZeitraster: number, idEintrag: number, data: Partial<UvZeitrasterEintrag>): Promise<void>;
 	deleteZeitrasterEintraege(idZeitraster: number, ids: number[]): Promise<void>;
-	createZeitrasterBlock(options: UvZeitrasterBlockOptions): Promise<void>;
 
-	addLehrerToPlanungsabschnitt(lehrer: UvLehrer[]): Promise<void>;
 	delLehrer(lehrer: UvLehrer[]): Promise<void>;
 	delPflichtstundensollBeiLehrern(lehrer: UvLehrer[]): Promise<void>;
 	importPflichtstundensollBeiLehrern(lehrer: UvLehrer[]): Promise<void>;
@@ -170,16 +91,106 @@ export interface UvState {
 	patchLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>): Promise<void>;
 	removeLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach): Promise<void>;
 
-	// Übergangsschnittstelle für fachfremde Datenbereiche. Diese Methoden werden in passende States verschoben,
-	// sobald States für den jeweiligen Bereich (z. B. GostKursblockung, Klassen oder Lehrer) verfügbar sind.
+	getSchulLehrer(): Promise<LehrerListeEintrag[]>;
+	importLehrerFromSchule(lehrer: LehrerListeEintrag[]): Promise<void>;
+}
+
+interface UvPlanungsAktionen {
+	addZeitrasterZuordnung(idZeitraster: number): Promise<void>;
+	patchZeitrasterZuordnung(id: UvPlanungsabschnittZeitraster, data: JahrgangsDaten[]): Promise<void>;
+	addZeitrasterZuordnungen(idZeitrasterList: number[]): Promise<void>;
+	removeZeitrasterZuordnung(idZeitraster: number): Promise<void>;
+	removeZeitrasterZuordnungen(idZeitrasterList: number[]): Promise<void>;
+
+	createKlasseMitSchuelergruppe(klasse: Partial<UvKlasse>, idsJahrgaenge: number[] | null): Promise<UvKlasse>;
+	delKlasse(klassen: UvKlasse[]): Promise<void>;
+	patchKlasse(idKlasse: number, klasse: Partial<UvKlasse>): Promise<void>;
+	addKlassenLehrer(data: Partial<UvKlassenLehrer>): Promise<void>;
+	patchKlassenLehrer(id: number, data: Partial<UvKlassenLehrer>): Promise<void>;
+	delKlassenLehrer(lehrerList: UvKlassenLehrer[]): Promise<void>;
+
+	createKursLerngruppe(
+		kurs: Partial<UvKurs>,
+		idSchuelergruppe: number | null,
+		idsJahrgaenge: number[],
+		idsSchueler: number[],
+		wochenstunden: number,
+		wochenstundenUnterrichtet: number
+	): Promise<UvLerngruppe>;
+	delKurs(kurse: UvKurs[]): Promise<void>;
+	patchKurs(idKurs: number, kurs: Partial<UvKurs>): Promise<void>;
+	importKursdaten(daten: UvKursImportDaten): Promise<void>;
+
+	createSchiene(schiene: Partial<UvSchiene>): Promise<UvSchiene>;
+	delSchiene(schienen: UvSchiene[]): Promise<void>;
+	patchSchiene(idSchiene: number, schiene: Partial<UvSchiene>): Promise<void>;
+	aendereSchienenJahrgang(idSchiene: number, idJahrgang: number, hinzufuegen: boolean): Promise<void>;
+
+	createLerngruppe(lerngruppe: Partial<UvLerngruppe>): Promise<UvLerngruppe>;
+	addPlanungsZuordnung(art: UvZuordnungArt, idZiel: number, id: number): Promise<void>;
+	deletePlanungsAuswahl(art: string, ids: number[]): Promise<void>;
+	createLerngruppenFromKlassen(): Promise<void>;
+	delLerngruppe(lerngruppen: UvLerngruppe[]): Promise<void>;
+	patchLerngruppe(idLerngruppe: number, lerngruppe: Partial<UvLerngruppe>): Promise<void>;
+	addLerngruppenLehrer(data: Partial<UvLerngruppenLehrer>): Promise<void>;
+	patchLerngruppenLehrer(id: number, data: Partial<UvLerngruppenLehrer>): Promise<void>;
+	patchLerngruppenLehrerMultiple(patches: { id: number; data: Partial<UvLerngruppenLehrer> }[]): Promise<void>;
+	delLerngruppenLehrer(lehrerList: UvLerngruppenLehrer[]): Promise<void>;
+	addLerngruppenSchiene(data: Partial<UvLerngruppenSchiene>): Promise<void>;
+	delLerngruppenSchiene(schienenList: UvLerngruppenSchiene[]): Promise<void>;
+
+	delSchueler(schueler: UvPlanungsabschnittSchueler[]): Promise<void>;
+	patchSchueler(idPlanungsabschnitt: number, idSchueler: number, schueler: Partial<UvPlanungsabschnittSchueler>): Promise<void>;
+	importSchueler(options: { idSchuljahresabschnitt: number; folgejahrgang: boolean; klassenzuweisungenUebernehmen: boolean; versetzungsvermerkeBeruecksichtigen: boolean; createMissingKlassen: boolean }): Promise<void>;
+
+	createSchuelergruppeFuerZiel(art: 'klassen' | 'kurse', id: number, gruppe: Partial<UvSchuelergruppe>): Promise<void>;
+	patchSchuelergruppe(idSchuelergruppe: number, schuelergruppe: Partial<UvSchuelergruppe>): Promise<void>;
+	aendereSchuelergruppenJahrgang(idGruppe: number, idJahrgang: number, hinzufuegen: boolean): Promise<void>;
+	addSchuelerToSchuelergruppe(idSchuelergruppe: number, idsSchueler: number[]): Promise<void>;
+	removeSchuelerFromSchuelergruppe(idSchuelergruppe: number, idsSchueler: number[]): Promise<void>;
+
+	addLehrerToPlanungsabschnitt(idsLehrer: number[]): Promise<void>;
+	removeLehrerFromPlanungsabschnitt(idsLehrer: number[]): Promise<void>;
+
 	getGostAbiturjahrgaenge(): Promise<GostJahrgang[]>;
 	getGostBlockungen(abiturjahr: number, idHalbjahr: number): Promise<GostBlockungListeneintrag[]>;
 	getGostBlockungsergebnisse(idBlockung: number): Promise<GostBlockungsergebnis[]>;
 	getGostBlockung(idBlockung: number): Promise<GostBlockungsdaten>;
 	getKurseFuerSchuljahresabschnitt(idSchuljahresabschnitt: number): Promise<List<KursDaten>>;
 	getImportKlassen(idSchuljahresabschnitt: number, idJahrgang: number): Promise<KlassenListeEintrag[]>;
-	getSchulLehrer(): Promise<LehrerListeEintrag[]>;
-	importLehrerFromSchule(lehrer: LehrerListeEintrag[]): Promise<void>;
+}
+
+export interface UvState {
+
+	get bearbeitungAktiv(): boolean;
+	setBearbeitungAktiv(aktiv: boolean): void;
+
+	get uvManager(): UvManager;
+	get planungsabschnitt(): UvPlanungsabschnitt | null;
+	get regelliste(): UvBlockungRegel[];
+	readonly grunddaten: UvGrunddatenAktionen;
+	readonly planung: UvPlanungsAktionen;
+	readonly regeln: {
+		create(regel: UvBlockungRegel): Promise<UvBlockungRegel>;
+		patch(regel: UvBlockungRegel): Promise<void>;
+		patchMehrere(regeln: UvBlockungRegel[]): Promise<void>;
+		loeschen(id: number): Promise<void>;
+		lehrerFixierungUmschalten(art: 'klasse' | 'lerngruppe', idZiel: number, idLehrer: number, reihenfolge: number): Promise<void>;
+		blockePlanungsabschnitt(fortschritt: (malusBeschreibung: string) => void): Promise<void>;
+		stoppeBlockung(): void;
+		verwerfeBlockung(): void;
+	};
+	get hatKompetenzAllgemeinAendern(): boolean;
+	get hatKompetenzFunktionsbezogenAendern(): boolean;
+	get hatKompetenzAendern(): boolean;
+
+	reset(): void;
+	setSchuljahresabschnitt(idSchuljahresabschnitt: number, forceReload?: boolean): Promise<List<UvPlanungsabschnitt> | null>;
+	ladeDaten(auswahl: UvPlanungsabschnitt | null, planungsabschnitte: Iterable<UvPlanungsabschnitt>): Promise<UvPlanungsabschnitt | null>;
+	patch(id: number, data: Partial<UvPlanungsabschnitt>): Promise<boolean>;
+	deletePlanungsabschnitte(ids: List<number>): Promise<List<SimpleOperationResponse>>;
+	add(partial: Partial<UvPlanungsabschnitt>): Promise<UvPlanungsabschnitt>;
+	addAsCopy(partial: Partial<UvPlanungsabschnitt>, idFromUvPlanungsabschnitt?: number): Promise<UvPlanungsabschnitt>;
 
 }
 

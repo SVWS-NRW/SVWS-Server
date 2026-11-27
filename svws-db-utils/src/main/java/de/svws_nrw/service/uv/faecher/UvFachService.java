@@ -101,8 +101,10 @@ public final class UvFachService {
 				}
 				final var neu = new DTOUvFach(nextId++, request.idFach, request.gueltigVon);
 				neu.GueltigBis = request.gueltigBis;
-				checkBeforePersist(neu);
 				entities.add(neu);
+			}
+			for (final DTOUvFach entity : entities) {
+				checkBeforePersist(entity, entities);
 			}
 			repository.update(entities);
 			repository.flush();
@@ -137,7 +139,9 @@ public final class UvFachService {
 			for (final var p : patches) {
 				final var entity = repository.getById(p.id);
 				applyPatch(entity, p);
-				checkBeforePersist(entity);
+			}
+			for (final DTOUvFach entity : entities) {
+				checkBeforePersist(entity, entities);
 			}
 			repository.update(entities);
 			repository.flush();
@@ -188,14 +192,18 @@ public final class UvFachService {
 		});
 	}
 
-	private void checkBeforePersist(final DTOUvFach dto) {
+	private void checkBeforePersist(final DTOUvFach dto, final Collection<DTOUvFach> geaenderteFaecher) {
+		if (!DateUtils.isValidDate(dto.GueltigVon) || ((dto.GueltigBis != null) && !DateUtils.isValidDate(dto.GueltigBis))) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Gültigkeitszeitraum enthält ein ungültiges Datum.");
+		}
 		if ((dto.GueltigBis != null) && (dto.GueltigVon.compareTo(dto.GueltigBis) > 0)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Das Datum 'gueltigBis' darf nicht vor dem Datum 'gueltigVon' liegen.");
 		}
 		// Prüfe auf überschneidende Zeiträume mit existierenden Einträgen zur gleichen Fach_ID
-		final List<DTOUvFach> existing = repository.getListByFachId(dto.Fach_ID);
+		final List<DTOUvFach> existing = new ArrayList<>(repository.getListByFachId(dto.Fach_ID));
+		existing.addAll(geaenderteFaecher);
 		for (final DTOUvFach other : existing) {
-			if (other.ID == dto.ID) {
+			if ((other.ID == dto.ID) || (other.Fach_ID != dto.Fach_ID)) {
 				continue;
 			}
 			if (DateUtils.intervallUeberlappt(dto.GueltigVon, dto.GueltigBis, other.GueltigVon, other.GueltigBis)) {

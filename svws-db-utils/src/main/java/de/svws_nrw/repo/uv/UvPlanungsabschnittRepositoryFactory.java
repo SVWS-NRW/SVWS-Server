@@ -17,6 +17,12 @@ import de.svws_nrw.repo.uv.lehrer.UvPlanungsabschnittLehrerRepository;
 import de.svws_nrw.repo.uv.lehrer.UvPlanungsabschnittLehrerRepositoryImpl;
 import de.svws_nrw.repo.uv.planungsabschnitte.UvPlanungsabschnittRepository;
 import de.svws_nrw.repo.uv.planungsabschnitte.UvPlanungsabschnittRepositoryImpl;
+import de.svws_nrw.repo.uv.regeln.UvStundenplanKonfigurationRepository;
+import de.svws_nrw.repo.uv.regeln.UvStundenplanKonfigurationRepositoryImpl;
+import de.svws_nrw.repo.uv.regeln.UvStundenplanRegelRepository;
+import de.svws_nrw.repo.uv.regeln.UvStundenplanRegelRepositoryImpl;
+import de.svws_nrw.repo.uv.regeln.UvStundenplanRegelparameterRepository;
+import de.svws_nrw.repo.uv.regeln.UvStundenplanRegelparameterRepositoryImpl;
 import de.svws_nrw.repo.uv.schueler.UvPlanungsabschnittSchuelerRepository;
 import de.svws_nrw.repo.uv.schueler.UvPlanungsabschnittSchuelerRepositoryImpl;
 import de.svws_nrw.repo.uv.zeitraster.UvPlanungsabschnittZeitrasterConstraintJahrgangRepository;
@@ -63,6 +69,33 @@ public final class UvPlanungsabschnittRepositoryFactory extends RepositoryFactor
 	 */
 	public UvPlanungsabschnittRepository getUvPlanungsabschnittRepository() {
 		return getOrCreate(UvPlanungsabschnittRepository.class, () -> new UvPlanungsabschnittRepositoryImpl(conn));
+	}
+
+	/**
+	 * Liefert das Repository für die Stundenplankonfigurationen.
+	 *
+	 * @return das Repository
+	 */
+	public UvStundenplanKonfigurationRepository getUvStundenplanKonfigurationRepository() {
+		return getOrCreate(UvStundenplanKonfigurationRepository.class, () -> new UvStundenplanKonfigurationRepositoryImpl(conn));
+	}
+
+	/**
+	 * Liefert das Repository für die UV-Blockungsregeln.
+	 *
+	 * @return das Repository
+	 */
+	public UvStundenplanRegelRepository getUvStundenplanRegelRepository() {
+		return getOrCreate(UvStundenplanRegelRepository.class, () -> new UvStundenplanRegelRepositoryImpl(conn));
+	}
+
+	/**
+	 * Liefert das Repository für die Parameter der UV-Blockungsregeln.
+	 *
+	 * @return das Repository
+	 */
+	public UvStundenplanRegelparameterRepository getUvStundenplanRegelparameterRepository() {
+		return getOrCreate(UvStundenplanRegelparameterRepository.class, () -> new UvStundenplanRegelparameterRepositoryImpl(conn));
 	}
 
 	/**

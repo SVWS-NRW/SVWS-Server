@@ -78,7 +78,7 @@
 		const formData = new FormData();
 		formData.append("data", file.value);
 		try {
-			await state.setUvRaeumeImportJSON(formData);
+			await state.grunddaten.setUvRaeumeImportJSON(formData);
 			show.value = false;
 		} catch (e) {
 			console.log(e);

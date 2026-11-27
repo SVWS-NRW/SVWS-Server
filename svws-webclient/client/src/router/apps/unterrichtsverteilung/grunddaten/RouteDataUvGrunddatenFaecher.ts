@@ -10,12 +10,12 @@ import { RouteNode } from '~/router/RouteNode';
 import { uvStateImpl } from "~/states/UvStateImpl";
 
 interface RouteStateUvGrunddatenFaecher extends RouteStateInterface {
-	auswahl: UvFach | undefined;
+	idAuswahl: number | undefined;
 	konfliktMitFach: UvFach | null;
 }
 
 const defaultState = <RouteStateUvGrunddatenFaecher> {
-	auswahl: undefined,
+	idAuswahl: undefined,
 	konfliktMitFach: null,
 };
 
@@ -26,17 +26,16 @@ export class RouteDataUvGrunddatenFaecher extends RouteData<RouteStateUvGrunddat
 	}
 
 	public get auswahl(): UvFach | undefined {
-		const auswahl = this._state.value.auswahl;
-		if (auswahl === undefined) {
+		const idAuswahl = this._state.value.idAuswahl;
+		if (idAuswahl === undefined) {
 			return undefined;
 		}
-		// Nach DTO-Patches immer die aktuelle Managerinstanz verwenden.
-		return uvStateImpl.uvManager.fachGetByIdOrNull(auswahl.id) ?? undefined;
+		return uvStateImpl.uvManager.fachGetByIdOrNull(idAuswahl) ?? undefined;
 	}
 
-	public setAuswahlFromRoute = (fach: UvFach | undefined): void => {
-		if (this._state.value.auswahl?.id !== fach?.id) {
-			this.setPatchedState({ auswahl: fach, konfliktMitFach: null });
+	public setAuswahlFromRoute = (idAuswahl: number | undefined): void => {
+		if (this._state.value.idAuswahl !== idAuswahl) {
+			this.setPatchedState({ idAuswahl, konfliktMitFach: null });
 		}
 	};
 

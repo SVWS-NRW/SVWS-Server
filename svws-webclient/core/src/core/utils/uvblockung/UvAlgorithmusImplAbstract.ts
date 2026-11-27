@@ -27,7 +27,7 @@ export abstract class UvAlgorithmusImplAbstract extends JavaObject {
 	 *
 	 * @param log   Ein {@link Logger}-Objekt für Debug-Zwecke.
 	 * @param rnd   Ein {@link Random}-Objekt zur Steuerung des Zufalls.
-	 * @param dyn   Die dynamische Daten (mit dynamischer Bewertung).
+	 * @param dyn   Die dynamischen Daten (mit dynamischer Bewertung).
 	 */
 	protected constructor(log: Logger, rnd: Random, dyn: UvAlgorithmusDynDaten) {
 		super();

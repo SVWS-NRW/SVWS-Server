@@ -1,101 +1,106 @@
 <template>
 	<div v-if="zeitraster !== undefined" class="page grid grid-cols-1 content-start gap-6 overflow-auto">
+		<svws-ui-notification v-if="fehler" type="error">{{ fehler }}</svws-ui-notification>
 		<svws-ui-content-card title="Allgemeine Daten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Bezeichnung" :model-value="zeitraster.bezeichnung ?? ''" @change="patchBezeichnung" span="full" required />
+				<svws-ui-text-input :disabled="loading || !hatKompetenzAendern"
+					placeholder="Bezeichnung"
+					:model-value="zeitraster.bezeichnung ?? ''"
+					@change="patchBezeichnung"
+					span="full"
+					required />
 				<div class="col-span-full grid min-w-0 grid-cols-2 gap-4">
-					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Gültig von" :model-value="zeitraster.gueltigVon" @change="patchGueltigVon" type="date" required />
-					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Gültig bis" :model-value="zeitraster.gueltigBis" @change="patchGueltigBis" type="date" />
+					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern"
+						placeholder="Gültig von"
+						:model-value="zeitraster.gueltigVon"
+						@change="patchGueltigVon"
+						type="date"
+						required />
+					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern"
+						placeholder="Gültig bis"
+						:model-value="zeitraster.gueltigBis"
+						@change="patchGueltigBis"
+						type="date" />
 				</div>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<div class="svws-ui-stundenplan svws-ui-stundenplan--mode-planung svws-ohne-zeitachse" v-if="listZeitrasterEintraege.length > 0">
-			<div class="svws-ui-stundenplan--head">
-				<div class="inline-flex gap-1 items-center justify-center opacity-50 text-sm font-bold pb-0.5" />
-				<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label group" :class="{ 'svws-selected': selected === wochentag }">
-					<span class="px-2 py-1 rounded-xs group group-hover:bg-ui-25!"> {{ wochentag.beschreibung }}</span>
-				</div>
-			</div>
-			<div class="svws-ui-stundenplan--body">
-				<div class="svws-ui-stundenplan--zeitraster svws-zeitachse">
-					<div v-for="stunde in stundenRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde text-center justify-center cursor-pointer" :class="{ 'svws-selected-stunde': selected === stunde }">
-						<div class="text-headline-sm">
-							{{ stunde }}.&nbsp;Stunde
-						</div>
-					</div>
-				</div>
-				<div class="svws-ui-stundenplan--zeitraster" v-for="wochentag in wochentagRange" :key="wochentag.id" :class="{ 'svws-selected': selected === wochentag }">
-					<template v-for="eintrag in getEintraegeByWochentag(wochentag.id)" :key="eintrag.id">
-						<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(eintrag)" :style="posZeitraster(eintrag.stunde)" :class="{ 'svws-selected': isEintragSelected(eintrag) }">
-							<div class="svws-ui-stundenplan--unterricht">
-								<span>{{ eintrag.stunde }}</span>
-								<div class="flex content-start">
-									{{ minutesToTimeString(eintrag.beginn) }}–{{ minutesToTimeString(eintrag.ende) }}
-								</div>
-							</div>
-						</div>
-					</template>
-				</div>
-			</div>
-		</div>
+		<s-uv-zeitraster-ansicht v-if="listZeitrasterEintraege.length > 0"
+			:tage="rasterTage"
+			:stunden="grenzen.stunden"
+			:selected
+			:set-selection />
 		<div v-else class="text-ui-secondary">Es wurden noch keine Zeitraster-Einträge für dieses Zeitraster angelegt.</div>
 
 		<div class="min-w-0 flex flex-col gap-4">
 			<div class="flex gap-3 flex-wrap justify-stretch">
-				<svws-ui-button :disabled="loading || !hatKompetenzAendern" class="grow" type="secondary" @click="addStunde">
+				<svws-ui-button :disabled="loading || !hatKompetenzAendern || listZeitrasterEintraege.length === 0"
+					class="grow"
+					type="secondary"
+					@click="addStunde">
 					<span class="icon i-ri-calendar-event-line" />
 					<span class="icon i-ri-add-line" />{{ maxStunde + 1 }}. Stunde
 				</svws-ui-button>
-				<svws-ui-button :disabled="loading || !hatKompetenzAendern" class="grow" type="secondary" @click="addWochentag" v-if="maxWochentag < 7">
+				<svws-ui-button :disabled="loading || !hatKompetenzAendern || listZeitrasterEintraege.length === 0"
+					class="grow"
+					type="secondary"
+					@click="addWochentag"
+					v-if="maxWochentag < 7">
 					<span class="icon i-ri-calendar-event-line" />
 					<span class="icon i-ri-add-line" />{{ nextWochentagName }}
 				</svws-ui-button>
 			</div>
 
-			<ui-card icon="i-ri-add-line" title="Alle Zeitraster erstellen" :is-open="actionZeitraster" @update:is-open="(isOpen) => actionZeitraster = isOpen">
+			<ui-card icon="i-ri-add-line"
+				title="Alle Zeitraster erstellen"
+				:is-open="actionZeitraster"
+				@update:is-open="(isOpen) => actionZeitraster = isOpen">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern" placeholder="Unterrichtsbeginn" :model-value="minutesToTimeString(settings.beginn)" @change="updateBeginn" type="time" />
-					<svws-ui-input-number :disabled="loading || !hatKompetenzAendern" placeholder="Stundendauer (min)" :model-value="settings.dauer" @change="v => settings.dauer = v ?? 45" :min="5" :max="120" />
-					<svws-ui-input-number :disabled="loading || !hatKompetenzAendern" placeholder="Pausenzeit (min)" :model-value="settings.pause" @change="v => settings.pause = v ?? 5" :min="0" :max="60" />
-					<svws-ui-input-number :disabled="loading || !hatKompetenzAendern" placeholder="Anzahl Stunden" :model-value="settings.stundenMax" @change="v => settings.stundenMax = v ?? 6" :min="1" :max="12" />
-					<svws-ui-button :disabled="loading || !hatKompetenzAendern" type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${settings.stundenMax}. Stunde erstellen`">
+					<svws-ui-text-input :disabled="loading || !hatKompetenzAendern"
+						placeholder="Unterrichtsbeginn"
+						:model-value="DateUtils.gibZeitStringOfMinuten(settings.beginn)"
+						@change="updateBeginn"
+						type="time" />
+					<svws-ui-input-number :disabled="loading || !hatKompetenzAendern"
+						placeholder="Stundendauer (min)"
+						:model-value="settings.dauer"
+						@change="v => settings.dauer = v ?? 45"
+						:min="5"
+						:max="120" />
+					<svws-ui-input-number :disabled="loading || !hatKompetenzAendern"
+						placeholder="Pausenzeit (min)"
+						:model-value="settings.pause"
+						@change="v => settings.pause = v ?? 5"
+						:min="0"
+						:max="60" />
+					<svws-ui-input-number :disabled="loading || !hatKompetenzAendern"
+						placeholder="Anzahl Stunden"
+						:model-value="settings.stundenMax"
+						@change="v => settings.stundenMax = v ?? 6"
+						:min="1"
+						:max="12" />
+					<svws-ui-button :disabled="loading || !hatKompetenzAendern"
+						type="secondary"
+						@click="addBlock"
+						:title="`Alle Zeitraster Montag - Freitag, 1.-${settings.stundenMax}. Stunde erstellen`">
 						<span class="icon i-ri-calendar-event-line" />
 						<span class="icon i-ri-add-line" />Mo-Fr / 1.-{{ settings.stundenMax }}. erstellen
 					</svws-ui-button>
 				</svws-ui-input-wrapper>
 			</ui-card>
 
-			<div class="flex gap-3 flex-wrap justify-stretch">
-				<svws-ui-button class="grow" type="secondary" @click="exportJSON" title="Alle Zeitrastereinträge als JSON-Datei exportieren">
-					<span class="icon i-ri-upload-2-line" />Exportieren
-				</svws-ui-button>
-				<svws-ui-button :disabled="loading || !hatKompetenzAendern" class="grow" type="secondary" @click="triggerImport" title="Zeitrastereinträge aus einer JSON-Datei importieren">
-					<span class="icon i-ri-download-2-line" />Importieren...
-				</svws-ui-button>
-				<label class="hidden" for="uv-zeitraster-import-json">JSON-Datei</label>
-				<input id="uv-zeitraster-import-json" ref="fileInput" type="file" accept=".json" class="hidden" @change="importJSON">
-			</div>
-
 			<div class="flex flex-wrap items-center gap-3 border-t border-ui pt-3" aria-label="Aktionen zur Rasterauswahl">
 				<span class="text-sm text-ui-secondary">{{ auswahlText }}</span>
-				<svws-ui-button type="secondary" :disabled="loading || !hatKompetenzAendern || !isUvZeitrasterEintrag(selected)" @click="openZeitDialog">Zeiten bearbeiten</svws-ui-button>
-				<svws-ui-button type="danger" :disabled="loading || !hatKompetenzAendern || selected === undefined" @click="deleteAuswahl">{{ loeschText }}</svws-ui-button>
+				<svws-ui-button type="secondary"
+					:disabled="loading || !hatKompetenzAendern || !isUvZeitrasterEintrag(selected)"
+					@click="openZeitDialog">
+					Zeiten bearbeiten
+				</svws-ui-button>
+				<svws-ui-button type="trash" :title="loeschText" :disabled="loading || !hatKompetenzAendern || selected === undefined" @click="deleteAuswahl" />
 			</div>
-			<svws-ui-modal v-model:show="showZeitDialog" :auto-close="!dialogLoading" :close-in-title="!dialogLoading">
-				<template #modalTitle>Zeiten bearbeiten</template>
-				<template #modalContent>
-					<p class="mb-3">{{ zeitEntwurf === null ? '' : Wochentag.fromIDorException(zeitEntwurf.wochentag).beschreibung + ', ' + zeitEntwurf.stunde + '. Stunde' }}</p>
-					<svws-ui-notification v-if="dialogError" type="error" class="mb-3">{{ dialogError }}</svws-ui-notification>
-					<svws-ui-input-wrapper :grid="2">
-						<svws-ui-text-input v-model="zeitBeginn" type="time" placeholder="Beginn" required :disabled="dialogLoading" />
-						<svws-ui-text-input v-model="zeitEnde" type="time" placeholder="Ende" required :disabled="dialogLoading" />
-					</svws-ui-input-wrapper>
-				</template>
-				<template #modalActions>
-					<svws-ui-button type="secondary" :disabled="dialogLoading" @click="showZeitDialog = false">Abbrechen</svws-ui-button>
-					<svws-ui-button :disabled="dialogLoading || !hatKompetenzAendern" @click="saveZeitDialog">Speichern</svws-ui-button>
-				</template>
-			</svws-ui-modal>
+			<s-uv-zeitraster-eintrag-dialog v-model:show="showZeitDialog"
+				:eintrag="zeitEintrag"
+				:darf-speichern="hatKompetenzAendern"
+				:speichern="speichereEintragZeiten" />
 		</div>
 	</div>
 	<div v-else class="page">
@@ -111,7 +116,14 @@
 	import type { UvZeitraster } from "@core/core/data/uv/UvZeitraster";
 	import { UvZeitrasterEintrag } from "@core/core/data/uv/UvZeitrasterEintrag";
 	import { Wochentag } from "@core/core/types/Wochentag";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { UvManager } from "@core/core/utils/uv/UvManager";
 	import { useUvState } from "@ui/states/UvState";
+
+	import { createUvPresenter } from "../../UvPresenter";
+
+	import SUvZeitrasterAnsicht from "./SUvZeitrasterAnsicht.vue";
+	import SUvZeitrasterEintragDialog from "./SUvZeitrasterEintragDialog.vue";
 
 	const props = defineProps<{
 		schulform: Schulform | undefined;
@@ -120,14 +132,21 @@
 		setSelection: (value: Wochentag | number | UvZeitrasterEintrag | undefined) => void;
 	}>();
 	const state = useUvState();
+	const presenter = computed(() => createUvPresenter(state.uvManager));
 	const hatKompetenzAendern = computed(() => state.hatKompetenzAendern);
 	const loading = ref(false);
+	const fehler = ref('');
+	watch(() => props.zeitraster?.id, () => {
+		fehler.value = '';
+	});
+	// Grunddaten des Zeitrasters
+
 	async function patchBezeichnung(bezeichnung: string | null | undefined): Promise<void> {
 		const zeitraster = props.zeitraster;
 		if (zeitraster === undefined) {
 			return;
 		}
-		await state.patchZeitraster(zeitraster.id, { bezeichnung: bezeichnung ?? '' });
+		await state.grunddaten.patchZeitraster(zeitraster.id, { bezeichnung: bezeichnung ?? '' });
 	}
 
 	async function patchGueltigVon(gueltigVon: string | null | undefined): Promise<void> {
@@ -135,7 +154,7 @@
 		if (zeitraster === undefined) {
 			return;
 		}
-		await state.patchZeitraster(zeitraster.id, { gueltigVon: gueltigVon ?? '' });
+		await state.grunddaten.patchZeitraster(zeitraster.id, { gueltigVon: gueltigVon ?? '' });
 	}
 
 	async function patchGueltigBis(gueltigBis: string | null | undefined): Promise<void> {
@@ -143,15 +162,12 @@
 		if (zeitraster === undefined) {
 			return;
 		}
-		await state.patchZeitraster(zeitraster.id, { gueltigBis: gueltigBis ?? null });
+		await state.grunddaten.patchZeitraster(zeitraster.id, { gueltigBis: gueltigBis ?? null });
 	}
 
 	const showZeitDialog = ref(false);
-	const dialogLoading = ref(false);
-	const dialogError = ref('');
-	const zeitEntwurf = ref<UvZeitrasterEintrag | null>(null);
-	const zeitBeginn = ref<string | null>('');
-	const zeitEnde = ref<string | null>('');
+	const zeitEintrag = ref<UvZeitrasterEintrag | null>(null);
+
 	watch(() => props.zeitraster?.id, () => {
 		showZeitDialog.value = false;
 	});
@@ -186,46 +202,26 @@
 			await deleteSelectedEintrag();
 		}
 	}
-	function openZeitDialog() {
+	// Einzelnen Zeitabschnitt im Dialog bearbeiten
+
+	function openZeitDialog(): void {
 		if (!isUvZeitrasterEintrag(props.selected) || !hatKompetenzAendern.value || loading.value) {
 			return;
 		}
-		zeitEntwurf.value = Object.assign(new UvZeitrasterEintrag(), props.selected);
-		zeitBeginn.value = minutesToTimeString(props.selected.beginn);
-		zeitEnde.value = minutesToTimeString(props.selected.ende);
-		dialogError.value = '';
+		zeitEintrag.value = props.selected;
 		showZeitDialog.value = true;
 	}
-	async function saveZeitDialog() {
-		if (dialogLoading.value || !hatKompetenzAendern.value || zeitEntwurf.value === null) {
-			return;
-		}
-		const beginn = timeStringToMinutes(zeitBeginn.value);
-		const ende = timeStringToMinutes(zeitEnde.value);
-		if (beginn === null || ende === null || ende <= beginn) {
-			dialogError.value = 'Bitte gültige Zeiten eingeben. Das Ende muss nach dem Beginn liegen.';
-			return;
-		}
-		dialogLoading.value = true;
-		dialogError.value = '';
-		try {
-			await state.patchZeitrasterEintrag(zeitEntwurf.value.idZeitraster, zeitEntwurf.value.id, { beginn, ende });
-			showZeitDialog.value = false;
-		} catch {
-			dialogError.value = 'Speichern fehlgeschlagen. Die Eingaben bleiben erhalten.';
-		} finally {
-			dialogLoading.value = false;
-		}
+
+	async function speichereEintragZeiten(eintrag: UvZeitrasterEintrag, beginn: number, ende: number): Promise<void> {
+		await state.grunddaten.patchZeitrasterEintrag(eintrag.idZeitraster, eintrag.id, { beginn, ende });
 	}
 
 	const actionZeitraster = ref(false);
-	const fileInput = ref<HTMLInputElement | null>(null);
 
 	const settings = ref({
 		beginn: 480, // 8:00
 		dauer: 45,
 		pause: 5,
-		// stundenMax: props.schulform?.kuerzel === 'G' ? 6 : 9,
 		stundenMax: 9,
 	});
 
@@ -236,79 +232,19 @@
 		return [...state.uvManager.zeitrasterEintragGetMengeByZeitraster(props.zeitraster.id)];
 	});
 
-	const maxStunde = computed<number>(() => {
-		if (listZeitrasterEintraege.value.length === 0) {
-			return 0;
-		}
-		return Math.max(...listZeitrasterEintraege.value.map(e => e.stunde));
-	});
+	const grenzen = computed(() => props.zeitraster === undefined ? { maxStunde: 0, maxWochentag: 0, wochentage: [], stunden: [], naechsterWochentag: '' } : presenter.value.zeitrasterAnsicht(props.zeitraster.id));
+	const maxStunde = computed(() => grenzen.value.maxStunde);
+	const maxWochentag = computed(() => grenzen.value.maxWochentag);
+	const wochentagRange = computed(() => grenzen.value.wochentage);
 
-	const maxWochentag = computed<number>(() => {
-		if (listZeitrasterEintraege.value.length === 0) {
-			return 0;
-		}
-		return Math.max(...listZeitrasterEintraege.value.map(e => e.wochentag));
-	});
-
-	const minWochentag = computed<number>(() => {
-		if (listZeitrasterEintraege.value.length === 0) {
-			return 1;
-		}
-		return Math.min(...listZeitrasterEintraege.value.map(e => e.wochentag));
-	});
-
-	const wochentagRange = computed<Wochentag[]>(() => {
-		const min = minWochentag.value;
-		const max = maxWochentag.value;
-		const result: Wochentag[] = [];
-		for (let i = min; i <= max; i++) {
-			if (i >= 1 && i <= 7) {
-				result.push(Wochentag.fromIDorException(i));
-			}
-		}
-		return result;
-	});
+	// Rasterpositionen und Auswahl
 
 	function getEintraegeByWochentag(wochentag: number): UvZeitrasterEintrag[] {
-		return listZeitrasterEintraege.value.filter(e => e.wochentag === wochentag);
+		return props.zeitraster === undefined ? [] : [...state.uvManager.zeitrasterEintragGetMengeByZeitrasterAndWochentag(props.zeitraster.id, wochentag)];
 	}
 
-	const stundenRange = computed(() => {
-		const max = maxStunde.value;
-		if (max === 0) {
-			return [];
-		}
-		return Array.from({ length: max }, (_, i) => i + 1);
-	});
-
-	const nextWochentagName = computed(() => {
-		const next = maxWochentag.value + 1;
-		if (next < 1 || next > 7) {
-			return '';
-		}
-		return Wochentag.fromIDorException(next).kuerzel;
-	});
-
-	function updateSelected(event: Wochentag | number | UvZeitrasterEintrag) {
-		if (event === props.selected) {
-			props.setSelection(undefined);
-		} else {
-			props.setSelection(event);
-		}
-	}
-
-	function isEintragSelected(eintrag: UvZeitrasterEintrag): boolean {
-		if (props.selected === undefined) {
-			return false;
-		}
-		if (isUvZeitrasterEintrag(props.selected)) {
-			return props.selected.id === eintrag.id;
-		}
-		if (typeof props.selected === 'number') {
-			return props.selected === eintrag.stunde;
-		}
-		return false;
-	}
+	const rasterTage = computed(() => wochentagRange.value.map(wochentag => ({ wochentag, eintraege: getEintraegeByWochentag(wochentag.id) })));
+	const nextWochentagName = computed(() => grenzen.value.naechsterWochentag);
 
 	function isUvZeitrasterEintrag(value: unknown): value is UvZeitrasterEintrag {
 		return value instanceof UvZeitrasterEintrag;
@@ -318,105 +254,118 @@
 		return value instanceof Wochentag;
 	}
 
-	function posZeitraster(stunde: number) {
-		return {
-			gridRowStart: stunde,
-			gridRowEnd: stunde + 1,
-		};
-	}
-
-	function minutesToTimeString(minutes: number): string {
-		const h = Math.floor(minutes / 60);
-		const m = minutes % 60;
-		return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-	}
-
-	function timeStringToMinutes(time: string | null): number | null {
-		if (time === null) {
+	function uhrzeitAlsMinuten(value: string | null): number | null {
+		if (value === null || !/^([01]\d|2[0-3]):[0-5]\d$/.test(value)) {
 			return null;
 		}
-		const [h, m] = time.split(':').map(Number);
-		return (h * 60) + m;
+		return DateUtils.gibMinutenOfZeitAsString(value);
 	}
 
 	function updateBeginn(value: string | null) {
-		const min = timeStringToMinutes(value);
+		const min = uhrzeitAlsMinuten(value);
 		if (min !== null) {
 			settings.value.beginn = min;
 		}
 	}
 
 	function getEintraegeByStunde(stunde: number): UvZeitrasterEintrag[] {
-		return listZeitrasterEintraege.value.filter(e => e.stunde === stunde);
+		return props.zeitraster === undefined ? [] : [...state.uvManager.zeitrasterEintragGetMengeByZeitrasterAndStunde(props.zeitraster.id, stunde)];
+	}
+
+	type NeuerZeitrasterEintrag = {
+		idZeitraster: number;
+		wochentag: number;
+		stunde: number;
+		beginn: number;
+		ende: number;
+	};
+
+	// Neue Rastereinträge berechnen und gemeinsam speichern
+
+	function pruefeZeitEinstellungen(): void {
+		const { beginn, dauer, pause } = settings.value;
+		if (!Number.isInteger(beginn) || beginn < 0 || beginn >= 1440 || !Number.isInteger(dauer) || dauer <= 0 || dauer >= 1440
+			|| !Number.isInteger(pause) || pause < 0 || pause >= 1440) {
+			throw new Error('Bitte einen gültigen Unterrichtsbeginn, eine positive Stundendauer und eine nicht negative Pause in ganzen Minuten eingeben.');
+		}
+	}
+
+	async function speichereNeueEintraege(eintraege: NeuerZeitrasterEintrag[]): Promise<void> {
+		if (eintraege.length === 0) {
+			return;
+		}
+		for (const eintrag of eintraege) {
+			if (UvManager.zeitrasterEintragZeitenGueltig(eintrag.beginn, eintrag.ende) === false) {
+				throw new Error('Die Zeiten müssen zwischen 00:00 und 23:59 liegen; das Ende muss nach dem Beginn liegen.');
+			}
+			state.uvManager.zeitrasterEintragPruefePosition(eintrag.idZeitraster, eintrag.wochentag, eintrag.stunde);
+		}
+		await state.grunddaten.addZeitrasterEintraege(eintraege);
 	}
 
 	async function addStundeImpl() {
-		if (props.zeitraster === undefined) {
+		const zeitraster = props.zeitraster;
+		if (zeitraster === undefined) {
 			return;
 		}
-		const neueStunde = maxStunde.value + 1;
-		const wochentagMin = minWochentag.value;
-		const wochentagMax = maxWochentag.value;
-		const letzterEintrag = listZeitrasterEintraege.value.find(e => e.stunde === maxStunde.value);
-		const beginn = letzterEintrag ? letzterEintrag.ende + settings.value.pause : settings.value.beginn;
-
-		const eintraege: Partial<UvZeitrasterEintrag>[] = [];
-		for (let tag = wochentagMin; tag <= wochentagMax; tag++) {
-			eintraege.push({
-				idZeitraster: props.zeitraster.id,
-				wochentag: tag,
-				stunde: neueStunde,
-				beginn: beginn,
-				ende: beginn + settings.value.dauer,
-			});
+		pruefeZeitEinstellungen();
+		const { dauer, pause } = settings.value;
+		const eintraege: NeuerZeitrasterEintrag[] = [];
+		for (const tag of wochentagRange.value) {
+			const letzter = getEintraegeByWochentag(tag.id).at(-1);
+			if (letzter !== undefined) {
+				const beginn = letzter.ende + pause;
+				eintraege.push({ idZeitraster: zeitraster.id, wochentag: tag.id, stunde: maxStunde.value + 1, beginn, ende: beginn + dauer });
+			}
 		}
-		await state.addZeitrasterEintraege(eintraege);
+		await speichereNeueEintraege(eintraege);
 	}
 
 	async function addWochentagImpl() {
-		if (props.zeitraster === undefined) {
+		const zeitraster = props.zeitraster;
+		if (zeitraster === undefined || maxWochentag.value >= 7) {
 			return;
 		}
-		const neuerTag = maxWochentag.value + 1;
-		if (neuerTag > 7) {
-			return;
+		pruefeZeitEinstellungen();
+		const { beginn, dauer, pause } = settings.value;
+		const eintraege: NeuerZeitrasterEintrag[] = [];
+		for (const stunde of grenzen.value.stunden) {
+			const referenz = getEintraegeByStunde(stunde).at(0);
+			const start = referenz?.beginn ?? beginn + ((stunde - 1) * (dauer + pause));
+			eintraege.push({ idZeitraster: zeitraster.id, wochentag: maxWochentag.value + 1, stunde, beginn: start, ende: referenz?.ende ?? start + dauer });
 		}
-		const stundeMax = maxStunde.value;
-
-		const eintraege: Partial<UvZeitrasterEintrag>[] = [];
-		for (let stunde = 1; stunde <= stundeMax; stunde++) {
-			const refEintrag = listZeitrasterEintraege.value.find(e => e.stunde === stunde);
-			eintraege.push({
-				idZeitraster: props.zeitraster.id,
-				wochentag: neuerTag,
-				stunde,
-				beginn: refEintrag?.beginn ?? settings.value.beginn + ((stunde - 1) * (settings.value.dauer + settings.value.pause)),
-				ende: refEintrag?.ende ?? settings.value.beginn + ((stunde - 1) * (settings.value.dauer + settings.value.pause)) + settings.value.dauer,
-			});
-		}
-		await state.addZeitrasterEintraege(eintraege);
+		await speichereNeueEintraege(eintraege);
 	}
 
 	async function addBlockImpl() {
-		if (props.zeitraster === undefined) {
+		const zeitraster = props.zeitraster;
+		if (zeitraster === undefined) {
 			return;
 		}
-		await state.createZeitrasterBlock({
-			idZeitraster: props.zeitraster.id,
-			stundeMax: settings.value.stundenMax,
-			beginn: settings.value.beginn,
-			dauer: settings.value.dauer,
-			pause: settings.value.pause,
-		});
+		pruefeZeitEinstellungen();
+		const { beginn, dauer, pause, stundenMax } = settings.value;
+		if (!Number.isInteger(stundenMax) || stundenMax < 1 || stundenMax > 12) {
+			throw new Error('Bitte eine Stundenanzahl zwischen 1 und 12 eingeben.');
+		}
+		const eintraege: NeuerZeitrasterEintrag[] = [];
+		for (let tag = 1; tag <= 5; tag++) {
+			for (let stunde = 1; stunde <= stundenMax; stunde++) {
+				const start = beginn + ((stunde - 1) * (dauer + pause));
+				eintraege.push({ idZeitraster: zeitraster.id, wochentag: tag, stunde, beginn: start, ende: start + dauer });
+			}
+		}
+		await speichereNeueEintraege(eintraege);
 		actionZeitraster.value = false;
 	}
+
+	// Einträge, Tage und Stunden aus dem Raster entfernen
 
 	async function deleteSelectedEintragImpl() {
 		const zeitraster = props.zeitraster;
 		if (!isUvZeitrasterEintrag(props.selected) || zeitraster === undefined) {
 			return;
 		}
-		await state.deleteZeitrasterEintraege(zeitraster.id, [props.selected.id]);
+		await state.grunddaten.deleteZeitrasterEintraege(zeitraster.id, [props.selected.id]);
 		props.setSelection(undefined);
 	}
 
@@ -425,11 +374,11 @@
 		if (zeitraster === undefined) {
 			return;
 		}
-		const ids = getEintraegeByWochentag(wochentag.id).map(e => e.id);
+		const ids = getEintraegeByWochentag(wochentag.id).map(eintrag => eintrag.id);
 		if (ids.length === 0) {
 			return;
 		}
-		await state.deleteZeitrasterEintraege(zeitraster.id, ids);
+		await state.grunddaten.deleteZeitrasterEintraege(zeitraster.id, ids);
 		props.setSelection(undefined);
 	}
 
@@ -438,61 +387,26 @@
 		if (zeitraster === undefined) {
 			return;
 		}
-		const ids = getEintraegeByStunde(stunde).map(e => e.id);
+		const ids = getEintraegeByStunde(stunde).map(eintrag => eintrag.id);
 		if (ids.length === 0) {
 			return;
 		}
-		await state.deleteZeitrasterEintraege(zeitraster.id, ids);
+		await state.grunddaten.deleteZeitrasterEintraege(zeitraster.id, ids);
 		props.setSelection(undefined);
 	}
 
-	function exportJSON() {
-		const arr = listZeitrasterEintraege.value.map(e => UvZeitrasterEintrag.transpilerToJSON(e));
-		const blob = new Blob(['[' + arr.join(',') + ']'], { type: "application/json" });
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(blob);
-		link.download = `ExportZeitraster_${props.zeitraster?.bezeichnung ?? 'export'}.json`;
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
-	}
-
-	function triggerImport() {
-		fileInput.value?.click();
-	}
-
-	async function importJSONImpl(event: Event) {
-		const target = event.target as HTMLInputElement;
-		const file = target.files?.[0];
-		const zeitraster = props.zeitraster;
-		if (!file || zeitraster === undefined) {
-			return;
-		}
-
-		const text = await file.text();
-		const data = JSON.parse(text) as Array<{ wochentag: number; stunde: number; beginn: number; ende: number }>;
-
-		const eintraege: Partial<UvZeitrasterEintrag>[] = data.map(d => ({
-			idZeitraster: zeitraster.id,
-			wochentag: d.wochentag,
-			stunde: d.stunde,
-			beginn: d.beginn,
-			ende: d.ende,
-		}));
-
-		await state.addZeitrasterEintraege(eintraege);
-		target.value = '';
-	}
+	// Rasteraktionen mit Ladezustand und Fehlermeldung
 
 	async function addStunde() {
 		if (loading.value || !hatKompetenzAendern.value || props.zeitraster === undefined) {
 			return;
 		}
 		loading.value = true;
+		fehler.value = '';
 		try {
 			await addStundeImpl();
-		} catch {
-			// Die Eingaben bleiben für einen erneuten Versuch erhalten.
+		} catch (error) {
+			fehler.value = error instanceof Error ? error.message : 'Die Änderung konnte nicht gespeichert werden.';
 		} finally {
 			loading.value = false;
 		}
@@ -503,10 +417,11 @@
 			return;
 		}
 		loading.value = true;
+		fehler.value = '';
 		try {
 			await addWochentagImpl();
-		} catch {
-			// Die Eingaben bleiben für einen erneuten Versuch erhalten.
+		} catch (error) {
+			fehler.value = error instanceof Error ? error.message : 'Die Änderung konnte nicht gespeichert werden.';
 		} finally {
 			loading.value = false;
 		}
@@ -517,10 +432,11 @@
 			return;
 		}
 		loading.value = true;
+		fehler.value = '';
 		try {
 			await addBlockImpl();
-		} catch {
-			// Die Eingaben bleiben für einen erneuten Versuch erhalten.
+		} catch (error) {
+			fehler.value = error instanceof Error ? error.message : 'Die Änderung konnte nicht gespeichert werden.';
 		} finally {
 			loading.value = false;
 		}
@@ -531,10 +447,11 @@
 			return;
 		}
 		loading.value = true;
+		fehler.value = '';
 		try {
 			await deleteSelectedEintragImpl();
-		} catch {
-			// Die Auswahl bleibt für einen erneuten Versuch erhalten.
+		} catch (error) {
+			fehler.value = error instanceof Error ? error.message : 'Die Auswahl konnte nicht gelöscht werden.';
 		} finally {
 			loading.value = false;
 		}
@@ -545,10 +462,11 @@
 			return;
 		}
 		loading.value = true;
+		fehler.value = '';
 		try {
 			await deleteWochentagImpl(wochentag);
-		} catch {
-			// Die Auswahl bleibt für einen erneuten Versuch erhalten.
+		} catch (error) {
+			fehler.value = error instanceof Error ? error.message : 'Die Auswahl konnte nicht gelöscht werden.';
 		} finally {
 			loading.value = false;
 		}
@@ -559,29 +477,15 @@
 			return;
 		}
 		loading.value = true;
+		fehler.value = '';
 		try {
 			await deleteStundeImpl(stunde);
-		} catch {
-			// Die Auswahl bleibt für einen erneuten Versuch erhalten.
+		} catch (error) {
+			fehler.value = error instanceof Error ? error.message : 'Die Auswahl konnte nicht gelöscht werden.';
 		} finally {
 			loading.value = false;
 		}
 	}
 
-
-
-	async function importJSON(event: Event) {
-		if (loading.value || !hatKompetenzAendern.value || props.zeitraster === undefined) {
-			return;
-		}
-		loading.value = true;
-		try {
-			await importJSONImpl(event);
-		} catch {
-			// Die ausgewählte Datei bleibt für einen erneuten Versuch erhalten.
-		} finally {
-			loading.value = false;
-		}
-	}
 
 </script>

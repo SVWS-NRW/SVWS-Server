@@ -1,11 +1,17 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { UvAlgorithmusDynDatenLehrkraft } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenLehrkraft';
+import { UvBlockungRegelPrioritaet } from '../../../core/data/uv/regel/UvBlockungRegelPrioritaet';
 import { UvAlgorithmusDynDatenLerngruppe } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenLerngruppe';
 import type { UvAlgorithmusDynDatenRegel } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenRegel';
 import { cast_de_svws_nrw_core_utils_uvblockung_UvAlgorithmusDynDatenRegel } from '../../../core/utils/uvblockung/UvAlgorithmusDynDatenRegel';
 import { Class } from '../../../java/lang/Class';
+import { JavaString } from '../../../java/lang/JavaString';
+import { Logger } from '../../../core/logger/Logger';
+import { LogLevel } from '../../../core/logger/LogLevel';
 
 export class UvAlgorithmusDynDatenRegel16 extends JavaObject implements UvAlgorithmusDynDatenRegel {
+
+	private readonly log: Logger;
 
 	private readonly malus: Array<number>;
 
@@ -19,13 +25,15 @@ export class UvAlgorithmusDynDatenRegel16 extends JavaObject implements UvAlgori
 	/**
 	 * Erzeugt eine neue Instanz der Regel und passt den Anfangs-Malus an.
 	 *
+	 * @param log          Der Logger für Debug-Zwecke.
 	 * @param malus        Das globale Malus-Array.
 	 * @param lerngruppe   Die {@link UvAlgorithmusDynDatenLerngruppe}.
 	 * @param lehrkraft    Die {@link UvAlgorithmusDynDatenLehrkraft}.
 	 * @param prioritaet   Die Priorität der Regel.
 	 */
-	public constructor(malus: Array<number>, lerngruppe: UvAlgorithmusDynDatenLerngruppe, lehrkraft: UvAlgorithmusDynDatenLehrkraft, prioritaet: number) {
+	public constructor(log: Logger, malus: Array<number>, lerngruppe: UvAlgorithmusDynDatenLerngruppe, lehrkraft: UvAlgorithmusDynDatenLehrkraft, prioritaet: number) {
 		super();
+		this.log = log;
 		this.malus = malus;
 		this.lerngruppe = lerngruppe;
 		this.lehrkraft = lehrkraft;
@@ -34,7 +42,11 @@ export class UvAlgorithmusDynDatenRegel16 extends JavaObject implements UvAlgori
 	}
 
 	public changeMalus(faktor: number): void {
-		if ((this.prioritaet >= 0) && this.lerngruppe.gibIstLehrkraftZugeordnet(this.lehrkraft)) {
+		if ((this.prioritaet < 0) || (this.prioritaet >= UvBlockungRegelPrioritaet.DEAKTIVIERT.nr)) {
+			this.log.logLn(LogLevel.ERROR, JavaString.format("UvAlgorithmusDynDatenRegel16: Ungültige oder deaktivierte Priorität %d - Malus-Änderung wird ignoriert.", this.prioritaet));
+			return;
+		}
+		if (this.lerngruppe.gibIstLehrkraftZugeordnet(this.lehrkraft)) {
 			this.malus[this.prioritaet] += faktor;
 		}
 	}

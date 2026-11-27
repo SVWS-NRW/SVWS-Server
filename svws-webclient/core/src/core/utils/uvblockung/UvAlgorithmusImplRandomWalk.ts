@@ -5,7 +5,7 @@ import { Class } from '../../../java/lang/Class';
 import { Logger } from '../../../core/logger/Logger';
 import { System } from '../../../java/lang/System';
 
-export class UvAlgorithmusImplRandomWalk extends UvAlgorithmusImplAbstract {
+export abstract class UvAlgorithmusImplRandomWalk extends UvAlgorithmusImplAbstract {
 
 
 	/**
@@ -15,19 +15,33 @@ export class UvAlgorithmusImplRandomWalk extends UvAlgorithmusImplAbstract {
 	 * @param rnd   Ein {@link Random}-Objekt zur Steuerung des Zufalls.
 	 * @param dyn   Die dynamischen Daten (mit dynamischer Bewertung).
 	 */
-	public constructor(log: Logger, rnd: Random, dyn: UvAlgorithmusDynDaten) {
+	protected constructor(log: Logger, rnd: Random, dyn: UvAlgorithmusDynDaten) {
 		super(log, rnd, dyn);
 	}
 
+	/**
+	 * Die individuelle Strategie der Unterklasse (einfach, ohne eigene Felder).
+	 */
+	protected abstract individuelleStrategie(): void;
+
+	/**
+	 * Die Grundmethode: probiert eine zufällige Basis-Strategie und führt danach die individuelle
+	 * Strategie der Unterklasse aus.
+	 */
+	private grundmethode(): void {
+		this.dyn.basisStrategieZufaellig();
+		this.individuelleStrategie();
+	}
+
+	/**
+	 * Führt wiederholt die Grundmethode aus, bis das Zeitlimit erreicht ist.
+	 *
+	 * @param zeitlimit   Das Zeitlimit (in Millisekunden).
+	 */
 	public berechneInnerhalb(zeitlimit: number): void {
 		const zeitEnde: number = System.currentTimeMillis() + zeitlimit;
 		while (System.currentTimeMillis() < zeitEnde) {
-			this.dyn.strategieLerngruppeLehrkraftHinzufuegen();
-			this.dyn.strategieLerngruppeLehrkraftEntfernen();
-			this.dyn.strategieKlassenleitung1Hinzufuegen();
-			this.dyn.strategieKlassenleitung1Entfernen();
-			this.dyn.strategieKlassenleitung2Hinzufuegen();
-			this.dyn.strategieKlassenleitung2Entfernen();
+			this.grundmethode();
 		}
 	}
 

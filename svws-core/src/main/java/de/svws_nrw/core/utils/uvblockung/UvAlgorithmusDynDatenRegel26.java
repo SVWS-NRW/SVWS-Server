@@ -1,6 +1,9 @@
 package de.svws_nrw.core.utils.uvblockung;
 
+import de.svws_nrw.core.data.uv.regel.UvBlockungRegelPrioritaet;
 import de.svws_nrw.core.data.uv.regel.UvBlockungRegelTyp;
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -10,7 +13,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class UvAlgorithmusDynDatenRegel26 implements UvAlgorithmusDynDatenRegel {
 
-	private final @NotNull int @NotNull [] malus;
+	private final @NotNull Logger log;
+	private final int @NotNull [] malus;
 	private final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft;
 	private final int maximum;
 	private final int prioritaet;
@@ -19,17 +23,20 @@ public final class UvAlgorithmusDynDatenRegel26 implements UvAlgorithmusDynDaten
 	/**
 	 * Erzeugt eine neue Instanz der Regel und passt den Anfangs-Malus an.
 	 *
+	 * @param log          Der Logger für Debug-Zwecke.
 	 * @param malus        Das globale Malus-Array.
 	 * @param lehrkraft    Die {@link UvAlgorithmusDynDatenLehrkraft}.
-	 * @param maximum      Die maximale Anzahl verschiedenen Jahrgängen in denen die Lehrkraft unterrichtet.
+	 * @param maximum      Die maximale Anzahl verschiedener Jahrgänge, in denen die Lehrkraft unterrichtet.
 	 * @param prioritaet   Die Priorität der Regel.
 	 */
 	public UvAlgorithmusDynDatenRegel26(
-			final @NotNull int @NotNull [] malus,
+			final @NotNull Logger log,
+			final int @NotNull [] malus,
 			final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft,
 			final int maximum,
 			final int prioritaet) {
 
+		this.log = log;
 		this.malus = malus;
 		this.lehrkraft = lehrkraft;
 		this.maximum = maximum;
@@ -41,9 +48,14 @@ public final class UvAlgorithmusDynDatenRegel26 implements UvAlgorithmusDynDaten
 
 	@Override
 	public void changeMalus(final int faktor) {
+		if ((prioritaet < 0) || (prioritaet >= UvBlockungRegelPrioritaet.DEAKTIVIERT.nr)) {
+			log.logLn(LogLevel.ERROR,
+					"UvAlgorithmusDynDatenRegel26: Ungültige oder deaktivierte Priorität %d - Malus-Änderung wird ignoriert.".formatted(prioritaet));
+			return;
+		}
 		final int ueberschreitung = lehrkraft.istJahrgangAnzahl - maximum;
 
-		if ((prioritaet >= 0) && (ueberschreitung > 0)) {
+		if (ueberschreitung > 0) {
 			malus[prioritaet] += faktor * ueberschreitung;
 		}
 	}

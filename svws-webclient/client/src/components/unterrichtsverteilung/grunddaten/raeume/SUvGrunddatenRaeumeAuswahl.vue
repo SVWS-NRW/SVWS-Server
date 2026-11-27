@@ -3,14 +3,38 @@
 		<template #title>
 			<h1 class="select-none">Räume</h1>
 		</template>
-		<svws-ui-table :items="filteredItems" :columns clickable @update:clicked="gotoRaum" :selectable="hatKompetenzAendern" v-model="selectedRaeume" count :clicked="auswahl"
-			scroll scroll-into-view allow-arrow-key-selection :focus-switching-enabled :focus-help-visible :filter-open="true" :filtered="hasActiveFilter" :filter-reset="resetFilter">
+		<svws-ui-table :items="filteredItems"
+			:columns
+			clickable
+			@update:clicked="gotoRaum"
+			:selectable="hatKompetenzAendern"
+			v-model="selectedRaeume"
+			count
+			:clicked="auswahl"
+			scroll
+			scroll-into-view
+			allow-arrow-key-selection
+			:focus-switching-enabled
+			:focus-help-visible
+			:filter-open="true"
+			:filtered="hasActiveFilter"
+			:filter-reset="resetFilter">
 			<template #search><svws-ui-text-input v-model="search" type="search" placeholder="Raum suchen" removable /></template>
 			<template #cell(kuerzel)="{ rowData, value }">
 				<span :class="{'font-bold': auswahl !== undefined && rowData?.id === auswahl.id}">{{ value }}</span>
 			</template>
+			<template #cell(beschreibung)="{ rowData, value }">
+				<div class="min-w-0 py-1">
+					<div class="break-words">{{ value }}</div>
+					<div v-if="rowData.idRaumgruppe !== null" class="break-words text-sm text-ui-secondary">Raumgruppe: {{ raumgruppeBezeichnung(rowData) }}</div>
+				</div>
+			</template>
 			<template #actions v-if="hatKompetenzAendern">
-				<s-uv-auswahl-loeschen :items="selectedRaeume" art="Räume" :bezeichnung="item => item.kuerzel" :loeschen="state.delRaeume" @deleted="onDeleted" />
+				<s-uv-auswahl-loeschen :items="selectedRaeume"
+					art="Räume"
+					:bezeichnung="item => item.kuerzel"
+					:loeschen="state.grunddaten.delRaeume"
+					@deleted="onDeleted" />
 				<s-uv-grunddaten-raeume-import-modal v-slot="{ openModal }">
 					<svws-ui-button type="icon" @click="openModal()">
 						<span class="icon-sm i-ri-download-2-line" />
@@ -46,9 +70,13 @@
 	function resetFilter() {
 		search.value = '';
 	}
-	const filteredItems = computed(() => [...state.uvManager.raumGetMengeAsList()].filter(item => `${item.kuerzel} ${item.beschreibung ?? ''}`
+	const filteredItems = computed(() => [...state.uvManager.raumGetMengeAsList()].filter(item => `${item.kuerzel} ${item.beschreibung ?? ''} ${raumgruppeBezeichnung(item)}`
 		.toLocaleLowerCase().includes(search.value.trim().toLocaleLowerCase())));
 	watch(() => state.planungsabschnitt?.id, resetFilter);
+
+	function raumgruppeBezeichnung(raum: UvRaum): string {
+		return raum.idRaumgruppe === null ? '' : state.uvManager.raumgruppeGetByIdOrException(raum.idRaumgruppe).bezeichnung;
+	}
 
 
 	const selectedRaeume = ref<UvRaum[]>([]);

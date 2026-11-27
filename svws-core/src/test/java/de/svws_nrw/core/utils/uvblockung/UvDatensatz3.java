@@ -224,8 +224,8 @@ class UvDatensatz3 {
 		final UvFach faMa = UvDatensatz.erzeugeUvFach(FACH_MA, FACH_DATEN_MA, "2026-01-01", null);
 		final UvFach faEn = UvDatensatz.erzeugeUvFach(FACH_EN, FACH_DATEN_EN, "2026-01-01", null);
 
-		final JahrgangsDaten jg5 = UvDatensatz.erzeugeJahrgang(JAHRGANG_5, "05", "5", "05", "Jahrgang 5", 5, "", true);
-		final JahrgangsDaten jg6 = UvDatensatz.erzeugeJahrgang(JAHRGANG_6, "06", "6", "06", "Jahrgang 6", 6, "", true);
+		final JahrgangsDaten jg5 = UvDatensatz.erzeugeJahrgang(JAHRGANG_5, "05", "5", "Jahrgang 5", 5, true);
+		final JahrgangsDaten jg6 = UvDatensatz.erzeugeJahrgang(JAHRGANG_6, "06", "6", "Jahrgang 6", 6, true);
 
 		final UvSchuelergruppe sg5A = UvDatensatz.erzeugeSchuelergruppe(SCHUELERGRUPPE_5A, PLANUNGSABSCHNITT, "5A GRUPPE", JAHRGANG_5);
 		final UvSchuelergruppe sg5B = UvDatensatz.erzeugeSchuelergruppe(SCHUELERGRUPPE_5B, PLANUNGSABSCHNITT, "5B GRUPPE", JAHRGANG_5);

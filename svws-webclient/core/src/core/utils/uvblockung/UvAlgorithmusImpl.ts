@@ -5,12 +5,12 @@ import { UvAlgorithmusDynDaten } from '../../../core/utils/uvblockung/UvAlgorith
 import { UvRegelManager } from '../../../core/utils/uv/UvRegelManager';
 import { UvManager } from '../../../core/utils/uv/UvManager';
 import { Logger } from '../../../core/logger/Logger';
+import { UvAlgorithmusImplRandomWalk1 } from '../../../core/utils/uvblockung/UvAlgorithmusImplRandomWalk1';
 import { JavaMath } from '../../../java/lang/JavaMath';
 import { LogLevel } from '../../../core/logger/LogLevel';
 import { System } from '../../../java/lang/System';
 import { UvAlgorithmusImplAbstract } from '../../../core/utils/uvblockung/UvAlgorithmusImplAbstract';
 import { Random } from '../../../java/util/Random';
-import { UvAlgorithmusImplRandomWalk } from '../../../core/utils/uvblockung/UvAlgorithmusImplRandomWalk';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
@@ -37,7 +37,7 @@ export class UvAlgorithmusImpl extends JavaObject {
 	private readonly dyn: UvAlgorithmusDynDaten;
 
 	/**
-	 * Alle Algorithmen, die für die Lehrkraft-Lerngruppen-Zuordnung implementiert wurden.
+	 * Alle Algorithmen, die für die Lerngruppen-Lehrkraft-Zuordnung implementiert wurden.
 	 */
 	private readonly alg: Array<UvAlgorithmusImplAbstract>;
 
@@ -46,7 +46,7 @@ export class UvAlgorithmusImpl extends JavaObject {
 	 * Der Konstruktor.
 	 *
 	 * @param manager             Ein {@link UvManager}-Objekt, welches alle Daten hat.
-	 * @param manRegeln           Ein {@link UvRegelManager}-Objekt, der alle Regeln hat.
+	 * @param manRegeln           Ein {@link UvRegelManager}-Objekt, das alle Regeln hat.
 	 * @param planungsabschnitt   Der aktuelle Planungsabschnitt.
 	 */
 	public constructor(manager: UvManager, manRegeln: UvRegelManager, planungsabschnitt: UvPlanungsabschnitt) {
@@ -57,11 +57,11 @@ export class UvAlgorithmusImpl extends JavaObject {
 		this.rnd = new Random(seed);
 		this.log.logLn(LogLevel.INFO, "UvAlgorithmus startet mit Seed " + seed + ".");
 		this.dyn = new UvAlgorithmusDynDaten(this.log, this.rnd, manager, manRegeln, planungsabschnitt);
-		this.alg = [new UvAlgorithmusImplRandomWalk(this.log, this.rnd, this.dyn)];
+		this.alg = [new UvAlgorithmusImplRandomWalk1(this.log, this.rnd, this.dyn)];
 	}
 
 	/**
-	 * Optimiert die derzeitige Lehrkraft-Lerngruppen-Zuordnung.
+	 * Optimiert die derzeitige Lerngruppen-Lehrkraft-Zuordnung.
 	 *
 	 * @param zeitlimit   Die Zeitspanne (in ms), die für die Berechnung zur Verfügung steht.
 	 */
@@ -74,16 +74,25 @@ export class UvAlgorithmusImpl extends JavaObject {
 				this.alg[i].berechneInnerhalb(zeitProAlgorithmus);
 			}
 		}
-		this.log.logLn(LogLevel.INFO, "Schleife-Danach: Malus1 = " + this.dyn.gibMalusBeschreibung());
+		this.log.logLn(LogLevel.INFO, "Schleife-Danach: Malus = " + this.dyn.gibMalusBeschreibung());
 	}
 
 	/**
-	 * Liefert die bisher beste Lehrkraft-Lerngruppen-Zuordnung.
+	 * Liefert die bisher beste Lerngruppen-Lehrkraft-Zuordnung.
 	 *
-	 * @return die bisher beste Lehrkraft-Lerngruppen-Zuordnung.
+	 * @return die bisher beste Lerngruppen-Lehrkraft-Zuordnung.
 	 */
 	public gibBestesAktuellesErgebnis(): List<UvLerngruppenLehrer> {
 		return this.dyn.gibAktuelleZuordnung();
+	}
+
+	/**
+	 * Liefert die aktuelle Güte der Berechnung als Malusbeschreibung.
+	 *
+	 * @return die aktuelle Malusbeschreibung.
+	 */
+	public gibMalusBeschreibung(): string {
+		return this.dyn.gibMalusBeschreibung();
 	}
 
 	transpilerCanonicalName(): string {

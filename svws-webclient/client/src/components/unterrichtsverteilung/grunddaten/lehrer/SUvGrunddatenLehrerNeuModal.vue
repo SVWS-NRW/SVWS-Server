@@ -62,7 +62,7 @@
 			if (!isValid.value) {
 				return;
 			}
-			await state.createLehrer({
+			await state.grunddaten.createLehrer({
 				kuerzel: kuerzel.value,
 				nachname: nachname.value,
 				vorname: vorname.value,

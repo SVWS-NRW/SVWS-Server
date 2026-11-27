@@ -9,7 +9,10 @@ import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.db.dto.current.uv.DTOUvPlanungsabschnitt;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.uv.klassen.UvKlasseRepository;
+import de.svws_nrw.repo.uv.kurse.UvKursRepository;
 import de.svws_nrw.repo.uv.planungsabschnitte.UvPlanungsabschnittRepository;
+import de.svws_nrw.repo.uv.schueler.UvPlanungsabschnittSchuelerRepository;
 import jakarta.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,14 +24,25 @@ import static de.svws_nrw.data.TransactionSupport.transactional;
 public final class UvPlanungsabschnittService {
 
 	private final UvPlanungsabschnittRepository repository;
+	private final UvPlanungsabschnittSchuelerRepository schuelerRepository;
+	private final UvKlasseRepository klasseRepository;
+	private final UvKursRepository kursRepository;
 
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param uvPlanungsabschnittRepository   das Repository
+	 * @param uvPlanungsabschnittRepository   das Repository der Planungsabschnitte
+	 * @param schuelerRepository             das Repository der Schülerzuordnungen
+	 * @param klasseRepository                das Repository der Klassen
+	 * @param kursRepository                  das Repository der Kurse
 	 */
-	public UvPlanungsabschnittService(final UvPlanungsabschnittRepository uvPlanungsabschnittRepository) {
+	public UvPlanungsabschnittService(final UvPlanungsabschnittRepository uvPlanungsabschnittRepository,
+			final UvPlanungsabschnittSchuelerRepository schuelerRepository,
+			final UvKlasseRepository klasseRepository, final UvKursRepository kursRepository) {
 		this.repository = uvPlanungsabschnittRepository;
+		this.schuelerRepository = schuelerRepository;
+		this.klasseRepository = klasseRepository;
+		this.kursRepository = kursRepository;
 	}
 
 	private static UvPlanungsabschnitt toApi(final DTOUvPlanungsabschnitt dto) {
@@ -238,6 +252,15 @@ public final class UvPlanungsabschnittService {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Es wurden nicht alle angegebenen IDs in der Datenbank gefunden.");
 			}
 			final var result = entities.stream().map(UvPlanungsabschnittService::toApi).toList();
+			for (final var entity : entities) {
+				// Die Schülerzuordnungen verweisen auf Klassen und müssen vor diesen gelöscht werden.
+				schuelerRepository.delete(schuelerRepository.getListByPlanungsabschnitt(entity.ID));
+				schuelerRepository.flush();
+				// Klassen und Kurse verweisen auf Schülergruppen. Ihre Lerngruppen werden per FK-Kaskade mitgelöscht.
+				klasseRepository.delete(klasseRepository.getListByPlanungsabschnitt(entity.ID));
+				kursRepository.delete(kursRepository.getListByPlanungsabschnitt(entity.ID));
+				klasseRepository.flush();
+			}
 			repository.delete(entities);
 			return result;
 		});
@@ -257,7 +280,7 @@ public final class UvPlanungsabschnittService {
 				if ((abschnitt.ID == dto.ID) || !abschnitt.Aktiv) {
 					continue;
 				}
-				if (DateUtils.berechneGemeinsameTage(abschnitt.GueltigVon, abschnitt.GueltigBis, dto.GueltigVon, dto.GueltigBis).length > 0) {
+				if (DateUtils.intervallUeberlappt(abschnitt.GueltigVon, abschnitt.GueltigBis, dto.GueltigVon, dto.GueltigBis)) {
 					throw new ApiOperationException(Status.CONFLICT,
 							"Der Gültigkeit des UV-Planungsabschnitts steht in Konflikt zum Planungsabschnitt mit der ID %d.".formatted(abschnitt.ID));
 				}

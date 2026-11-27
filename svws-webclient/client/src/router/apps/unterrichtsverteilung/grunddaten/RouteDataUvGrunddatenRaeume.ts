@@ -7,11 +7,11 @@ import { RouteNode } from '~/router/RouteNode';
 import { uvStateImpl } from "~/states/UvStateImpl";
 
 interface RouteStateUvGrunddatenRaeume extends RouteStateInterface {
-	auswahl: UvRaum | undefined;
+	idAuswahl: number | undefined;
 }
 
 const defaultState = <RouteStateUvGrunddatenRaeume> {
-	auswahl: undefined,
+	idAuswahl: undefined,
 };
 
 export class RouteDataUvGrunddatenRaeume extends RouteData<RouteStateUvGrunddatenRaeume> {
@@ -21,16 +21,15 @@ export class RouteDataUvGrunddatenRaeume extends RouteData<RouteStateUvGrunddate
 	}
 
 	public get auswahl(): UvRaum | undefined {
-		const auswahl = this._state.value.auswahl;
-		if (auswahl === undefined) {
+		const idAuswahl = this._state.value.idAuswahl;
+		if (idAuswahl === undefined) {
 			return undefined;
 		}
-		// Nach DTO-Patches immer die aktuelle Managerinstanz verwenden.
-		return uvStateImpl.uvManager.raumGetByIdOrNull(auswahl.id) ?? undefined;
+		return uvStateImpl.uvManager.raumGetByIdOrNull(idAuswahl) ?? undefined;
 	}
 
-	public setAuswahlFromRoute = (raum: UvRaum | undefined): void => {
-		this.setPatchedState({ auswahl: raum });
+	public setAuswahlFromRoute = (idAuswahl: number | undefined): void => {
+		this.setPatchedState({ idAuswahl });
 	};
 
 	public gotoRaum = async (raum: UvRaum | undefined): Promise<void> => {

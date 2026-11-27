@@ -7,6 +7,7 @@ import java.util.Random;
 import de.svws_nrw.core.data.uv.UvLerngruppe;
 import de.svws_nrw.core.data.uv.UvPlanungsabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.uv.UvManager;
 import jakarta.validation.constraints.NotNull;
@@ -36,7 +37,7 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	/** Die vorgesehenen Wochenstunden (mit potentieller Kürzung). */
 	double wochenstundenVorgesehenGekuerzt;
 
-	/** Wert für der angibt, ob es sich um ein Korrekturfach handelt (1 = ja, 0 = nein). */
+	/** Wert, der angibt, ob es sich um ein Korrekturfach handelt (1 = ja, 0 = nein). */
 	final int korrekturBelastung;
 
 
@@ -58,14 +59,14 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	/** Die Jahrgänge dieser Lerngruppe (in der Regel 1). */
 	final @NotNull List<UvAlgorithmusDynDatenJahrgang> jahrgangmenge;
 
-	/** Alle Zeitslots denen diese Lerngruppe zugeordnet ist (Regel 17). */
+	/** Alle Zeitslots, denen diese Lerngruppe zugeordnet ist (Regel 17). */
 	final @NotNull List<UvAlgorithmusDynDatenRegel17> zeitslots;
 
-	/** Die Menge aller Regel-Objekte die sich auf diese Lerngruppe beziehen. */
+	/** Die Menge aller Regel-Objekte, die sich auf diese Lerngruppe beziehen. */
 	final @NotNull List<UvAlgorithmusDynDatenRegel> regeln;
 
-	/** Das Fach dieser Lerngruppe. */
-	final @NotNull UvAlgorithmusDynDatenFach fach;
+	/** Das Fach dieser Lerngruppe (oder null, falls das Mapping nicht gefunden wurde). */
+	final UvAlgorithmusDynDatenFach fach;
 
 
 	/**
@@ -74,7 +75,7 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	 * @param index               Der Index, unter dem dieses Objekt im Array der aufrufenden Klasse gespeichert ist.
 	 * @param parent              Das Elternobjekt.
 	 * @param man                 Der {@link UvManager}.
-	 * @param planungsabschnitt   Der {@link UvPlanungsabschnitt} auf den sich die Berechnung bezieht.
+	 * @param planungsabschnitt   Der {@link UvPlanungsabschnitt}, auf den sich die Berechnung bezieht.
 	 * @param klassen             Die {@link UvAlgorithmusDynDatenKlasse}-Menge dieser Lerngruppe.
 	 * @param jahrgaenge          Die {@link UvAlgorithmusDynDatenJahrgang}-Menge dieser Lerngruppe.
 	 */
@@ -101,7 +102,14 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 		this.lehrkraefteZugeordnetAlle = new ArrayList<>();
 		this.wochenstundenVorgesehenUngekuerzt = lerngruppe.wochenstunden;
 		this.wochenstundenVorgesehenGekuerzt = lerngruppe.wochenstunden;
-		this.korrekturBelastung = man.lerngruppeIstKorrekturfach(lerngruppe) ? 1 : 0;
+		boolean istKorrekturfach;
+		try {
+			istKorrekturfach = man.lerngruppeIstKorrekturfach(lerngruppe);
+		} catch (@SuppressWarnings("unused") final DeveloperNotificationException ex) {
+			log.logLn(LogLevel.ERROR, "Die Korrekturfach-Info der Lerngruppe UV-ID=%d konnte nicht ermittelt werden - false wird verwendet.".formatted(lerngruppe.id));
+			istKorrekturfach = false;
+		}
+		this.korrekturBelastung = istKorrekturfach ? 1 : 0;
 		this.zeitslots = new ArrayList<>();
 		this.regeln = new ArrayList<>();
 	}
@@ -118,12 +126,12 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 
 
 	/**
-	 * Liefert true, falls die Lehrkraft der Lerngruppe zugeordnet ist.
+	 * Liefert TRUE, falls die Lehrkraft der Lerngruppe zugeordnet ist.
 	 * Hinweis: Der Vergleich der Objektreferenzen ist hier korrekt und effizienter als "equals".
 	 *
 	 * @param lehrkraft   Die Lehrkraft, die überprüft wird.
 	 *
-	 * @return true, falls die Lehrkraft der Lerngruppe zugeordnet ist.
+	 * @return TRUE, falls die Lehrkraft der Lerngruppe zugeordnet ist.
 	 */
 	boolean gibIstLehrkraftZugeordnet(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
 		return lehrkraefteZugeordnet.contains(lehrkraft) || lehrkraefteZugeordnetFixiert.contains(lehrkraft);
@@ -159,7 +167,7 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	 * <br>Hinweis: Eine Optimierung lohnt sich hier nicht,
 	 *              denn die zugeordneten Lehrkräfte sind fast immer 0 oder 1.
 	 *
-	 * @return eine potentielle Lehrkraft, welche dieser Lerngruppe noch nicht zugeordnet ist.
+	 * @return eine potentielle Lehrkraft, welche dieser Lerngruppe noch nicht zugeordnet ist, oder null.
 	 */
 	UvAlgorithmusDynDatenLehrkraft gibLehrkraftPotentiellZufaelligOderNull() {
 		final int size = lehrkraeftePotentiell.size();
@@ -178,9 +186,9 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 
 
 	/**
-	 * Liefert eine zufällige derzeit zugeordnete Lehrkraft die nicht fixiert ist, oder null.
+	 * Liefert eine zufällige derzeit zugeordnete Lehrkraft, die nicht fixiert ist, oder null.
 	 *
-	 * @return eine zufällige derzeit zugeordnete Lehrkraft die nicht fixiert ist, oder null.
+	 * @return eine zufällige derzeit zugeordnete Lehrkraft, die nicht fixiert ist, oder null.
 	 */
 	UvAlgorithmusDynDatenLehrkraft gibLehrkraftZugeordnetAberNichtFixiertZufaellig() {
 		final int size = lehrkraefteZugeordnet.size();
@@ -196,9 +204,11 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	 *
 	 * @param lehrkraft   Die Lehrkraft, welche hinzugefügt wird.
 	 */
-	void fuegeLehrkraftHinzuf(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+	void fuegeLehrkraftHinzu(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		// Konsistenzprüfung. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (lehrkraeftePotentiell.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Lehrkraft %s Duplikat bei der potentiellen Menge!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Lehrkraft %s ist ein Duplikat in der potentiellen Menge!".formatted(lehrkraft.toString()));
+			return;
 		}
 
 		lehrkraeftePotentiell.add(lehrkraft);
@@ -211,13 +221,14 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	 * @param lehrkraft   Die zu entfernende Lehrkraft.
 	 */
 	void entferneLehrkraft(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		// Konsistenzprüfung. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(
-					"Lehrkraft %s soll in Lerngruppe verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Lehrkraft %s soll in der Lerngruppe verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			return;
 		}
 		if (lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(
-					"Lehrkraft %s soll in Lerngruppe verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Lehrkraft %s soll in der Lerngruppe verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			return;
 		}
 
 		lehrkraeftePotentiell.remove(lehrkraft);
@@ -234,12 +245,14 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 			final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft,
 			final @NotNull UvAlgorithmusDynDatenKlasse klasse) {
 
-		// Konsistenzprüfung.
+		// Konsistenzprüfung. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Lehrkraft %s soll verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Lehrkraft %s soll verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			return;
 		}
 		if (lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Lehrkraft %s soll verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Lehrkraft %s soll verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			return;
 		}
 
 		// Anwenden.
@@ -250,23 +263,23 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 
 
 	/**
-	 * Entfernt die Lehrkraft aus der Menge der potentiellen Lehrkräfte, falls diese Lerngruppe die Stufe tangiert.
+	 * Entfernt die Lehrkraft aus der Menge der potentiellen Lehrkräfte, falls diese Lerngruppe den Jahrgang tangiert.
 	 *
 	 * @param lehrkraft   Die zu entfernende Lehrkraft.
 	 * @param jahrgang    Der verbotene Jahrgang.
 	 */
-	void entferneLehrkraftWennStufeUebereinstimmt(
+	void entferneLehrkraftWennJahrgangUebereinstimmt(
 			final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft,
 			final @NotNull UvAlgorithmusDynDatenJahrgang jahrgang) {
 
-		// Konsistenzprüfung.
+		// Konsistenzprüfung. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(
-					"Lehrkraft %s soll in Stufe verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Lehrkraft %s soll im Jahrgang verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+			return;
 		}
 		if (lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(
-					"Lehrkraft %s soll in Stufe verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Lehrkraft %s soll im Jahrgang verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+			return;
 		}
 
 		// Anwenden.
@@ -277,7 +290,7 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 
 
 	/**
-	 * Entfernt die Lehrkraft aus der Menge der potentiellen Lehrkräfte, falls das Fach und die Lerngruppe übereinstimmen.
+	 * Entfernt die Lehrkraft aus der Menge der potentiellen Lehrkräfte, falls das Fach übereinstimmt und einer der übergebenen Jahrgänge enthalten ist.
 	 *
 	 * @param lehrkraft    Die {@link UvAlgorithmusDynDatenLehrkraft}.
 	 * @param fach         Das {@link UvAlgorithmusDynDatenFach}.
@@ -293,14 +306,16 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 		if (this.fach == fach) {
 			for (final @NotNull UvAlgorithmusDynDatenJahrgang jahrgang : jahrgaenge) {
 				if (jahrgangmenge.contains(jahrgang)) {
-					// Konsistenzprüfung.
+					// Konsistenzprüfung. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 					if (lehrkraefteZugeordnet.contains(lehrkraft)) {
-						throw new DeveloperNotificationException(
-								"Regel 24: Lehrkraft %s soll in Stufe verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+						log.logLn(LogLevel.ERROR,
+								"Regel 24: Lehrkraft %s soll im Jahrgang verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+						return;
 					}
 					if (lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-						throw new DeveloperNotificationException(
-								"Regel 24: Lehrkraft %s soll in Stufe verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+						log.logLn(LogLevel.ERROR,
+								"Regel 24: Lehrkraft %s soll im Jahrgang verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+						return;
 					}
 
 					lehrkraeftePotentiell.remove(lehrkraft);
@@ -323,14 +338,16 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 
 		// Anwenden.
 		if (this.fach == fach) {
-			// Konsistenzprüfung.
+			// Konsistenzprüfung. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 			if (lehrkraefteZugeordnet.contains(lehrkraft)) {
-				throw new DeveloperNotificationException(
-						"Regel 25: Lehrkraft %s soll in Stufe verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+				log.logLn(LogLevel.ERROR,
+						"Regel 25: Lehrkraft %s soll im Fach verboten werden, ist aber bereits zugeordnet!".formatted(lehrkraft.toString()));
+				return;
 			}
 			if (lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-				throw new DeveloperNotificationException(
-						"Regel 25: Lehrkraft %s soll in Stufe verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+				log.logLn(LogLevel.ERROR,
+						"Regel 25: Lehrkraft %s soll im Fach verboten werden, ist aber bereits fixiert!".formatted(lehrkraft.toString()));
+				return;
 			}
 			lehrkraeftePotentiell.remove(lehrkraft);
 		}
@@ -345,14 +362,16 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	 * @param fixiert     Falls true, wird die Lehrkraft der Liste aller fixierten Lehrkräfte zugeordnet, sonst der normalen Liste.
 	 */
 	void stateLehrkraftZugeordnetAdd(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft, final boolean fixiert) {
-		// Konsistenz prüfen.
+		// Konsistenz prüfen. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(
+			log.logLn(LogLevel.ERROR,
 					"Die Lerngruppe %s hat bereits die zugeordnete Lehrkraft %s!".formatted(this.toString(), lehrkraft.toString()));
+			return;
 		}
 		if (lehrkraefteZugeordnetFixiert.contains(lehrkraft)) {
-			throw new DeveloperNotificationException(
+			log.logLn(LogLevel.ERROR,
 					"Die Lerngruppe %s hat bereits die fixierte Lehrkraft %s!".formatted(this.toString(), lehrkraft.toString()));
+			return;
 		}
 
 		// Zustand verändern.
@@ -371,9 +390,10 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	 * @param lehrkraft   Die {@link UvAlgorithmusDynDatenLehrkraft}.
 	 */
 	void stateLehrkraftZugeordnetDel(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
-		// Konsistenz prüfen.
+		// Konsistenz prüfen. (Da der Aufruf aus einem separaten Thread erfolgen kann, wird nicht geworfen, sondern geloggt und abgebrochen.)
 		if (!lehrkraefteZugeordnet.contains(lehrkraft)) {
-			throw new DeveloperNotificationException("Die Lerngruppe %s hat keine zugeordnete Lehrkraft %s!".formatted(this.toString(), lehrkraft.toString()));
+			log.logLn(LogLevel.ERROR, "Die Lerngruppe %s hat keine zugeordnete Lehrkraft %s!".formatted(this.toString(), lehrkraft.toString()));
+			return;
 		}
 
 		// Zustand verändern.
@@ -382,8 +402,21 @@ public final class UvAlgorithmusDynDatenLerngruppe {
 	}
 
 
+	boolean gibIstLehrkraftZugeordnetAddMoeglich(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		return gibIstLehrkraftPotentiell(lehrkraft)
+				&& !gibIstLehrkraftZugeordnet(lehrkraft)
+				&& !gibIstLehrkraftFixiert(lehrkraft)
+				&& (fach != null);
+	}
+
+
+	boolean gibIstLehrkraftZugeordnetDelMoeglich(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		return gibIstLehrkraftZugeordnet(lehrkraft) && !gibIstLehrkraftFixiert(lehrkraft) && (fach != null);
+	}
+
+
 	/**
-	 * Ändert den Stunden-SOLL dieser Lerngruppe.
+	 * Ändert das Stunden-Soll dieser Lerngruppe.
 	 *
 	 * @param neuerSoll   Der neue Wert.
 	 */

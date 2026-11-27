@@ -16,18 +16,12 @@ import { routeUvGrunddatenRaeumeGruppen } from "~/router/apps/unterrichtsverteil
 import { routeUvGrunddatenStundentafeln } from "~/router/apps/unterrichtsverteilung/grunddaten/RouteUvGrunddatenStundentafeln";
 import { routeUvGrunddatenZeitraster } from "~/router/apps/unterrichtsverteilung/grunddaten/RouteUvGrunddatenZeitraster";
 import { RouteDataUv } from "~/router/apps/unterrichtsverteilung/RouteDataUv";
-import { routeUvKlassen } from "~/router/apps/unterrichtsverteilung/RouteUvKlassen";
-import { routeUvKurse } from "~/router/apps/unterrichtsverteilung/RouteUvKurse";
-import { routeUvLerngruppen } from "~/router/apps/unterrichtsverteilung/RouteUvLerngruppen";
 import { routeUvPlanungsabschnitt } from "~/router/apps/unterrichtsverteilung/RouteUvPlanungsabschnitte";
 import { routeUvPlanungsabschnittGruppenprozesse } from "~/router/apps/unterrichtsverteilung/RouteUvPlanungsabschnittGruppenprozesse";
 import { routeUvPlanungsabschnittNeu } from "~/router/apps/unterrichtsverteilung/RouteUvPlanungsabschnittNeu";
-import { routeUvSchienen } from "~/router/apps/unterrichtsverteilung/RouteUvSchienen";
-import { routeUvSchueler } from "~/router/apps/unterrichtsverteilung/RouteUvSchueler";
-import { routeUvSchuelergruppen } from "~/router/apps/unterrichtsverteilung/RouteUvSchuelergruppen";
-import { routeUvUnterrichte } from "~/router/apps/unterrichtsverteilung/RouteUvUnterrichte";
 import { routeError } from "~/router/error/RouteError";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 export class RouteUv extends RouteAuswahlNode<UvPlanungsabschnitteListeManager, RouteDataUv, RouteApp> {
@@ -41,13 +35,6 @@ export class RouteUv extends RouteAuswahlNode<UvPlanungsabschnitteListeManager, 
 		super.children = [
 			routeUvPlanungsabschnitt,
 			routeUvGrunddatenLehrer,
-			routeUvSchueler,
-			routeUvSchuelergruppen,
-			routeUvKlassen,
-			routeUvKurse,
-			routeUvSchienen,
-			routeUvLerngruppen,
-			routeUvUnterrichte,
 			routeUvGrunddatenRaeumeGruppen,
 			routeUvGrunddatenFaecher,
 			routeUvGrunddatenStundentafeln,
@@ -62,9 +49,29 @@ export class RouteUv extends RouteAuswahlNode<UvPlanungsabschnitteListeManager, 
 			tabManager: props.tabManager,
 			manager: props.manager,
 		});
+		super.getAuswahlListProps = (props) => ({
+			...props,
+			gotoDefaultView: this.gotoPlanungsabschnitt,
+		});
 	}
 
-	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
+	private readonly gotoPlanungsabschnitt = async (id?: number | null): Promise<void> => {
+		const manager = this.data.manager;
+		let zielId = id;
+		if (zielId === undefined || zielId === null || !manager.liste.has(zielId)) {
+			const gefiltert = manager.filtered();
+			if (gefiltert.isEmpty()) {
+				return;
+			}
+			zielId = gefiltert.getFirst().id;
+		}
+		const ziel = zielId === -1
+			? routeUvGrunddatenLehrer.getRoute({ id: zielId, idLehrer: '' })
+			: routeUvPlanungsabschnitt.getRoute({ id: zielId, bereich: '', idObjekt: '' });
+		await RouteManager.doRoute(ziel);
+	};
+
+	protected readonly doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
 		if (this.data.manager.hasDaten() !== true) {
 			return;
 		}
@@ -97,7 +104,7 @@ export class RouteUv extends RouteAuswahlNode<UvPlanungsabschnitteListeManager, 
 	}
 
 	/** Löst einen Auswahlparameter innerhalb der für eine UV-Ansicht zulässigen Objekte auf. */
-	public static resolveAuswahl<T>(value: string | string[] | undefined, items: Iterable<T>, getId: (item: T) => number): T | undefined {
+	public static resolveAuswahl<T>(value: string | string[] | undefined, items: Iterable<T>, getId: (item: T) => number): number | undefined {
 		if ((value === undefined) || (value === '')) {
 			return undefined;
 		}
@@ -107,7 +114,7 @@ export class RouteUv extends RouteAuswahlNode<UvPlanungsabschnitteListeManager, 
 		const id = Number(value);
 		for (const item of items) {
 			if (getId(item) === id) {
-				return item;
+				return id;
 			}
 		}
 		throw new DeveloperNotificationException('Das UV-Objekt ist in diesem Bereich bzw. Planungsabschnitt nicht vorhanden.');

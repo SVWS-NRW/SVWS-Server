@@ -3,11 +3,26 @@
 		<template #title>
 			<h1 class="select-none">UV-Fächer</h1>
 		</template>
-		<svws-ui-table :items="filteredItems" :columns clickable @update:clicked="gotoFach" :selectable="hatKompetenzAendern" v-model="selectedFaecher" count :clicked="auswahl" :unselectable
-			scroll scroll-into-view allow-arrow-key-selection :focus-switching-enabled :focus-help-visible :filter-open="true" :filtered="hasActiveFilter" :filter-reset="resetFilter">
+		<svws-ui-table :items="filteredItems"
+			:columns
+			clickable
+			@update:clicked="gotoFach"
+			:selectable="hatKompetenzAendern"
+			v-model="selectedFaecher"
+			count
+			:clicked="auswahl"
+			:unselectable
+			scroll
+			scroll-into-view
+			allow-arrow-key-selection
+			:focus-switching-enabled
+			:focus-help-visible
+			:filter-open="true"
+			:filtered="hasActiveFilter"
+			:filter-reset="resetFilter">
 			<template #search><svws-ui-text-input v-model="search" type="search" placeholder="Fach suchen" removable /></template>
 			<template #cell(idFach)="{ rowData }">
-				<span><svws-ui-badge size="tiny" type="highlight" v-if="konfliktMitFach?.value !== null && konfliktMitFach.value.id === rowData.id"><span class="icon i-ri-alert-line icon-ui-onwarning" /></svws-ui-badge> {{ state.uvManager.fachdatenGetByFach(rowData).bezeichnung }}</span>
+				<span class="flex items-center gap-2"><svws-ui-badge size="tiny" type="highlight" v-if="konfliktMitFach?.value !== null && konfliktMitFach.value.id === rowData.id"><span class="icon i-ri-alert-line icon-ui-onwarning" /></svws-ui-badge><s-uv-fach-badge :id-fach="rowData.id" />{{ state.uvManager.fachdatenGetByFach(rowData).bezeichnung }}</span>
 			</template>
 			<template #cell(gueltigVon)="{ value }">
 				{{ DateUtils.gibDatumGermanFormat(value) }}
@@ -20,7 +35,12 @@
 				<s-uv-grunddaten-faecher-import-modal v-slot="{ openModal }">
 					<svws-ui-button @click="openModal" type="icon" title="Fächer importieren"> <span class="icon i-ri-upload-2-line" /> </svws-ui-button>
 				</s-uv-grunddaten-faecher-import-modal>
-				<svws-ui-button @click="state.delFaecher(selectedFaecher)" type="trash" :disabled="!selectedFaecher.length" />
+				<s-uv-auswahl-loeschen :items="selectedFaecher"
+					art="Fächer"
+					:bezeichnung="item => state.uvManager.fachdatenGetByFach(item).bezeichnung"
+					:loeschen="state.grunddaten.delFaecher"
+					:disabled="selectedFaecher.some(item => unselectable.has(item))"
+					@deleted="onDeleted" />
 			</template>
 		</svws-ui-table>
 	</s-uv-auswahl>
@@ -37,6 +57,8 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	import SUvAuswahl from "../../SUvAuswahl.vue";
+	import SUvAuswahlLoeschen from "../../SUvAuswahlLoeschen.vue";
+	import SUvFachBadge from "../../SUvFachBadge.vue";
 	import SUvGrunddatenFaecherImportModal from "~/components/unterrichtsverteilung/grunddaten/faecher/SUvGrunddatenFaecherImportModal.vue";
 
 	const props = defineProps<{
@@ -57,7 +79,14 @@
 
 
 	const selectedFaecher = ref<UvFach[]>([]);
-	const unselectable = computed<Set<UvFach>>(() => new Set(state.uvManager.fachGetMengeVerwendetInStundentafel()));
+	function onDeleted(items: UvFach[]): void {
+		selectedFaecher.value = [];
+		if (items.some(item => item.id === props.auswahl?.id)) {
+			props.gotoFach(undefined);
+		}
+	}
+
+	const unselectable = computed<Set<UvFach>>(() => new Set(state.uvManager.fachGetMengeVerwendet()));
 
 	const columns = [
 		{ key: "idFach", label: "Fach", sortable: true, defaultSort: 'asc' },

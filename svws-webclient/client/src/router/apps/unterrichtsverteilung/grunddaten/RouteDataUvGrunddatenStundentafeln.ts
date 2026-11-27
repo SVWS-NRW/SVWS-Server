@@ -7,11 +7,11 @@ import { RouteNode } from '~/router/RouteNode';
 import { uvStateImpl } from "~/states/UvStateImpl";
 
 interface RouteStateUvGrunddatenStundentafeln extends RouteStateInterface {
-	auswahl: UvStundentafel | undefined;
+	idAuswahl: number | undefined;
 }
 
 const defaultState = <RouteStateUvGrunddatenStundentafeln> {
-	auswahl: undefined,
+	idAuswahl: undefined,
 };
 
 export class RouteDataUvGrunddatenStundentafeln extends RouteData<RouteStateUvGrunddatenStundentafeln> {
@@ -21,16 +21,15 @@ export class RouteDataUvGrunddatenStundentafeln extends RouteData<RouteStateUvGr
 	}
 
 	public get auswahl(): UvStundentafel | undefined {
-		const auswahl = this._state.value.auswahl;
-		if (auswahl === undefined) {
+		const idAuswahl = this._state.value.idAuswahl;
+		if (idAuswahl === undefined) {
 			return undefined;
 		}
-		// Nach DTO-Patches immer die aktuelle Managerinstanz verwenden.
-		return uvStateImpl.uvManager.stundentafelGetByIdOrNull(auswahl.id) ?? undefined;
+		return uvStateImpl.uvManager.stundentafelGetByIdOrNull(idAuswahl) ?? undefined;
 	}
 
-	public setAuswahlFromRoute = (stundentafel: UvStundentafel | undefined): void => {
-		this.setPatchedState({ auswahl: stundentafel });
+	public setAuswahlFromRoute = (idAuswahl: number | undefined): void => {
+		this.setPatchedState({ idAuswahl });
 	};
 
 	public gotoStundentafel = async (stundentafel: UvStundentafel | undefined): Promise<void> => {

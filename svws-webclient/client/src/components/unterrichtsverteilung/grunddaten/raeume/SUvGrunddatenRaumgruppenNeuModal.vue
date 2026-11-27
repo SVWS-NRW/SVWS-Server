@@ -68,7 +68,7 @@
 			if (!isValid.value) {
 				return;
 			}
-			await state.createRaumgruppe({
+			await state.grunddaten.createRaumgruppe({
 				bezeichnung: bezeichnung.value,
 				beschreibung: beschreibung.value !== null && beschreibung.value.trim().length > 0 ? beschreibung.value : null,
 				gueltigVon: gueltigVon.value,

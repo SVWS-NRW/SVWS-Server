@@ -6,9 +6,9 @@ import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Algorithmus der diese Klasse erweitert dient dazu Lehrkräfte auf Lerngruppen zu verteilen.
+ * Ein Algorithmus, der diese Klasse erweitert, dient dazu, Lehrkräfte auf Lerngruppen zu verteilen.
  * <br>Ziel ist es:
- * <br>- TODO Regeln einzuhalten (später).
+ * <br>- Die UV-Blockungsregeln über Malus und Prioritäten einzuhalten.
  * <br>- Eine Berechnung innerhalb eines Zeitlimits durchzuführen.
  * <br>- Eine Zuordnung von Lehrkräften auf Lerngruppen zu liefern.
  *
@@ -30,7 +30,7 @@ public abstract class UvAlgorithmusImplAbstract {
 	 *
 	 * @param log   Ein {@link Logger}-Objekt für Debug-Zwecke.
 	 * @param rnd   Ein {@link Random}-Objekt zur Steuerung des Zufalls.
-	 * @param dyn   Die dynamische Daten (mit dynamischer Bewertung).
+	 * @param dyn   Die dynamischen Daten (mit dynamischer Bewertung).
 	 */
 	protected UvAlgorithmusImplAbstract(final @NotNull Logger log, final @NotNull Random rnd, final @NotNull UvAlgorithmusDynDaten dyn) {
 		this.log = log;

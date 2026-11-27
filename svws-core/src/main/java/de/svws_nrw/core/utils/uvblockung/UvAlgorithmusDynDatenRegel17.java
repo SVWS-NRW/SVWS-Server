@@ -1,6 +1,9 @@
 package de.svws_nrw.core.utils.uvblockung;
 
+import de.svws_nrw.core.data.uv.regel.UvBlockungRegelPrioritaet;
 import de.svws_nrw.core.data.uv.regel.UvBlockungRegelTyp;
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Wochentag;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,7 +14,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class UvAlgorithmusDynDatenRegel17 implements UvAlgorithmusDynDatenRegel {
 
-	private final @NotNull int @NotNull [] malus;
+	private final @NotNull Logger log;
+	private final int @NotNull [] malus;
 	private final @NotNull UvAlgorithmusDynDatenLerngruppe lerngruppe;
 	private final int prioritaet;
 
@@ -28,26 +32,29 @@ public final class UvAlgorithmusDynDatenRegel17 implements UvAlgorithmusDynDaten
 	/**
 	 * Erzeugt eine neue Instanz der Regel und passt den Anfangs-Malus an.
 	 *
-	 * @param malus        Das globale Malus-Array.
-	 * @param lerngruppe   Die {@link UvAlgorithmusDynDatenLerngruppe}.
-	 * @param wochentag    Der {@link Wochentag}.
-	 * @param stunde       Die Stunde am Tag.
-	 * @param wochentyp    Der Wochentyp (0 = Jeder Woche, 1 = A-Woche, 2 = B-Woche, ...)
-	 * @param prioritaet   Die Priorität der Regel.
+	 * @param log             Der Logger für Debug-Zwecke.
+	 * @param malus           Das globale Malus-Array.
+	 * @param lerngruppe      Die {@link UvAlgorithmusDynDatenLerngruppe}.
+	 * @param wochentag       Der {@link Wochentag}.
+	 * @param stunde          Die Stunde am Tag.
+	 * @param wochentypWert   Der Wochentyp (0 = jede Woche, 1 = A-Woche, 2 = B-Woche, ...).
+	 * @param prioritaet      Die Priorität der Regel.
 	 */
 	public UvAlgorithmusDynDatenRegel17(
-			final @NotNull int @NotNull [] malus,
+			final @NotNull Logger log,
+			final int @NotNull [] malus,
 			final @NotNull UvAlgorithmusDynDatenLerngruppe lerngruppe,
-			final @NotNull int wochentag,
-			final @NotNull int stunde,
-			final @NotNull int wochentyp,
+			final int wochentag,
+			final int stunde,
+			final int wochentypWert,
 			final int prioritaet) {
 
+		this.log = log;
 		this.malus = malus;
 		this.lerngruppe = lerngruppe;
 		this.wochentag = wochentag;
 		this.stunde = stunde;
-		this.wochentyp = wochentyp;
+		this.wochentyp = wochentypWert;
 		this.prioritaet = prioritaet;
 
 		this.changeMalus(1);
@@ -56,31 +63,42 @@ public final class UvAlgorithmusDynDatenRegel17 implements UvAlgorithmusDynDaten
 
 	@Override
 	public void changeMalus(final int faktor) {
-		if (prioritaet <= 0) {
+		if ((prioritaet < 0) || (prioritaet >= UvBlockungRegelPrioritaet.DEAKTIVIERT.nr)) {
+			log.logLn(LogLevel.ERROR,
+					"UvAlgorithmusDynDatenRegel17: Ungültige oder deaktivierte Priorität %d - Malus-Änderung wird ignoriert.".formatted(prioritaet));
 			return;
 		}
+
+		int anzahlZuviel = 0;
 		for (final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft : lerngruppe.lehrkraefteZugeordnetAlle) {
-			final int genau0 = lehrkraft.istWochentagStundeWochentypCounter[wochentag][stunde][0];
-
-			// Bestimme meine Kollision abhängig davon, ob ich Wochentyp=0 oder Wochentyp>0 bin.
-			boolean kollision = false;
-			if (wochentyp == 0) {
-				// Beispiele: [2*, 0, 0] oder [1*, 1, 0] oder [1*, 0, 1]
-				int groesser0 = 0;
-				for (int i = 1; i < lehrkraft.istWochentagStundeWochentypCounter[wochentag][stunde].length; i++) {
-					groesser0 += lehrkraft.istWochentagStundeWochentypCounter[wochentag][stunde][i];
-				}
-				kollision = (genau0 + groesser0) > 1;
-			} else {
-				// Beispiele: [0, 2*, 0] oder [0, 0, 2*] oder [1, 1*, 0] oder [1, 0, 1*]
-				kollision = (genau0 + lehrkraft.istWochentagStundeWochentypCounter[wochentag][stunde][wochentyp]) > 1;
-			}
-
-			// Gabe es eine Kollision, die ich verursacht habe?
-			if (kollision) {
-				malus[prioritaet] += faktor;
+			final int anzahl = (wochentyp == 0)
+					? gibMinimumUeberAlleWochentypen(lehrkraft)
+					: lehrkraft.stundenplanAnzahl[wochentag][stunde][wochentyp];
+			if (anzahl > 1) {
+				anzahlZuviel += anzahl - 1;
 			}
 		}
+
+		if (anzahlZuviel > 0) {
+			malus[prioritaet] += faktor * anzahlZuviel;
+		}
+	}
+
+
+	/**
+	 * Liefert das Minimum des Stundenplans der Lehrkraft im aktuellen Zeitslot über alle Wochentypen > 0.
+	 * <br>(Im typischen Fall entspricht das der Anzahl der Lerngruppen, die jede Woche stattfinden.)
+	 *
+	 * @param lehrkraft   Die Lehrkraft.
+	 *
+	 * @return das Minimum des Stundenplans der Lehrkraft im aktuellen Zeitslot über alle Wochentypen > 0.
+	 */
+	private int gibMinimumUeberAlleWochentypen(final @NotNull UvAlgorithmusDynDatenLehrkraft lehrkraft) {
+		int minimum = Integer.MAX_VALUE;
+		for (int wt = 1; wt < lehrkraft.stundenplanAnzahl[wochentag][stunde].length; wt++) {
+			minimum = Math.min(minimum, lehrkraft.stundenplanAnzahl[wochentag][stunde][wt]);
+		}
+		return (minimum == Integer.MAX_VALUE) ? 0 : minimum;
 	}
 
 }

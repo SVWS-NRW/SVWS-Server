@@ -12,7 +12,7 @@ import de.svws_nrw.core.utils.uv.UvRegelManager;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Algorithmus um Lerngruppen potentielle Lehrkräfte zuzuordnen.
+ * Algorithmus, um Lerngruppen potentielle Lehrkräfte zuzuordnen.
  *
  * @author Benjamin A. Bartsch
  */
@@ -30,7 +30,7 @@ public final class UvAlgorithmusImpl {
 	/** Zur dynamischen Bewertung der aktuellen Zuordnung. */
 	private final @NotNull UvAlgorithmusDynDaten dyn;
 
-	/** Alle Algorithmen, die für die Lehrkraft-Lerngruppen-Zuordnung implementiert wurden. */
+	/** Alle Algorithmen, die für die Lerngruppen-Lehrkraft-Zuordnung implementiert wurden. */
 	private final @NotNull UvAlgorithmusImplAbstract @NotNull [] alg;
 
 
@@ -38,7 +38,7 @@ public final class UvAlgorithmusImpl {
 	 * Der Konstruktor.
 	 *
 	 * @param manager             Ein {@link UvManager}-Objekt, welches alle Daten hat.
-	 * @param manRegeln           Ein {@link UvRegelManager}-Objekt, der alle Regeln hat.
+	 * @param manRegeln           Ein {@link UvRegelManager}-Objekt, das alle Regeln hat.
      * @param planungsabschnitt   Der aktuelle Planungsabschnitt.
 	 */
 	public UvAlgorithmusImpl(final @NotNull UvManager manager, final @NotNull UvRegelManager manRegeln, final @NotNull UvPlanungsabschnitt planungsabschnitt) {
@@ -50,20 +50,20 @@ public final class UvAlgorithmusImpl {
 		this.rnd = new Random(seed);
 		log.logLn(LogLevel.INFO, "UvAlgorithmus startet mit Seed " + seed + ".");
 
-		// Es gibt das SELBE "UvAlgorithmusDynDaten"-Objekt für alle Algorithmen.
+		// Es gibt dasselbe "UvAlgorithmusDynDaten"-Objekt für alle Algorithmen.
 		this.dyn = new UvAlgorithmusDynDaten(log, rnd, manager, manRegeln, planungsabschnitt);
 
 		// Algorithmen erzeugen.
 		this.alg = new UvAlgorithmusImplAbstract @NotNull [] {
 			// Alle Algorithmen ...
-			new UvAlgorithmusImplRandomWalk(log, rnd, dyn),
+			new UvAlgorithmusImplRandomWalk1(log, rnd, dyn),
 			// ... Ende der Algorithmen.
 		};
 	}
 
 
 	/**
-	 * Optimiert die derzeitige Lehrkraft-Lerngruppen-Zuordnung.
+	 * Optimiert die derzeitige Lerngruppen-Lehrkraft-Zuordnung.
 	 *
 	 * @param zeitlimit   Die Zeitspanne (in ms), die für die Berechnung zur Verfügung steht.
 	 */
@@ -77,18 +77,27 @@ public final class UvAlgorithmusImpl {
 				alg[i].berechneInnerhalb(zeitProAlgorithmus);
 			}
 		}
-		log.logLn(LogLevel.INFO, "Schleife-Danach: Malus1 = " + dyn.gibMalusBeschreibung());
-
+		log.logLn(LogLevel.INFO, "Schleife-Danach: Malus = " + dyn.gibMalusBeschreibung());
 	}
 
 
 	/**
-	 * Liefert die bisher beste Lehrkraft-Lerngruppen-Zuordnung.
+	 * Liefert die bisher beste Lerngruppen-Lehrkraft-Zuordnung.
 	 *
-	 * @return die bisher beste Lehrkraft-Lerngruppen-Zuordnung.
+	 * @return die bisher beste Lerngruppen-Lehrkraft-Zuordnung.
 	 */
 	public @NotNull List<UvLerngruppenLehrer> gibBestesAktuellesErgebnis() {
 		return dyn.gibAktuelleZuordnung();
+	}
+
+
+	/**
+	 * Liefert die aktuelle Güte der Berechnung als Malusbeschreibung.
+	 *
+	 * @return die aktuelle Malusbeschreibung.
+	 */
+	public @NotNull String gibMalusBeschreibung() {
+		return dyn.gibMalusBeschreibung();
 	}
 
 

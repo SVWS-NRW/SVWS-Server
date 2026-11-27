@@ -105,16 +105,47 @@ public final class UvLerngruppenLehrerService {
 		if (createRequests.isEmpty()) {
 			return new ArrayList<>();
 		}
+		return transactional(() -> persistNew(createRequests, repository.getNextID()));
+	}
+
+	/**
+	 * Ersetzt alle Lehrkraftzuordnungen eines Planungsabschnitts atomar.
+	 *
+	 * @param idPlanungsabschnitt der Zielplanungsabschnitt
+	 * @param requests die vollständigen neuen Zuordnungen, auch eine leere Menge ist zulässig
+	 * @return die neuen Zuordnungen
+	 */
+	public List<UvLerngruppenLehrer> replaceByPlanungsabschnitt(final long idPlanungsabschnitt,
+			final Collection<UvLerngruppenLehrerCreateRequest> requests) {
+		if ((idPlanungsabschnitt <= 0) || (requests == null)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Planungsabschnitt und Zuordnungen müssen angegeben werden.");
+		}
 		return transactional(() -> {
-			long nextId = repository.getNextID();
-			final List<DTOUvLerngruppenLehrer> entities = new ArrayList<>();
-			for (final UvLerngruppenLehrerCreateRequest request : createRequests) {
-				entities.add(buildNewDto(nextId++, request));
+			for (final UvLerngruppenLehrerCreateRequest request : requests) {
+				if ((request == null) || (request.idPlanungsabschnitt == null) || (request.idPlanungsabschnitt != idPlanungsabschnitt)) {
+					throw new ApiOperationException(Status.BAD_REQUEST, "Alle Zuordnungen müssen zum Zielplanungsabschnitt gehören.");
+				}
 			}
-			repository.update(entities);
-			repository.flush();
-			return getList(entities.stream().map(e -> e.ID).toList());
+			// Neue IDs vor dem Löschen bestimmen, damit entfernte JPA-Entitäten nicht unter derselben ID neu angelegt werden.
+			final long ersteId = requests.isEmpty() ? 0 : repository.getNextID();
+			final List<DTOUvLerngruppenLehrer> alt = repository.getListByPlanungsabschnitt(idPlanungsabschnitt);
+			if (!alt.isEmpty()) {
+				repository.delete(alt);
+				repository.flush();
+			}
+			return requests.isEmpty() ? List.of() : persistNew(requests, ersteId);
 		});
+	}
+
+	private List<UvLerngruppenLehrer> persistNew(final Collection<UvLerngruppenLehrerCreateRequest> requests, final long ersteId) {
+		long nextId = ersteId;
+		final List<DTOUvLerngruppenLehrer> entities = new ArrayList<>();
+		for (final UvLerngruppenLehrerCreateRequest request : requests) {
+			entities.add(buildNewDto(nextId++, request));
+		}
+		repository.update(entities);
+		repository.flush();
+		return getList(entities.stream().map(e -> e.ID).toList());
 	}
 
 	private static DTOUvLerngruppenLehrer buildNewDto(final long id, final UvLerngruppenLehrerCreateRequest request) {

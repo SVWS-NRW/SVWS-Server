@@ -57,8 +57,9 @@ export class RouteDataUv extends RouteDataAuswahl<UvPlanungsabschnitteListeManag
 		param.id = id;
 	}
 
-	public async ladeDaten(auswahl: UvPlanungsabschnitt | null): Promise<UvPlanungsabschnitt | null> {
-		return await uvStateImpl.ladeDaten(auswahl, this.manager.liste.list());
+	public async ladeDaten(auswahl: UvPlanungsabschnitt | null, state: Partial<RouteStateUnterrichtsverteilung>): Promise<UvPlanungsabschnitt | null> {
+		const manager = state.manager ?? this.manager;
+		return await uvStateImpl.ladeDaten(auswahl, manager.liste.list());
 	}
 
 	protected deleteMessage(id: number, abschnitt: UvPlanungsabschnitt): string {

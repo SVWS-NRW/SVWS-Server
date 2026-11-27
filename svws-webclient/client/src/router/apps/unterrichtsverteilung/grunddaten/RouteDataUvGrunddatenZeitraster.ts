@@ -11,12 +11,12 @@ import { uvStateImpl } from "~/states/UvStateImpl";
 type UvZeitrasterSelection = Wochentag | number | UvZeitrasterEintrag | undefined;
 
 interface RouteStateUvGrunddatenZeitraster extends RouteStateInterface {
-	auswahl: UvZeitraster | undefined;
+	idAuswahl: number | undefined;
 	selected: UvZeitrasterSelection;
 }
 
 const defaultState = <RouteStateUvGrunddatenZeitraster> {
-	auswahl: undefined,
+	idAuswahl: undefined,
 	selected: undefined,
 };
 
@@ -26,17 +26,12 @@ export class RouteDataUvGrunddatenZeitraster extends RouteData<RouteStateUvGrund
 		super(defaultState);
 	}
 
-	public async ladeZeitraster(): Promise<void> {
-		// Daten sind bereits im UvManager geladen, nichts zu tun
-	}
-
 	public get auswahl(): UvZeitraster | undefined {
-		const auswahl = this._state.value.auswahl;
-		if (auswahl === undefined) {
+		const idAuswahl = this._state.value.idAuswahl;
+		if (idAuswahl === undefined) {
 			return undefined;
 		}
-		// Nach DTO-Patches immer die aktuelle Managerinstanz verwenden.
-		return uvStateImpl.uvManager.zeitrasterGetByIdOrNull(auswahl.id) ?? undefined;
+		return uvStateImpl.uvManager.zeitrasterGetByIdOrNull(idAuswahl) ?? undefined;
 	}
 
 	public get selected(): UvZeitrasterSelection {
@@ -51,8 +46,8 @@ export class RouteDataUvGrunddatenZeitraster extends RouteData<RouteStateUvGrund
 		this.setPatchedState({ selected: value });
 	};
 
-	public setAuswahlFromRoute = (zeitraster: UvZeitraster | undefined): void => {
-		this.setPatchedState({ auswahl: zeitraster, selected: undefined });
+	public setAuswahlFromRoute = (idAuswahl: number | undefined): void => {
+		this.setPatchedState({ idAuswahl, selected: undefined });
 	};
 
 	public gotoZeitraster = async (zeitraster: UvZeitraster | undefined): Promise<void> => {

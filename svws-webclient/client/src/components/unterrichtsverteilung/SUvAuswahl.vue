@@ -6,7 +6,7 @@
 		<div v-if="$slots.header" class="shrink-0">
 			<slot name="header" />
 		</div>
-		<div class="min-h-0 flex-1">
+		<div class="flex min-h-0 flex-1 flex-col [&>.svws-ui-table]:min-h-0 [&>.svws-ui-table-filter]:shrink-0">
 			<slot />
 		</div>
 	</div>

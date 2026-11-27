@@ -7,6 +7,7 @@ import { ServerMode } from "@core/core/types/ServerMode";
 import SUvGrunddatenLehrer from "~/components/unterrichtsverteilung/grunddaten/lehrer/SUvGrunddatenLehrer.vue";
 import SUvGrunddatenLehrerAuswahl from "~/components/unterrichtsverteilung/grunddaten/lehrer/SUvGrunddatenLehrerAuswahl.vue";
 import { RouteUv } from "~/router/apps/unterrichtsverteilung/RouteUv";
+import { routeUvPlanungsabschnitt } from "~/router/apps/unterrichtsverteilung/RouteUvPlanungsabschnitte";
 import { RouteNode } from "~/router/RouteNode";
 import { uvStateImpl } from '~/states/UvStateImpl';
 
@@ -19,14 +20,20 @@ export class RouteUvGrunddatenLehrer extends RouteNode<RouteDataUvGrunddatenLehr
 		super.mode = ServerMode.DEV;
 		super.propHandler = () => this.getProps();
 		super.text = "Lehrer";
-		this.isHidden = (params?: RouteParams) => RouteUv.tabsCheckHidden(true, true, params);
+		this.isHidden = (params?: RouteParams) => {
+			const umleitung = RouteUv.tabsCheckHidden(true, false, params);
+			if (umleitung === false || params === undefined || typeof params.idLehrer !== 'string' || params.idLehrer === '') {
+				return umleitung;
+			}
+			const { idLehrer, ...planungsParams } = params;
+			return routeUvPlanungsabschnitt.getRoute({ ...planungsParams, bereich: 'lehrer', idObjekt: idLehrer });
+		};
 		super.setView("auswahl", SUvGrunddatenLehrerAuswahl, () => this.getAuswahlProps());
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
 		isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
-		const plan = uvStateImpl.planungsabschnitt;
-		const items = plan !== null && plan.id !== -1 ? uvStateImpl.uvManager.lehrerGetMengeByPlanungsabschnitt(plan) : uvStateImpl.uvManager.lehrerGetMengeAsList();
+		const items = uvStateImpl.uvManager.lehrerGetMengeAsList();
 		this.data.setAuswahlFromRoute(RouteUv.resolveAuswahl(to_params.idLehrer, items, item => item.id));
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}
