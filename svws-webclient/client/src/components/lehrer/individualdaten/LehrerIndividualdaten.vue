@@ -133,7 +133,7 @@
 					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Leitungsfunktionen" v-if="serverState.mode === ServerMode.DEV">
+		<svws-ui-content-card title="Leitungsfunktionen">
 			<svws-ui-table class="max-h-72! w-full"
 				v-model="selectedLeitungsfunktionen"
 				:items="lehrerAuswahlState.stammdaten.leitungsfunktionen.entries"
@@ -141,7 +141,7 @@
 				@update:clicked="lf => patchLeitungsfunktionModal(lf)"
 				:columns="leitungsfunktionenTableColumns"
 				:clickable="!readonly"
-				:selectable="!readonly"
+				:selectable="!deleteDisabled"
 				scroll scroll-into-view count>
 				<template #cell(idLeitungsfunktion)="{ value }">
 					{{ getBezeichnungLeitungsfunktion(value) }}
@@ -152,12 +152,12 @@
 				<template #cell(datumEndeLeitungsfunktion)="{ value }">
 					{{ formatDatum(value) }}
 				</template>
-				<template #actions v-if="!readonly">
+				<template #actions v-if="!readonly || !deleteDisabled">
 					<div class="inline-flex gap-4">
-						<svws-ui-button type="trash"
+						<svws-ui-button v-if="!deleteDisabled" type="trash"
 							@click="deleteSelectedLeitungsfunktionen"
 							:disabled="selectedLeitungsfunktionen.length === 0" />
-						<svws-ui-button title="Leitungsfunktion hinzufügen"
+						<svws-ui-button v-if="!readonly" title="Leitungsfunktion hinzufügen"
 							type="icon"
 							@click="addLeitungsfunktionModal">
 							<span class="icon i-ri-add-line" />
@@ -209,14 +209,12 @@
 	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { PersonalTyp } from "@core/core/types/PersonalTyp";
-	import { ServerMode } from "@core/core/types/ServerMode";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { JavaString } from "@core/java/lang/JavaString";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { useSchuleState } from "@ui/states/SchuleState";
-	import { useServerState } from "@ui/states/ServerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -230,7 +228,6 @@
 	const props = defineProps<LehrerIndividualdatenProps>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
-	const serverState = useServerState();
 	const orteState = useOrteState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
 
@@ -243,6 +240,7 @@
 	);
 
 	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
+	const deleteDisabled = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_LOESCHEN));
 	const selectedLeitungsfunktionen = ref<Schulleitung[]>([]);
 	const clickedLeitungsfunktion = ref<Schulleitung | null>(null);
 	const leitungsfunktionEntry = ref<Schulleitung>(new Schulleitung());
