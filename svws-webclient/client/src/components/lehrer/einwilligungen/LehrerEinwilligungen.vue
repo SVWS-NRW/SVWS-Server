@@ -67,7 +67,7 @@
 	const benutzerState = useBenutzerState();
 	const einwilligungsartenState = useEinwilligungsartenState();
 
-	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
 	const noEntries = computed<boolean>(() => props.einwilligungen().isEmpty());
 

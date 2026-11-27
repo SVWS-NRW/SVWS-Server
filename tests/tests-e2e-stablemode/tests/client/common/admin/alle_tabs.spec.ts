@@ -98,7 +98,9 @@ test('Admins können entsprechende Bereiche bei den Lehrern im STABLE Mode sehen
 
 	await expect(page.getByRole('button', { name: 'Personaldaten' })).toHaveCount(0);
 	await expect(page.getByRole('button', { name: 'Unterricht' })).toHaveCount(0);
-	await expect(page.getByRole('button', { name: 'Einwilligungen' })).toHaveCount(0);
+	await expect(page.getByRole('button', { name: 'Einwilligungen' })).toBeVisible();
+	await page.getByRole('button', { name: 'Einwilligungen' }).click();
+	await expect(page.getByRole('heading', { name: 'Nicht abgefragt' })).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Lernplattform' })).toHaveCount(0);
 });
 

@@ -1974,7 +1974,7 @@ public class APILehrer {
 	public Response getLehrerEinwilligungen(@PathParam("schema") final String schema, @PathParam("idLehrer") final long idLehrer,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessDev(request)
+				.withReadAccessStable(request)
 				.getLehrerEinwilligungController()
 				.getListByIdLehrer(idLehrer);
 	}
@@ -1994,7 +1994,7 @@ public class APILehrer {
 	@Path("/{idLehrer : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}")
 	@Operation(summary = "Passt die Lehrereinwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an.",
 			description = "Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrereinwilligungen besitzt.")
+					+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrereinwilligungen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrereinwilligung integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Einwilligungen der Lehrer zu ändern.")
@@ -2009,7 +2009,7 @@ public class APILehrer {
 							schema = @Schema(implementation = LehrerEinwilligung.class))) final LehrerEinwilligungPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessDev(request)
+				.withWriteAccessStable(request)
 				.getLehrerEinwilligungController()
 				.patch(idLehrer, idEinwilligungsart, patch);
 	}

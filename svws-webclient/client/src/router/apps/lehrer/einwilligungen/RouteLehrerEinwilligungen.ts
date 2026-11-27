@@ -18,8 +18,8 @@ const LehrerEinwilligungen = () => import("~/components/lehrer/einwilligungen/Le
 export class RouteLehrerEinwilligungen extends RouteNode<RouteDataLehrerEinwilligungen, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.einwilligungen", "einwilligungen", LehrerEinwilligungen, new RouteDataLehrerEinwilligungen());
-		super.mode = ServerMode.DEV;
+		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_ANSEHEN], "lehrer.einwilligungen", "einwilligungen", LehrerEinwilligungen, new RouteDataLehrerEinwilligungen());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungen";
 	}

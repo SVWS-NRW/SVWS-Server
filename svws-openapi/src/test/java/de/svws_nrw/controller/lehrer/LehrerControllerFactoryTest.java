@@ -248,7 +248,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerEinwilligungController | gibt einen Controller zurück")
 	void getLehrerEinwilligungController() {
 		final LehrerEinwilligungController controller = LehrerControllerFactory
-				.withReadAccessDev(request)
+				.withReadAccessStable(request)
 				.getLehrerEinwilligungController();
 
 		assertNotNull(controller);
