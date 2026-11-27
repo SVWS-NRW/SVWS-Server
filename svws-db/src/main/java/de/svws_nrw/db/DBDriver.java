@@ -151,10 +151,11 @@ public enum DBDriver {
 	 *
 	 * @param location   der Ort, an dem sich die Datenbank befindet (z.B. localhost, ein andere Hostname ggf. mit Port oder ein Dateiname)
 	 * @param schema     das Schema in der Datenbank, sofern mehrere Schemata vom DBMS unterstützt werden
+	 * @param useTLS     gibt an, ob die Verbindung mit TLS aufgebaut werden soll (wird nur bei MARIA_DB berücksichtigt)
 	 *
 	 * @return die JDBC-URL
 	 */
-	public String getJDBCUrl(final String location, final String schema) {
+	public String getJDBCUrl(final String location, final String schema, final boolean useTLS) {
 		switch (this) {
 			case MDB:
 				return "jdbc:ucanaccess://" + location + ";memory=false;immediatelyReleaseResources=true";
@@ -163,7 +164,7 @@ public enum DBDriver {
 			case MYSQL:
 				return "jdbc:mysql://" + location + "/" + schema;
 			case MARIA_DB:
-				return "jdbc:mariadb://" + location + "/" + schema;
+				return "jdbc:mariadb://" + location + "/" + schema + (useTLS ? "?sslMode=verify-full" : "");
 			case SQLITE:
 				return "jdbc:sqlite:" + location;
 			default:

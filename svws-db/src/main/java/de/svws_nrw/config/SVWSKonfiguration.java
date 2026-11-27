@@ -19,6 +19,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -568,6 +569,18 @@ public final class SVWSKonfiguration {
 		final SVWSKonfigurationSchemaDTO schema = dto.dbKonfiguration.schemata.get(i);
 		return new DBConfig(PersistenceUnits.SVWS_DB, driver, dto.dbKonfiguration.location, schema.name, schema.svwslogin, schema.username, schema.password,
 				true, false);
+	}
+
+	/**
+	 * Gibt zurück, ob die Verbindung zu der Datenbank an dem angegebenen Ort mit TLS aufgebaut werden soll.
+	 * Dies ist nur der Fall, wenn TLS konfiguriert ist und es sich um den konfigurierten Datenbank-Server handelt.
+	 *
+	 * @param location   der Ort, an dem sich die Datenbank befindet
+	 *
+	 * @return true, falls TLS verwendet werden soll, und ansonsten false
+	 */
+	public boolean useDBTLS(final String location) {
+		return (dto != null) && (dto.dbKonfiguration != null) && dto.dbKonfiguration.tls && Objects.equals(dto.dbKonfiguration.location, location);
 	}
 
 	/**

@@ -20,6 +20,10 @@ class SVWSKonfigurationDatabaseDTO {
 	@JsonProperty("location")
 	String location;
 
+	/** Gibt an, ob die Verbindung zur Datenbank mit TLS verschlüsselt wird (nur MARIA_DB) - Default ist false */
+	@JsonProperty("tls")
+	boolean tls;
+
 	/** Das Default-Schema, welches ausgewählt wird, wenn bei Pfadangaben kein Schema angegeben ist - Default ist das erste Schema */
 	@JsonProperty("defaultschema")
 	String defaultschema;

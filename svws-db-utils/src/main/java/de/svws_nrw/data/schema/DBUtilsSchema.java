@@ -21,6 +21,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
+import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.PersistenceUnits;
@@ -95,18 +96,11 @@ public final class DBUtilsSchema {
 		final DBConfig dbconfig = SVWSKonfiguration.get().getRootDBConfig(credentials.user, credentials.password);
 		final String location = dbconfig.getDBLocation();
 
-		String url;
-		switch (dbconfig.getDBDriver()) {
-			case MARIA_DB:
-				url = String.format("jdbc:mariadb://%s/", location);
-				break;
-			case MYSQL:
-				url = String.format("jdbc:mysql://%s/", location);
-				break;
-
-			default:
-				return false;
+		final DBDriver driver = dbconfig.getDBDriver();
+		if ((driver != DBDriver.MARIA_DB) && (driver != DBDriver.MYSQL)) {
+			return false;
 		}
+		final String url = driver.getJDBCUrl(location, "", SVWSKonfiguration.get().useDBTLS(location));
 
 		try (Connection conn = DriverManager.getConnection(url, credentials.user, credentials.password);
 				Statement stmt = conn.createStatement()) {

@@ -201,7 +201,8 @@ public class ConnectionFactory {
 		propertyMap.put("jakarta.persistence.jdbc.driver", config.getDBDriver().getJDBCDriver());
 		final String username = config.getUsername();
 		String password = config.getPassword();
-		String url = config.getDBDriver().getJDBCUrl(config.getDBLocation(), config.getDBSchema());
+		String url = config.getDBDriver().getJDBCUrl(config.getDBLocation(), config.getDBSchema(),
+				SVWSKonfiguration.get().useDBTLS(config.getDBLocation()));
 		if (config.getDBDriver() == DBDriver.MDB) {
 			try (Database db = DatabaseBuilder.open(new File(config.getDBLocation()))) {
 				password = db.getDatabasePassword();
