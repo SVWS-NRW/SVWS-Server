@@ -165,11 +165,13 @@ public class AggregationReligionStatistikExport {
 			return false;
 		}
 
-		// S42
-		final Map<String, ReligionszugehoerigkeitenStatistikExport> religionen = new HashMap<>();
-		statistikGesamt.schueler.stream().forEach(schueler -> erstellenReligionszugehoerigkeitenStatistikExport(schueler, religionen));
-		statistikExport.religionszugehoerigkeitenStatistikExport.addAll(religionen.values());
-
+		// Laut Vorgabe Importspezifikation "Satzart S42 - Religionszugehörigkeiten - Anmerkung"
+		if (Schulform.WB != schulform) {
+			// S42
+			final Map<String, ReligionszugehoerigkeitenStatistikExport> religionen = new HashMap<>();
+			statistikGesamt.schueler.stream().forEach(schueler -> erstellenReligionszugehoerigkeitenStatistikExport(schueler, religionen));
+			statistikExport.religionszugehoerigkeitenStatistikExport.addAll(religionen.values());
+		}
 
 		return true;
 	}
@@ -211,7 +213,7 @@ public class AggregationReligionStatistikExport {
 			case XR -> erhoehen(() -> religionExport.andereZusammen++, () -> religionExport.andereWeiblich++, istWeiblich);
 			case OH -> erhoehen(() -> religionExport.ohneZusammen++, () -> religionExport.ohneWeiblich++, istWeiblich);
 			//TODO: Aufsummieren 'ohneUnterricht...'
-			default -> fehlermeldungen.add("Unbekannte Religion: " + religion);
+			default -> fehlermeldungen.add(this.getClass().getSimpleName() + " Unbekannte Religion: " + religion);
 		}
 	}
 
@@ -235,7 +237,7 @@ public class AggregationReligionStatistikExport {
 						istWeiblich);
 			}
 		} catch (final InvalidDateException e) {
-			fehlermeldungen.add("Ungültiges Datum: " + e.getMessage());
+			fehlermeldungen.add(this.getClass().getSimpleName() + " Ungültiges Datum: " + e.getMessage());
 		}
 	}
 
@@ -259,7 +261,7 @@ public class AggregationReligionStatistikExport {
 						istWeiblich);
 			}
 		} catch (final InvalidDateException e) {
-			fehlermeldungen.add("Ungültiges Datum: " + e.getMessage());
+			fehlermeldungen.add(this.getClass().getSimpleName() + " Ungültiges Datum: " + e.getMessage());
 		}
 	}
 
@@ -273,9 +275,9 @@ public class AggregationReligionStatistikExport {
 		if (jahrgang == null) {
 
 			if (istJahrgangErforderlich(schulform)) {
-				fehlermeldungen
-						.add("Zu folgender idJahrgang konnte kein Jahrgang gefunden werden: " + lernabschnitt.idJahrgang + " bei Schüler mit ID: "
-								+ schueler.id);
+				fehlermeldungen.add(this.getClass().getSimpleName() + " Zu folgender idJahrgang konnte kein Jahrgang gefunden werden: "
+						+ lernabschnitt.idJahrgang + " bei Schüler mit ID: "
+						+ schueler.id);
 				return;
 			}
 		} else {
@@ -370,14 +372,14 @@ public class AggregationReligionStatistikExport {
 		final Long mappedId = religionIdMap.get(schueler.religionID);
 
 		if (mappedId == null) {
-			fehlermeldungen.add("Keine Mapping-ID für religionID: " + schueler.religionID);
+			fehlermeldungen.add(this.getClass().getSimpleName() + " Keine Mapping-ID für religionID: " + schueler.religionID);
 			return null;
 		}
 
 		final Religion religion = Religion.data().getWertByIDOrNull(mappedId);
 
 		if (religion == null) {
-			fehlermeldungen.add("Keine Religion gefunden für ID: " + schueler.religionID);
+			fehlermeldungen.add(this.getClass().getSimpleName() + " Keine Religion gefunden für ID: " + schueler.religionID);
 		}
 
 		return religion;

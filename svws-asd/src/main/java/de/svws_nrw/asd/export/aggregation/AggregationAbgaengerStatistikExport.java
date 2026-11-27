@@ -311,7 +311,7 @@ public class AggregationAbgaengerStatistikExport {
 				jahrgang = jgKuerzel;
 			}
 		} else {
-			System.out.println("Keinen Vorjahres-Jahrgang zur ID gefunden: " + vorjahresLernabschnitt.idJahrgang);
+			fehlermeldungen.add(this.getClass().getSimpleName() + " Keinen Vorjahres-Jahrgang zur ID gefunden: " + vorjahresLernabschnitt.idJahrgang);
 		}
 
 		final KlassenStatistikGesamt klasse = klasseIdMap.get(vorjahresLernabschnitt.idKlasse);
@@ -326,7 +326,7 @@ public class AggregationAbgaengerStatistikExport {
 				abgaengerExport.bildungsgangkennzeichen =
 						((klasse.parallelitaet != null) && (!klasse.parallelitaet.isEmpty())) ? klasse.parallelitaet.substring(0, 1) : "";
 			} else {
-				System.out.println("Keine Vorjahres-Klasse zur ID gefunden: " + vorjahresLernabschnitt.idKlasse);
+				fehlermeldungen.add(this.getClass().getSimpleName() + " Keine Vorjahres-Klasse zur ID gefunden: " + vorjahresLernabschnitt.idKlasse);
 			}
 		}
 
