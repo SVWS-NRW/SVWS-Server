@@ -12943,37 +12943,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getOAuthCredentialsForDomain für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/domain/{domain}/credentials
-	 *
-	 * Gibt die OAuth2-Credentials der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der OAuth2-Credentials besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste der OAuth2-Credentials der Schule.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<OAuthCredentials>
-	 *   Code 403: Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der OAuth2-Credentials.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {string} domain - der Pfad-Parameter domain
-	 *
-	 * @returns Eine Liste der OAuth2-Credentials der Schule.
-	 */
-	public async getOAuthCredentialsForDomain(schema: string, domain: string): Promise<List<OAuthCredentials>> {
-		const path = "/db/{schema}/oauth/domain/{domain}/credentials"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{domain\s*(:[^{}]+({[^{}]+})*)?}/g, domain);
-		const result: string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<OAuthCredentials>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(OAuthCredentials.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/orte
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhandenen Orte unter Angabe der ID, der PLZ, des Ortes, ggf. des Kreises, dem Bundesland, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.

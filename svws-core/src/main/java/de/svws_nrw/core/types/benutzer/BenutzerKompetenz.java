@@ -623,7 +623,7 @@ public enum BenutzerKompetenz {
 	));
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 6;
+	public static final long VERSION = 7;
 
 	/** Die Daten der Benutzerkompetenz */
 	public final @NotNull BenutzerKompetenzKatalogEintrag daten;

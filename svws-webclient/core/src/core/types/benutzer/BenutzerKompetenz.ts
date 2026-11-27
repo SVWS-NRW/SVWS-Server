@@ -516,17 +516,17 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Es werden Rechte zum Versenden von E-Mails beim Drucken von Berichten benötigt.
 	 */
-	public static readonly EMAIL_VERSAND_REPORTING: BenutzerKompetenz = new BenutzerKompetenz("EMAIL_VERSAND_REPORTING", 98, new BenutzerKompetenzKatalogEintrag(801, BenutzerKompetenzGruppe.EMAIL_VERSAND, "Versand im Rahmen des Druckens (Reporting)", null, "Ermöglicht das Versenden von Berichten per E-Mail. Zusätzlich ist ein Recht zum Drucken der Berichte nötig."));
+	public static readonly EMAIL_VERSAND_REPORTING: BenutzerKompetenz = new BenutzerKompetenz("EMAIL_VERSAND_REPORTING", 99, new BenutzerKompetenzKatalogEintrag(801, BenutzerKompetenzGruppe.EMAIL_VERSAND, "Versand im Rahmen des Druckens (Reporting)", null, "Ermöglicht das Versenden von Berichten per E-Mail. Zusätzlich ist ein Recht zum Drucken der Berichte nötig."));
 
 	/**
 	 * Es werden Rechte zum Versenden von E-Mails über die API benötigt.
 	 */
-	public static readonly EMAIL_VERSAND_API: BenutzerKompetenz = new BenutzerKompetenz("EMAIL_VERSAND_API", 99, new BenutzerKompetenzKatalogEintrag(802, BenutzerKompetenzGruppe.EMAIL_VERSAND, "Versand über API", null, "Ermöglicht das Versenden von E-Mails an übergebene Adressen über die API des SVWS-Servers."));
+	public static readonly EMAIL_VERSAND_API: BenutzerKompetenz = new BenutzerKompetenz("EMAIL_VERSAND_API", 100, new BenutzerKompetenzKatalogEintrag(802, BenutzerKompetenzGruppe.EMAIL_VERSAND, "Versand über API", null, "Ermöglicht das Versenden von E-Mails an übergebene Adressen über die API des SVWS-Servers."));
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION: number = 6;
+	public static readonly VERSION: number = 7;
 
 	/**
 	 * Die Daten der Benutzerkompetenz
