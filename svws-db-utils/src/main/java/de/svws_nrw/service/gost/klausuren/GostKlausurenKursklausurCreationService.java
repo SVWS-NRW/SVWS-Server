@@ -178,10 +178,14 @@ public final class GostKlausurenKursklausurCreationService {
 		}
 
 		private void collectKursklausurenForKurs(final DTOKurs kurs) {
+			final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
+			if (kursart == null) {
+				return;
+			}
 			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte =
 					kursBelegungService.getAktiveSchriftlicheGostSchuelerLernabschnittsdatenByKurs(schuljahresabschnitt.Jahr, kurs.ID);
 			final List<GostKlausurvorgabe> kursVorgaben = klausurplanManager.vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(abiturjahr,
-					gostHalbjahr, quartal, GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID);
+					gostHalbjahr, quartal, kursart, kurs.Fach_ID);
 			if (kursVorgaben.isEmpty() && !lernabschnitte.isEmpty()) {
 				kurseOhneVorgabe.add(kurs);
 			}

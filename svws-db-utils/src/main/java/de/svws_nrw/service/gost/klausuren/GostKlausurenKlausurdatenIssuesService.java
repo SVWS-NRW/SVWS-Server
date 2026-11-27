@@ -84,7 +84,10 @@ public final class GostKlausurenKlausurdatenIssuesService {
 		final GostKlausurplanManager manager = new GostKlausurplanManager(vorhandeneKlausurdaten);
 
 		for (final DTOKurs kurs : kurse) {
-			final GostKursart kursart = GostKursart.fromKuerzelOrException(kurs.KursartAllg);
+			final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
+			if (kursart == null) {
+				continue;
+			}
 			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte =
 					kursBelegungService.getAktiveSchriftlicheGostSchuelerLernabschnittsdatenByKurs(schuljahresabschnitt.Jahr, kurs.ID);
 			for (final int quartal : QUARTALE) {
