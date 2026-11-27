@@ -25,7 +25,7 @@
 					</div>
 				</template>
 				<template #actions>
-					<svws-ui-tooltip v-if="serverState.hasDev && hatKompetenzAendern" position="bottom">
+					<svws-ui-tooltip v-if="hatKompetenzAendern" position="bottom">
 						<svws-ui-button :disabled="lehrerAuswahlState.navigator.activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="lehrerAuswahlState.navigator.gotoHinzufuegen(true)"
 							:has-focus="lehrerAuswahlState.filter.visible.isEmpty()">
 							<span class="icon i-ri-add-line" />
@@ -48,7 +48,6 @@
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { PersonalTyp } from "@core/core/types/PersonalTyp";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { useServerState } from "@ui/states/ServerState";
 	import type { SortByAndOrder } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
@@ -57,7 +56,6 @@
 
 
 	const benutzerState = useBenutzerState();
-	const serverState = useServerState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
