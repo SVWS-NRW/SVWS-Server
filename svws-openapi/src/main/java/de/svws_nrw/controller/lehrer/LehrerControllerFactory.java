@@ -142,34 +142,6 @@ public final class LehrerControllerFactory {
 	}
 
 	/**
-	 * Diese statische Methode dient dem lesenden Zugriff auf die Lehrerdaten (z.B. Lernplattformen) in der API-Schicht.
-	 * Der Zugriff ist weiterhin nur im Entwicklungsmodus ({@link ServerMode#DEV}) möglich.
-	 *
-	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
-	 *
-	 * @return der spezielle Servlet-Controller
-	 *
-	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
-	 */
-	public static LehrerControllerFactory withReadAccessDev(final HttpServletRequest request) {
-		return getNewInstance(request, ServerMode.DEV, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
-	}
-
-	/**
-	 * Diese statische Methode dient dem schreibenden Zugriff auf die Lehrerdaten (z.B. Lernplattformen) in der API-Schicht.
-	 * Der Zugriff ist weiterhin nur im Entwicklungsmodus ({@link ServerMode#DEV}) möglich.
-	 *
-	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
-	 *
-	 * @return der spezielle Servlet-Controller
-	 *
-	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
-	 */
-	public static LehrerControllerFactory withWriteAccessDev(final HttpServletRequest request) {
-		return getNewInstance(request, ServerMode.DEV, BenutzerKompetenz.LEHRERDATEN_AENDERN);
-	}
-
-	/**
 	 * Erstellt einen Controller für die Unterrichtsfächer von Lehrern
 	 *
 	 * @return der Controller

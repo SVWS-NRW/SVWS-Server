@@ -130,7 +130,9 @@ test('Nicht privilegierte Nutzer können nur entsprechende Lehrern Tabs im DEV M
 	await expect(page.getByRole('button', { name: 'Einwilligungen' })).toBeVisible();
 	await page.getByRole('button', { name: 'Einwilligungen' }).click();
 	await expect(page.getByRole('heading', { name: 'Nicht abgefragt' })).toBeVisible();
-	await expect(page.getByRole('button', { name: 'Lernplattformen' })).toHaveCount(0);
+	await expect(page.getByRole('button', { name: 'Lernplattformen' })).toBeVisible();
+	await page.getByRole('button', { name: 'Lernplattformen' }).click();
+	await expect(page.locator('.page').getByRole('table')).toBeVisible();
 });
 
 test('Nicht privilegierter User können Oberstufe nicht bearbeiten', async ({ page }) => {

@@ -110,26 +110,6 @@ class LehrerControllerFactoryTest {
 		assertNotNull(factory);
 	}
 
-	@Test
-	@DisplayName("withReadAccessDev | DBBenutzerUtils wird mit DEV und LEHRERDATEN_ANSEHEN aufgerufen")
-	void withReadAccessDev() {
-		final var factory = LehrerControllerFactory.withReadAccessDev(request);
-
-		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
-				eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)), times(1));
-		assertNotNull(factory);
-	}
-
-	@Test
-	@DisplayName("withWriteAccessDev | DBBenutzerUtils wird mit DEV und LEHRERDATEN_AENDERN aufgerufen")
-	void withWriteAccessDev() {
-		final var factory = LehrerControllerFactory.withWriteAccessDev(request);
-
-		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
-				eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.LEHRERDATEN_AENDERN)), times(1));
-		assertNotNull(factory);
-	}
-
 	// -------------------------------------------------------------------------
 	// Controller-Getter
 	// -------------------------------------------------------------------------
@@ -238,7 +218,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerLernplattformController | gibt einen Controller zurück")
 	void getLehrerLernplattformController() {
 		final LehrerLernplattformController controller = LehrerControllerFactory
-				.withReadAccessDev(request)
+				.withReadAccessStable(request)
 				.getLehrerLernplattformController();
 
 		assertNotNull(controller);

@@ -2027,25 +2027,25 @@ public class APILehrer {
 	@Path("/{id : \\d+}/lernplattformen")
 	@Operation(summary = "Liefert zu der ID des Lehrers die zugehörigen Lernplattformen.",
 			description = "Liest die Lernplattformen des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Sind dem Lehrer keine Lernplattformen zugeordnet, wird eine leere Liste zurückgegeben. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Lernplattformen des Lehrers",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerLernplattform.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Lernplattform für den Lehrer mit der angegebenen ID gefunden")
 	public Response getLehrerLernplattformen(@PathParam("schema") final String schema, @PathParam("id") final long idLehrer,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccessDev(request)
+				.withReadAccessStable(request)
 				.getLehrerLernplattformController()
 				.getListByIdLehrer(idLehrer);
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Patchen einer Lernplattform.
+	 * Die OpenAPI-Methode für das Patchen der Einwilligungen eines Lehrers zu einer Lernplattform.
 	 *
 	 * @param schema               das Datenbankschema, auf welchem der Patch ausgeführt werden soll
 	 * @param idLehrer             die Lehrer-ID
-	 * @param idLernplattform      die ID der Lernplattform, zu welcher die zu patchende Einwilligung gehört
+	 * @param idLernplattform      die ID der Lernplattform, zu welcher die Einwilligungen des Lehrers angepasst werden
 	 * @param patch                das partielle Update als {@link LehrerLernplattformPatchRequest}
 	 * @param request              die Informationen zur HTTP-Anfrage
 	 *
@@ -2053,13 +2053,13 @@ public class APILehrer {
 	 */
 	@PATCH
 	@Path("/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}")
-	@Operation(summary = "Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an.",
-			description = "Passt die Einwilligung zu der angegebenen Lehrer- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Einwilligungen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lernplattform integriert.")
+	@Operation(summary = "Passt die Einwilligungen des Lehrers zu der angegebenen Lernplattform an.",
+			description = "Passt die Einwilligungen zu der angegebenen Lehrer- und Lernplattform-ID an und speichert das Ergebnis in der Datenbank."
+					+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lernplattform-Zuordnung des Lehrers integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lernplattform der Lehrer zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Kein Lehrer oder keine Lernplattform der angegebenen Art gefunden.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Lehrerdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Lernplattform-Zuordnung für die angegebene Lehrer- und Lernplattform-ID gefunden.")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde."
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -2070,7 +2070,7 @@ public class APILehrer {
 							schema = @Schema(implementation = LehrerLernplattform.class))) final LehrerLernplattformPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withWriteAccessDev(request)
+				.withWriteAccessStable(request)
 				.getLehrerLernplattformController()
 				.patch(idLehrer, idLernplattform, patch);
 	}

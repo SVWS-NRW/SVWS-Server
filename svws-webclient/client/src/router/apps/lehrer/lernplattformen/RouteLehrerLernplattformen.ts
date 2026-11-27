@@ -18,8 +18,8 @@ const LehrerLernplattformen = () => import("~/components/lehrer/lernplattformen/
 export class RouteLehrerLernplattformen extends RouteNode<RouteDataLehrerLernplattformen, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.lernplattformen", "lernplattformen", LehrerLernplattformen, new RouteDataLehrerLernplattformen());
-		super.mode = ServerMode.DEV;
+		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_ANSEHEN], "lehrer.lernplattformen", "lernplattformen", LehrerLernplattformen, new RouteDataLehrerLernplattformen());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lernplattformen";
 	}

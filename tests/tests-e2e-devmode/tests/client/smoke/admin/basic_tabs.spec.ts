@@ -156,7 +156,7 @@ test('Admins können entsprechende Lehrer Tabs im DEV Mode sehen', async ({ page
 
 	await expect(page.getByRole('button', { name: 'Lernplattform' })).toBeVisible();
 	await page.getByRole('button', { name: 'Lernplattform' }).click();
-	await expect(page.getByText('Einwilligung Abgefragt')).toBeVisible();
+	await expect(page.locator('.page').getByRole('table')).toBeVisible();
 });
 
 test('Admins können Oberstufe bearbeiten', async ({ page }) => {
