@@ -10,6 +10,10 @@
 			@apply bg-ui-selected;
 			@apply text-ui-100;
 		}
+		span.popover-touch-item.enm-note-selected {
+			outline: 3px solid #f97316;
+			outline-offset: 1px;
+		}
 		span.popover-touch-item.extra-button {
 			@apply bg-ui-50;
 			@apply text-ui-100;

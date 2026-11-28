@@ -106,23 +106,25 @@
 				</td>
 				<template v-if="gridManager.isColVisible('Quartal') ?? true">
 					<td v-if="istErlaubt(pair, 'Quartal')"
-						:style="`anchor-name: --anchor_Quartal_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="showPopoverNote(`Quartal_${pair.a.id}_${pair.b.id}`, pair.a.noteQuartal)"
+						:style="`anchor-name: --anchor_Quartal_${pair.a.id}_${pair.b.id};`" @click="showPopoverNote(`Quartal_${pair.a.id}_${pair.b.id}`, pair.a.noteQuartal)"
 						:ref="inputNoteQuartal(pair, 6, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 6),
 							'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
 							'contentFocusField': gridManager.isFocusLast(6, index),
+							'enm-note-active': popoverKey === `Quartal_${pair.a.id}_${pair.b.id}`,
 						}" />
 					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('Note') ?? true">
 					<td v-if="istErlaubt(pair, 'Note')"
-						:style="`anchor-name: --anchor_Note_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="showPopoverNote(`Note_${pair.a.id}_${pair.b.id}`, pair.a.note)"
+						:style="`anchor-name: --anchor_Note_${pair.a.id}_${pair.b.id};`" @click="showPopoverNote(`Note_${pair.a.id}_${pair.b.id}`, pair.a.note)"
 						:ref="inputNote(pair, 7, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 7),
 							'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),
 							'contentFocusField': gridManager.isFocusLast(7, index),
+							'enm-note-active': popoverKey === `Note_${pair.a.id}_${pair.b.id}`,
 						}" />
 					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
 				</template>
@@ -161,6 +163,7 @@
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 10),
 							'contentFocusField': gridManager.isFocusLast(10, index),
+							'enm-fs-active': popoverKey === `FS_${pair.a.id}_${pair.b.id}`,
 						}" />
 					<td v-else>{{ pair.a.fehlstundenFach ?? "—" }}</td>
 				</template>
@@ -171,6 +174,7 @@
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 11),
 							'contentFocusField': gridManager.isFocusLast(11, index),
+							'enm-fs-active': popoverKey === `FSU_${pair.a.id}_${pair.b.id}`,
 						}" />
 					<td v-else>{{ pair.a.fehlstundenUnentschuldigtFach ?? "-" }}</td>
 				</template>
@@ -206,7 +210,7 @@
 			<grid-popover-note :model-value="popoverNote" @update:model-value="updateNote" @close="popoverNotenRef?.hidePopover()" />
 		</div>
 		<div id="popover_fs_eingabe" ref="popoverFS" popover :style="`position-anchor: ${popoverAnchor}; position-area: right; position-try-fallbacks: flip-block;`">
-			<grid-popover-fehlstunden :model-value="popoverFs" @update:model-value="updateFs" @close="popoverNotenRef?.hidePopover()" />
+			<grid-popover-fehlstunden :model-value="popoverFs" @update:model-value="updateFs" @close="closePopoverFS" />
 		</div>
 	</div>
 </template>
@@ -224,8 +228,8 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import type { GridInput } from '@ui/ui/controls/tablegrid/GridInput';
-	import type { GridInputIntegerDiv } from '@ui/ui/controls/tablegrid/GridInputIntegerDiv';
-	import type { GridInputNote } from '@ui/ui/controls/tablegrid/GridInputNote';
+	import { GridInputIntegerDiv } from '@ui/ui/controls/tablegrid/GridInputIntegerDiv';
+	import { GridInputNote } from '@ui/ui/controls/tablegrid/GridInputNote';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	import type { EnmLeistungenUebersichtProps } from './EnmLeistungenUebersichtProps';
@@ -239,6 +243,35 @@
 	const popoverAnchor = ref<string | null>(null);
 	const popoverKey = ref<string | null>(null);
 	const popoverMax = ref<number | null>(null);
+
+	function closePopoverFS() {
+		const key = popoverKey.value;
+		const input = (key === null) ? null : gridManager.getInputByKey(key) as GridInputIntegerDiv<string> | null;
+		if (input === null) {
+			popoverFSRef.value?.hidePopover();
+			popoverKey.value = null;
+			popoverAnchor.value = null;
+			popoverMax.value = null;
+			return;
+		}
+		for (let row = input.row + 1; row < gridManager.daten.size(); row++) {
+			const next = gridManager.getInputByPosition(row, input.col);
+			if (!(next instanceof GridInputIntegerDiv)) {
+				continue;
+			}
+			const pair = gridManager.daten.get(row);
+			popoverKey.value = next.key;
+			popoverAnchor.value = `--anchor_${next.key}`;
+			popoverMax.value = String(next.key).startsWith('FSU_') ? pair.a.fehlstundenFach : 999;
+			popoverFs.value = String(next.key).startsWith('FSU_') ? pair.a.fehlstundenUnentschuldigtFach : pair.a.fehlstundenFach;
+			gridManager.doFocusByKey(next.key);
+			return;
+		}
+		popoverFSRef.value?.hidePopover();
+		popoverKey.value = null;
+		popoverAnchor.value = null;
+		popoverMax.value = null;
+	}
 
 	function showPopoverNote(key: string, val: string | null) {
 		if (popoverNotenRef.value === null) {
@@ -276,6 +309,18 @@
 		}
 		input.update(val.getNoteKuerzel(props.enmManager().schuljahr));
 		input.commit();
+		for (let row = input.row + 1; row < gridManager.daten.size(); row++) {
+			const next = gridManager.getInputByPosition(row, input.col);
+			if (!(next instanceof GridInputNote)) {
+				continue;
+			}
+			const pair = gridManager.daten.get(row);
+			popoverKey.value = next.key;
+			popoverAnchor.value = `--anchor_${next.key}`;
+			popoverNote.value = Note.fromKuerzel(String(next.key).startsWith('Quartal_') ? pair.a.noteQuartal : pair.a.note);
+			gridManager.doFocusByKey(next.key);
+			return;
+		}
 		popoverNotenRef.value.hidePopover();
 		popoverKey.value = null;
 		popoverAnchor.value = null;

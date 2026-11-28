@@ -9,6 +9,12 @@
 		@apply focus:ring-ui;
 	}
 
+	.ui-table-grid-input.enm-note-active,
+	.ui-table-grid-input.enm-fs-active {
+		outline: 2px solid #f97316;
+		outline-offset: -2px;
+	}
+
 	.ui-table-grid-button {
 		@apply cursor-pointer;
 		@apply focus:ring-2;
